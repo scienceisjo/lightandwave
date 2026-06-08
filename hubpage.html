@@ -48,7 +48,7 @@
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  /* ============ HERO (메인 이미지: imagelight/hero.png) ============ */
+  /* ============ HERO (메인 이미지: hero.png) ============ */
   .hero{
     position:relative;
     min-height:90vh;
@@ -57,7 +57,7 @@
     padding:7rem 1.5rem 9rem;
     background-image:
       linear-gradient(180deg, rgba(6,9,18,.72) 0%, rgba(6,9,18,.12) 32%, rgba(6,9,18,.18) 62%, rgba(6,9,18,.9) 100%),
-      url("imagelight/hero.png"),
+      url("hero.png"),
       linear-gradient(160deg,#0a1330 0%,#0c1024 55%,#070b16 100%);
     background-size:cover, cover, cover;
     background-position:center 42%;
@@ -140,7 +140,7 @@
 
   .lesson__top{display:grid;grid-template-columns:38% 1fr;gap:1.6rem;align-items:center}
 
-  /* 이미지 자리 — imagelight/ 폴더의 파일을 불러옴 */
+  /* 이미지 자리 — index.html과 같은 폴더에서 불러옴 */
   .lesson__media{
     position:relative;aspect-ratio:3/2;border-radius:12px;overflow:hidden;
     background:linear-gradient(135deg,#0e1730,#1a2342);
@@ -227,7 +227,7 @@
         <article class="lesson" style="--i:0;--accent:#8ea2ff">
           <div class="lesson__top">
             <div class="lesson__media">
-              <img src="imagelight/light-01.png" alt="물체를 보는 과정" loading="lazy" onerror="this.style.display='none'">
+              <img src="light-01.png" alt="물체를 보는 과정" loading="lazy" onerror="this.style.display='none'">
               <span class="lesson__no">01</span>
             </div>
             <div class="lesson__body">
@@ -235,8 +235,7 @@
               <h3 class="lesson__title">우리는 현재를 보고 있지 않다</h3>
               <div class="lesson__actions">
                 <button class="btn btn--ghost" data-toggle aria-expanded="false"><span class="btn__label">자세히 보기</span><span class="chev" aria-hidden="true">▾</span></button>
-                <!-- ↓ href에 이 차시의 웹앱 주소를 넣으세요 -->
-                <a class="btn btn--go" href="#">수업 들어가기 →</a>
+                <a class="btn btn--go" href="https://scienceisjo.github.io/lightandwave/01.html" target="_blank" rel="noopener">수업 들어가기 →</a>
               </div>
             </div>
           </div>
@@ -250,7 +249,7 @@
         <article class="lesson" style="--i:1;--accent:#7fb0ff">
           <div class="lesson__top">
             <div class="lesson__media">
-              <img src="imagelight/light-02.png" alt="평면 거울에서 상이 생기는 원리" loading="lazy" onerror="this.style.display='none'">
+              <img src="light-02.png" alt="평면 거울에서 상이 생기는 원리" loading="lazy" onerror="this.style.display='none'">
               <span class="lesson__no">02</span>
             </div>
             <div class="lesson__body">
@@ -272,7 +271,7 @@
         <article class="lesson" style="--i:2;--accent:#6fd0e8">
           <div class="lesson__top">
             <div class="lesson__media">
-              <img src="imagelight/light-03.png" alt="생활 속 거울과 렌즈" loading="lazy" onerror="this.style.display='none'">
+              <img src="light-03.png" alt="생활 속 거울과 렌즈" loading="lazy" onerror="this.style.display='none'">
               <span class="lesson__no">03</span>
             </div>
             <div class="lesson__body">
@@ -294,7 +293,7 @@
         <article class="lesson" style="--i:3;--accent:#8a9bff">
           <div class="lesson__top">
             <div class="lesson__media">
-              <img src="imagelight/light-04.png" alt="거울과 렌즈에 의한 상" loading="lazy" onerror="this.style.display='none'">
+              <img src="light-04.png" alt="거울과 렌즈에 의한 상" loading="lazy" onerror="this.style.display='none'">
               <span class="lesson__no">04</span>
             </div>
             <div class="lesson__body">
@@ -316,7 +315,7 @@
         <article class="lesson lesson--spectrum" style="--i:4">
           <div class="lesson__top">
             <div class="lesson__media">
-              <img src="imagelight/light-05.png" alt="물체의 색과 빛의 합성" loading="lazy" onerror="this.style.display='none'">
+              <img src="light-05.png" alt="물체의 색과 빛의 합성" loading="lazy" onerror="this.style.display='none'">
               <span class="lesson__no">05</span>
             </div>
             <div class="lesson__body">
@@ -351,7 +350,7 @@
         <article class="lesson" style="--i:0;--accent:#6fb6ff">
           <div class="lesson__top">
             <div class="lesson__media">
-              <img src="imagelight/wave-01.png" alt="퍼져 나가는 파동" loading="lazy" onerror="this.style.display='none'">
+              <img src="wave-01.png" alt="퍼져 나가는 파동" loading="lazy" onerror="this.style.display='none'">
               <span class="lesson__no">01</span>
             </div>
             <div class="lesson__body">
@@ -373,7 +372,7 @@
         <article class="lesson" style="--i:1;--accent:#9b8cff">
           <div class="lesson__top">
             <div class="lesson__media">
-              <img src="imagelight/wave-02.png" alt="파동으로 알아보는 소리의 특성" loading="lazy" onerror="this.style.display='none'">
+              <img src="wave-02.png" alt="파동으로 알아보는 소리의 특성" loading="lazy" onerror="this.style.display='none'">
               <span class="lesson__no">02</span>
             </div>
             <div class="lesson__body">
