@@ -1,0 +1,3087 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>평면거울에서 상이 생기는 원리 · 빛과 파동</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root{
+  --bg:#ffffff; --bg2:#f7f4ea; --surface:#ffffff; --surface2:#f3eee0;
+  --line:#e7e0cd; --line2:#d3c9af;
+  --text:#221b10; --muted:#6b5e45; --faint:#7d6f51;
+  --gold:#946400; --gold-soft:#8a5e00; --gold-deep:#7d5500;
+  --cyan:#2563d4; --cyan-soft:#1d4fae; --cyan-deep:#173f8c;
+  --silver:#5d6675; --silver-soft:#454d5a; --silver-deep:#7f8a9c;
+  --green:#13853f; --rose:#cf2a44; --violet:#7c3fd1;
+  --font-display:'Black Han Sans',sans-serif;
+  --font-body:'Noto Sans KR',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --shadow:0 18px 46px -22px rgba(60,48,20,.22);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:
+  radial-gradient(1000px 620px at 12% -8%, rgba(230,57,70,.10), transparent 58%),
+  radial-gradient(900px 600px at 45% -10%, rgba(255,170,0,.12), transparent 56%),
+  radial-gradient(950px 640px at 82% -6%, rgba(37,99,212,.10), transparent 58%),
+  radial-gradient(800px 700px at 4% 78%, rgba(19,133,63,.08), transparent 56%),
+  radial-gradient(900px 760px at 96% 84%, rgba(124,63,209,.09), transparent 58%),
+  conic-gradient(from 192deg at 30% -8%, transparent 0deg 6deg, rgba(230,57,70,.06) 6deg 10deg, transparent 10deg 17deg, rgba(255,170,0,.07) 17deg 21deg, transparent 21deg 28deg, rgba(19,133,63,.05) 28deg 32deg, transparent 32deg),
+  conic-gradient(from 168deg at 72% -8%, transparent 0deg 5deg, rgba(37,99,212,.06) 5deg 9deg, transparent 9deg 15deg, rgba(124,63,209,.06) 15deg 19deg, transparent 19deg),
+  var(--bgimg),
+  #ffffff}
+body{--bgimg:url("bg-mirror-main.png") center/cover no-repeat fixed}
+#bgStars{position:fixed;inset:0;z-index:-1;pointer-events:none}
+body::after{content:"";position:fixed;inset:0;z-index:-1;opacity:.5;background-image:radial-gradient(rgba(0,0,0,.04) 1px, transparent 1px);background-size:32px 32px;mask-image:linear-gradient(180deg,#000,transparent 90%)}
+.topbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:linear-gradient(180deg, rgba(255,255,255,.94), rgba(255,255,255,.78));border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1180px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;margin-right:auto}
+.brand .mark{width:42px;height:42px;border-radius:12px;flex:0 0 auto;position:relative;overflow:hidden;background:linear-gradient(115deg,#e63946 0% 33%,#ffaa00 33% 66%,#2563d4 66% 100%);box-shadow:0 0 22px rgba(95,105,120,.35), inset 0 0 10px rgba(0,0,0,.18)}
+.brand .mark::before{content:"";position:absolute;left:18%;top:24%;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+.brand .mark::after{content:"";position:absolute;right:18%;top:24%;width:8px;height:8px;border-radius:50%;border:1.6px dashed var(--cyan-soft);opacity:.95}
+.brand h1{font-family:var(--font-display);font-weight:400;font-size:1.18rem;letter-spacing:.5px;line-height:1.15}
+.brand h1 small{display:block;font-family:var(--font-body);font-weight:500;font-size:.7rem;color:var(--muted);letter-spacing:2px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab-btn{font-family:var(--font-body);font-weight:700;font-size:.86rem;color:var(--muted);background:transparent;border:1px solid transparent;border-radius:11px;padding:9px 15px;cursor:pointer;transition:.22s;display:flex;align-items:center;gap:7px;white-space:nowrap}
+.tab-btn:hover{color:var(--text);background:rgba(0,0,0,.04)}
+.tab-btn.active{color:var(--bg);background:linear-gradient(135deg,var(--gold),var(--gold-deep));box-shadow:0 8px 22px -8px rgba(207,143,31,.7)}
+.tab-btn .ico{font-size:1rem}
+main{max-width:1180px;margin:0 auto;padding:30px 22px 90px}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fadein .5s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.reveal{opacity:0}
+.tab-panel.active .reveal{animation:up .6s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.r1{animation-delay:.04s}.r2{animation-delay:.12s}.r3{animation-delay:.2s}.r4{animation-delay:.28s}.r5{animation-delay:.36s}.r6{animation-delay:.44s}
+.eyebrow{font-family:var(--font-mono);font-weight:700;font-size:.72rem;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+.section-title{font-family:var(--font-display);font-weight:400;font-size:2rem;line-height:1.1;margin:6px 0 2px;letter-spacing:.5px}
+.lead{color:var(--muted);max-width:62ch;font-size:1rem}
+.ws-chip{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:800;color:#0c2a26;background:linear-gradient(135deg,#9be8d2,#5fc9b0);border-radius:999px;padding:4px 11px;letter-spacing:.5px;vertical-align:middle;margin-left:8px}
+/* ===== hero — 거울 대칭 모티프 ===== */
+.hero{position:relative;border-radius:24px;overflow:hidden;padding:46px 38px 40px;background:
+  radial-gradient(700px 380px at 78% -10%, rgba(124,63,209,.10), transparent 60%),
+  radial-gradient(620px 420px at 8% 120%, rgba(255,170,0,.14), transparent 60%),
+  radial-gradient(540px 360px at 30% -10%, rgba(230,57,70,.08), transparent 60%),
+  linear-gradient(160deg,#ffffff,#faf6ec);border:1px solid var(--line);box-shadow:var(--shadow)}
+.hero .mirror-seam{position:absolute;top:0;bottom:0;left:62%;width:2px;background:linear-gradient(180deg,transparent,rgba(90,101,119,.85),transparent);box-shadow:0 0 18px rgba(124,63,209,.4);pointer-events:none}
+.hero .mirror-side{position:absolute;top:0;bottom:0;left:62%;right:0;background:linear-gradient(90deg,rgba(95,105,120,.05),rgba(176,126,240,.06));pointer-events:none}
+.hero .ghost-title{position:absolute;top:46px;left:62%;transform:scaleX(-1);transform-origin:left top;font-family:var(--font-display);font-weight:400;font-size:clamp(2.1rem,5vw,3.3rem);line-height:1.02;letter-spacing:.5px;color:transparent;-webkit-text-stroke:1px rgba(90,101,119,.35);pointer-events:none;white-space:pre-line;user-select:none}
+.hero h2{font-family:var(--font-display);font-weight:400;font-size:clamp(2.1rem,5vw,3.3rem);line-height:1.02;letter-spacing:.5px;position:relative;max-width:62%}
+.hero h2 .hl{color:var(--gold);text-shadow:0 0 30px rgba(242,177,62,.5)}
+.hero .whisper{position:relative;margin-top:10px;font-size:1rem;color:var(--silver);font-style:italic;letter-spacing:.5px}
+.hero p.desc{position:relative;margin-top:14px;color:#55503f;max-width:54ch;font-size:1.05rem}
+.hero .chip-row{position:relative;margin-top:22px;display:flex;gap:10px;flex-wrap:wrap}
+.chip{font-size:.8rem;font-weight:700;padding:7px 13px;border-radius:999px;background:rgba(0,0,0,.05);border:1px solid var(--line2);color:#55503f;display:flex;gap:7px;align-items:center}
+.chip b{color:var(--cyan-soft)}
+.bigq{margin-top:26px;border-radius:18px;padding:22px 24px;position:relative;overflow:hidden;background:linear-gradient(135deg, rgba(242,177,62,.14), rgba(95,105,120,.1));border:1px solid var(--line2)}
+.bigq .q-label{font-family:var(--font-mono);font-size:.72rem;letter-spacing:2px;color:var(--gold);font-weight:700}
+.bigq p{font-family:var(--font-display);font-weight:400;font-size:clamp(1.2rem,3vw,1.7rem);line-height:1.25;color:#221b10;margin-top:6px}
+@media(max-width:760px){.hero h2{max-width:100%}.hero .ghost-title,.hero .mirror-seam,.hero .mirror-side{display:none}}
+/* ===== 나만의 질문 ===== */
+.qmaker{margin-top:26px;border-radius:20px;border:1px solid var(--line);background:linear-gradient(165deg,var(--surface2),var(--surface));box-shadow:var(--shadow);padding:24px}
+.qmaker h3{font-family:var(--font-display);font-weight:400;font-size:1.3rem;letter-spacing:.3px}
+.qmaker .qm-sub{color:var(--muted);font-size:.88rem;margin:4px 0 14px}
+.qmaker .qm-row{display:flex;gap:10px;flex-wrap:wrap}
+.qmaker input{flex:1;min-width:220px;background:var(--bg2);border:1px solid var(--line2);border-radius:12px;color:var(--text);font-family:var(--font-body);font-size:.95rem;padding:12px 14px;outline:none}
+.qmaker input:focus{border-color:var(--gold)}
+.qm-add{font-family:var(--font-display);font-weight:400;font-size:1rem;letter-spacing:1px;color:var(--bg);border:none;border-radius:12px;padding:12px 22px;cursor:pointer;background:linear-gradient(135deg,var(--gold),var(--gold-deep));transition:.18s}
+.qm-add:hover{transform:translateY(-2px)}
+.qm-list{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.qm-item{display:flex;align-items:baseline;gap:10px;background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:10px 13px;font-size:.92rem;color:#3f382a}
+.qm-item .qn{font-family:var(--font-mono);font-weight:700;font-size:.74rem;color:var(--gold)}
+.qm-note{margin-top:10px;font-size:.78rem;color:var(--faint)}
+/* ===== hooks ===== */
+.hooks{margin-top:34px;display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px}
+.hook{position:relative;border-radius:20px;padding:26px 24px 24px;overflow:hidden;background:linear-gradient(165deg,var(--surface2),var(--surface));border:1px solid var(--line);box-shadow:var(--shadow);transition:.28s}
+.hook:hover{transform:translateY(-5px);border-color:var(--line2)}
+.hook::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--accent,var(--gold))}
+.hook .num{font-family:var(--font-mono);font-weight:700;font-size:.78rem;color:var(--faint)}
+.hook .emoji{font-size:2.1rem;line-height:1;margin:4px 0 10px;display:block;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
+.hook .hook-img{display:block;width:100%;height:150px;object-fit:cover;border-radius:13px;margin:10px 0 6px;border:1px solid var(--line)}
+.hook h3{font-family:var(--font-display);font-weight:400;font-size:1.32rem;line-height:1.18;letter-spacing:.3px}
+.hook .hook-body{color:#5a4f3a;font-size:.95rem;margin-top:10px}
+.hook .classroom{margin-top:14px;font-size:.86rem;color:var(--muted);border-left:3px solid var(--accent,var(--gold));padding:8px 0 8px 12px;background:rgba(0,0,0,.02);border-radius:0 8px 8px 0}
+.hook .classroom b{color:var(--text)}
+.hook .cta{margin-top:16px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-weight:700;font-size:.88rem;color:var(--bg);border:none;background:linear-gradient(135deg,var(--cyan),var(--cyan-deep));padding:10px 16px;border-radius:11px;transition:.2s}
+.hook .cta:hover{transform:translateX(3px);box-shadow:0 10px 24px -10px rgba(90,167,240,.7)}
+/* ===== sim cards ===== */
+.lab-grid{display:grid;gap:26px;margin-top:26px}
+.sim-card{border-radius:22px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:linear-gradient(165deg,var(--surface2),var(--surface))}
+.sim-head{padding:22px 24px 0;display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.sim-head .badge{font-family:var(--font-mono);font-weight:700;font-size:.72rem;letter-spacing:1px;padding:6px 11px;border-radius:9px;color:var(--bg);white-space:nowrap}
+.badge.gold{background:linear-gradient(135deg,var(--gold),var(--gold-deep))}
+.badge.cy{background:linear-gradient(135deg,var(--cyan),var(--cyan-deep))}
+.sim-head h3{font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:.3px;line-height:1.1}
+.sim-head .sub{color:var(--muted);font-size:.9rem;margin-top:2px}
+.sim-body{display:grid;grid-template-columns:1.5fr 1fr;gap:0;margin-top:18px}
+@media(max-width:820px){.sim-body{grid-template-columns:1fr}}
+.canvas-wrap{position:relative;padding:10px 14px 18px 22px}
+canvas{width:100%;display:block;border-radius:14px;touch-action:none}
+.sim-side{padding:14px 24px 24px;border-left:1px solid var(--line)}
+@media(max-width:820px){.sim-side{border-left:none;border-top:1px solid var(--line)}}
+.readouts{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.readout{flex:1;min-width:110px;background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:13px 15px;transition:.2s}
+.readout .rlabel{font-size:.74rem;color:var(--muted);font-weight:700;letter-spacing:.5px}
+.readout .rval{font-family:var(--font-mono);font-weight:700;font-size:1.7rem;margin-top:3px}
+.readout.gold .rval{color:var(--gold)}
+.readout.cyan .rval{color:var(--cyan-soft)}
+.ctl-label{font-size:.8rem;font-weight:700;color:var(--muted);margin:4px 0 8px;letter-spacing:.5px}
+.fire-light{width:100%;font-family:var(--font-display);font-weight:400;font-size:1.05rem;letter-spacing:1px;cursor:pointer;color:var(--bg);border:none;border-radius:13px;padding:13px;margin-bottom:14px;transition:.16s;display:flex;align-items:center;justify-content:center;gap:8px}
+.fire-light.gold{background:linear-gradient(135deg,var(--gold),var(--gold-deep));box-shadow:0 12px 28px -12px rgba(207,143,31,.8)}
+.fire-light.cyan{background:linear-gradient(135deg,var(--cyan),var(--cyan-deep));box-shadow:0 12px 28px -12px rgba(47,124,214,.8)}
+.fire-light:hover{transform:translateY(-2px)}
+.fire-light:active{transform:scale(.97)}
+.toggle-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.tg{display:flex;align-items:center;gap:7px;font-size:.84rem;color:var(--muted);cursor:pointer;user-select:none}
+.tg input{accent-color:var(--gold);width:16px;height:16px;cursor:pointer}
+.step-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.step-btn{flex:1;min-width:96px;font-family:var(--font-body);font-weight:700;font-size:.84rem;cursor:pointer;background:rgba(0,0,0,.04);border:1px solid var(--line2);color:var(--text);padding:11px 8px;border-radius:11px;transition:.18s;line-height:1.3}
+.step-btn small{display:block;font-weight:500;font-size:.7rem;color:var(--muted)}
+.step-btn:hover{border-color:var(--gold)}
+.step-btn.active{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:var(--bg);border-color:transparent}
+.step-btn.active small{color:rgba(255,255,255,.85)}
+.angle-slider-wrap{margin-bottom:14px}
+.angle-slider-wrap .asl-head{display:flex;justify-content:space-between;gap:10px;font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:8px}
+.angle-slider-wrap .asl-head span{font-family:var(--font-mono);color:var(--gold)}
+input[type=range].rng{width:100%;height:14px;border-radius:8px;appearance:none;-webkit-appearance:none;background:#1b2640;cursor:pointer;outline:none}
+input[type=range].rng::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-deep));cursor:pointer;box-shadow:0 0 12px rgba(242,177,62,.6);border:2px solid #fff3}
+input[type=range].rng::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--gold);cursor:pointer;border:2px solid #fff3}
+.gloss{margin-top:4px;margin-bottom:16px}
+.gloss-title{font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:8px;letter-spacing:.5px}
+.gloss-chips{display:flex;flex-wrap:wrap;gap:7px}
+.gloss-chip{font-family:var(--font-body);font-weight:700;font-size:.8rem;cursor:pointer;background:rgba(0,0,0,.05);border:1px solid var(--line2);color:#55503f;padding:6px 12px;border-radius:999px;transition:.16s}
+.gloss-chip:hover{border-color:var(--gold);color:#221b10;background:rgba(242,177,62,.08)}
+.gloss-chip.active{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:var(--bg);border-color:transparent}
+.gloss-def{margin-top:10px;font-size:.88rem;color:#3f382a;background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 14px;display:none}
+.gloss-def.show{display:block;animation:up .3s ease both}
+.gloss-def .gd-term{font-weight:700;color:#221b10;margin-right:6px}
+.qbox{background:linear-gradient(135deg,rgba(242,177,62,.1),rgba(242,177,62,.03));border:1px solid rgba(242,177,62,.25);border-radius:13px;padding:15px 16px;margin-top:4px}
+.qbox.cyanq{background:linear-gradient(135deg,rgba(90,167,240,.1),rgba(90,167,240,.03));border-color:rgba(90,167,240,.25)}
+.qbox .qtag{font-family:var(--font-mono);font-size:.68rem;letter-spacing:1.5px;font-weight:700;color:var(--gold)}
+.qbox.cyanq .qtag{color:var(--cyan-soft)}
+.qbox p{font-size:.92rem;margin-top:5px;color:#3f382a}
+.ansbtn{margin-top:11px;font-family:var(--font-body);font-weight:700;font-size:.8rem;cursor:pointer;background:transparent;border:1px dashed var(--line2);color:var(--muted);padding:8px 12px;border-radius:9px;transition:.18s}
+.ansbtn:hover{color:var(--text);border-color:var(--gold)}
+.answer{margin-top:11px;font-size:.9rem;color:#114d2c;background:rgba(68,200,120,.08);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:11px 13px;display:none}
+.answer.show{display:block;animation:up .35s ease both}
+.answer b{color:#221b10}
+.story-box{background:linear-gradient(135deg,rgba(176,126,240,.1),rgba(176,126,240,.03));border:1px solid rgba(176,126,240,.28);border-radius:13px;padding:15px 16px;margin-bottom:14px}
+.story-box .story-tag{font-family:var(--font-mono);font-size:.68rem;letter-spacing:1.5px;font-weight:700;color:var(--violet)}
+.story-box p{font-size:.9rem;margin-top:6px;color:#3f382a}
+.story-box p b{color:#221b10}
+.rec-panel{background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:14px 15px;margin-bottom:14px}
+.rec-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:10px}
+.rec-btn{margin-left:auto;font-family:var(--font-body);font-weight:700;font-size:.78rem;cursor:pointer;color:var(--bg);background:linear-gradient(135deg,var(--gold),var(--gold-deep));border:none;padding:7px 12px;border-radius:9px;transition:.16s}
+.rec-btn:hover{transform:translateY(-1px)}
+.rec-clear{font-family:var(--font-body);font-weight:700;font-size:.74rem;cursor:pointer;color:var(--muted);background:transparent;border:1px solid var(--line2);padding:7px 10px;border-radius:9px}
+.rec-clear:hover{color:var(--text);border-color:var(--rose)}
+.rec-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.rec-table th{text-align:center;color:var(--muted);font-weight:700;font-size:.76rem;padding:6px;border-bottom:1px solid var(--line2)}
+.rec-table td{text-align:center;padding:7px 6px;border-bottom:1px solid rgba(0,0,0,.04);font-family:var(--font-mono);font-weight:700;color:var(--gold-soft)}
+.rec-table tr.rec-empty td{font-family:var(--font-body);font-weight:500;color:var(--faint);font-size:.8rem;border-bottom:none}
+.find-rule{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line2)}
+.find-rule>p{font-size:.88rem;color:#3f382a;margin-bottom:10px}
+.find-rule>p b{color:#221b10}
+.rule-btns{display:flex;gap:8px;flex-wrap:wrap}
+.rule-btn{flex:1;min-width:96px;font-family:var(--font-body);font-weight:700;font-size:.82rem;cursor:pointer;background:rgba(0,0,0,.05);border:1px solid var(--line2);color:var(--text);padding:11px;border-radius:10px;transition:.16s}
+.rule-btn:hover{border-color:var(--gold);background:rgba(242,177,62,.08)}
+.rule-btn.picked-ok{background:rgba(68,200,120,.16);border-color:var(--green)}
+.rule-btn.picked-no{background:rgba(234,93,114,.14);border-color:var(--rose)}
+.rule-result{margin-top:12px;font-size:.9rem;display:none;border-radius:10px;padding:12px 14px}
+.rule-result.show{display:block;animation:up .3s ease both}
+.rule-result.ok{color:#0e5128;background:rgba(68,200,120,.1);border-left:3px solid var(--green)}
+.rule-result.no{color:#8f1424;background:rgba(234,93,114,.1);border-left:3px solid var(--rose)}
+.rule-result b{color:#221b10}
+.howto{font-size:.82rem;color:var(--faint);padding:0 24px 18px;display:flex;align-items:center;gap:8px}
+.howto::before{content:"☝";font-size:1rem}
+.adv-badge{font-family:var(--font-mono);font-weight:800;font-size:.66rem;letter-spacing:1px;color:var(--bg);background:var(--violet);border-radius:5px;padding:2px 6px;vertical-align:middle}
+.adv-out{font-size:.7rem;color:var(--violet);border:1px solid rgba(176,126,240,.5);border-radius:5px;padding:1px 6px;vertical-align:middle}
+.adv-note{font-size:.84rem;line-height:1.65;color:#3f382a;background:rgba(176,126,240,.07);border-left:3px solid var(--violet);border-radius:0 8px 8px 0;padding:10px 13px;margin:10px 0 14px}
+.adv-note b{color:#221b10}
+/* ===== game shell ===== */
+.game-wrap{margin-top:26px;border-radius:22px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:linear-gradient(165deg,var(--surface2),var(--surface))}
+.game-top{padding:22px 24px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.game-top h3{font-family:var(--font-display);font-weight:400;font-size:1.55rem;letter-spacing:.3px;line-height:1.1}
+.game-top .sub{color:var(--muted);font-size:.9rem;margin-top:3px;max-width:46ch}
+.score-pills{display:flex;gap:10px;flex-wrap:wrap}
+.pill{background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:9px 15px;text-align:center;min-width:74px}
+.pill .pl{font-size:.68rem;color:var(--muted);font-weight:700;letter-spacing:.5px}
+.pill .pv{font-family:var(--font-mono);font-weight:700;font-size:1.45rem;line-height:1.1;margin-top:2px}
+.pill.hit .pv{color:var(--green)}.pill.try .pv{color:var(--text)}.pill.streak .pv{color:var(--gold)}
+.pill.time .pv{color:var(--cyan-soft)}.pill.best .pv{color:var(--violet)}
+.pill.time.low .pv{color:var(--rose)}
+.game-canvas-wrap{padding:14px 18px 4px;position:relative}
+#snpCanvas{cursor:crosshair;border:1px solid var(--line);width:100%;display:block;border-radius:10px;touch-action:none}
+.game-panel{padding:8px 24px 22px}
+.coach{font-size:.86rem;color:#3f382a;background:rgba(176,126,240,.08);border-left:3px solid var(--violet);border-radius:0 8px 8px 0;padding:10px 12px;margin-bottom:14px}
+.coach b{color:#221b10}
+.gmode-select{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.gmodebtn{flex:1;min-width:150px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:14px 10px;border-radius:15px;border:1px solid var(--line2);background:var(--bg2);color:var(--muted);cursor:pointer;transition:.18s}
+.gmodebtn:hover{border-color:var(--cyan);color:#221b10;transform:translateY(-2px)}
+.gmodebtn .gm-i{font-size:1.5rem;line-height:1}
+.gmodebtn .gm-t{font-weight:800;font-size:1.05rem;font-family:'Black Han Sans',sans-serif;letter-spacing:.5px}
+.gmodebtn .gm-d{font-size:.74rem;opacity:.8}
+.gmodebtn.active{background:linear-gradient(135deg,rgba(90,167,240,.22),rgba(176,126,240,.18));border-color:var(--cyan);color:#221b10;box-shadow:0 6px 20px rgba(90,167,240,.18)}
+.game-controls{padding:0;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.fire-btn{font-family:var(--font-display);font-weight:400;font-size:1.1rem;letter-spacing:1px;cursor:pointer;color:var(--bg);border:none;border-radius:13px;padding:13px 30px;transition:.18s;background:linear-gradient(135deg,var(--gold),var(--gold-deep));box-shadow:0 12px 28px -12px rgba(242,177,62,.75)}
+.fire-btn:hover{transform:translateY(-2px)}
+.fire-btn:active{transform:translateY(1px)}
+.fire-btn:disabled{opacity:.4;cursor:default;transform:none;box-shadow:none}
+.next-btn{font-family:var(--font-body);font-weight:700;font-size:.92rem;cursor:pointer;color:var(--bg);border:none;border-radius:13px;padding:13px 24px;background:linear-gradient(135deg,var(--cyan),var(--cyan-deep));transition:.18s}
+.next-btn:hover{transform:translateY(-2px)}
+.mbtn{font-family:var(--font-body);font-weight:700;font-size:.86rem;cursor:pointer;border:1px solid var(--line2);background:rgba(0,0,0,.04);color:var(--text);border-radius:11px;padding:11px 16px;transition:.18s}
+.mbtn:hover{border-color:var(--gold);background:rgba(242,177,62,.07)}
+.game-msg{flex:1;min-width:230px;font-size:.9rem;color:var(--muted);padding:11px 15px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);transition:.2s}
+.game-msg.hit{color:#0e5128;border-color:rgba(68,200,120,.4);background:rgba(68,200,120,.08)}
+.game-msg.miss{color:#8f1424;border-color:rgba(234,93,114,.4);background:rgba(234,93,114,.08)}
+.game-msg b{color:#221b10}
+@media(max-width:560px){.fire-btn{width:100%;text-align:center;padding:14px 20px}.game-controls{justify-content:center}}
+/* ===== 거울 암호 ===== */
+.dec-stage{padding:10px 24px 4px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.mword-frame{position:relative;width:min(540px,100%);border-radius:18px;border:2px solid var(--line2);background:
+  linear-gradient(115deg, rgba(95,105,120,.10), rgba(176,126,240,.08) 50%, rgba(90,167,240,.08));
+  box-shadow:inset 0 0 40px rgba(95,105,120,.08), 0 14px 40px -18px rgba(0,0,0,.8);
+  padding:38px 20px;text-align:center;overflow:hidden}
+.mword-frame::before{content:"";position:absolute;top:-40%;left:-20%;width:55%;height:180%;background:linear-gradient(100deg,transparent,rgba(0,0,0,.07),transparent);transform:rotate(8deg);pointer-events:none}
+.mword-frame .frame-tag{position:absolute;top:10px;left:14px;font-family:var(--font-mono);font-size:.66rem;letter-spacing:2px;color:var(--silver-deep)}
+.mword{display:inline-block;transform:scaleX(-1);font-family:var(--font-display);font-weight:400;font-size:clamp(2.2rem,7vw,3.6rem);letter-spacing:4px;color:var(--silver-soft);text-shadow:0 0 26px rgba(95,105,120,.45)}
+.dec-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(540px,100%)}
+@media(max-width:480px){.dec-opts{grid-template-columns:1fr}}
+.dec-opt{font-family:var(--font-body);font-weight:800;font-size:1.05rem;cursor:pointer;background:var(--bg2);border:1px solid var(--line2);color:var(--text);padding:15px 10px;border-radius:13px;transition:.15s}
+.dec-opt:hover{border-color:var(--gold);background:rgba(242,177,62,.07)}
+.dec-opt.ok{background:rgba(68,200,120,.18);border-color:var(--green);color:#221b10}
+.dec-opt.no{background:rgba(234,93,114,.16);border-color:var(--rose);color:#221b10;animation:shake .3s}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.amb-demo{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:12px;background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:16px}
+.lr-axis{display:flex;align-items:center;gap:7px;background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:9px 14px;font-size:.88rem;font-weight:700;color:var(--text)}
+.lr-dot{width:11px;height:11px;border-radius:50%;display:inline-block;flex:none}
+.lr-state{margin-left:6px;font-size:.8rem;font-weight:800;padding:3px 9px;border-radius:8px;background:rgba(0,0,0,.06);color:var(--dim);transition:.2s}
+.lr-state.flip{background:rgba(234,93,114,.18);color:#ab1f37}
+.lr-state.keep{background:rgba(68,200,120,.16);color:#0e6e34}
+.amb-word{font-family:var(--font-mono);font-weight:700;font-size:clamp(1rem,3.4vw,1.5rem);letter-spacing:2px;color:#8f1424;padding:9px 14px;border:2px solid rgba(234,93,114,.5);border-radius:10px}
+.amb-word.flip{transform:scaleX(-1);color:var(--cyan-soft);border-color:rgba(90,167,240,.5)}
+.amb-arrow{font-size:1.4rem;color:var(--muted)}
+/* ===== concept ===== */
+.concept-grid{margin-top:26px;display:grid;gap:20px}
+.cblock{border-radius:20px;border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden;background:linear-gradient(165deg,var(--surface2),var(--surface))}
+.cblock-head{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:13px;flex-wrap:wrap}
+.cblock-head .cn{font-family:var(--font-display);font-weight:400;font-size:1.1rem;width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;border-radius:12px;color:var(--bg);background:linear-gradient(135deg,var(--gold),var(--gold-deep))}
+.cblock-head h3{font-family:var(--font-display);font-weight:400;font-size:1.4rem;letter-spacing:.3px}
+.cblock-body{padding:22px 24px}
+.why-text{color:#3f382a;font-size:.95rem;line-height:1.7}
+.why-text b{color:#221b10}
+.def-list{display:grid;gap:14px}
+.def{display:flex;gap:14px;align-items:baseline}
+.def .term{font-weight:700;color:var(--gold);min-width:120px;flex:0 0 auto;font-size:.98rem}
+.def .term.cy{color:var(--cyan-soft)}
+.def .desc{color:#3f382a;font-size:.95rem}
+.def .desc b{color:#221b10}
+.law{margin-top:18px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;background:var(--bg2);border:1px solid var(--line2);border-radius:14px;padding:18px}
+.law .formula{font-family:var(--font-mono);font-weight:700;font-size:1.2rem;color:#221b10;text-align:center}
+.law .formula .op{color:var(--gold)}
+.law .note{font-size:.84rem;color:var(--muted);max-width:44ch}
+.fig-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+@media(max-width:680px){.fig-row{grid-template-columns:1fr}}
+.concept-fig{border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--bg2)}
+.concept-fig img{width:100%;display:block}
+.img-placeholder{aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;color:var(--faint);padding:20px;background:repeating-linear-gradient(45deg, rgba(0,0,0,.015) 0 12px, transparent 12px 24px), var(--bg2)}
+.img-placeholder .ph-ico{font-size:2.4rem;opacity:.6}
+.img-placeholder p{font-size:.84rem;line-height:1.5}
+.img-placeholder code{font-family:var(--font-mono);font-size:.78rem;color:var(--gold-soft);background:rgba(242,177,62,.1);padding:3px 8px;border-radius:6px;display:inline-block;margin-top:4px}
+.concept-fig figcaption{padding:11px 15px;font-size:.84rem;color:var(--muted);font-weight:700;border-top:1px solid var(--line);display:flex;align-items:center;gap:8px}
+.concept-fig figcaption::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.steps4{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:14px}
+.step4{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:16px 14px;position:relative}
+.step4 .s4n{font-family:var(--font-mono);font-weight:700;font-size:.7rem;color:var(--cyan-soft);letter-spacing:1px}
+.step4 p{font-size:.88rem;color:#3f382a;margin-top:6px}
+.step4 p b{color:#221b10}
+.misc-note{margin-top:18px;font-size:.86rem;color:var(--muted);background:rgba(176,126,240,.07);border-left:3px solid var(--violet);border-radius:0 8px 8px 0;padding:12px 15px}
+.misc-note b{color:#221b10}
+.sum-table{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:8px}
+.sum-table th{font-family:var(--font-body);font-weight:800;font-size:.8rem;color:var(--gold);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line2);letter-spacing:.5px}
+.sum-table td{padding:11px 12px;border-bottom:1px solid rgba(0,0,0,.05);color:#3f382a;vertical-align:top}
+.sum-table td:first-child{font-weight:800;color:#221b10;white-space:nowrap}
+.sum-table td b{color:#221b10}
+/* ===== why panels ===== */
+.why-sim{margin-top:16px}
+.why-sim canvas{width:100%;max-width:640px;margin:0 auto;display:block;border:1px solid var(--line);border-radius:12px;background:#fdfbf4}
+.why-readout{display:flex;gap:10px;margin:14px auto 0;max-width:640px;flex-wrap:wrap}
+.reason-cell{flex:1;min-width:110px;text-align:center;background:rgba(0,0,0,.03);border:1px solid var(--line);border-radius:10px;padding:9px}
+.reason-cell .rc-l{font-size:.7rem;color:var(--muted);font-weight:700}
+.reason-cell .rc-v{font-family:var(--font-mono);font-weight:700;font-size:1.3rem;margin-top:2px;color:var(--gold)}
+.why-controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:14px}
+.why-hint{font-size:.82rem;color:var(--muted);flex:1;min-width:200px}
+.why-hint b{color:var(--violet)}
+.why-verdict{margin-top:12px;padding:11px 14px;border-radius:11px;border-left:3px solid var(--violet);background:rgba(176,126,240,.08);color:#3f382a;font-size:.9rem}
+.why-verdict.ok{border-left-color:var(--green);background:rgba(68,200,120,.1)}
+.why-verdict b{color:#221b10}
+.why-proof{margin-top:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--line2);background:rgba(242,177,62,.05)}
+.why-proof .wp-title{font-weight:800;color:var(--gold);font-size:.95rem;margin-bottom:8px}
+.why-proof p{color:#3f382a;font-size:.9rem;line-height:1.7;margin:6px 0}
+.why-proof b{color:#221b10}
+.why-proof .wp-eq{font-family:var(--font-mono);font-size:.9rem;color:#7a5300;background:rgba(0,0,0,.3);border-radius:8px;padding:9px 12px;margin:8px 0;overflow-x:auto;white-space:nowrap}
+.why-proof .wp-eq b{color:#221b10}
+.why-sliders{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:16px}
+@media(max-width:560px){.why-sliders{grid-template-columns:1fr;gap:8px}}
+/* ===== yt slot ===== */
+.yt-slot{margin-top:16px;border:2px dashed var(--line2);border-radius:13px;padding:24px 18px;text-align:center;color:var(--faint);font-size:.85rem;line-height:1.7}
+.yt-slot .ys-ico{font-size:1.6rem;display:block;margin-bottom:4px;opacity:.7}
+.yt-slot code{font-family:var(--font-mono);font-size:.76rem;color:var(--gold-soft);background:rgba(242,177,62,.1);padding:2px 7px;border-radius:6px}
+.yt-embed{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#000;margin:12px auto;display:none}
+.yt-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+/* ===== medals ===== */
+.medal-showcase{margin-top:24px;border-radius:20px;border:1px solid var(--line);box-shadow:var(--shadow);background:linear-gradient(165deg,var(--surface2),var(--surface));padding:22px 24px}
+.medal-showcase .ms-head{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.medal-showcase .ms-head h3{font-family:var(--font-display);font-weight:400;font-size:1.35rem;letter-spacing:.3px}
+.medal-showcase .ms-sub{color:var(--muted);font-size:.86rem;margin-bottom:18px}
+.medal-showcase .ms-sub code{font-family:var(--font-mono);font-size:.78rem;color:var(--gold-soft);background:rgba(242,177,62,.1);padding:2px 7px;border-radius:6px}
+.medal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:16px}
+.medal{position:relative;border-radius:16px;border:1px solid var(--line);background:var(--bg2);padding:18px 14px 16px;text-align:center;transition:.3s}
+.medal.unlocked{border-color:var(--accent2,var(--gold));box-shadow:0 0 26px -10px var(--accent2,var(--gold))}
+.medal .ring{width:94px;height:94px;margin:0 auto 12px;border-radius:50%;position:relative;display:grid;place-items:center;background:var(--surface);border:3px solid var(--line2);overflow:hidden;transition:.3s}
+.medal.unlocked .ring{border-color:var(--accent2,var(--gold));box-shadow:0 0 18px -4px var(--accent2,var(--gold)), inset 0 0 14px rgba(0,0,0,.45)}
+.medal .ring img{width:100%;height:100%;object-fit:cover;display:block}
+.medal.locked .ring img{filter:grayscale(1) brightness(.42)}
+.medal .ring .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;padding:6px;color:var(--faint);background:repeating-linear-gradient(45deg,rgba(0,0,0,.02) 0 8px,transparent 8px 16px),var(--surface)}
+.medal .ring .ph .pi{font-size:1.4rem;opacity:.6}
+.medal .ring .ph small{font-size:.6rem;line-height:1.3}
+.medal.locked .ring .lock{position:absolute;inset:0;display:grid;place-items:center;font-size:1.7rem;background:rgba(20,16,13,.5);color:#55503f;z-index:2}
+.medal .mname{font-family:var(--font-display);font-weight:400;font-size:1.05rem;letter-spacing:.3px;color:#221b10}
+.medal.locked .mname{color:var(--muted)}
+.medal .mcond{font-size:.73rem;color:var(--muted);margin-top:5px;line-height:1.4;min-height:30px}
+.medal .mstate{margin-top:8px;font-family:var(--font-mono);font-weight:700;font-size:.68rem;letter-spacing:1px;padding:4px 10px;border-radius:999px;display:inline-block}
+.medal.locked .mstate{color:var(--faint);background:rgba(0,0,0,.04);border:1px solid var(--line2)}
+.medal.unlocked .mstate{color:var(--bg);background:var(--accent2,var(--gold))}
+.medal .medal-code{font-family:var(--font-mono);font-size:.6rem;color:var(--faint);margin-top:7px;word-break:break-all}
+.medal-toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(50px);z-index:300;opacity:0;pointer-events:none;transition:.45s cubic-bezier(.2,.8,.3,1);display:flex;align-items:center;gap:13px;background:linear-gradient(135deg,#2b2317,#171209);border:2px solid #f2b13e;border-radius:16px;padding:13px 22px 13px 13px;box-shadow:0 20px 50px -16px rgba(0,0,0,.85), 0 0 30px -10px var(--gold);max-width:92vw}
+.medal-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.medal-toast .tmedal{width:52px;height:52px;border-radius:50%;flex:0 0 auto;overflow:hidden;border:2px solid var(--gold);background:var(--surface);display:grid;place-items:center}
+.medal-toast .tmedal img{width:100%;height:100%;object-fit:cover}
+.medal-toast .tmedal .tph{font-size:1.4rem}
+.medal-toast .tt small{font-family:var(--font-mono);font-size:.64rem;letter-spacing:1.5px;color:var(--gold);font-weight:700}
+.medal-toast .tt h4{font-family:var(--font-display);font-weight:400;font-size:1.12rem;color:#221b10;line-height:1.1;margin-top:2px}
+.medal-toast .tt p{font-size:.74rem;color:var(--muted);margin-top:2px}
+footer{max-width:1180px;margin:0 auto;padding:30px 22px 50px;color:var(--faint);font-size:.8rem;border-top:1px solid var(--line);text-align:center}
+footer .fdot{color:var(--gold)}
+
+@media(max-width:820px){.ray-bottom{grid-template-columns:1fr!important}}
+/* 한 방 퀴즈 (MCQ) */
+.mcq{display:grid;gap:8px;margin-top:10px}
+.mcq-btn{text-align:left;font-family:var(--font-body);font-weight:700;font-size:.9rem;cursor:pointer;background:var(--bg2);border:1px solid var(--line2);color:var(--text);padding:12px 14px;border-radius:12px;transition:.15s;line-height:1.5}
+.mcq-btn:hover{border-color:var(--sapphire);transform:translateY(-1px)}
+.mcq-btn.ok{background:rgba(43,178,76,.16);border-color:#13853f;color:#0e5128}
+.mcq-btn.no{background:rgba(230,57,70,.10);border-color:#cf2a44;color:#8f1424}
+.mcq-exp{display:none;margin-top:10px;font-size:.88rem;border-radius:0 8px 8px 0;padding:11px 13px;border-left:3px solid;line-height:1.6}
+.mcq-exp.show{display:block;animation:up .3s ease both}
+.mcq-exp.good{background:rgba(43,178,76,.10);border-color:#13853f;color:#0e5128}
+.mcq-exp.bad{background:rgba(230,57,70,.07);border-color:#cf2a44;color:#7a3030}
+/* 작도 물체 피커 */
+.objp{width:52px;height:52px;border-radius:13px;border:2px solid var(--line2);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:0;font-size:.74rem;font-weight:800;color:var(--muted);transition:.15s;flex:none}
+.objp[data-obj=star]{width:auto;padding:0 14px}
+.objp img{width:100%;height:100%;object-fit:cover;display:block}
+.objp:hover{transform:translateY(-2px)}
+.objp.active{border-color:var(--sapphire);box-shadow:0 0 0 3px rgba(47,111,214,.22)}
+/* ===== 빛의 대성당 — 스테인드글라스 양식 ===== */
+:root{--ruby:#e63946;--tangerine:#f4791f;--amber:#ffc914;--emerald:#2bb24c;--sapphire:#2f6fd6;--amethyst:#8b46cf;--lead:#241f18}
+/* 스테인드글라스 띠 (섹션 제목 아래 자동 삽입) */
+.glass-strip{height:11px;border-radius:3px;margin:12px 0 20px;max-width:560px;
+ background:linear-gradient(90deg,
+  var(--ruby) 0 14%, var(--lead) 14% 16%,
+  var(--tangerine) 16% 30%, var(--lead) 30% 32%,
+  var(--amber) 32% 47%, var(--lead) 47% 49%,
+  var(--emerald) 49% 64%, var(--lead) 64% 66%,
+  var(--sapphire) 66% 81%, var(--lead) 81% 83%,
+  var(--amethyst) 83% 100%);
+ box-shadow:0 4px 16px rgba(36,31,24,.18), inset 0 2px 4px rgba(255,255,255,.45), inset 0 -2px 4px rgba(0,0,0,.25);
+ border:2px solid var(--lead)}
+/* 카드 = 납선 액자 + 색유리 모서리 빛 */
+.cblock,.game-wrap,.hero{border:3px solid var(--lead);
+ box-shadow:0 0 0 1px rgba(36,31,24,.06), var(--shadow)}
+.cblock{background:
+ linear-gradient(155deg, rgba(234,93,114,.06), transparent 26%),
+ linear-gradient(205deg, rgba(90,167,240,.06), transparent 26%),
+ linear-gradient(330deg, rgba(176,126,240,.05), transparent 24%),
+ var(--surface)}
+.cblock-head{position:relative;padding-bottom:10px}
+.cblock-head::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:2px;opacity:.85;
+ background:linear-gradient(90deg,var(--ruby),var(--tangerine),var(--amber),var(--emerald),var(--sapphire),var(--amethyst))}
+/* 탭 = 색유리 판 (5색 순환) */
+.tabs .tab-btn{border-top:3px solid transparent}
+.tabs .tab-btn:nth-child(6n+1){border-top-color:var(--ruby)}
+.tabs .tab-btn:nth-child(6n+2){border-top-color:var(--tangerine)}
+.tabs .tab-btn:nth-child(6n+3){border-top-color:var(--amber)}
+.tabs .tab-btn:nth-child(6n+4){border-top-color:var(--emerald)}
+.tabs .tab-btn:nth-child(6n+5){border-top-color:var(--sapphire)}
+.tabs .tab-btn:nth-child(6n+6){border-top-color:var(--amethyst)}
+.tabs .tab-btn.active{background:linear-gradient(180deg, rgba(255,201,20,.30), rgba(255,201,20,.08));
+ box-shadow:inset 0 0 0 2px var(--lead), 0 6px 18px -8px rgba(196,150,0,.6)}
+/* 장미창 — 히어로 우측 상단 */
+.hero::after{content:"";position:absolute;top:-70px;right:-70px;width:280px;height:280px;border-radius:50%;
+ pointer-events:none;opacity:.85;
+ background:
+  repeating-conic-gradient(from 0deg,
+   var(--ruby) 0deg 27deg, var(--lead) 27deg 30deg,
+   var(--tangerine) 30deg 57deg, var(--lead) 57deg 60deg,
+   var(--amber) 60deg 87deg, var(--lead) 87deg 90deg,
+   var(--emerald) 90deg 117deg, var(--lead) 117deg 120deg,
+   var(--sapphire) 120deg 147deg, var(--lead) 147deg 150deg,
+   var(--amethyst) 150deg 177deg, var(--lead) 177deg 180deg);
+ -webkit-mask:radial-gradient(circle, transparent 0 17%, #000 18% 30%, transparent 31% 36%, #000 37% 58%, transparent 59% 64%, #000 65% 96%, transparent 97%);
+ mask:radial-gradient(circle, transparent 0 17%, #000 18% 30%, transparent 31% 36%, #000 37% 58%, transparent 59% 64%, #000 65% 96%, transparent 97%);
+ filter:drop-shadow(0 0 26px rgba(242,177,62,.45))}
+/* 섹션 제목 — 다색 유리 그라데이션 텍스트 */
+.section-title{background:linear-gradient(100deg,#c2243d 0%,#c25500 28%,#1c4e9e 66%,#5f28a8 100%);
+ -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+ filter:drop-shadow(0 2px 10px rgba(36,31,24,.12))}
+.eyebrow::before{content:"✦ "}
+.eyebrow::after{content:" ✦"}
+.misc-note,.adv-note,.why-proof{border-style:double;border-width:3px}
+.fire-light,.next-btn{box-shadow:inset 0 0 0 2px var(--lead), inset 0 2px 6px rgba(255,255,255,.25), 0 10px 26px -12px rgba(242,177,62,.6)}
+footer{border-top:3px double var(--line2)}
+@media (max-width:680px){.hero::after{width:180px;height:180px;top:-46px;right:-46px;opacity:.35}}
+/* ===== 가독성 핀 고정 (어두운 토스트 위 밝은 글씨) ===== */
+.medal-toast .tt h4{color:#fff}
+.medal-toast .tt p{color:#cfc3a4}
+.medal-toast .tt small{color:#f2b13e}
+</style>
+</head>
+<body>
+<canvas id="bgStars"></canvas>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="mark"></div>
+      <h1>평면거울에서 상이 생기는 원리<small>중2 과학 · 빛과 파동 · 02</small></h1>
+    </div>
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="intro"><span class="ico">🪞</span>도입</button>
+      <button class="tab-btn" data-tab="lab1"><span class="ico">🔬</span>상의 특징</button>
+      <button class="tab-btn" data-tab="lab2"><span class="ico">✏️</span>빛의 경로와 상</button>
+      <button class="tab-btn" data-tab="concept"><span class="ico">📖</span>개념 정리</button>
+      <button class="tab-btn" data-tab="sniper"><span class="ico">✏️</span>반사점 찾기</button>
+      <button class="tab-btn" data-tab="decode"><span class="ico">🕵️</span>거울 검수관</button>
+      <button class="tab-btn" data-tab="phone"><span class="ico">📸</span>사진 속 나</button>
+      <button class="tab-btn" data-tab="why"><span class="ico">🌙</span>교과서 밖</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= 도입 ================= -->
+<section class="tab-panel active" id="tab-intro">
+  <div class="hero reveal r1">
+    <div class="mirror-side"></div>
+    <div class="mirror-seam"></div>
+    <div class="ghost-title">당신은 당신의
+진짜 얼굴을 본 적이 없다</div>
+    <h2>당신은 당신의<br>진짜 얼굴을 <span class="hl">본 적이 없다</span></h2>
+    <div class="whisper">(그건, 제 잔상입니다만.)</div>
+    <p class="desc">매일 보는 거울 속 내 얼굴 — 그건 빛이 거울에서 <b>반사</b>되어 만들어낸 <b>상(像)</b>이다. 거울 뒤에는 아무것도 없는데, 우리는 왜 그 속에서 '나'를 보는 걸까? 빛의 반사 법칙 하나로 그 비밀을 전부 풀 수 있다.</p>
+    <div class="chip-row">
+      <span class="chip">🪞 <b>상(像)</b>이란?</span>
+      <span class="chip">📏 상의 <b>세 가지 규칙</b></span>
+      <span class="chip">💡 반사 법칙으로 <b>상 그리기</b></span>
+    </div>
+    <div class="bigq">
+      <span class="q-label">▶ 단원 여는 질문</span>
+      <p>거울 뒤에는 아무것도 없는데, 왜 그 속에 내 모습이 보일까?</p>
+    </div>
+  </div>
+
+  <div class="qmaker reveal r2">
+    <h3>❓ 나만의 질문 만들기 <span class="ws-chip">📄 활동지 연계</span></h3>
+    <div class="qm-sub">이 단원을 배우며 궁금한 점을 직접 적어 보자. 예) 거울 속 글씨는 왜 뒤집혀 보일까? / 거울 뒤에는 아무것도 없는데 왜 내 모습이 보일까?</div>
+    <div class="qm-row">
+      <input id="qmInput" type="text" maxlength="80" placeholder="나의 질문을 입력하세요…">
+      <button class="qm-add" id="qmAdd">질문 등록 +</button>
+    </div>
+    <div class="qm-list" id="qmList"></div>
+    <div class="qm-note">※ 등록한 질문은 화면을 새로고침하면 사라져요. 마음에 드는 질문은 꼭 <b>활동지</b>에 옮겨 적자!</div>
+  </div>
+
+  <div class="hooks">
+    <article class="hook reveal r3" style="--accent:var(--rose)">
+      <span class="num">HOOK 01</span><span class="emoji">🪞</span>
+      <img class="hook-img" src="hook-m1.png" alt="" onerror="this.style.display='none';">
+      <h3>당신은 평생, 남들이 보는<br>당신 얼굴을 본 적이 없다</h3>
+      <p class="hook-body">거울 속 내 얼굴은 좌우가 바뀐 것처럼 보이는 <b>상</b>이고(사실 거울은 앞뒤를 뒤집을 뿐!), 셀카조차 카메라가 한 번 더 변환한 모습이다. '남들이 보는 그대로의 내 얼굴'을 직접 본 사람은 정작 나 자신뿐 — 거울로도, 사진으로도 그 진짜를 본 적이 없다.</p>
+      <div class="classroom">교실 연결 · 활동지 '더 생각해 보기'와 직결. \"거울은 정말 좌우를 바꿀까?\"라는 질문을 던지고 <b>📖 개념 정리의 3D 글자 시뮬레이터</b>로 진실(앞뒤 반전 + 내 회전)을 파헤친 뒤, \"그럼 어느 쪽이 진짜 나인가\" 토론으로 이어 간다.</div>
+    </article>
+    <article class="hook reveal r4" style="--accent:var(--violet)">
+      <span class="num">HOOK 02</span><span class="emoji">👻</span>
+      <img class="hook-img" src="hook-m2.png" alt="" onerror="this.style.display='none';">
+      <h3>거울 뒤엔 빛이<br>단 한 줄기도 없다</h3>
+      <p class="hook-body">거울 뒤 그 자리에 빛은 실제로 도달하지 않는다. 그런데도 우리 눈(정확히는 뇌)은 그곳에 물체가 있다고 <b>착각</b>한다. 보이는 것과 있는 것이 다를 수 있다는, 과학에서 가장 짜릿한 사실 중 하나.</p>
+      <div class="classroom">교실 연결 · 단원 여는 질문 그 자체. "뇌는 왜 속을까?"라는 질문을 남겨 두면 <b>'왜 보일까?' 탭</b>의 심화 학습 동기가 된다.</div>
+      <button class="cta" data-goto="why">왜 보일까? 탭으로 →</button>
+    </article>
+    <article class="hook reveal r5" style="--accent:var(--gold)">
+      <span class="num">HOOK 03</span><span class="emoji">🚑</span>
+      <img class="hook-img" src="hook-m3.png" alt="" onerror="this.style.display='none';">
+      <h3>구급차 글자가<br>거꾸로 쓰여 있는 이유</h3>
+      <p class="hook-body">구급차 앞면에는 <b>ƎƆИA⅃UᙠMA</b>처럼 뒤집힌 글자가 적혀 있다. 앞차 운전자가 <b>백미러(거울)</b>로 보면 똑바로 읽히기 때문! 거울 대칭을 일상에서 거꾸로 이용한 디자인이다.</p>
+      <div class="classroom">교실 연결 · 활동지 ②의 규칙(㉠㉡㉢)+반전이 그대로 게임의 단서가 된다. 거울 검수관에서 '반전 누락' 위조를 잡아낸 뒤, "정말 뒤집힌 건 좌우일까?"로 핵심 질문을 던진다.</div>
+      <button class="cta" data-goto="decode">거울 검수관 출동하기 →</button>
+    </article>
+    <article class="hook reveal r6" style="--accent:var(--cyan)">
+      <span class="num">HOOK 04</span><span class="emoji">♾️</span>
+      <img class="hook-img" src="hook-m4.png" alt="" onerror="this.style.display='none';">
+      <h3>거울 두 장이면<br>무한이 열린다</h3>
+      <p class="hook-body">엘리베이터 양쪽 거울 사이에 서면 내 모습이 끝없이 이어진다. 상이 또 상을 만들기 때문. 두 거울 사이 <b>각도를 줄일수록 상의 개수는 늘어난다</b> — 만화경의 원리다. <span class="adv-out">교육과정 밖</span></p>
+      <div class="classroom">교실 연결 · '왜 보일까?' 탭의 심화 시뮬레이터에서 각도 슬라이더로 직접 확인할 수 있다.</div>
+      <button class="cta" data-goto="why">무한 거울 실험하러 가기 →</button>
+    </article>
+    <article class="hook reveal r6" style="--accent:var(--green)">
+      <span class="num">HOOK 05</span><span class="emoji">📸</span>
+      <img class="hook-img" src="hook-m5.png" alt="" onerror="this.style.display='none';">
+      <h3>남이 찍어준 내 사진은<br>왜 어색할까</h3>
+      <p class="hook-body">친구가 찍어준 사진 속 나는 어딘가 낯설다. 그런데 셀카 <b>미리보기</b>의 나는 자연스럽다 — 왜? 휴대폰 미리보기는 <b>거울 모드</b>(거울 속 나), 저장된 사진은 <b>사진 모드</b>(남이 보는 나)이기 때문. 아이폰의 <b>'전면 카메라 좌우 반전'</b> 설정이 바로 이 둘을 바꾸는 스위치다. 내가 매일 보는 건 거울 속 나 — 그래서 <b>진짜 내 모습(사진)이 오히려 어색하다!</b></p>
+      <div class="classroom">교실 연결 · "둘 중 진짜 나는 누구일까?"로 열고, 📸 <b>사진 속 나</b> 탭의 시뮬레이터에서 비대칭 얼굴 비교로 궁금증을 해결한다.</div>
+      <button class="cta" data-goto="phone">궁금증 해결하러 →</button>
+    </article>
+  </div>
+</section>
+
+<!-- ================= 탐구 1: 상의 특징 ================= -->
+<section class="tab-panel" id="tab-lab1">
+  <div class="reveal r1">
+    <span class="eyebrow">탐구 · 관찰하고 규칙 찾기</span>
+    <h2 class="section-title">평면거울에 생기는 상의 특징 <span class="ws-chip">📄 활동지 ①·②</span></h2>
+    <p class="lead">물체(화살표)를 끌어서 옮기고 높이를 바꿔 가며, 거울 속 <b>상</b>이 어떻게 따라오는지 관찰하자. 기록표를 채우고 <b>세 가지 규칙</b>을 스스로 찾아낸다.</p>
+  </div>
+
+  <div class="lab-grid">
+    <div class="sim-card reveal r2">
+      <div class="sim-head">
+        <span class="badge gold">탐구 1</span>
+        <div>
+          <h3>거울 탐정 — 상의 규칙을 찾아라</h3>
+          <div class="sub">교과서 탐구 그대로 — 모눈종이 위에 반투명 거울을 세우고 <b>물체(가)</b>를 놓는다. 상의 크기·거리를 비교하고, 거울 뒤에 <b>물체(나)</b>를 상과 겹치게 놓아 보자.</div>
+        </div>
+      </div>
+      <div class="sim-body">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+          <button class="mbtn" id="featPhotoBtn">📸 직접 업로드해 실험하기</button>
+          <button class="mbtn" id="featPhotoReset" style="display:none">↩️ 화살표로 돌아가기</button>
+          <span style="font-size:.78rem;color:var(--dim)">사진은 어디에도 전송·저장되지 않아요 — 이 화면 안에서만 쓰입니다!</span>
+          <input type="file" id="featPhotoInput" accept="image/*" style="display:none">
+          <div id="featObjPicker" style="display:none;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px">
+            <span style="font-size:.85rem;font-weight:800;color:var(--muted)">🐶 우리 반 반려동물로 실험:</span>
+          </div>
+        </div>
+        <div class="canvas-wrap"><canvas id="featCanvas"></canvas></div>
+        <div class="game-msg" id="featNbMsg" style="display:none;margin-top:10px"></div>
+        <div class="sim-side">
+          <div class="readouts">
+            <div class="readout gold"><div class="rlabel">물체 → 거울</div><div class="rval" id="featDo">3.5칸</div></div>
+            <div class="readout cyan"><div class="rlabel">상 → 거울</div><div class="rval" id="featDi">3.5칸</div></div>
+          </div>
+          <div class="angle-slider-wrap">
+            <div class="asl-head"><label>📏 물체의 높이</label><span id="featHVal">3칸</span></div>
+            <input type="range" class="rng" id="featH" min="1" max="4" step="0.5" value="3">
+          </div>
+          <div class="toggle-row">
+            <label class="tg"><input type="checkbox" id="featShow" checked> 상 보기 (반투명 거울)</label>
+            <label class="tg"><input type="checkbox" id="featDist" checked> 거리 표시</label>
+            <label class="tg"><input type="checkbox" id="featNb"> 🕯️ 물체(나) 놓기 — 교과서 탐구 ❷</label>
+          </div>
+          <div class="gloss">
+            <div class="gloss-title">📕 용어 사전 (클릭)</div>
+            <div class="gloss-chips">
+              <button class="gloss-chip" data-term="상" data-box="featDef">상(像)</button>
+              <button class="gloss-chip" data-term="평면거울" data-box="featDef">평면거울</button>
+              <button class="gloss-chip" data-term="대칭" data-box="featDef">대칭</button>
+            </div>
+            <div class="gloss-def" id="featDef"></div>
+          </div>
+          <div class="story-box">
+            <span class="story-tag">🔍 미스터리 · 거울 탐정</span>
+            <p>거울 속 상은 물체를 그대로 따라 한다. 그런데 <b>얼마나 정확히</b> 따라 할까? 물체의 위치와 높이를 바꿔 가며 <b>3번 이상 기록</b>하고, 숨어 있는 규칙을 찾아내자!</p>
+          </div>
+          <div class="rec-panel">
+            <div class="rec-head">📋 관찰 기록표
+              <button class="rec-btn" id="featRecBtn">현재 상태 기록 +</button>
+              <button class="rec-clear" id="featRecClear">초기화</button>
+            </div>
+            <table class="rec-table">
+              <thead><tr><th>#</th><th>물체→거울</th><th>상→거울</th><th>물체 높이</th><th>상 높이</th></tr></thead>
+              <tbody id="featRecBody"><tr class="rec-empty"><td colspan="5">아직 기록이 없어요. 위치·높이를 바꿔가며 3번 이상 기록해 보세요.</td></tr></tbody>
+            </table>
+            <div class="find-rule" id="featFindRule" style="display:none">
+              <p>규칙 ① — <b>상까지의 거리</b>는 물체까지의 거리와 비교하면?</p>
+              <div class="rule-btns" id="featRuleD">
+                <button class="rule-btn" data-rule="near">상이 더 가깝다</button>
+                <button class="rule-btn" data-rule="eq">같다</button>
+                <button class="rule-btn" data-rule="far">상이 더 멀다</button>
+              </div>
+              <p style="margin-top:14px">규칙 ② — <b>상의 크기</b>는 물체의 크기와 비교하면?</p>
+              <div class="rule-btns" id="featRuleS">
+                <button class="rule-btn" data-rule="small">더 작다</button>
+                <button class="rule-btn" data-rule="eq">같다</button>
+                <button class="rule-btn" data-rule="big">더 크다</button>
+              </div>
+              <div class="rule-result" id="featRuleResult"></div>
+            </div>
+            <div class="misc-note" style="margin-top:12px">🧠 <b>측정이 말해 주는 것</b> — 어디에 두어도, 얼마나 크게 만들어도 거리·크기가 <b>항상</b> 같다는 건 우연일까? 절대 아니다. 빛의 반사 법칙에서 수학적으로 <b>증명</b>되는 결과다. 증명이 궁금하면 <b>🤔 왜 보일까? 탭의 블록 ③(합동 삼각형)</b>으로! 그리고 이 "항상 같음" 덕분에, 상은 거울 면을 접는 선으로 했을 때 물체와 포개지는 <b>대칭</b>이 된다(㉢).</div>
+          </div>
+          <div class="qbox">
+            <span class="qtag">탐구 질문 · 활동지 ② 빈칸</span>
+            <p>거리도 같고 크기도 같다면 — 상과 물체는 무엇을 중심으로 어떤 관계를 이루고 있을까?</p>
+            <button class="ansbtn" data-ans="featAns">정리해 볼까 →</button>
+            <div class="answer" id="featAns">거울에 생기는 상은 <b>거울 면을 중심으로 물체와 대칭</b>을 이룬다. 그래서 크기가 같고(㉠), 거울까지의 거리가 같으며(㉡), 거울 면을 접는 선으로 접으면 물체와 정확히 포개진다(㉢).</div>
+          </div>
+        </div>
+      </div>
+      <div class="howto">실제 수업의 <b style="color:var(--gold)">반투명 거울 실험</b>(거울 앞뒤에 똑같은 물체를 놓아 상과 겹쳐 보기)과 같은 원리예요. '상 보기'를 껐다 켜며 비교해 보세요.</div>
+    </div>
+
+    <div class="sim-card reveal r3">
+      <div class="sim-head">
+        <span class="badge cy">도전</span>
+        <div>
+          <h3>✕ 상의 위치 맞히기 <span class="ws-chip">📄 활동지 ② 그리기</span></h3>
+          <div class="sub">활동지의 '그림 그리는 곳'을 게임으로! 상의 끝이 올 위치를 모눈 위에 직접 찍어 본다.</div>
+        </div>
+      </div>
+      <div class="sim-body">
+        <div class="canvas-wrap"><canvas id="quizCanvas"></canvas></div>
+        <div class="sim-side">
+          <div class="readouts">
+            <div class="readout gold"><div class="rlabel">연속 정답</div><div class="rval" id="quizStreak">0</div></div>
+            <div class="readout cyan"><div class="rlabel">맞힌 수</div><div class="rval" id="quizScore">0</div></div>
+          </div>
+          <button class="fire-light cyan" id="quizNewBtn">🎲 새 문제 내기</button>
+          <div class="coach">💡 세 가지 규칙(크기 같음 · 거리 같음 · 거울 중심 대칭)을 머릿속으로 적용해, <b>상의 끝(✕)이 올 모눈 칸</b>을 탭하세요. <b>3연속 정답</b>이면 '작도 마스터' 훈장!</div>
+          <div class="game-msg" id="quizMsg">새 문제를 내고 상의 끝 위치를 찍어 보세요.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="yt-slot reveal r4"><span class="ys-ico">🎬</span>영상으로 확인 · 평면거울에 생기는 상의 특징 — 영상 자리<br>유튜브 주소를 찾으면 이 자리의 코드를 교체하세요 → <code>YT-SLOT-1</code></div>
+</section>
+
+<!-- ================= 탐구 2: 빛의 경로와 상 ================= -->
+<section class="tab-panel" id="tab-lab2">
+  <div class="reveal r1">
+    <span class="eyebrow">탐구 · 반사 법칙 적용하기</span>
+    <h2 class="section-title">상이 생기는 원리 — 빛의 경로 추적 <span class="ws-chip">📄 활동지 ③</span></h2>
+    <p class="lead">거울 뒤에는 빛이 실제로 가지 않는데, 왜 그곳에 상이 보일까? 빛의 여정을 <b>세 단계</b>로 따라가 보자. 물체(★)와 눈(👁)은 드래그로 옮길 수 있다.</p>
+  </div>
+
+  <div class="lab-grid">
+    <div class="sim-card reveal r2">
+      <div class="sim-head">
+        <span class="badge gold">탐구 2</span>
+        <div>
+          <h3>빛의 경로 3단계 — 퍼짐 · 반사 · 연장</h3>
+          <div class="sub">활동지 ③의 네 문장이 그대로 눈앞에서 일어난다.</div>
+        </div>
+      </div>
+      <div class="sim-body" style="grid-template-columns:1fr">
+        <div style="padding:14px 24px 0">
+          <div class="step-row" style="margin-bottom:10px">
+            <button class="step-btn" data-step="1">① 빛 퍼짐<small>사방으로 나간다</small></button>
+            <button class="step-btn" data-step="2">② 반사<small>입사각=반사각</small></button>
+            <button class="step-btn" data-step="3">③ 눈으로<small>빛이 들어온다</small></button>
+            <button class="step-btn" data-step="4">④ 연장선<small>만나는 곳 = 상</small></button>
+          </div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+            <div class="toggle-row" style="margin:0">
+              <label class="tg"><input type="checkbox" id="rayNormal" checked> 법선 보기</label>
+              <label class="tg"><input type="checkbox" id="rayAngles" checked> 각도 표시</label>
+              <label class="tg"><input type="checkbox" id="rayBrain"> 🧠 왜 '그곳에 있다'고 느낄까?</label>
+            </div>
+            <div id="rayObjPicker" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+              <span style="font-size:.85rem;font-weight:800;color:var(--muted)">작도할 물체 🐶</span>
+              <button class="objp active" data-obj="star">⭐ 기본</button>
+            </div>
+          </div>
+        </div>
+        <div class="canvas-wrap" style="padding:12px 24px 4px"><canvas id="rayCanvas"></canvas></div>
+        <div style="padding:4px 24px 22px">
+          <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:stretch;margin-bottom:12px">
+            <div class="readouts" style="margin:0">
+              <div class="readout gold"><div class="rlabel">입사각</div><div class="rval" id="rayInc">–</div></div>
+              <div class="readout gold"><div class="rlabel">반사각</div><div class="rval" id="rayRef">–</div></div>
+            </div>
+            <div style="flex:1;min-width:280px"><div class="why-verdict" id="rayVerdict" style="margin-top:0;height:100%;display:flex;align-items:center">①→②→③→④ 버튼을 차례로 눌러 빛의 여정을 따라가 보세요. 물체와 눈은 드래그!</div></div>
+          </div>
+          <div class="adv-note" id="rayBrainNote" style="display:none;margin-top:0;margin-bottom:12px">🧠 <b>뇌의 해석</b> — 눈은 자기에게 <b>마지막으로 들어온 빛의 방향</b>만 안다. 중간에 거울에서 꺾였는지는 모른다! 그래서 "빛은 직진하니까, 이 방향 <b>끝</b>에서 왔겠지"라고 해석한다 — 보라색 직선이 바로 뇌가 믿는 빛의 길. 그 직선들이 모이는 곳이 상이다. 그리고 이 교점은 <b>물체와 거울만으로 정해지는 대칭점</b>이라, 내가 앉아서 보든 서서 보든 — 누가 어디서 보든 — <b>상의 위치는 항상 같다!</b></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+            <button class="mbtn" id="rad3dToggle">🌐 3D로 보기 · 빛은 모든 방향으로 <b>▾ 펼치기</b></button>
+            <button class="mbtn" id="rays3dToggle">🪞 3D로 보기 · 반사되어 눈으로 들어오는 빛 <b>▾ 펼치기</b></button>
+          </div>
+          <div id="rad3dWrap" style="display:none;margin-bottom:12px">
+            <div style="font-weight:800;font-size:.88rem;color:#7a5300;margin-bottom:6px">🌐 빛은 평면이 아니라 <b>공간의 모든 방향</b>으로 퍼진다 <span style="font-weight:600;color:var(--faint)">(드래그로 돌려 보기)</span></div>
+            <div id="rad3d" style="height:300px;border-radius:14px;background:#fdfbf4;border:1px solid var(--line2);cursor:grab;touch-action:none;overflow:hidden"></div>
+          </div>
+          <div id="rays3dWrap" style="display:none;margin-bottom:12px">
+            <div style="font-weight:800;font-size:.88rem;color:#1d4fae;margin-bottom:6px">🪞 물체 → 거울(반사) → 눈 · 나와 친구들, <b>누가 보든 연장선은 같은 상에서!</b> <span style="font-weight:600;color:var(--faint)">(드래그로 돌려 보기)</span></div>
+            <div id="rays3d" style="height:320px;border-radius:14px;background:#fdfbf4;border:1px solid var(--line2);cursor:grab;touch-action:none;overflow:hidden"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px" class="ray-bottom">
+            <div class="gloss" style="margin:0">
+              <div class="gloss-title">📘 용어 사전 (클릭)</div>
+              <div class="gloss-chips">
+                <button class="gloss-chip" data-term="법선" data-box="rayDef">법선</button>
+                <button class="gloss-chip" data-term="입사각" data-box="rayDef">입사각</button>
+                <button class="gloss-chip" data-term="반사각" data-box="rayDef">반사각</button>
+                <button class="gloss-chip" data-term="연장선" data-box="rayDef">연장선</button>
+                <button class="gloss-chip" data-term="허상" data-box="rayDef">허상 <span class="adv-badge">심화</span></button>
+              </div>
+              <div class="gloss-def" id="rayDef"></div>
+            </div>
+            <div class="qbox cyanq" style="margin-top:0">
+              <span class="qtag">탐구 질문 · 활동지 ③ 네 문장</span>
+              <p>방금 본 빛의 여정을 활동지의 네 문장으로 정리하면?</p>
+              <button class="ansbtn" data-ans="rayAns">정리해 볼까 →</button>
+              <div class="answer" id="rayAns">① 물체에서 빛이 <b>사방</b>으로 퍼져 나간다 → ② 빛이 거울 면에서 입사각과 <b>같은</b> 반사각으로 반사한다 → ③ 반사한 빛이 우리 <b>눈</b>으로 들어온다 → ④ 눈으로 들어온 빛을 거울 뒤로 <b>연장</b>했을 때 만나는 지점에 <b>상</b>이 생긴다.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="howto"><b style="color:var(--cyan-soft)">눈을 드래그</b>해 보세요 — 반사 지점은 움직이지만, 연장선이 만나는 <b style="color:var(--gold)">상의 위치는 변하지 않습니다.</b> 누가 어디서 보든 상은 같은 자리!</div>
+    </div>
+  </div>
+  <div class="yt-slot reveal r3"><span class="ys-ico">🎬</span>영상으로 확인 · 평면거울에서 상이 생기는 원리 — 영상 자리<br>유튜브 주소를 찾으면 이 자리의 코드를 교체하세요 → <code>YT-SLOT-2</code></div>
+</section>
+
+<!-- ================= 개념 정리 ================= -->
+<section class="tab-panel" id="tab-concept">
+  <div class="reveal r1">
+    <span class="eyebrow">정리 · 스스로 확인하기</span>
+    <h2 class="section-title">개념 정리하기 <span class="ws-chip">📄 활동지 ①~④</span></h2>
+    <p class="lead">평면거울에서 상이 생기는 원리의 핵심을 한눈에. 교과서 개념 그림은 아래 자리에 들어갑니다.</p>
+  </div>
+  <div class="concept-grid">
+    <div class="cblock reveal r2">
+      <div class="cblock-head"><div class="cn">1</div><h3>상(像)이란 무엇일까</h3></div>
+      <div class="cblock-body">
+        <div class="def-list">
+          <div class="def"><span class="term">상(像)</span><span class="desc">거울 속에 있는 것처럼 <b>보이는 물체의 모습</b>.</span></div>
+          <div class="def"><span class="term">핵심 한 줄</span><span class="desc">실제로 거울 뒤에는 아무것도 없지만, 우리 눈은 그 자리에 물체가 있다고 <b>착각한다</b>.</span></div>
+        </div>
+        <div class="misc-note"><span class="adv-badge">심화</span> <b>허상(虛像)</b> · 빛이 실제로 모이지 않는데도 보이는 이런 상을 고등학교에서는 '허상'이라고 부른다. 빛이 실제로 모여 만들어지는 상(실상)과 구별하는 용어로, <b>교육과정 밖</b> 내용이니 이름만 알아 두자.</div>
+      </div>
+    </div>
+    <div class="cblock reveal r3">
+      <div class="cblock-head"><div class="cn" style="background:linear-gradient(135deg,var(--cyan),var(--cyan-deep))">2</div><h3>평면거울에 생기는 상의 특징</h3></div>
+      <div class="cblock-body">
+        <div class="def-list">
+          <div class="def"><span class="term cy">㉠ 크기</span><span class="desc">상의 크기는 물체의 크기와 <b>같다</b>.</span></div>
+          <div class="def"><span class="term cy">㉡ 거리</span><span class="desc">상에서 거울까지의 거리는 물체에서 거울까지의 거리와 <b>같다</b>.</span></div>
+          <div class="def"><span class="term cy">㉢ 대칭</span><span class="desc">거울에 생기는 상은 <b>거울 면</b>을 중심으로 물체와 <b>대칭</b>을 이룬다.</span></div>
+        </div>
+        <div class="fig-row">
+          <figure class="concept-fig">
+            <img src="fig-m1.png" alt="평면거울 상의 특징" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="img-placeholder" style="display:none"><span class="ph-ico">🖼️</span><p>그림 · 평면거울에 생기는 상의 특징<br><code>fig-m1.png</code></p></div>
+            <figcaption>그림 1 · 상의 특징 (크기 / 거리 / 대칭)</figcaption>
+          </figure>
+          <figure class="concept-fig">
+            <img src="fig-m2.png" alt="상이 생기는 원리 작도" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="img-placeholder" style="display:none"><span class="ph-ico">🖼️</span><p>그림 · 상이 생기는 원리 (작도)<br><code>fig-m2.png</code></p></div>
+            <figcaption>그림 2 · 상이 생기는 원리 (빛의 경로와 연장선)</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+    <div class="cblock reveal r4">
+      <div class="cblock-head"><div class="cn" style="background:linear-gradient(135deg,var(--violet),#5b28a3)">3</div><h3>상이 생기는 원리 — 4단계</h3></div>
+      <div class="cblock-body">
+        <div class="steps4">
+          <div class="step4"><span class="s4n">STEP 1</span><p>물체에서 빛이 <b>사방으로</b> 퍼져 나간다.</p></div>
+          <div class="step4"><span class="s4n">STEP 2</span><p>빛이 거울 면에서 입사각과 <b>같은</b> 반사각으로 반사한다.</p></div>
+          <div class="step4"><span class="s4n">STEP 3</span><p>반사한 빛이 우리 <b>눈</b>으로 들어온다.</p></div>
+          <div class="step4"><span class="s4n">STEP 4</span><p>눈으로 들어온 빛을 거울 뒤로 <b>연장</b>했을 때 만나는 지점에 <b>상</b>이 생긴다.</p></div>
+        </div>
+        <div class="law"><span class="formula">입사각 <span class="op">=</span> 반사각 <span class="op">→</span> 상의 위치·크기 결정</span><span class="note">빛의 반사 법칙이 성립하기 때문에, 상의 크기와 거리가 ②의 규칙처럼 정해진다.</span></div>
+      </div>
+    </div>
+    <div class="cblock reveal r5">
+      <div class="cblock-head"><div class="cn" style="background:linear-gradient(135deg,var(--rose),#c43d57)">4</div><h3>거울 속 글자는 왜 뒤집혀 보일까 <span class="adv-out" style="border-color:rgba(143,26,48,.5);color:#8f1424">교과서 보충</span></h3></div>
+      <div class="cblock-body">
+        <p class="why-text">설명을 통째로 바꿔 보자 — 회전이고 축이고 다 잊어도 된다. <b>1분 실험</b> 하나면 끝난다. 종이에 큰 글자를 쓰고: <b>①</b> 글자를 내 쪽으로 들고 읽는다 — 잘 읽힌다. <b>②</b> 종이를 <b>돌리지 말고 그대로</b> 형광등이나 창문에 비춰, <b>뒷면에서</b> 본다 — 글자가 좌우로 뒤집혀 보인다! <b>③</b> 이번엔 거울 앞에서 글자를 거울 쪽으로 들고 거울을 본다 — <b>②와 완전히 똑같은 모습</b>이다. 결론은 한 줄: <b>거울 속 글자 = 그 글자를 '뒤에서 본 모습'</b>. 거울은 모든 점을 면 너머 맞은편으로 옮기는(앞뒤 반전) 장치라서, 항상 물체의 <b>뒷모습</b>을 보여 준다. 글자가 좌우로 "바뀐" 게 아니라 — <b>뒷모습이 원래 그렇게 생긴 것!</b> 아래 3D에서 빨간 점●의 위치로 확인해 보자.</p>
+        <div class="step-row" id="mir3dBtns" style="margin-top:14px">
+          <button class="step-btn active" data-m3d="me">🙂 내 쪽으로<small>돌리기 전</small></button>
+          <button class="step-btn" data-m3d="vert">↩️ 세로축으로 돌려<small>거울에 보여 주기</small></button>
+          <button class="step-btn" data-m3d="horiz">⤵️ 가로축으로 돌려<small>거울에 보여 주기</small></button>
+          <button class="step-btn" data-m3d="thru">🔍 안 돌리고 그대로<small>유리창 글자처럼</small></button>
+        </div>
+        <label class="tg" style="margin:4px 0 8px;display:inline-flex"><input type="checkbox" id="mir3dLight" checked> 💡 빛의 경로 보기 (글자 → 거울 → 눈)</label>
+        <div id="mir3d" style="height:340px;border-radius:14px;background:#fdfbf4;border:1px solid var(--line2);cursor:grab;touch-action:none;overflow:hidden;margin-top:6px"></div>
+        <div class="why-verdict" id="mir3dVerdict">버튼으로 카드를 돌려 보고, 화면을 드래그해 시점을 바꿔 보세요. 거울 너머(반투명)에 비친 상의 글자를 관찰!</div>
+        <div class="amb-demo" style="margin-top:16px">
+          <span class="amb-word flip">AMBULANCE</span>
+          <span class="amb-arrow">→ 🪞 →</span>
+          <span class="amb-word" style="color:var(--cyan-soft);border-color:rgba(90,167,240,.5)">AMBULANCE</span>
+        </div>
+        <p class="why-text" style="margin-top:10px;font-size:.86rem;color:var(--muted)">구급차 앞면의 뒤집힌 글자는 앞차의 백미러(거울)에서 똑바로 읽히도록 한 디자인 — 거울이 '뒷모습'을 보여 준다는 성질을 거꾸로 이용한 것!</p>
+        <a class="mbtn" href="https://www.sobangnews.kr/news/articleView.html?idxno=36456" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;margin-top:10px">🚑 실제 구급차 거울 문자 기사 보기 (소방뉴스) ↗</a>
+        <p class="why-text" style="margin-top:18px">이번엔 <b>사람</b>으로 — 거울 앞에 <b>오른손에 깃발🚩을 든 사람</b>이 서 있다. 거울 속 상을 보면: 깃발은 <b>둘 다 화면의 같은 쪽</b>(좌우 그대로!), 위아래도 그대로. 달라진 건 단 하나 — <b>얼굴(앞)이 서로 마주 본다</b>. 즉 거울 면에 수직인 <b>앞뒤만 반전</b>된 것! 발밑의 좌표 화살표(교과서 보충 그림)도 함께 보자: 🟢y(좌우)·🔵z(위아래)는 같은 방향, 🔴x(앞뒤)만 반대다. 깃발에서 출발한 <b>빛이 거울에서 반사되어 눈으로</b> 들어가는 경로(금색)와, 거울 뒤 상으로 이어지는 연장선(파란 점선)도 흐른다.</p>
+        <div id="coord3d" style="height:330px;border-radius:14px;background:#fdfbf4;border:1px solid var(--line2);cursor:grab;touch-action:none;overflow:hidden;margin-top:6px"></div>
+        <div class="why-verdict ok" style="margin-top:10px">드래그해 빙 돌려 보자 — 어느 각도에서도 <b>깃발 손은 같은 쪽, 얼굴만 마주 봄</b>. 거울에 생기는 상은 <b>거울을 중심으로 물체와 대칭</b>이고, 그 대칭의 정체는 좌우가 아니라 <b>앞뒤 반전</b>이다!</div>
+        <div style="display:flex;flex-direction:column;align-items:center;margin-top:18px;gap:8px">
+          <div style="font-weight:800;font-size:.9rem;color:#7a5300">🎬 좌우반전 챌린지 — 보고 직접 따라 해 보기!</div>
+          <div style="width:min(300px,86%);aspect-ratio:9/16;border:3px solid var(--lead);border-radius:18px;overflow:hidden;box-shadow:0 14px 36px -16px rgba(60,48,20,.4)">
+            <iframe src="https://www.youtube.com/embed/3IWs5QvSv10" title="좌우반전 챌린지" style="width:100%;height:100%;border:none;display:block" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+        <div class="qbox" style="margin-top:16px">
+          <span class="qtag">사고력 · 활동지 ④</span>
+          <p>나와 친구가 나란히 거울 앞에 섰을 때, 거울 속에서 '친구의 상'을 보려면 빛이 어떤 경로로 와야 할까?</p>
+          <button class="ansbtn" data-ans="thinkAns">정리해 볼까 →</button>
+          <div class="answer" id="thinkAns"><b>친구의 몸에서 출발한 빛</b>이 거울 면에서 입사각=반사각으로 반사되어 <b>내 눈</b>으로 들어와야 한다. 그 빛을 거울 뒤로 연장하면, 거울 면을 중심으로 친구와 대칭인 위치에서 만난다 — 그래서 친구의 상은 '친구의 대칭 지점'에 보인다. (내가 보는 것은 언제나 '내 눈에 들어온 빛'이라는 점이 핵심!)</div>
+        </div>
+        <div class="misc-note" style="border-color:var(--rose);background:rgba(234,93,114,.07)">자주 나오는 오개념 · "거울 뒤에 빛이 실제로 모인다"(✕ — 빛은 거울 뒤로 가지 않는다, 연장선이 만날 뿐) · "상은 빛 입자가 모여서 만들어진 덩어리다"(✕ — 우리가 받는 빛은 망막에 닿은 빛뿐, 상의 위치는 그 빛다발을 <b>역추적한 가상의 지점</b>이다) · "거울은 좌우를 뒤집는다"(엄밀히 ✕ — <b>앞뒤를 뒤집는다</b>) · "상의 위치는 보는 사람에 따라 달라진다"(✕ — 누가 어디서 보든 같다).</div>
+      </div>
+    </div>
+    <div class="cblock reveal r6">
+      <div class="cblock-head"><div class="cn">★</div><h3>한눈에 정리</h3></div>
+      <div class="cblock-body">
+        <table class="sum-table">
+          <thead><tr><th>구분</th><th>핵심 내용</th><th>우리 주변의 예</th></tr></thead>
+          <tbody>
+            <tr><td>상(像)</td><td>거울 속에 있는 것처럼 보이는 물체의 모습 <b>(실제로 거울 뒤엔 빛이 모이지 않음)</b></td><td>거울 속 내 모습</td></tr>
+            <tr><td>상의 특징</td><td>크기 = 물체 / 거울까지 거리 = 물체까지 거리 / <b>거울을 중심으로 대칭</b></td><td>화장실 거울, 무용실 거울</td></tr>
+            <tr><td>생기는 원리</td><td>반사한 빛(입사각=반사각)의 <b>연장선이 만나는 지점</b>에 상이 생김</td><td>평면거울, 가게 유리</td></tr>
+          </tbody>
+        </table>
+        <div class="misc-note">🪞 다음 시간 예고 — 거울 <b>면이 휘어지면</b>(볼록·오목) 상은 어떻게 달라질까?</div>
+      </div>
+    </div>
+  </div>
+  <div class="yt-slot reveal r6"><span class="ys-ico">🎬</span>영상으로 한 번 더 — 영상 자리 · 코드 교체 위치 → <code>YT-SLOT-3</code></div>
+</section>
+
+<!-- ================= 반사점 찾기 (광선 작도 게임) ================= -->
+<section class="tab-panel" id="tab-sniper">
+  <div class="reveal r1">
+    <span class="eyebrow">게임 · 나도 모르게 광선 작도</span>
+    <h2 class="section-title">반사점을 찾아라 ✏️ — 빛을 눈에 명중시켜라</h2>
+    <p class="lead">물체에서 출발한 빛이 <b>거울의 어느 점</b>에서 반사해야 정확히 <b>눈</b>으로 들어올까? 거울 위의 한 점을 클릭하면 빛이 발사된다 — 입사각=반사각으로 꺾여서! 눈에 명중시켜 보자. (사실 이 게임, 몰래 <b>광선 작도법</b>을 가르치고 있다 🤫)</p>
+  </div>
+
+  <div class="game-wrap reveal r2">
+    <div class="game-top">
+      <div>
+        <h3>✏️ 빛의 길 잇기</h3>
+        <div class="sub">물체 ⭐ → 거울 위 반사점(클릭!) → 눈 👁 — 단 하나의 점만이 빛을 눈으로 보낸다.</div>
+      </div>
+      <div class="score-pills">
+        <div class="pill hit"><div class="pl">명중</div><div class="pv" id="ptHit">0</div></div>
+        <div class="pill try"><div class="pl">시도</div><div class="pv" id="ptTry">0</div></div>
+        <div class="pill streak"><div class="pl">연속</div><div class="pv" id="ptStreak">0</div></div>
+      </div>
+    </div>
+    <div class="game-canvas-wrap"><canvas id="ptCanvas"></canvas></div>
+    <div class="game-panel">
+      <div class="coach" id="ptCoach">💡 막막하다면 — <b>'상 보기'</b>를 켜 보자. 거울 뒤 상과 눈을 <b>직선으로 이은 선이 거울과 만나는 점</b>… 그게 정답이다. 이 방법이 바로 교과서의 <b>광선 작도법</b>!</div>
+      <div class="game-controls">
+        <button class="next-btn" id="ptNew">🎲 새 문제</button>
+        <label class="tg"><input type="checkbox" id="ptGhost"> 🪞 상 보기 (작도 힌트)</label>
+        <label class="tg"><input type="checkbox" id="ptLine"> 📏 상–눈 작도선 보기</label>
+        <div class="game-msg" id="ptMsg">거울(세로 막대) 위의 한 점을 클릭하면 빛이 발사됩니다!</div>
+      </div>
+      <div class="misc-note" style="margin-top:14px">✏️ <b>방금 한 것이 광선 작도법</b> — ① 거울 뒤에 물체의 <b>상</b>을 찍는다(같은 거리) ② <b>상과 눈을 직선</b>으로 잇는다 ③ 그 직선이 거울과 만나는 점이 <b>반사점</b>. 빛은 물체→반사점→눈으로, 입사각=반사각을 지키며 간다. 게임에서 손이 기억한 그 점이, 활동지의 작도 그 점이다!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 거울 암호 ================= -->
+<section class="tab-panel" id="tab-decode">
+  <div class="reveal r1">
+    <span class="eyebrow">게임 · 반사 법칙 검산</span>
+    <h2 class="section-title">거울 검수관 🕵️ <span class="ws-chip">📄 활동지 ② 응용</span></h2>
+    <p class="lead">거울 나라에 <b>위조꾼</b>이 침입했다! 진짜 상들 사이에 반사 법칙을 어긴 <b>가짜 상</b>이 하나 숨어 있다. ㉠크기 · ㉡거리 · 같은 높이(대칭) · 좌우 반전 — 네 가지 규칙을 검산해서 범인을 체포하라.</p>
+  </div>
+
+  <div class="game-wrap reveal r2">
+    <div class="game-top">
+      <div>
+        <h3 id="inspTitle">🔍 사건 현장 — 가짜 상을 탭하라!</h3>
+        <div class="sub">왼쪽이 실제 세계, 오른쪽이 거울 나라. 짝(같은 색·모양)끼리 비교하면 단서가 보인다.</div>
+      </div>
+      <div class="score-pills">
+        <div class="pill hit"><div class="pl">검거</div><div class="pv" id="inspScore">0</div></div>
+        <div class="pill streak"><div class="pl">연속</div><div class="pv" id="inspStreak">0</div></div>
+        <div class="pill time" id="inspTimePill"><div class="pl">남은 시간</div><div class="pv" id="inspTime">60</div></div>
+        <div class="pill best"><div class="pl">최고</div><div class="pv" id="inspBest">0</div></div>
+      </div>
+    </div>
+    <div class="canvas-wrap"><canvas id="inspCanvas"></canvas></div>
+    <div class="game-panel">
+      <div class="game-controls" style="margin-top:10px">
+        <button class="next-btn" id="inspChalBtn">⏱ 60초 도전!</button>
+        <button class="mbtn" id="inspSkipBtn">다음 사건 →</button>
+        <div class="game-msg" id="inspMsg">규칙을 어긴 상을 찾아 <b>오른쪽(거울 나라)</b>에서 탭하세요. 누적 <b>8건</b> 검거 시 훈장!</div>
+      </div>
+      <div class="misc-note">🕵️ 검수 요령 — ① 거울까지의 <b>거리</b>가 짝과 같은가(㉡) ② <b>크기</b>가 같은가(㉠) ③ <b>같은 높이</b>인가(대칭) ④ 좌우 모양이 <b>뒤집혀</b> 있는가(반전 — 단, 별처럼 좌우대칭인 물체는 뒤집어도 티가 안 난다!). 하나라도 어기면 가짜다.</div>
+    </div>
+  </div>
+  <div class="game-wrap reveal r3" style="margin-top:18px">
+    <div class="game-panel" style="padding-top:20px">
+      <div class="misc-note" style="margin-top:0">🔑 <b>검수관의 비밀 병기 — '앞뒤 반전'</b> · 진짜 거울상은 모양이 좌우로 뒤집혀 <b>보이는데</b>, 그 정체는 거울 면에 수직인 <b>앞뒤 방향의 반전</b>이다. 물체가 거울을 향해 내민 면이 상에서는 나를 향한다 — 그래서 비대칭 무늬(깃발·글자·지느러미)가 뒤집혀 보인다. 가짜는 바로 이 반전을 빠뜨리거나, 거리·크기를 어긴 놈들!</div>
+      <button class="cta" data-goto="concept" style="margin-top:12px">📖 3D 사람 시뮬레이터로 '앞뒤 반전' 직접 보기 →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 왜 보일까? ================= -->
+<section class="tab-panel" id="tab-why">
+  <div class="reveal r1">
+    <span class="eyebrow">번외 · 시험엔 안 나오는 깊은 이야기</span>
+    <h2 class="section-title">교과서 밖 이야기 🌙 — 더 궁금한 사람만</h2>
+    <p class="lead">여기까지의 탭이면 <b>교과서 범위는 충분</b>하다. 이 탭은 "그런데 <b>왜</b> 하필 그곳에 보일까?"가 머리에서 떠나지 않는 사람을 위한 보너스 — 빛다발, 경로 펼치기, 수학 증명, 전신거울, 두 거울까지. 시험 걱정 없이 즐기자!</p>
+  </div>
+  <div class="concept-grid">
+
+    <div class="cblock reveal r2">
+      <div class="cblock-head"><div class="cn" style="background:linear-gradient(135deg,var(--gold),#e8a93c);color:#ffffff">0</div><h3>모든 것의 출발 — '본다'는 건 무엇일까?</h3></div>
+      <div class="cblock-body">
+        <p class="why-text">물체의 한 점에서 나온 빛은 사방으로 퍼진다. 그중 <b>내 눈동자로 들어온 빛</b>만이 "보인다"가 된다 — 그것도 한 줄기가 아니라, 좁게 퍼지는 <b>빛다발(원뿔)</b>로! 뇌는 이 다발이 퍼져 나온 모양을 거꾸로 추적해서 <b>꼭짓점 = 물체의 위치</b>라고 판정한다. 거울은 이 다발의 경로를 꺾을 뿐, <b>퍼짐의 모양</b>은 그대로 보존한다. 그래서 꼭짓점을 역추적하면… 거울 뒤가 나온다.</p>
+        <div class="step-row" id="wbuBtns" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+          <button class="step-btn active" data-wbu="1">① 그냥 볼 때</button>
+          <button class="step-btn" data-wbu="2">② 거울로 볼 때</button>
+          <button class="step-btn" data-wbu="3">③ 눈은 구별 못 한다</button>
+        </div>
+        <div class="why-sim"><canvas id="whyBundleCanvas"></canvas></div>
+        <div class="why-sliders" style="grid-template-columns:1fr">
+          <div class="angle-slider-wrap" style="margin:14px 0 0" id="wbuEyeWrap">
+            <div class="asl-head"><label>👁 눈의 위치</label><span id="whyBundleEyeVal">55%</span></div>
+            <input type="range" class="rng" id="whyBundleEye" min="30" max="80" step="1" value="55">
+          </div>
+        </div>
+        <div class="why-verdict" id="whyBundleVerdict">눈에 들어오는 것은 <b>퍼지는 빛다발</b> — 뇌는 다발의 꼭짓점을 "물체가 있는 곳"으로 읽는다.</div>
+        <div class="adv-note" style="margin-top:14px">⚠️ 흔한 오개념 바로잡기 — 상의 위치(거울 뒤)에 <b>빛 입자가 모여 있는 것이 아니다!</b> 거울 뒤에는 빛이 단 하나도 없다. 빛은 전부 거울 앞에서 반사되어 눈으로 왔고, 상은 그 빛다발의 퍼짐을 <b>역추적한 가상의 꼭짓점</b>일 뿐이다. 그래서 이런 상을 <b>허상</b>이라 부른다(심화).</div>
+        <div class="misc-note" style="margin-top:12px">🪟 <b>비유 — 거울은 '창문'이 아니라 '빛 방향 바꾸는 판'</b>이다. 거울을 보면 마치 거울 뒤에 공간이 있는 것 같지만, 거울은 창문처럼 뒤쪽을 보여 주는 물건이 아니다. 그저 빛의 방향을 바꿔 내 눈에 보내는 판일 뿐 — 그런데 뇌가 "오? 빛이 저쪽에서 곧장 왔네? 그럼 저 뒤에 뭔가 있나 보다!"라고 해석해서, 거울 뒤에 내가 있는 것처럼 느끼는 것이다.</div>
+        <div class="adv-note" style="margin-top:12px">🤯 <b>사고실험</b> — 만약 뇌가 빛을 '직진해 온 것'으로 해석하지 않는다면? "저 안에 내가 있네?" 대신 "거울 표면에서 빛이 이상하게 튕겨 나오네?"라고 느낄 것이다. 거울 속 공간은 사라지고, 그냥 반짝이는 표면의 빛무늬처럼 보일 수 있다 — '거울 속 세상'은 뇌의 해석이 만들어 낸 공간이다.</div>
+        <div class="qbox" style="margin-top:14px">
+          <span class="qtag">한 방 퀴즈 Q1</span>
+          <p>거울 속 상의 위치에서 실제로 빛이 나오고 있을까?</p>
+          <div class="mcq" data-ok="1" data-exp="거울 뒤에는 실제 물체도, 실제 빛도 없다. 거울 속 상은 반사광선을 뒤로 연장했을 때 생기는 위치 착각 — 그래서 허상이다.">
+            <button class="mcq-btn">① 그렇다 — 거울 뒤에서 빛이 나온다</button>
+            <button class="mcq-btn">② 아니다 — 실제 빛은 물체에서 나와 거울에 반사된 뒤 눈으로 들어온다</button>
+          </div>
+          <div class="mcq-exp"></div>
+        </div>
+        <div class="qbox" style="margin-top:12px">
+          <span class="qtag">한 방 퀴즈 Q2</span>
+          <p>우리가 거울 뒤에 물체가 있는 것처럼 느끼는 이유는?</p>
+          <div class="mcq" data-ok="1" data-exp="우리 뇌는 눈에 들어온 빛의 방향만 보고, 그 빛이 직진해서 온 것처럼 해석한다. 그래서 반사광선의 연장선이 만나는 거울 뒤에 상이 있는 것처럼 느낀다.">
+            <button class="mcq-btn">① 거울 뒤에 실제 물체가 있기 때문이다</button>
+            <button class="mcq-btn">② 뇌가 반사된 빛을 직진해 온 것처럼 해석하기 때문이다</button>
+            <button class="mcq-btn">③ 거울이 빛을 저장했다가 다시 내보내기 때문이다</button>
+          </div>
+          <div class="mcq-exp"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cblock reveal r2">
+      <div class="cblock-head"><div class="cn">1</div><h3>거울은 경로를 '접고', 뇌는 다시 '펼친다'</h3></div>
+      <div class="cblock-body">
+        <p class="why-text">눈은 빛이 어디서 출발했는지 모른다. 아는 것은 오직 <b>마지막에 들어온 방향</b>뿐. 그래서 뇌는 "빛은 곧게 날아왔겠지"라고 가정하고, 꺾인 경로를 <b>곧게 펼쳐서</b> 출발점을 그려 낸다 — 종이를 접었다 펴듯이. 펼쳐진 끝점이 바로 <b>상의 위치</b>다.</p>
+        <div class="why-sim"><canvas id="whyBrainCanvas"></canvas></div>
+        <div class="why-controls">
+          <button class="fire-light gold" style="width:auto;margin:0;padding:11px 22px" id="whyBrainBtn">📐 경로 펼쳐 보기</button>
+          <div class="why-hint"><b>눈 위치 슬라이더</b>를 움직여도 펼쳐진 끝점은 항상 같은 곳 — 상의 위치는 보는 사람과 무관하다!</div>
+        </div>
+        <div class="why-sliders" style="grid-template-columns:1fr">
+          <div class="angle-slider-wrap" style="margin:14px 0 0">
+            <div class="asl-head"><label>👁 눈의 위치</label><span id="whyBrainEyeVal"></span></div>
+            <input type="range" class="rng" id="whyBrainEye" min="45" max="85" step="1" value="66">
+          </div>
+        </div>
+        <div class="why-verdict" id="whyBrainVerdict">버튼을 눌러, 접힌 빛의 경로가 펼쳐지는 순간을 지켜보세요.</div>
+      </div>
+    </div>
+
+    <div class="cblock reveal r4">
+      <div class="cblock-head"><div class="cn" style="background:linear-gradient(135deg,var(--violet),#5b28a3)">2</div><h3>수학의 눈 — 왜 '거리가 같은 곳'에서 만날까</h3></div>
+      <div class="cblock-body">
+        <p class="why-text">반사 법칙(입사각=반사각)만 있으면, 연장선이 <b>반드시 거울 대칭 지점</b>에서 만난다는 걸 증명할 수 있다. 핵심은 <b>합동인 두 직각삼각형</b>.</p>
+        <div class="why-sim"><canvas id="whyProofCanvas"></canvas></div>
+        <div class="adv-note" style="margin-top:12px">🙋 <b>예리한 질문 — "눈이 물체랑 나란하지 않아도 합동이 돼요?"</b> 된다! 직각(∠B)은 눈이 아니라 <b>물체에서 거울에 내린 수선</b>이 만든다. 눈의 위치는 거울 위 <b>반사점 P의 자리만</b> 바꿀 뿐 — P가 어디로 가든, 입사각=반사각 덕분에 ∠OPB=∠IPB는 항상 성립해서 두 직각삼각형은 늘 합동(ASA)이다. 그래서 OB=IB, 즉 <b>누가 어디서 보든 상은 같은 거리</b>!</div>
+        <div class="why-proof">
+          <div class="wp-title">📜 두 문장 증명</div>
+          <p>물체 O에서 나온 빛이 거울 위 점 P에서 반사된다. O에서 거울에 수선을 내린 발을 B, 연장선이 만나는 점을 I라 하자.</p>
+          <div class="wp-eq">△OBP ≡ △IBP  (∠B=90°, BP 공통, ∠OPB=∠IPB ← 입사각=반사각)</div>
+          <p>합동이므로 <b>OB = IB</b> — 상까지의 거리는 물체까지의 거리와 같다! P를 거울 위 어디로 잡아도 똑같이 성립하므로, <b>모든 반사광선의 연장선이 한 점 I에서 만난다.</b> 탐구 1에서 발견한 규칙이 우연이 아니었던 이유.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cblock reveal r5">
+      <div class="cblock-head"><div class="cn" style="background:linear-gradient(135deg,var(--rose),#c43d57)">3</div><h3>작은 거울로도 '전신 크기'의 상이? — 거울 크기의 진실 <span class="adv-badge">교육과정 밖</span></h3></div>
+      <div class="cblock-body">
+        <div class="adv-note">이 내용은 <b>중학교 교육과정 밖</b>의 보너스입니다. 시험엔 안 나오지만, 평면거울 원리의 가장 유명한 응용이에요.</div>
+        <p class="why-text">손거울처럼 작은 거울에도 내 얼굴 전체가, 심지어 멀리서 보면 몸 전체가 비친다 — 거울이 나보다 작은데 어떻게? 비밀은 이것: <b>상의 크기는 거울 크기와 무관</b>하다. 광원의 빛이 내 몸에 반사되고, 그 빛이 거울에서 다시 반사되어 눈으로 들어오면, 뇌는 그 반사광선의 <b>연장선이 만나는 곳</b>(거울 뒤, 물체까지와 <b>같은 거리</b>)에 나와 똑같은 크기의 상을 그려 낸다. 거울 크기가 정하는 건 단 하나 — <b>머리끝 빛의 반사점부터 발끝 빛의 반사점까지</b>를 거울이 담을 수 있느냐, 즉 <b>"상을 볼 수 있는 창의 크기"</b>다. 이 두 반사점 사이가 전신을 보는 <b>최소 거울 길이(= 키의 ½)</b>!</p>
+        <div class="why-sim"><canvas id="whyHalfCanvas"></canvas></div>
+        <div class="why-sliders" style="grid-template-columns:1fr 1fr 1fr">
+          <div class="angle-slider-wrap" style="margin:0">
+            <div class="asl-head"><label>🧍 키</label><span id="whyHalfHVal">170cm</span></div>
+            <input type="range" class="rng" id="whyHalfH" min="140" max="190" step="1" value="170">
+          </div>
+          <div class="angle-slider-wrap" style="margin:0">
+            <div class="asl-head"><label>↔ 거울과의 거리</label><span id="whyHalfDVal"></span></div>
+            <input type="range" class="rng" id="whyHalfD" min="20" max="100" step="1" value="55">
+          </div>
+          <div class="angle-slider-wrap" style="margin:0">
+            <div class="asl-head"><label>🪞 거울 길이 (필요 길이 대비)</label><span id="whyHalfMVal">100%</span></div>
+            <input type="range" class="rng" id="whyHalfM" min="35" max="130" step="1" value="100">
+          </div>
+        </div>
+        <div class="why-verdict ok" id="whyHalfVerdict"></div>
+        <div class="misc-note" style="margin-top:12px">🔑 <b>한 방 정리</b> — 거울이 작아지면 상이 작아진다(✕). 상은 언제나 <b>물체와 같은 크기·같은 거리</b>에 생긴다(○). 작은 거울은 그 상을 내다보는 <b>창문이 좁아질 뿐</b>이다. 거울 길이 슬라이더를 줄여서 직접 확인! 그리고 거리 슬라이더를 움직여 봐 — 멀어져도 필요한 최소 길이는 <b>변하지 않는다.</b></div>
+      </div>
+    </div>
+
+    <div class="cblock reveal r6">
+      <div class="cblock-head"><div class="cn" style="background:linear-gradient(135deg,var(--silver),var(--silver-deep));color:#ffffff">4</div><h3>거울 두 장의 마법 — 상은 몇 개 생길까? <span class="adv-badge">교육과정 밖</span></h3></div>
+      <div class="cblock-body">
+        <div class="adv-note">역시 <b>교육과정 밖</b> 보너스. 엘리베이터 무한 거울과 만화경의 원리입니다.</div>
+        <p class="why-text">거울 두 장을 각도 θ로 세우면, 상이 또 다른 거울에 비치며 <b>상의 상</b>이 생긴다 — 1번 반사된 상이 2번, 3번… 꼬리에 꼬리를 물고! 각도가 작아질수록 상의 개수는 <b>360°÷θ − 1</b>개로 늘어나고, 두 거울이 평행(θ→0)이 되면… 무한대. <b>물체(노란 점)를 드래그</b>해 보고, <b>▶ 반사 한 번 더</b> 버튼으로 상이 한 세대씩 태어나는 과정을 지켜보자. 점선 스포크는 거울이 만들어 낸 <b>'가상의 방'</b> 경계 — 360÷θ개의 방마다 나(또는 내 상)가 하나씩 들어 있다!</p>
+        <div class="why-sim"><canvas id="whyTwoCanvas"></canvas></div>
+        <div class="why-sliders" style="grid-template-columns:1fr">
+          <div class="angle-slider-wrap" style="margin:0">
+            <div class="asl-head"><label>📐 두 거울 사이 각도 θ</label><span id="whyTwoVal">90°</span></div>
+            <input type="range" class="rng" id="whyTwo" min="0" max="7" step="1" value="2">
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin:12px 0">
+          <button class="mbtn" id="twoStep">▶ 반사 한 번 더</button>
+          <button class="mbtn" id="twoReset">⏮ 물체만 보기</button>
+          <button class="mbtn" id="twoAll">✨ 모두 보기</button>
+          <div style="display:flex;gap:8px;align-items:center;font-size:.78rem;font-weight:800;flex-wrap:wrap">
+            <span style="color:#946400">● 물체</span>
+            <span style="color:#b8860b">● 1번 반사</span>
+            <span style="color:#c25500">● 2번</span>
+            <span style="color:#ab1f37">● 3번</span>
+            <span style="color:#6230b3">● 4번+</span>
+          </div>
+        </div>
+        <div class="why-readout">
+          <div class="reason-cell"><div class="rc-l">각도 θ</div><div class="rc-v" id="whyTwoTheta">90°</div></div>
+          <div class="reason-cell"><div class="rc-l">360 ÷ θ</div><div class="rc-v" id="whyTwoDiv">4</div></div>
+          <div class="reason-cell"><div class="rc-l">상의 개수</div><div class="rc-v" id="whyTwoCount" style="color:var(--cyan-soft)">3개</div></div>
+        </div>
+        <div class="why-verdict" id="whyTwoVerdict">만화경은 보통 60°(상 5개)로 만든다 — 원본까지 합쳐 6각 대칭 무늬가 생기는 이유!</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= 폰카 실험실 ================= -->
+<section class="tab-panel" id="tab-phone">
+  <div class="reveal r1">
+    <span class="eyebrow">궁금증 해결 · 도입에서 만난 그 질문</span>
+    <h2 class="section-title">사진 속 나 vs 거울 속 나 📸 — 왜 다른 사람 같을까</h2>
+    <p class="lead">도입에서 던진 질문 — <b>"남이 찍어준 내 사진은 왜 어색할까?"</b> 그 답을 여기서 시뮬레이터로 직접 확인한다. 준비물은 휴대폰과 거울 하나면 충분!</p>
+  </div>
+  <div class="concept-grid">
+    </div>
+
+    <div class="cblock reveal r3">
+      <div class="cblock-head"><div class="cn" style="background:linear-gradient(135deg,var(--cyan),var(--cyan-deep))">1</div><h3>🤳 셀카는 거울일까, 사진일까?</h3></div>
+      <div class="cblock-body">
+        <p class="why-text">셀카를 찍을 때 화면 속 나는 <b>거울처럼 반전</b>되어 있다(내가 오른손을 들면 화면 속 나는 '왼쪽'에서 손이 올라온다 — 거울과 똑같이). 그런데 저장된 사진은…?</p>
+        <div class="misc-note">
+          <b>미션</b><br>
+          ① 글자가 큰 책 표지(또는 이름표)를 들고 전면 카메라를 켠다.<br>
+          ② <b>화면 미리보기</b>에서 글자가 어떻게 보이는지 관찰한다.<br>
+          ③ 사진을 찍고, <b>갤러리에 저장된 사진</b>의 글자와 비교한다.<br>
+          ④ 같은 자세로 <b>실제 거울</b> 앞에 서서 글자를 비교 — 미리보기·저장본·거울 셋 중 어느 것끼리 같을까?
+        </div>
+        <button class="ansbtn" data-ans="phAns2">결과와 원리 →</button>
+        <div class="answer" id="phAns2">미리보기는 <b>거울과 같고</b>(글자 반전), 저장된 사진은 보통 <b>반전 없이</b>(남이 보는 나) 저장된다 — 휴대폰 설정에 따라 '셀카 반전 저장' 옵션이 있는 기종도 있으니 설정도 찾아보자. 미리보기를 거울처럼 반전해 주는 이유는, 우리가 <b>거울 속 내 모습에 익숙해서</b> 반전 안 된 화면을 보면 움직임이 반대로 느껴져 어색하기 때문! 카메라 회사가 평면거울의 성질을 UX에 활용한 사례다.</div>
+        <div class="misc-note" style="margin-top:12px">⚙️ <b>설정에서 직접 바꿔 보기</b> — <b>아이폰</b>: 설정 → 카메라 → <b>'전면 카메라 좌우 반전'</b>을 켜면 저장본도 미리보기(거울 모드)처럼 저장된다. <b>갤럭시</b>: 카메라 → 설정 → <b>'셀피를 미리 보기처럼 저장'</b>. 즉 휴대폰은 <b>거울 모드(미리보기 = 거울 속 나)</b>와 <b>사진 모드(저장본 = 남이 보는 나)</b> 사이를 오가는 스위치를 갖고 있는 셈!</div>
+      </div>
+    </div>
+
+    <div class="cblock reveal r4">
+      <div class="cblock-head"><div class="cn" style="background:linear-gradient(135deg,var(--rose),#c43d57)">2</div><h3>🙂 남이 찍은 내 사진은 왜 어색할까?</h3></div>
+      <div class="cblock-body">
+        <p class="why-text">친구가 찍어준 사진 속 나 = <b>남들이 보는 나</b>. 거울 속 나 = 모습이 좌우로 뒤집혀 <b>'보이는'</b> 나. ⚠️ 여기서 헷갈리지 말기 — 거울이 실제로 뒤집는 건 <b>앞뒤</b>이고, 마주 본 우리가 그걸 <b>좌우처럼 느끼는</b> 것(📖 개념 정리의 3D 시뮬레이터 참고)! 어쨌든 화면에 '보이는 모습'끼리 비교하면, 사진 속 나와 거울 속 나는 서로 좌우가 뒤집혀 보이는 관계다. 얼굴이 완벽한 대칭이라면 사진과 거울 속이 똑같겠지만, 실제 얼굴은 가르마·점·눈썹·입꼬리가 <b>비대칭</b>이라 정말로 "다른 얼굴"처럼 보인다. 버튼을 눌러 직접 비교해 보자.</p>
+        <div class="why-sim"><canvas id="faceCanvas"></canvas></div>
+        <div class="why-controls">
+          <button class="fire-light gold" style="width:auto;margin:0;padding:11px 22px" id="faceFlipBtn">🔄 거울 모드 ↔ 사진 모드</button>
+          <div class="why-hint">점·가르마·입꼬리의 위치가 어떻게 달라지는지 관찰!</div>
+        </div>
+        <div class="why-verdict" id="faceVerdict">지금은 <b>사진 모드</b> — 남들이 보는 얼굴입니다.</div>
+        <div class="why-proof" style="margin-top:16px">
+          <div class="wp-title">🧭 왜 달라질까? — 세 단계로 완전 이해</div>
+          <p><b>0단계 · 헷갈림 방지!</b> 사진 속 나도, 거울 속 나도 들고 있는 손은 <b>똑같은 내 오른손</b>이다 — 손이 바뀌는 게 아니다! 갈리는 건 그 손이 <b>화면의 어느 쪽에 보이느냐</b>다.</p>
+          <p><b>1단계 · 거울 속 나.</b> 내가 오른손🟡을 들면, 거울 화면의 <b>오른쪽</b>에서 손이 올라온다. 거울은 나를 <b>앞뒤로 뒤집어</b> 마주 세운 모습이라, 내 오른손과 상의 든 손이 같은 쪽에서 마주 보기 때문이다.</p>
+          <p><b>2단계 · 사진 속 나.</b> 사진은 <b>나를 마주 보는 친구의 시점</b>이다. 마주 본 사람의 오른손은 내 시야의 왼쪽에 있다 — 그래서 사진에서는 내 오른손이 화면의 <b>왼쪽</b>에서 올라온다.</p>
+          <p><b>3단계 · 결론.</b> 거울 속 나와 사진 속 나는 <b>서로 좌우가 통째로 뒤바뀐 관계</b>다. 얼굴이 완벽한 대칭이라면 둘은 똑같아 보이겠지만, 가르마·점·입꼬리가 비대칭이라 둘은 정말로 "다른 얼굴"이 된다. 아래 버튼으로 직접 확인!</p>
+        </div>
+        <div class="why-sim" style="margin-top:12px"><canvas id="handCanvas"></canvas></div>
+        <div class="why-controls">
+          <button class="fire-light cyan" style="width:auto;margin:0;padding:11px 22px" id="handBtn">🙋 오른손 들어 보기</button>
+          <div class="why-hint">두 화면 다 <b>내 오른손🟡</b>인 건 똑같다 — 다만 화면에서 나타나는 <b>쪽이 반대</b>! 그래서 비대칭인 얼굴이 '다른 사람'처럼 보이는 것.</div>
+        </div>
+        <div class="adv-note" style="margin-top:14px"><b>심리학 보너스</b> <span class="adv-badge">교육과정 밖</span> — 매일 보는 건 거울 버전이라, 뇌는 그쪽을 "내 얼굴"의 기준으로 삼는다(<b>단순 노출 효과</b>: 자주 본 것을 더 좋아하게 되는 현상). 그래서 <b>나는 거울 버전이, 친구들은 사진 버전이</b> 더 자연스럽다고 느낀다. 둘 다 틀리지 않았다 — 기준이 다를 뿐! 덤으로, 가까이서 찍는 셀카는 광각 렌즈 때문에 코가 실제보다 크게 왜곡되기도 한다.</div>
+        <div class="misc-note" style="margin-top:12px"><b>폰으로 확인</b> — 친구가 찍어준 내 사진을 갤러리 편집의 <b>좌우 반전(mirror)</b> 기능으로 뒤집어 보자. 갑자기 "아는 얼굴"이 된다면, 그게 바로 매일 거울에서 보던 나! (사진을 좌우로 뒤집으면, 거울이 보여 주던 그 모습과 같아진다.)</div>
+      </div>
+    </div>
+
+    <div class="cblock reveal r5">
+      <div class="cblock-head"><div class="cn" style="background:linear-gradient(135deg,var(--violet),#5b28a3)">3</div><h3>🏃 상은 나보다 두 배 빠르다</h3></div>
+      <div class="cblock-body">
+        <p class="why-text">특징 ㉡(거리가 같다)이 참이라면 이상한 일이 생긴다 — 내가 거울로 1m 다가가면, 상도 거울 뒤에서 1m 다가온다. 그럼 <b>나와 상 사이의 거리는 한 번에 2m</b>가 줄어든다!</p>
+        <div class="misc-note">
+          <b>미션</b><br>
+          ① 친구가 거울 옆에서(거울에 안 비치게) 내가 걷는 모습을 <b>동영상</b>으로 찍는다.<br>
+          ② 나는 거울에서 4걸음 떨어진 곳에서 출발해 일정한 속도로 거울까지 걷는다.<br>
+          ③ 영상을 천천히 재생하며 관찰: 나는 4걸음 움직였는데, <b>나와 거울 속 나 사이의 간격</b>은 몇 걸음만큼 줄었을까?
+        </div>
+        <button class="ansbtn" data-ans="phAns4">결과와 원리 →</button>
+        <div class="answer" id="phAns4">간격은 <b>8걸음만큼</b>(두 배로) 줄어든다. 내가 1초에 1m 다가가면 상은 <b>나를 기준으로</b> 1초에 2m 다가오는 셈 — "거리가 항상 같다"(㉡)의 움직이는 버전이다. 자동차 사이드미러에 "사물이 보이는 것보다 가까이 있음"이라 적힌 것도 거울의 성질 때문(단, 그건 볼록거울 — 다음 시간 예고!).</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+</main>
+
+
+<footer>
+  중2 과학 · 빛과 파동 <span class="fdot">●</span> 평면거울에서 상이 생기는 원리 <span class="fdot">●</span> 당신은 당신의 진짜 얼굴을 본 적이 없다<br>
+  드래그 · 탭 · 슬라이더로 직접 만져 보며 배우는 학습 공간<br>
+  제작 · 해누리중 조승재 (과학이조선생)
+</footer>
+
+<script>
+/* ============================================================
+   평면거울에서 상이 생기는 원리 — 단일 파일 학습 공간
+   ============================================================ */
+const $=id=>document.getElementById(id);
+if(!CanvasRenderingContext2D.prototype.roundRect){
+  CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
+    if(typeof r==='number')r={tl:r,tr:r,br:r,bl:r};else r=r||{tl:0,tr:0,br:0,bl:0};
+    this.beginPath();this.moveTo(x+r.tl,y);
+    this.lineTo(x+w-r.tr,y);this.arcTo(x+w,y,x+w,y+r.tr,r.tr);
+    this.lineTo(x+w,y+h-r.br);this.arcTo(x+w,y+h,x+w-r.br,y+h,r.br);
+    this.lineTo(x+r.bl,y+h);this.arcTo(x,y+h,x,y+h-r.bl,r.bl);
+    this.lineTo(x,y+r.tl);this.arcTo(x,y,x+r.tl,y,r.tl);
+    this.closePath();return this;};
+}
+const deg=r=>r*180/Math.PI, rad=d=>d*Math.PI/180;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const easeOut=t=>1-Math.pow(1-t,3);
+
+function fitCanvas(cv,aspect){
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const w=cv.clientWidth, h=Math.round(w*aspect);
+  if(cv.width!==Math.round(w*dpr)||cv.height!==Math.round(h*dpr)){
+    cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr);
+    cv.style.height=h+'px';
+  }
+  const ctx=cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,w,h};
+}
+function ptr(cv,e){const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left),y:(e.clientY-r.top)};}
+function glowSeg(ctx,x1,y1,x2,y2,color,width,blur){
+  ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';
+  ctx.shadowColor=color;ctx.shadowBlur=blur||10;
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore();
+}
+function dashSeg(ctx,x1,y1,x2,y2,color,width,pattern){
+  ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(pattern||[7,6]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore();
+}
+function arrowHead(ctx,x,y,ang,size,color,hollow){
+  ctx.save();ctx.translate(x,y);ctx.rotate(ang);
+  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-size,-size*0.55);ctx.lineTo(-size,size*0.55);ctx.closePath();
+  if(hollow){ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();}
+  else{ctx.fillStyle=color;ctx.fill();}
+  ctx.restore();
+}
+function txt(ctx,str,x,y,o){
+  o=o||{};ctx.save();
+  ctx.font=(o.weight||'700')+' '+(o.size||12)+'px '+(o.font||"'Noto Sans KR',sans-serif");
+  ctx.fillStyle=o.color||'#6b5e45';ctx.textAlign=o.align||'center';ctx.textBaseline=o.base||'middle';
+  if(o.glow){ctx.shadowColor=o.glow;ctx.shadowBlur=10;}
+  ctx.fillText(str,x,y);ctx.restore();
+}
+function drawStarShape(ctx,x,y,r,color,ghost){
+  ctx.save();ctx.beginPath();
+  for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5, rr=i%2?r*0.45:r;
+    i?ctx.lineTo(x+rr*Math.cos(a),y+rr*Math.sin(a)):ctx.moveTo(x+rr*Math.cos(a),y+rr*Math.sin(a));}
+  ctx.closePath();
+  if(ghost){ctx.strokeStyle=color;ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.globalAlpha=.9;ctx.stroke();}
+  else{ctx.fillStyle=color;ctx.shadowColor=color;ctx.shadowBlur=16;ctx.fill();}
+  ctx.restore();
+}
+function drawEyeIcon(ctx,x,y,color){
+  ctx.save();ctx.fillStyle='#ffffff';ctx.strokeStyle=color;ctx.lineWidth=2.4;
+  ctx.beginPath();ctx.ellipse(x,y,17,11,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.beginPath();ctx.arc(x,y,5.5,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+  ctx.beginPath();ctx.arc(x-1.6,y-1.6,1.8,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+  ctx.restore();
+}
+function drawMirrorBar(ctx,cx,y0,y1,faceLeft){
+  // 은빛 거울 막대 + 뒷면 해칭
+  const g=ctx.createLinearGradient(cx-3,0,cx+3,0);
+  g.addColorStop(0,'#454d5a');g.addColorStop(.5,'#a3adbf');g.addColorStop(1,'#5a6577');
+  ctx.save();
+  ctx.shadowColor='rgba(95,105,120,.7)';ctx.shadowBlur=14;
+  ctx.fillStyle=g;ctx.fillRect(cx-2.5,y0,5,y1-y0);
+  ctx.restore();
+  ctx.save();ctx.strokeStyle='rgba(95,105,120,.55)';ctx.lineWidth=1.4;
+  const dir=faceLeft?1:-1;
+  for(let y=y0+6;y<y1-2;y+=11){
+    ctx.beginPath();ctx.moveTo(cx+3*dir,y);ctx.lineTo(cx+11*dir,y+8);ctx.stroke();
+  }
+  ctx.restore();
+}
+/* ---------- Web Audio ---------- */
+let AC=null;
+function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();return AC;}
+function blip(freq,dur,type,gain,when){
+  const a=ac();if(!a)return;const t=a.currentTime+(when||0);
+  const o=a.createOscillator(),g=a.createGain();
+  o.type=type||'sine';o.frequency.setValueAtTime(freq,t);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(gain||.16,t+.012);
+  g.gain.exponentialRampToValueAtTime(.0001,t+(dur||.18));
+  o.connect(g).connect(a.destination);o.start(t);o.stop(t+(dur||.18)+.05);
+}
+const sndClick=()=>blip(620,.08,'triangle',.1);
+const sndLaser=()=>{blip(900,.16,'sawtooth',.09);blip(1500,.1,'square',.05);};
+const sndHit=()=>{blip(523,.12,'triangle',.16);blip(659,.12,'triangle',.16,.07);blip(784,.2,'triangle',.18,.14);};
+const sndMiss=()=>{blip(240,.2,'sawtooth',.1);blip(170,.26,'sawtooth',.09,.08);};
+const sndFanfare=()=>{[523,659,784,1047].forEach((f,i)=>blip(f,.3,'triangle',.16,i*.12));};
+
+/* ---------- 용어 사전 ---------- */
+const GLOSSARY={
+ '상':'거울 속에 있는 것처럼 보이는 물체의 모습. 실제로 거울 뒤에는 아무것도 없지만, 우리 눈은 그 자리에 물체가 있다고 착각한다.',
+ '평면거울':'면이 평평한 거울. 물체와 크기가 같은 상이 거울 면을 중심으로 대칭인 위치에 생긴다.',
+ '대칭':'거울 면을 접는 선으로 삼아 접었을 때, 물체와 상이 정확히 포개지는 관계.',
+ '법선':'반사가 일어나는 지점에서 거울 면에 수직으로 세운 가상의 기준선. 입사각과 반사각은 모두 법선에서부터 잰다.',
+ '입사각':'거울로 들어오는 빛(입사 광선)과 법선이 이루는 각.',
+ '반사각':'반사되어 나가는 빛(반사 광선)과 법선이 이루는 각. 빛의 반사 법칙에 따라 항상 입사각과 같다.',
+ '연장선':'눈으로 들어온 반사 광선을 거울 뒤쪽으로 곧게 늘인 가상의 선. 연장선들이 모이는 곳에 상이 보인다.',
+ '허상':'[심화 · 교육과정 밖] 빛이 실제로 모이지 않는데도 보이는 상. 평면거울의 상이 대표적이다. 빛이 실제로 모여 스크린에 맺을 수 있는 상은 실상(實像)이라 한다.'
+};
+document.querySelectorAll('.gloss-chip').forEach(ch=>{
+  ch.addEventListener('click',()=>{
+    const box=$(ch.dataset.box), term=ch.dataset.term;
+    const wasActive=ch.classList.contains('active');
+    ch.closest('.gloss').querySelectorAll('.gloss-chip').forEach(c=>c.classList.remove('active'));
+    if(wasActive){box.classList.remove('show');return;}
+    ch.classList.add('active');
+    box.innerHTML='<span class="gd-term">'+term+'</span>'+GLOSSARY[term];
+    box.classList.add('show');sndClick();
+  });
+});
+/* ---------- 정답 보기 버튼 ---------- */
+/* ---------- 한 방 퀴즈 (MCQ) ---------- */
+document.querySelectorAll('.mcq').forEach(box=>{
+  const ok=+box.dataset.ok, exp=box.parentElement.querySelector('.mcq-exp');
+  const btns=[...box.querySelectorAll('.mcq-btn')];
+  btns.forEach((b,i)=>b.addEventListener('click',()=>{
+    btns.forEach(x=>x.classList.remove('ok','no'));
+    b.classList.add(i===ok?'ok':'no');
+    if(i!==ok)btns[ok].classList.add('ok');
+    exp.className='mcq-exp show '+(i===ok?'good':'bad');
+    exp.innerHTML=(i===ok?'⭕ 정답! ':'❌ 아쉽다! 정답은 '+'①②③'[ok]+'번 — ')+box.dataset.exp;
+    (i===ok?sndHit:sndMiss)();
+  }));
+});
+document.querySelectorAll('.ansbtn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const a=$(b.dataset.ans);a.classList.toggle('show');
+    b.textContent=a.classList.contains('show')?'접기 ↑':'정리해 볼까 →';sndClick();
+  });
+});
+/* ---------- 나만의 질문 ---------- */
+let qmN=0;
+function qmAddFn(){
+  const inp=$('qmInput');const v=inp.value.trim();
+  if(!v)return;
+  if(qmN>=8){$('qmInput').placeholder='질문은 8개까지! 활동지에 옮겨 적어 보세요 ✏️';return;}
+  qmN++;
+  const d=document.createElement('div');d.className='qm-item';
+  d.innerHTML='<span class="qn">Q'+qmN+'</span><span></span>';
+  d.lastElementChild.textContent=v;
+  $('qmList').appendChild(d);inp.value='';sndClick();
+}
+$('qmAdd').addEventListener('click',qmAddFn);
+$('qmInput').addEventListener('keydown',e=>{if(e.key==='Enter')qmAddFn();});
+
+/* ============================================================
+   탐구 1 — 상의 특징 (featCanvas)
+   ============================================================ */
+const feat={ox:-3.5,h:3,show:true,dist:true,ruleD:false,ruleS:false,log:[],nbOn:false,nbD:5,nbDone:false};
+function featGeom(w,h){return{cell:w/16,cx:w/2,base:h*0.84,top:h*0.05};}
+function drawGridMirror(ctx,w,h,g){
+  ctx.fillStyle='#fdfbf4';ctx.fillRect(0,0,w,h);
+  ctx.save();ctx.strokeStyle='rgba(0,0,0,.05)';ctx.lineWidth=1;
+  for(let x=g.cx%g.cell;x<w;x+=g.cell){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+  for(let y=g.base;y>0;y-=g.cell){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+  ctx.restore();
+  ctx.save();ctx.strokeStyle='rgba(0,0,0,.14)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,g.base);ctx.lineTo(w,g.base);ctx.stroke();ctx.restore();
+  drawMirrorBar(ctx,g.cx,g.top,g.base+8,true);
+  txt(ctx,'거울',g.cx,g.top-2,{color:'#5d6675',size:12,base:'bottom'});
+  txt(ctx,'(왼쪽이 비추는 면)',g.cx,g.base+22,{color:'#7d6f51',size:10});
+}
+function drawArrowObj(ctx,x,base,hh,color,ghost,label){
+  if(ghost){ctx.save();ctx.setLineDash([6,5]);}
+  glowSeg(ctx,x,base,x,base-hh,color,ghost?2.6:4,ghost?6:12);
+  if(ghost)ctx.restore();
+  arrowHead(ctx,x,base-hh,-Math.PI/2,12,color,ghost);
+  ctx.save();ctx.beginPath();ctx.arc(x,base,4,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.restore();
+  if(label)txt(ctx,label,x,base+16,{color,size:12,weight:'800'});
+}
+function distMarker(ctx,x1,x2,y,color,label){
+  dashSeg(ctx,x1,y,x2,y,color,1.4,[4,4]);
+  [x1,x2].forEach(x=>{ctx.save();ctx.strokeStyle=color;ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(x,y-5);ctx.lineTo(x,y+5);ctx.stroke();ctx.restore();});
+  txt(ctx,label,(x1+x2)/2,y-11,{color,size:11,weight:'800'});
+}
+function drawFeat(){
+  const cv=$('featCanvas');if(!cv||!cv.clientWidth)return;
+  const {ctx,w,h}=fitCanvas(cv,0.62);
+  const g=featGeom(w,h);
+  drawGridMirror(ctx,w,h,g);
+  const hh=feat.h*g.cell;
+  if(feat.photo&&!feat.nbOn){
+    const wd=hh*feat.pAspect;
+    const lim=-(wd/(2*g.cell)+0.3);
+    if(feat.ox>lim)feat.ox=Math.max(-7,Math.floor(lim*2)/2);
+    const xo=g.cx+feat.ox*g.cell;
+    // 물체 = 업로드한 사진
+    ctx.save();ctx.shadowColor='rgba(242,177,62,.5)';ctx.shadowBlur=14;
+    ctx.drawImage(feat.photo,xo-wd/2,g.base-hh,wd,hh);ctx.restore();
+    ctx.save();ctx.strokeStyle='#946400';ctx.lineWidth=2.4;
+    ctx.strokeRect(xo-wd/2,g.base-hh,wd,hh);ctx.restore();
+    txt(ctx,'물체 (가) — 내 최애!',xo,g.base+16,{color:'#946400',size:12,weight:'800'});
+    txt(ctx,'◀ 드래그로 이동',xo,g.base-hh-14,{color:'#7d6f51',size:10});
+    if(feat.show){
+      const xi=g.cx-feat.ox*g.cell;
+      ctx.save();ctx.globalAlpha=.62;
+      ctx.translate(xi,0);ctx.scale(-1,1);
+      ctx.drawImage(feat.photo,-wd/2,g.base-hh,wd,hh);
+      ctx.restore();
+      ctx.save();ctx.strokeStyle='#2563d4';ctx.lineWidth=2;ctx.setLineDash([7,5]);
+      ctx.shadowColor='#2563d4';ctx.shadowBlur=8;
+      ctx.strokeRect(xi-wd/2,g.base-hh,wd,hh);ctx.restore();
+      txt(ctx,'상 — 좌우 모양이 반전!',xi,g.base+16,{color:'#2563d4',size:12,weight:'800'});
+    }
+  }else{
+    const xo=g.cx+feat.ox*g.cell;
+    drawArrowObj(ctx,xo,g.base,hh,'#946400',false,'물체 (가)');
+    txt(ctx,'◀ 드래그로 이동',xo,g.base-hh-18,{color:'#7d6f51',size:10});
+    if(feat.show){
+      const xi=g.cx-feat.ox*g.cell;
+      drawArrowObj(ctx,xi,g.base,hh,'#2563d4',true,'상');
+    }
+  }
+  if(feat.nbOn){
+    const usePhotoOff=true; // 물체(나) 모드는 화살표 기준(교과서: 크기·모양 같은 물체 2개)
+    const xn=g.cx+feat.nbD*g.cell;
+    drawArrowObj(ctx,xn,g.base,hh,'#c25500',false,'물체 (나)');
+    txt(ctx,'드래그로 이동 ▶',xn,g.base-hh-18,{color:'#7d6f51',size:10});
+    const match=Math.abs(feat.nbD-Math.abs(feat.ox))<0.26;
+    const m=$('featNbMsg');m.style.display='block';
+    if(match){
+      ctx.save();ctx.strokeStyle='#0e6e34';ctx.lineWidth=3;ctx.setLineDash([6,5]);
+      ctx.shadowColor='#2bb24c';ctx.shadowBlur=10;
+      ctx.beginPath();ctx.arc(xn,g.base-hh/2,hh/2+18,0,Math.PI*2);ctx.stroke();ctx.restore();
+      txt(ctx,'일치!',xn,g.base-hh-34,{color:'#0e6e34',size:13,weight:'800',glow:'#2bb24c'});
+      m.className='game-msg hit';
+      m.innerHTML='🎉 <b>물체(나)가 상과 정확히 겹쳤다!</b> 반투명 거울 너머로 보이는 상의 자리에 진짜 물체를 놓을 수 있다는 것 — 상까지의 거리가 물체(가)까지의 거리와 <b>같고</b>, 크기도 <b>같다</b>는 증거다(교과서 모범 답안 그대로!).';
+      if(!feat.nbDone){feat.nbDone=true;sndHit();}
+    }else{
+      m.className='game-msg';
+      m.innerHTML='교과서 탐구 ❷ — <b>물체(나)</b>를 드래그해서 거울에 비친 <b>물체(가)의 상</b>과 정확히 겹쳐 보세요. (물체(나) '+feat.nbD.toFixed(1)+'칸 / 상 '+Math.abs(feat.ox).toFixed(1)+'칸)';
+      feat.nbDone=false;
+    }
+  }else{$('featNbMsg').style.display='none';}
+  if(feat.dist){
+    const yM=g.base-g.cell*0.5, xo2=g.cx+feat.ox*g.cell;
+    distMarker(ctx,xo2,g.cx,yM,'#946400',Math.abs(feat.ox)+'칸');
+    if(feat.show)distMarker(ctx,g.cx,g.cx-feat.ox*g.cell,yM,'#2563d4',Math.abs(feat.ox)+'칸');
+  }
+  $('featDo').textContent=Math.abs(feat.ox)+'칸';
+  $('featDi').textContent=feat.show?Math.abs(feat.ox)+'칸':'?';
+}
+(function(){
+  const cv=$('featCanvas');let dragging=false;
+  const move=p=>{
+    const {w}=fitCanvas(cv,0.62);const g=featGeom(w,cv.clientHeight);
+    if(feat.nbOn&&p.x>g.cx){
+      feat.nbD=clamp(Math.round(((p.x-g.cx)/g.cell)*2)/2,1,7);
+    }else{
+      feat.ox=clamp(Math.round(((p.x-g.cx)/g.cell)*2)/2,-7,-1);
+    }
+    drawFeat();
+  };
+  cv.addEventListener('pointerdown',e=>{dragging=true;cv.setPointerCapture(e.pointerId);move(ptr(cv,e));});
+  cv.addEventListener('pointermove',e=>{if(dragging)move(ptr(cv,e));});
+  cv.addEventListener('pointerup',()=>dragging=false);
+  cv.addEventListener('pointercancel',()=>dragging=false);
+})();
+$('featPhotoBtn').addEventListener('click',()=>$('featPhotoInput').click());
+$('featPhotoInput').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0];if(!f)return;
+  const url=URL.createObjectURL(f), img=new Image();
+  img.onload=()=>{
+    const mx=640, sc=Math.min(1,mx/Math.max(img.width,img.height));
+    const oc=document.createElement('canvas');
+    oc.width=Math.max(1,Math.round(img.width*sc));
+    oc.height=Math.max(1,Math.round(img.height*sc));
+    oc.getContext('2d').drawImage(img,0,0,oc.width,oc.height);
+    feat.photo=oc;feat.pAspect=oc.width/oc.height;
+    $('featPhotoReset').style.display='inline-block';
+    URL.revokeObjectURL(url);drawFeat();sndHit();
+  };
+  img.onerror=()=>{URL.revokeObjectURL(url);};
+  img.src=url;e.target.value='';
+});
+$('featPhotoReset').addEventListener('click',()=>{
+  feat.photo=null;$('featPhotoReset').style.display='none';drawFeat();sndClick();
+});
+$('featH').addEventListener('input',e=>{feat.h=+e.target.value;$('featHVal').textContent=feat.h+'칸';drawFeat();});
+$('featShow').addEventListener('change',e=>{feat.show=e.target.checked;drawFeat();});
+$('featDist').addEventListener('change',e=>{feat.dist=e.target.checked;drawFeat();});
+$('featNb').addEventListener('change',e=>{feat.nbOn=e.target.checked;if(feat.nbOn){feat.show=true;$('featShow').checked=true;}drawFeat();sndClick();});
+$('featRecBtn').addEventListener('click',()=>{
+  feat.log.push({d:Math.abs(feat.ox),s:feat.h});sndClick();renderFeatLog();
+});
+$('featRecClear').addEventListener('click',()=>{feat.log=[];renderFeatLog();});
+function renderFeatLog(){
+  const tb=$('featRecBody');
+  if(!feat.log.length){tb.innerHTML='<tr class="rec-empty"><td colspan="5">아직 기록이 없어요. 위치·높이를 바꿔가며 3번 이상 기록해 보세요.</td></tr>';}
+  else tb.innerHTML=feat.log.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+r.d+'칸</td><td>'+r.d+'칸</td><td>'+r.s+'칸</td><td>'+r.s+'칸</td></tr>').join('');
+  $('featFindRule').style.display=feat.log.length>=3?'block':'none';
+}
+function wireRuleGroup(boxId,okRule,which){
+  $(boxId).querySelectorAll('.rule-btn').forEach(b=>{
+    b.addEventListener('click',()=>{
+      $(boxId).querySelectorAll('.rule-btn').forEach(x=>x.classList.remove('picked-ok','picked-no'));
+      const ok=b.dataset.rule===okRule;
+      b.classList.add(ok?'picked-ok':'picked-no');
+      feat[which]=ok;
+      const res=$('featRuleResult');
+      if(feat.ruleD&&feat.ruleS){
+        res.className='rule-result show ok';
+        res.innerHTML='🎉 <b>정답!</b> 상까지의 거리와 상의 크기는 물체와 <b>항상 같다</b>. 즉, 상은 <b>거울 면을 중심으로 물체와 대칭</b>이다 — 활동지 ㉠㉡㉢ 완성!';
+        sndHit();unlockMedal('detective');
+      }else if(ok){
+        res.className='rule-result show ok';
+        res.innerHTML='👍 좋아요! 나머지 규칙도 골라 보세요.';sndClick();
+      }else{
+        res.className='rule-result show no';
+        res.innerHTML='🤔 기록표의 숫자를 다시 비교해 보세요. 두 열의 값이 어떤 관계인가요?';sndMiss();
+      }
+    });
+  });
+}
+wireRuleGroup('featRuleD','eq','ruleD');
+wireRuleGroup('featRuleS','eq','ruleS');
+
+/* ---------- 상 위치 맞히기 퀴즈 ---------- */
+const quiz={ox:-3,h:2,active:false,answered:false,click:null,ok:false,streak:0,score:0};
+function quizNew(){
+  quiz.ox=-(1.5+Math.round(Math.random()*9)/2);   // -1.5 ~ -6
+  quiz.h=1+Math.round(Math.random()*6)/2;          // 1 ~ 4
+  quiz.active=true;quiz.answered=false;quiz.click=null;
+  $('quizMsg').className='game-msg';
+  $('quizMsg').innerHTML='물체를 보고, <b>상의 끝(✕)</b>이 올 위치를 탭하세요!';
+  drawQuiz();sndClick();
+}
+function drawQuiz(){
+  const cv=$('quizCanvas');if(!cv||!cv.clientWidth)return;
+  const {ctx,w,h}=fitCanvas(cv,0.62);
+  const g=featGeom(w,h);
+  drawGridMirror(ctx,w,h,g);
+  if(!quiz.active){
+    txt(ctx,'🎲 새 문제 내기를 눌러 시작!',w/2,h/2,{color:'#7d6f51',size:14});
+    return;
+  }
+  const xo=g.cx+quiz.ox*g.cell, hh=quiz.h*g.cell;
+  drawArrowObj(ctx,xo,g.base,hh,'#946400',false,'물체 (가)');
+  if(!quiz.answered){
+    txt(ctx,'상의 끝은 어디에? 탭!',g.cx-quiz.ox*g.cell,g.base-hh-22,{color:'#2563d4',size:12,weight:'800'});
+  }else{
+    const xi=g.cx-quiz.ox*g.cell;
+    drawArrowObj(ctx,xi,g.base,hh,'#2563d4',true,'상');
+    const ex=xi, ey=g.base-hh;
+    ctx.save();ctx.strokeStyle='#946400';ctx.lineWidth=3;ctx.shadowColor='#946400';ctx.shadowBlur=10;
+    ctx.beginPath();ctx.moveTo(ex-8,ey-8);ctx.lineTo(ex+8,ey+8);ctx.moveTo(ex+8,ey-8);ctx.lineTo(ex-8,ey+8);ctx.stroke();ctx.restore();
+    if(quiz.click){
+      const c=quiz.click, col=quiz.ok?'#13853f':'#cf2a44';
+      ctx.save();ctx.strokeStyle=col;ctx.lineWidth=2.4;
+      ctx.beginPath();ctx.arc(c.x,c.y,11,0,Math.PI*2);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(c.x-6,c.y-6);ctx.lineTo(c.x+6,c.y+6);ctx.moveTo(c.x+6,c.y-6);ctx.lineTo(c.x-6,c.y+6);ctx.stroke();ctx.restore();
+      txt(ctx,quiz.ok?'정답!':'내 답',c.x,c.y-20,{color:col,size:11,weight:'800'});
+    }
+  }
+}
+$('quizNewBtn').addEventListener('click',quizNew);
+$('quizCanvas').addEventListener('pointerdown',e=>{
+  if(!quiz.active||quiz.answered)return;
+  const cv=$('quizCanvas'), p=ptr(cv,e);
+  const {w,h}=fitCanvas(cv,0.62), g=featGeom(w,h);
+  const ex=g.cx-quiz.ox*g.cell, ey=g.base-quiz.h*g.cell;
+  quiz.answered=true;quiz.click=p;
+  quiz.ok=Math.hypot(p.x-ex,p.y-ey)<g.cell*0.62;
+  const msg=$('quizMsg');
+  if(quiz.ok){
+    quiz.streak++;quiz.score++;sndHit();
+    msg.className='game-msg hit';
+    msg.innerHTML='🎯 <b>정확!</b> 거리 '+Math.abs(quiz.ox)+'칸 · 높이 '+quiz.h+'칸 그대로 대칭!'+(quiz.streak>=3?' — 3연속 달성!':'');
+    if(quiz.streak>=3)unlockMedal('raymaster');
+  }else{
+    quiz.streak=0;sndMiss();
+    msg.className='game-msg miss';
+    msg.innerHTML='아쉽다! 정답은 <b>✕</b> 자리 — 거울에서 같은 거리(' +Math.abs(quiz.ox)+'칸), 같은 높이('+quiz.h+'칸)예요.';
+  }
+  $('quizStreak').textContent=quiz.streak;$('quizScore').textContent=quiz.score;
+  drawQuiz();
+});
+
+/* ============================================================
+   탐구 2 — 빛의 경로 (rayCanvas)
+   ============================================================ */
+const ray={o:{fx:.18,fy:.28},e:{fx:.30,fy:.66},step:0,t:1,drag:null,raf:null};
+const RAY_MX=.58;
+function rayGeom(w,h){
+  const cx=RAY_MX*w;
+  const ox=ray.o.fx*w, oy=ray.o.fy*h, ex=ray.e.fx*w, ey=ray.e.fy*h;
+  const ix=2*cx-ox, iy=oy;
+  const E=[{x:ex,y:ey-10},{x:ex,y:ey+10}];
+  const P=E.map(pt=>{const t=(cx-ix)/(pt.x-ix);return{x:cx,y:iy+t*(pt.y-iy)};});
+  return{cx,ox,oy,ex,ey,ix,iy,E,P};
+}
+function growLine(ctx,x1,y1,x2,y2,t,fn){const x=lerp(x1,x2,t),y=lerp(y1,y2,t);fn(x1,y1,x,y);}
+function drawRay(){
+  const cv=$('rayCanvas');if(!cv||!cv.clientWidth)return;
+  const {ctx,w,h}=fitCanvas(cv,0.46);
+  const G=rayGeom(w,h);
+  ctx.fillStyle='#fdfbf4';ctx.fillRect(0,0,w,h);
+  ctx.save();ctx.strokeStyle='rgba(0,0,0,.04)';
+  for(let x=0;x<w;x+=w/16){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+  for(let y=0;y<h;y+=w/16){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+  ctx.restore();
+  drawMirrorBar(ctx,G.cx,h*.04,h*.96,true);
+  txt(ctx,'거울',G.cx,h*.04-2,{color:'#5d6675',size:12,base:'bottom'});
+  const t=ray.t;
+  // STEP1 — 사방으로 퍼짐 (사실적: 28갈래, 멀리까지, 파면 링)
+  if(ray.step>=1){
+    const a1=ray.step===1?t:1;
+    const Lmax=Math.hypot(w,h);
+    ctx.save();
+    for(let i=0;i<28;i++){
+      const a=i*Math.PI/14+0.07;
+      const dx=Math.cos(a),dy=Math.sin(a);
+      let L=Lmax;
+      if(dx>0){const tm=(G.cx-G.ox)/dx;if(tm>0&&tm<L)L=tm;}   // 거울에서 멈춤
+      L*=a1;
+      const gx=G.ox+dx*L, gy=G.oy+dy*L;
+      const gr=ctx.createLinearGradient(G.ox,G.oy,gx,gy);
+      gr.addColorStop(0,'rgba(148,100,0,.65)');gr.addColorStop(.5,'rgba(148,100,0,.22)');gr.addColorStop(1,'rgba(148,100,0,0)');
+      ctx.strokeStyle=gr;ctx.lineWidth=1.5;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(G.ox,G.oy);ctx.lineTo(gx,gy);ctx.stroke();
+    }
+    // 퍼져 나가는 파면(동심원)
+    for(let k=1;k<=3;k++){
+      const r=Lmax*0.32*a1*k/3;
+      ctx.strokeStyle='rgba(148,100,0,'+(0.30*(1-k/3.6)*(ray.step===1?1:.4)).toFixed(2)+')';
+      ctx.lineWidth=1.2;ctx.setLineDash([4,7]);
+      ctx.beginPath();ctx.arc(G.ox,G.oy,r,0,Math.PI*2);ctx.stroke();
+    }
+    ctx.setLineDash([]);ctx.restore();
+    if(ray.step===1)txt(ctx,'빛은 모든 방향으로, 멀리멀리!',G.ox,Math.max(16,G.oy-Math.min(w,h)*0.34),{color:'#8a5e00',size:12,weight:'800'});
+  }
+  // STEP2 — 물체→거울 입사, 입사각=반사각
+  if(ray.step>=2){
+    const t2=ray.step===2?t:1;
+    G.P.forEach((P,i)=>{
+      growLine(ctx,G.ox,G.oy,P.x,P.y,t2,(a,b,c,d)=>glowSeg(ctx,a,b,c,d,'#946400',2.6,9));
+      if(t2>=1)arrowHead(ctx,lerp(G.ox,P.x,.55),lerp(G.oy,P.y,.55),Math.atan2(P.y-G.oy,P.x-G.ox),9,'#946400');
+    });
+    const P0=G.P[0];
+    if($('rayNormal').checked)dashSeg(ctx,P0.x,P0.y,P0.x-56,P0.y,'#6f6248',1.4,[5,5]);
+    const aIn=Math.atan2(G.oy-P0.y,G.ox-P0.x), aOut=Math.atan2(G.E[0].y-P0.y,G.E[0].x-P0.x);
+    const thI=Math.round(Math.abs(deg(aIn))<=90?Math.abs(deg(aIn)):180-Math.abs(deg(aIn)));
+    const thO=Math.round(Math.abs(deg(aOut))<=90?Math.abs(deg(aOut)):180-Math.abs(deg(aOut)));
+    if($('rayAngles').checked&&t2>=1){
+      ctx.save();ctx.strokeStyle='#946400';ctx.lineWidth=1.6;
+      ctx.beginPath();ctx.arc(P0.x,P0.y,26,Math.PI,aIn,aIn<Math.PI);ctx.stroke();
+      ctx.strokeStyle='#2563d4';
+      ctx.beginPath();ctx.arc(P0.x,P0.y,34,Math.PI,aOut,aOut<Math.PI);ctx.stroke();ctx.restore();
+      txt(ctx,thI+'°',P0.x-46,P0.y-16,{color:'#946400',size:11,weight:'800'});
+      txt(ctx,thO+'°',P0.x-46,P0.y+18,{color:'#1d4fae',size:11,weight:'800'});
+    }
+    $('rayInc').textContent=thI+'°';$('rayRef').textContent=thO+'°';
+  }else{$('rayInc').textContent='–';$('rayRef').textContent='–';}
+  // STEP3 — 반사 광선이 눈으로
+  if(ray.step>=3){
+    const t3=ray.step===3?t:1;
+    G.P.forEach((P,i)=>{
+      const E=G.E[i];
+      growLine(ctx,P.x,P.y,E.x,E.y,t3,(a,b,c,d)=>glowSeg(ctx,a,b,c,d,'#8a5e00',2.6,9));
+      if(t3>=1)arrowHead(ctx,lerp(P.x,E.x,.6),lerp(P.y,E.y,.6),Math.atan2(E.y-P.y,E.x-P.x),9,'#8a5e00');
+    });
+  }
+  // 🧠 뇌가 믿는 직선 경로 (토글)
+  if(ray.step>=3&&$('rayBrain').checked){
+    const t3=ray.step===3?t:1;
+    if(t3>=1){
+      G.E.forEach((E,i)=>{
+        const P=G.P[i];
+        glowSeg(ctx,E.x,E.y,G.ix,G.iy,'#7c3fd1',1.6,8);
+        arrowHead(ctx,lerp(G.ix,E.x,.88),lerp(G.iy,E.y,.88),Math.atan2(E.y-G.iy,E.x-G.ix),8,'#7c3fd1');
+      });
+      txt(ctx,'🧠 "직진해서 왔겠지!"',G.ex,Math.max(14,G.ey-34),{color:'#6230b3',size:11,weight:'800'});
+    }
+  }
+
+  // STEP4 — 연장선과 상
+  if(ray.step>=4){
+    const tt=ray.step===4?t:1;
+    G.P.forEach(P=>{
+      growLine(ctx,P.x,P.y,G.ix,G.iy,tt,(a,b,c,d)=>dashSeg(ctx,a,b,c,d,'#2563d4',2,[7,6]));
+    });
+    if(tt>=1){
+      if(RAYOBJ.img){
+        const hh=Math.min(w,h)*0.20, wd=Math.min(hh*RAYOBJ.aspect, w*0.16);
+        ctx.save();ctx.globalAlpha=.55;
+        ctx.translate(G.ix,0);ctx.scale(-1,1);
+        ctx.drawImage(RAYOBJ.img,-wd/2,G.iy,wd,hh);ctx.restore();
+        ctx.save();ctx.strokeStyle='#2563d4';ctx.lineWidth=2;ctx.setLineDash([6,5]);
+        ctx.strokeRect(G.ix-wd/2,G.iy,wd,hh);ctx.restore();
+        txt(ctx,'상 — 여기 보인다! (좌우 모양 반전)',G.ix,G.iy-14,{color:'#1d4fae',size:12,weight:'800',glow:'#2563d4'});
+      }else{
+        drawStarShape(ctx,G.ix,G.iy,13,'#1d4fae',true);
+        txt(ctx,'상 — 여기 보인다!',G.ix,G.iy-24,{color:'#1d4fae',size:12,weight:'800',glow:'#2563d4'});
+      }
+    }
+  }
+  // 물체·눈
+  if(RAYOBJ.img){
+    const hh=Math.min(w,h)*0.20, wd=Math.min(hh*RAYOBJ.aspect, w*0.16);
+    ctx.save();ctx.shadowColor='rgba(148,100,0,.5)';ctx.shadowBlur=10;
+    ctx.drawImage(RAYOBJ.img,G.ox-wd/2,G.oy,wd,hh);ctx.restore();
+    ctx.save();ctx.strokeStyle='#946400';ctx.lineWidth=2.2;ctx.strokeRect(G.ox-wd/2,G.oy,wd,hh);ctx.restore();
+    ctx.save();ctx.fillStyle='#946400';ctx.shadowColor='#946400';ctx.shadowBlur=8;
+    ctx.beginPath();ctx.arc(G.ox,G.oy,4.5,0,Math.PI*2);ctx.fill();ctx.restore();
+    txt(ctx,'물체 (드래그) — 빛은 윗부분 ●에서 출발',G.ox,G.oy+hh+15,{color:'#946400',size:11,weight:'800'});
+  }else{
+    drawStarShape(ctx,G.ox,G.oy,13,'#946400');
+    txt(ctx,'물체 (드래그)',G.ox,G.oy+26,{color:'#946400',size:11,weight:'800'});
+  }
+  drawEyeIcon(ctx,G.ex,G.ey,'#1d4fae');
+  txt(ctx,'눈 (드래그)',G.ex,G.ey+26,{color:'#1d4fae',size:11,weight:'800'});
+}
+function raySetStep(s){
+  ray.step=s;ray.t=0;
+  document.querySelectorAll('#tab-lab2 .step-btn').forEach(b=>b.classList.toggle('active',+b.dataset.step===s));
+  const v=$('rayVerdict');
+  v.className='why-verdict'+(s===4?' ok':'');
+  v.innerHTML=s===1?'<b>① 물체에서 빛이 사방으로 퍼져 나간다.</b> 그중 일부가 거울로 향한다.'
+   :s===2?'<b>② 입사각과 동일한 반사각으로 빛이 반사한다.</b> 법선·각도 표시를 켜고 두 각을 비교해 보세요 — 빛의 반사 법칙!'
+   :s===3?'<b>③ 반사한 빛이 눈에 들어온다.</b> 우리 눈은 이렇게 들어온 반사 광선만을 감각한다.'
+   :'<b>④ 반사하는 빛의 연장선이 만나는 지점에 상이 생긴다!</b> (주의 — 그 자리에 빛이 모여 있는 건 아니에요. 빛은 전부 거울 앞쪽에!) 눈을 드래그해도 상의 위치는 그대로예요. 친구가 앉아서 보든 서서 보든, 누가 어디서 보든 — 상의 위치는 <b>물체와 거울</b>이 정합니다!';
+  if(ray.raf)cancelAnimationFrame(ray.raf);
+  const t0=performance.now();
+  (function anim(now){
+    ray.t=clamp((now-t0)/800,0,1);drawRay();
+    if(ray.t<1)ray.raf=requestAnimationFrame(anim);
+  })(t0);
+  sndClick();
+}
+document.querySelectorAll('#tab-lab2 .step-btn').forEach(b=>b.addEventListener('click',()=>raySetStep(+b.dataset.step)));
+/* ---------- 🐶 반려동물 사진 공유 로더 (obj-01 ~ obj-30, png→jpg 폴백) ----------
+   깃허브 같은 폴더에 obj-01.png(또는 .jpg) ~ obj-30.png 업로드하면
+   ① 탐구1 '상의 특징' 실험과 ② 탐구2 '작도할 물체 고르기' 양쪽에 자동 등장 */
+const RAYOBJ={img:null,aspect:1};
+const PETS=[];
+(function(){
+  const rayPick=$('rayObjPicker'), featPick=$('featObjPicker');
+  function raySel(btn,img){
+    rayPick.querySelectorAll('.objp').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    RAYOBJ.img=img;RAYOBJ.aspect=img?img.width/img.height:1;
+    ray.t=1;drawRay();sndClick();
+  }
+  function featSel(img){
+    feat.photo=img;feat.pAspect=img.width/img.height;
+    $('featPhotoReset').style.display='inline-block';
+    if(feat.nbOn){feat.nbOn=false;$('featNb').checked=false;}
+    drawFeat();sndClick();
+  }
+  rayPick.querySelector('[data-obj=star]').addEventListener('click',e=>raySel(e.currentTarget,null));
+  function addThumb(pick,im,onClick){
+    const b=document.createElement('button');b.className='objp';
+    const th=document.createElement('img');th.src=im.src;b.appendChild(th);
+    b.addEventListener('click',()=>onClick(b,im));
+    pick.appendChild(b);
+  }
+  for(let i=1;i<=30;i++){
+    const n=String(i).padStart(2,'0');
+    const im=new Image();let tried=0;
+    im.onload=()=>{
+      PETS.push(im);
+      addThumb(rayPick,im,(b,img)=>raySel(b,img));
+      featPick.style.display='flex';
+      addThumb(featPick,im,(b,img)=>featSel(img));
+    };
+    im.onerror=()=>{if(tried===0){tried=1;im.src='obj-'+n+'.jpg';}};
+    im.src='obj-'+n+'.png';
+  }
+})();
+$('rayNormal').addEventListener('change',drawRay);
+$('rayAngles').addEventListener('change',drawRay);
+$('rayBrain').addEventListener('change',e=>{$('rayBrainNote').style.display=e.target.checked?'block':'none';drawRay();sndClick();});
+(function(){
+  const cv=$('rayCanvas');
+  cv.addEventListener('pointerdown',e=>{
+    const p=ptr(cv,e), w=cv.clientWidth, h=cv.clientHeight, G=rayGeom(w,h);
+    if(Math.hypot(p.x-G.ox,p.y-G.oy)<30)ray.drag='o';
+    else if(Math.hypot(p.x-G.ex,p.y-G.ey)<30)ray.drag='e';
+    else ray.drag=null;
+    if(ray.drag)cv.setPointerCapture(e.pointerId);
+  });
+  cv.addEventListener('pointermove',e=>{
+    if(!ray.drag)return;
+    const p=ptr(cv,e), w=cv.clientWidth, h=cv.clientHeight;
+    const o=ray[ray.drag];
+    if(ray.drag==='o'){o.fx=clamp(p.x/w,.06,RAY_MX-.14);o.fy=clamp(p.y/h,.10,.55);}
+    else{o.fx=clamp(p.x/w,.08,RAY_MX-.12);o.fy=clamp(p.y/h,.30,.92);}
+    ray.t=1;drawRay();
+  });
+  const up=()=>ray.drag=null;
+  cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+})();
+
+/* ============================================================
+   반사점 찾기 (ptCanvas) — 광선 작도 게임
+   (좌표는 비율로 저장 → 리사이즈/탭 전환에도 안전, 상은 항상 화면 안)
+   ============================================================ */
+const PT={O:null,E:null,hit:0,tries:0,streak:0,anim:null,last:null,done:false};
+const PT_MX=0.56;   // 거울 x 비율 — 상(2*MX−ox ≤ 0.96)이 항상 보이도록
+function ptNewRound(){
+  PT.O={fx:0.18+Math.random()*0.22, fy:0.12+Math.random()*0.32};   // 상 fx ∈ [0.72, 0.94]
+  PT.E={fx:0.06+Math.random()*0.26, fy:0.58+Math.random()*0.32};
+  if(Math.random()<0.5){const t=PT.O.fy;PT.O.fy=PT.E.fy;PT.E.fy=t;}
+  PT.last=null;PT.done=false;
+  const m=$('ptMsg');if(m){m.className='game-msg';
+    m.innerHTML='거울 위 어디서 반사해야 빛이 👁 눈으로 들어갈까? <b>거울 막대를 클릭!</b>';}
+  ptDraw();
+}
+function ptTruth(w,h){
+  const mx=PT_MX*w, O={x:PT.O.fx*w,y:PT.O.fy*h}, E={x:PT.E.fx*w,y:PT.E.fy*h};
+  const I={x:2*mx-O.x,y:O.y};
+  const t=(mx-E.x)/(I.x-E.x);
+  return {mx,O,E,I,P:{x:mx,y:E.y+(I.y-E.y)*t}};
+}
+function ptDraw(prog){
+  const cv=$('ptCanvas');if(!cv||!cv.clientWidth||!PT.O)return;
+  const {ctx,w,h}=fitCanvas(cv,0.52);
+  const {mx,O,E,I,P}=ptTruth(w,h);
+  ctx.fillStyle='#fdfbf4';ctx.fillRect(0,0,w,h);
+  ctx.save();ctx.strokeStyle='rgba(0,0,0,.05)';
+  for(let x=0;x<w;x+=w/20){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+  for(let y=0;y<h;y+=w/20){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+  ctx.restore();
+  ctx.fillStyle='rgba(124,63,209,.05)';ctx.fillRect(mx,0,w-mx,h);
+  txt(ctx,'거울 속 세계',(mx+w)/2,16,{color:'#8a7c5f',size:10.5,weight:'700'});
+  drawMirrorBar(ctx,mx,h*0.04,h*0.96,true);
+  txt(ctx,'거울 — 클릭해서 반사점 고르기!',mx,h*0.04-4,{color:'#5d6675',size:11,weight:'800',base:'bottom'});
+  if($('ptGhost').checked){
+    drawStarShape(ctx,I.x,I.y,12,'#2563d4',true);
+    txt(ctx,'상 (같은 거리!)',I.x,I.y-22,{color:'#1d4fae',size:11,weight:'800'});
+  }
+  if($('ptLine').checked){
+    dashSeg(ctx,E.x,E.y,I.x,I.y,'#7c3fd1',1.6,[6,6]);
+    txt(ctx,'상–눈 직선이 거울과 만나는 곳!',(E.x+I.x)/2,(E.y+I.y)/2-14,{color:'#6230b3',size:10.5,weight:'800'});
+  }
+  if(PT.last){
+    const g={x:mx,y:PT.last.fy*h,ok:PT.last.ok};
+    const t1=prog===undefined?1:Math.min(prog*2,1);
+    const t2=prog===undefined?1:Math.max(0,Math.min(prog*2-1,1));
+    growLine(ctx,O.x,O.y,g.x,g.y,t1,(a,b,c,d)=>glowSeg(ctx,a,b,c,d,'#946400',2.6,9));
+    if(t2>0){
+      const dx=g.x-O.x, dy=g.y-O.y;
+      const L=Math.max(w,h)*1.5, n=Math.hypot(dx,dy);
+      const rx=-dx/n, ry=dy/n;
+      growLine(ctx,g.x,g.y,g.x+rx*L,g.y+ry*L,t2,(a,b,c,d)=>glowSeg(ctx,a,b,c,d,'#8a5e00',2.6,9));
+      if(g.ok&&t2>=1){
+        dashSeg(ctx,g.x,g.y,I.x,I.y,'#2563d4',1.6,[6,6]);
+        ctx.save();ctx.strokeStyle='#0e6e34';ctx.lineWidth=3;ctx.shadowColor='#2bb24c';ctx.shadowBlur=12;
+        ctx.beginPath();ctx.arc(E.x,E.y,24,0,Math.PI*2);ctx.stroke();ctx.restore();
+      }
+    }
+    ctx.save();ctx.fillStyle=g.ok?'#0e6e34':'#ab1f37';
+    ctx.beginPath();ctx.arc(g.x,g.y,5,0,Math.PI*2);ctx.fill();ctx.restore();
+  }
+  drawStarShape(ctx,O.x,O.y,12,'#946400');
+  txt(ctx,'물체',O.x,O.y+24,{color:'#946400',size:11,weight:'800'});
+  drawEyeIcon(ctx,E.x,E.y,'#1d4fae');
+  txt(ctx,'눈 — 여기에 명중!',E.x,E.y+26,{color:'#1d4fae',size:11,weight:'800'});
+}
+function ptShoot(px,py){
+  if(PT.done)return;
+  const cv=$('ptCanvas');const w=cv.clientWidth,h=w*0.52;
+  const {mx,P}=ptTruth(w,h);
+  if(Math.abs(px-mx)>w*0.07){
+    $('ptMsg').className='game-msg';
+    $('ptMsg').innerHTML='<b>거울 막대 위</b>를 클릭해 주세요 — 반사는 거울에서만 일어나요!';
+    return;
+  }
+  const gy=clamp(py,h*0.05,h*0.95);
+  const ok=Math.abs(gy-P.y)<h*0.05;
+  PT.tries++;PT.last={fy:gy/h,ok};
+  if(PT.anim)cancelAnimationFrame(PT.anim);
+  const t0=performance.now();
+  (function an(now){
+    const pr=clamp((now-t0)/700,0,1);
+    ptDraw(pr);
+    if(pr<1)PT.anim=requestAnimationFrame(an);
+    else{
+      const msg=$('ptMsg');
+      if(ok){
+        PT.hit++;PT.streak++;PT.done=true;sndHit();
+        msg.className='game-msg hit';
+        msg.innerHTML='🎉 <b>명중!</b> 빛이 입사각=반사각으로 꺾여 눈으로! 파란 점선이 보이지? 반사점은 정확히 <b>상과 눈을 이은 직선</b> 위에 있었다 — 이게 광선 작도법. 잠시 후 새 문제!';
+        setTimeout(ptNewRound,2600);
+      }else{
+        PT.streak=0;sndMiss();
+        msg.className='game-msg miss';
+        msg.innerHTML='빗나갔다! 반사된 빛이 눈을 비껴갔어요. 힌트 — <b>🪞 상 보기</b>를 켜고, 상과 눈을 잇는 직선을 상상해 보자.';
+      }
+      $('ptHit').textContent=PT.hit;$('ptTry').textContent=PT.tries;$('ptStreak').textContent=PT.streak;
+    }
+  })(t0);
+}
+(function(){
+  const cv=$('ptCanvas');
+  cv.addEventListener('pointerdown',e=>{const p=ptr(cv,e);ptShoot(p.x,p.y);});
+})();
+$('ptNew').addEventListener('click',()=>{ptNewRound();sndClick();});
+$('ptGhost').addEventListener('change',()=>ptDraw());
+$('ptLine').addEventListener('change',()=>ptDraw());
+
+/* ============================================================
+   거울 검수관 (inspCanvas) — 가짜 상 찾기
+   ============================================================ */
+const INSP={objs:[],errIdx:0,solved:false,total:0,streak:0,best:0,
+  run:'free',timeLeft:60,timer:null,chalScore:0,wrong:null};
+const ITYPES=[
+ {id:'arrow',chiral:true,color:'#946400'},
+ {id:'flag',chiral:true,color:'#cf2a44'},
+ {id:'glyph',chiral:true,color:'#1d4fae'},
+ {id:'star',chiral:false,color:'#6230b3'},
+ {id:'fish',chiral:true,color:'#13853f'}
+];
+function inspShape(ctx,id,S,color){
+  ctx.lineCap='round';ctx.lineJoin='round';
+  ctx.strokeStyle=color;ctx.fillStyle=color;
+  ctx.shadowColor=color;ctx.shadowBlur=10;
+  if(id==='arrow'){
+    ctx.lineWidth=S*.28;
+    ctx.beginPath();ctx.moveTo(-S,0);ctx.lineTo(S*.55,0);ctx.stroke();
+    ctx.shadowBlur=0;
+    ctx.beginPath();ctx.moveTo(S,0);ctx.lineTo(S*.35,-S*.45);ctx.lineTo(S*.35,S*.45);ctx.closePath();ctx.fill();
+  }else if(id==='flag'){
+    ctx.lineWidth=S*.18;
+    ctx.beginPath();ctx.moveTo(-S*.5,S);ctx.lineTo(-S*.5,-S);ctx.stroke();
+    ctx.shadowBlur=0;
+    ctx.beginPath();ctx.moveTo(-S*.5,-S);ctx.lineTo(S*.75,-S*.55);ctx.lineTo(-S*.5,-S*.1);ctx.closePath();ctx.fill();
+  }else if(id==='glyph'){
+    ctx.lineWidth=S*.3;
+    ctx.beginPath();ctx.moveTo(-S*.4,S);ctx.lineTo(-S*.4,-S);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(-S*.4,-S);ctx.lineTo(S*.62,-S);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(-S*.4,-S*.05);ctx.lineTo(S*.3,-S*.05);ctx.stroke();
+  }else if(id==='star'){
+    ctx.shadowBlur=0;
+    ctx.beginPath();
+    for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5, rr=i%2?S*.45:S;
+      i?ctx.lineTo(rr*Math.cos(a),rr*Math.sin(a)):ctx.moveTo(rr*Math.cos(a),rr*Math.sin(a));}
+    ctx.closePath();ctx.fill();
+  }else if(id==='fish'){
+    ctx.shadowBlur=0;
+    ctx.beginPath();ctx.moveTo(S,0);
+    ctx.quadraticCurveTo(S*.1,-S*.78,-S*.45,0);
+    ctx.quadraticCurveTo(S*.1,S*.78,S,0);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(-S*.4,0);ctx.lineTo(-S,-S*.5);ctx.lineTo(-S,S*.5);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#1c1713';
+    ctx.beginPath();ctx.arc(S*.5,-S*.13,S*.1,0,Math.PI*2);ctx.fill();
+  }
+}
+function inspGeom(w,h){return{cell:w/16,cx:w/2,base:h*0.9};}
+function inspNew(keepMsg){
+  const types=ITYPES.slice().sort(()=>Math.random()-.5).slice(0,4);
+  const rows=[1.6,3.0,4.4,5.8].sort(()=>Math.random()-.5);
+  INSP.objs=types.map((t,i)=>({type:t,
+    d:1.5+Math.round(Math.random()*8)/2,
+    row:rows[i],s:.6+Math.random()*.25,err:null}));
+  const idx=Math.floor(Math.random()*4), o=INSP.objs[idx];
+  const pool=['dist','size','height'].concat(o.type.chiral?['flip','flip']:[]);
+  o.err=pool[Math.floor(Math.random()*pool.length)];
+  if(o.err==='dist')o.errD=o.d+(o.d<4?+1.5:-1.5);
+  if(o.err==='size'){let up=Math.random()<.5;if(up&&o.d<o.s*1.55+.5)up=false;o.errS=o.s*(up?1.55:.58);}
+  if(o.err==='height')o.errRow=o.row+(o.row<3.5?+1.2:-1.2);
+  INSP.errIdx=idx;INSP.solved=false;INSP.wrong=null;
+  if(!keepMsg){
+    $('inspMsg').className='game-msg';
+    $('inspMsg').innerHTML='새 사건 발생! 네 쌍을 비교해 <b>가짜 상</b>을 찾아라.';
+  }
+  inspDraw();
+}
+function inspDraw(){
+  const cv=$('inspCanvas');if(!cv||!cv.clientWidth)return;
+  const {ctx,w,h}=fitCanvas(cv,0.62);
+  const g=inspGeom(w,h);
+  ctx.fillStyle='#fdfbf4';ctx.fillRect(0,0,w,h);
+  // 거울 나라 배경
+  const mg=ctx.createLinearGradient(g.cx,0,w,0);
+  mg.addColorStop(0,'rgba(176,126,240,.10)');mg.addColorStop(1,'rgba(176,126,240,.02)');
+  ctx.fillStyle=mg;ctx.fillRect(g.cx,0,w/2,h);
+  ctx.save();ctx.strokeStyle='rgba(0,0,0,.05)';
+  for(let x=g.cx%g.cell;x<w;x+=g.cell){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+  ctx.restore();
+  ctx.save();ctx.strokeStyle='rgba(0,0,0,.14)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,g.base);ctx.lineTo(w,g.base);ctx.stroke();ctx.restore();
+  drawMirrorBar(ctx,g.cx,h*.04,g.base+6,true);
+  txt(ctx,'실제 세계',w*.25,h*.045,{color:'#6f6248',size:12,weight:'800'});
+  txt(ctx,'거울 나라 🕵️',w*.75,h*.045,{color:'#6230b3',size:12,weight:'800'});
+  INSP.objs.forEach((o,i)=>{
+    // 실제 물체
+    const ox=g.cx-o.d*g.cell, oy=g.base-o.row*g.cell, S=o.s*g.cell;
+    ctx.save();ctx.translate(ox,oy);inspShape(ctx,o.type.id,S,o.type.color);ctx.restore();
+    // 거울 상 (오류 적용)
+    const d2=o.err==='dist'?o.errD:o.d;
+    const r2=o.err==='height'?o.errRow:o.row;
+    const S2=(o.err==='size'?o.errS:o.s)*g.cell;
+    const mx2=g.cx+d2*g.cell, my2=g.base-r2*g.cell;
+    ctx.save();ctx.translate(mx2,my2);
+    if(o.err!=='flip')ctx.scale(-1,1);
+    ctx.globalAlpha=.88;
+    inspShape(ctx,o.type.id,S2,o.type.color);
+    ctx.restore();
+    o.mx=mx2;o.my=my2;o.mr=Math.max(32,S2*1.5);
+    // 정답 공개 연출
+    if(INSP.solved&&i===INSP.errIdx){
+      ctx.save();ctx.strokeStyle='#13853f';ctx.lineWidth=3;ctx.setLineDash([6,5]);
+      ctx.shadowColor='#13853f';ctx.shadowBlur=12;
+      ctx.beginPath();ctx.arc(mx2,my2,o.mr+8,0,Math.PI*2);ctx.stroke();ctx.restore();
+      txt(ctx,'체포!',mx2,my2-o.mr-18,{color:'#13853f',size:13,weight:'800',glow:'#13853f'});
+      // 위반 단서 시각화
+      if(o.err==='dist'||o.err==='height'){
+        const cxr=g.cx+o.d*g.cell, cyr=g.base-o.row*g.cell;
+        ctx.save();ctx.strokeStyle='rgba(255,255,255,.45)';ctx.lineWidth=1.6;ctx.setLineDash([4,4]);
+        ctx.beginPath();ctx.arc(cxr,cyr,o.s*g.cell+6,0,Math.PI*2);ctx.stroke();ctx.restore();
+        txt(ctx,'원래 자리',cxr,cyr-o.s*g.cell-14,{color:'#5d6675',size:10,weight:'800'});
+      }
+    }
+  });
+  if(INSP.wrong){
+    ctx.save();ctx.strokeStyle='#cf2a44';ctx.lineWidth=3;
+    ctx.beginPath();ctx.arc(INSP.wrong.x,INSP.wrong.y,INSP.wrong.r+8,0,Math.PI*2);ctx.stroke();ctx.restore();
+    txt(ctx,'결백!',INSP.wrong.x,INSP.wrong.y-INSP.wrong.r-16,{color:'#ab1f37',size:12,weight:'800'});
+  }
+}
+function inspVerdictText(o){
+  if(o.err==='dist')return '거리 위반(㉡)! 물체는 거울에서 <b>'+o.d+'칸</b>인데 상은 <b>'+o.errD+'칸</b>에 있었다.';
+  if(o.err==='size')return '크기 위반(㉠)! 상은 물체와 크기가 같아야 하는데 '+(o.errS>o.s?'<b>더 컸다</b>':'<b>더 작았다</b>')+'.';
+  if(o.err==='height')return '대칭 위반! 상은 물체와 <b>같은 높이</b>여야 하는데 '+(o.errRow>o.row?'위':'아래')+'로 어긋나 있었다.';
+  return '반전 누락! 상은 <b>좌우 모양이 뒤집혀야</b> 하는데 물체와 똑같은 방향이었다.';
+}
+$('inspCanvas').addEventListener('pointerdown',e=>{
+  if(INSP.solved)return;
+  if(INSP.run==='chal'&&INSP.timeLeft<=0)return;
+  const cv=$('inspCanvas'), p=ptr(cv,e);
+  if(p.x<cv.clientWidth/2)return; // 거울 나라에서만 체포
+  let pick=-1,pd=1e9;
+  INSP.objs.forEach((o,i)=>{
+    const d=Math.hypot(p.x-o.mx,p.y-o.my);
+    if(d<o.mr*1.25&&d<pd){pd=d;pick=i;}
+  });
+  if(pick<0)return;
+  const msg=$('inspMsg');
+  if(pick===INSP.errIdx){
+    const o=INSP.objs[pick];
+    INSP.solved=true;INSP.total++;INSP.streak++;
+    if(INSP.run==='chal')INSP.chalScore++;
+    sndHit();
+    msg.className='game-msg hit';
+    msg.innerHTML='🚨 <b>검거 성공!</b> '+inspVerdictText(o)+(INSP.streak>=3?' · '+INSP.streak+'연속!':'');
+    if(INSP.total>=8)unlockMedal('inspector');
+    $('inspScore').textContent=INSP.run==='chal'?INSP.chalScore:INSP.total;
+    $('inspStreak').textContent=INSP.streak;
+    inspDraw();
+    setTimeout(()=>inspNew(true),INSP.run==='chal'?900:1500);
+  }else{
+    const o=INSP.objs[pick];
+    INSP.streak=0;sndMiss();
+    INSP.wrong={x:o.mx,y:o.my,r:o.mr};
+    msg.className='game-msg miss';
+    msg.innerHTML='그 상은 <b>결백</b>하다! 거리·크기·높이·반전을 모두 지키고 있어. 다시 비교해 보자.';
+    $('inspStreak').textContent=0;
+    inspDraw();
+    setTimeout(()=>{INSP.wrong=null;inspDraw();},700);
+  }
+});
+$('inspSkipBtn').addEventListener('click',()=>{if(!INSP.solved){INSP.streak=0;$('inspStreak').textContent=0;}inspNew();sndClick();});
+$('inspChalBtn').addEventListener('click',()=>{
+  if(INSP.timer)clearInterval(INSP.timer);
+  INSP.run='chal';INSP.timeLeft=60;INSP.chalScore=0;INSP.streak=0;
+  $('inspScore').textContent=0;$('inspStreak').textContent=0;
+  $('inspMsg').className='game-msg';
+  $('inspMsg').innerHTML='⏱ 60초 도전! 최대한 많은 위조꾼을 검거하라!';
+  inspNew(true);sndClick();
+  INSP.timer=setInterval(()=>{
+    INSP.timeLeft--;
+    $('inspTime').textContent=INSP.timeLeft;
+    $('inspTimePill').classList.toggle('low',INSP.timeLeft<=10);
+    if(INSP.timeLeft<=0){
+      clearInterval(INSP.timer);INSP.timer=null;INSP.run='free';
+      INSP.best=Math.max(INSP.best,INSP.chalScore);
+      $('inspBest').textContent=INSP.best;
+      $('inspMsg').className='game-msg hit';
+      $('inspMsg').innerHTML='⏱ 종료! <b>'+INSP.chalScore+'건</b> 검거'+(INSP.chalScore>=INSP.best?' — 최고 기록!':'');
+      $('inspScore').textContent=INSP.total;
+    }
+  },1000);
+});
+
+/* ============================================================
+   왜 보일까? — 5개 블록
+   ============================================================ */
+/* 블록 0 — 빛다발과 꼭짓점 역추적 */
+const WBU={mode:1,eyeF:.55};
+function bundleCone(ctx,ax,ay,p1,p2,color,alpha){
+  ctx.save();ctx.globalAlpha=alpha||.15;ctx.fillStyle=color;
+  ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.closePath();ctx.fill();
+  ctx.restore();
+  glowSeg(ctx,ax,ay,p1.x,p1.y,color,1.8,6);
+  glowSeg(ctx,ax,ay,p2.x,p2.y,color,1.8,6);
+}
+function quadFill(ctx,a,b,c,d,color,alpha){
+  ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle=color;
+  ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.lineTo(c.x,c.y);ctx.lineTo(d.x,d.y);ctx.closePath();ctx.fill();ctx.restore();
+}
+function omniRays(ctx,x,y,len){
+  ctx.save();ctx.globalAlpha=.13;
+  for(let i=0;i<16;i++){const a=i*Math.PI/8+.1;
+    glowSeg(ctx,x,y,x+Math.cos(a)*len,y+Math.sin(a)*len,'#946400',1.2,3);}
+  ctx.restore();
+}
+function pupilEdges(E,from,PUP){
+  const dx=E.x-from.x,dy=E.y-from.y,L=Math.hypot(dx,dy)||1;
+  const nx=-dy/L,ny=dx/L;
+  return[{x:E.x+nx*PUP,y:E.y+ny*PUP},{x:E.x-nx*PUP,y:E.y-ny*PUP}];
+}
+function drawWhyBundle(now){
+  const cv=$('whyBundleCanvas');if(!cv||!cv.clientWidth)return;
+  const {ctx,w,h}=fitCanvas(cv,0.62);
+  ctx.fillStyle='#fdfbf4';ctx.fillRect(0,0,w,h);
+  const PUP=11;
+  if(WBU.mode===1){
+    const O={x:.20*w,y:.46*h}, E={x:.78*w,y:WBU.eyeF*h};
+    omniRays(ctx,O.x,O.y,w*.15);
+    const [p1,p2]=pupilEdges(E,O,PUP);
+    bundleCone(ctx,O.x,O.y,p1,p2,'#946400',.16);
+    arrowHead(ctx,lerp(O.x,E.x,.55),lerp(O.y,E.y,.55),Math.atan2(E.y-O.y,E.x-O.x),9,'#8a5e00');
+    dashSeg(ctx,p1.x,p1.y,O.x,O.y,'#7c3fd1',1.2,[4,6]);
+    dashSeg(ctx,p2.x,p2.y,O.x,O.y,'#7c3fd1',1.2,[4,6]);
+    ctx.save();ctx.strokeStyle='#7c3fd1';ctx.lineWidth=2;ctx.setLineDash([3,4]);
+    ctx.beginPath();ctx.arc(O.x,O.y,20,0,Math.PI*2);ctx.stroke();ctx.restore();
+    drawStarShape(ctx,O.x,O.y,12,'#946400');
+    txt(ctx,'물체의 한 점 (빛을 사방으로)',O.x,O.y+30,{color:'#946400',size:11,weight:'800'});
+    txt(ctx,'뇌: 다발의 꼭짓점 = 여기!',O.x,O.y-34,{color:'#6230b3',size:12,weight:'800',glow:'#7c3fd1'});
+    drawEyeIcon(ctx,E.x,E.y,'#1d4fae');
+    txt(ctx,'눈 — 동공으로 빛다발이 들어온다',E.x-8,E.y+27,{color:'#1d4fae',size:11,weight:'800'});
+    $('whyBundleVerdict').className='why-verdict';
+    $('whyBundleVerdict').innerHTML='한 줄기가 아니라 <b>퍼지는 다발</b>이 들어온다. 뇌는 그 퍼짐을 거꾸로 모아 <b>꼭짓점</b>을 찾는다 — 평소엔 그게 곧 물체의 위치.';
+  }else{
+    const cx=.56*w, O={x:.18*w,y:.26*h};
+    const E={x:.30*w,y:(WBU.mode===3?.62:WBU.eyeF)*h};
+    const I={x:2*cx-O.x,y:O.y};
+    const [p1,p2]=pupilEdges(E,I,PUP);
+    const P=[p1,p2].map(p=>{const t=(cx-I.x)/(p.x-I.x);return{x:cx,y:I.y+t*(p.y-I.y)};});
+    const phase=WBU.mode===3?Math.floor(now/1600)%2:0;
+    if(phase===0){
+      // 세계 A: 물체 + 거울
+      omniRays(ctx,O.x,O.y,w*.13);
+      quadFill(ctx,O,P[0],P[1],O,'#946400',.10);
+      glowSeg(ctx,O.x,O.y,P[0].x,P[0].y,'#946400',1.8,6);
+      glowSeg(ctx,O.x,O.y,P[1].x,P[1].y,'#946400',1.8,6);
+      arrowHead(ctx,lerp(O.x,P[0].x,.6),lerp(O.y,P[0].y,.6),Math.atan2(P[0].y-O.y,P[0].x-O.x),8,'#946400');
+      drawMirrorBar(ctx,cx,h*.05,h*.95,true);
+      txt(ctx,'거울',cx,h*.05-2,{color:'#5d6675',size:11,base:'bottom'});
+      drawStarShape(ctx,O.x,O.y,12,'#946400');
+      txt(ctx,'물체',O.x,O.y-22,{color:'#946400',size:11,weight:'800'});
+      // 역추적 연장선 + 가상의 꼭짓점
+      dashSeg(ctx,P[0].x,P[0].y,I.x,I.y,'#7c3fd1',1.4,[5,6]);
+      dashSeg(ctx,P[1].x,P[1].y,I.x,I.y,'#7c3fd1',1.4,[5,6]);
+      ctx.save();ctx.strokeStyle='#7c3fd1';ctx.lineWidth=2;ctx.setLineDash([3,4]);
+      ctx.beginPath();ctx.arc(I.x,I.y,20,0,Math.PI*2);ctx.stroke();ctx.restore();
+      drawStarShape(ctx,I.x,I.y,11,'#1d4fae',true);
+      txt(ctx,'역추적 꼭짓점 = 상 (빛은 없다!)',I.x,I.y-32,{color:'#6230b3',size:11,weight:'800',glow:'#7c3fd1'});
+      if(WBU.mode===3)txt(ctx,'세계 A — 물체 + 거울',w*.5,h*.06,{color:'#8a5e00',size:13,weight:'800',font:"'Black Han Sans',sans-serif"});
+    }else{
+      // 세계 B: 거울 없음, 그 자리에 진짜 물체
+      omniRays(ctx,I.x,I.y,w*.13);
+      quadFill(ctx,I,P[0],P[1],I,'#1d4fae',.07);
+      glowSeg(ctx,I.x,I.y,P[0].x,P[0].y,'#2563d4',1.6,5);
+      glowSeg(ctx,I.x,I.y,P[1].x,P[1].y,'#2563d4',1.6,5);
+      drawStarShape(ctx,I.x,I.y,12,'#1d4fae');
+      txt(ctx,'진짜 물체가 여기 있다면?',I.x,I.y-26,{color:'#1d4fae',size:11,weight:'800'});
+      txt(ctx,'세계 B — 거울 없음',w*.5,h*.06,{color:'#1d4fae',size:13,weight:'800',font:"'Black Han Sans',sans-serif"});
+    }
+    // 공통: 눈에 들어오는 마지막 다발 (두 세계에서 동일)
+    quadFill(ctx,P[0],p1,p2,P[1],'#946400',.20);
+    glowSeg(ctx,P[0].x,P[0].y,p1.x,p1.y,'#8a5e00',2.2,9);
+    glowSeg(ctx,P[1].x,P[1].y,p2.x,p2.y,'#8a5e00',2.2,9);
+    arrowHead(ctx,lerp(P[0].x,p1.x,.6),lerp(P[0].y,p1.y,.6),Math.atan2(p1.y-P[0].y,p1.x-P[0].x),8,'#8a5e00');
+    drawEyeIcon(ctx,E.x,E.y,'#1d4fae');
+    txt(ctx,'눈',E.x,E.y+25,{color:'#1d4fae',size:11,weight:'800'});
+    if(WBU.mode===3){
+      txt(ctx,'눈에 들어온 빛다발: 두 세계에서 완전히 동일',(cx+E.x)/2,h*.93,{color:'#7a5300',size:12,weight:'800',glow:'#946400'});
+      $('whyBundleVerdict').className='why-verdict ok';
+      $('whyBundleVerdict').innerHTML='두 세계가 1.6초마다 교대된다 — <b>눈에 도착한 빛다발은 완전히 같다!</b> 그래서 뇌는 절대 구별할 수 없고, 거울 속 얼굴이 그토록 진짜처럼 보인다.';
+    }else{
+      $('whyBundleVerdict').className='why-verdict';
+      $('whyBundleVerdict').innerHTML='거울은 다발의 경로만 꺾을 뿐 <b>퍼짐의 모양은 보존</b>한다. 역추적 꼭짓점만 거울 뒤로 — <b>그 자리에 빛은 없다.</b> 눈 위치를 바꿔 보세요.';
+    }
+  }
+}
+document.querySelectorAll('#wbuBtns .step-btn').forEach(b=>b.addEventListener('click',()=>{
+  WBU.mode=+b.dataset.wbu;
+  document.querySelectorAll('#wbuBtns .step-btn').forEach(x=>x.classList.toggle('active',x===b));
+  $('wbuEyeWrap').style.opacity=WBU.mode===3?.35:1;
+  $('whyBundleEye').disabled=(WBU.mode===3);
+  drawWhyBundle(performance.now());sndClick();
+}));
+$('whyBundleEye').addEventListener('input',e=>{
+  WBU.eyeF=+e.target.value/100;
+  $('whyBundleEyeVal').textContent=e.target.value+'%';
+  drawWhyBundle(performance.now());
+});
+
+/* 블록 1 — 경로 펼치기 */
+const WB={eyeF:.66,u:0,played:false,raf:null};
+function wbGeom(w,h){
+  const cx=.56*w, ox=.18*w, oy=.26*h, ex=.30*w, ey=WB.eyeF*h;
+  const ix=2*cx-ox, iy=oy;
+  const t=(cx-ix)/(ex-ix), px=cx, py=iy+t*(ey-iy);
+  return{cx,ox,oy,ex,ey,ix,iy,px,py};
+}
+function drawWhyBrain(){
+  const cv=$('whyBrainCanvas');if(!cv||!cv.clientWidth)return;
+  const {ctx,w,h}=fitCanvas(cv,0.62);
+  const G=wbGeom(w,h);
+  ctx.fillStyle='#fdfbf4';ctx.fillRect(0,0,w,h);
+  drawMirrorBar(ctx,G.cx,h*.05,h*.95,true);
+  txt(ctx,'거울',G.cx,h*.05-2,{color:'#5d6675',size:11,base:'bottom'});
+  // 실제 경로(접힌 경로)
+  glowSeg(ctx,G.ox,G.oy,G.px,G.py,'#946400',2.6,9);
+  arrowHead(ctx,lerp(G.ox,G.px,.55),lerp(G.oy,G.py,.55),Math.atan2(G.py-G.oy,G.px-G.ox),9,'#946400');
+  glowSeg(ctx,G.px,G.py,G.ex,G.ey,'#8a5e00',2.6,9);
+  arrowHead(ctx,lerp(G.px,G.ex,.6),lerp(G.py,G.ey,.6),Math.atan2(G.ey-G.py,G.ex-G.px),9,'#8a5e00');
+  txt(ctx,'접힌 경로 (실제)',(G.ox+G.px)/2,(G.oy+G.py)/2-16,{color:'#8a5e00',size:11,weight:'800'});
+  // 펼치는 애니메이션: P 중심, O를 I로 회전 (|PO| = |PI|)
+  if(WB.u>0){
+    const L=Math.hypot(G.ox-G.px,G.oy-G.py);
+    const a0=Math.atan2(G.oy-G.py,G.ox-G.px), a1=Math.atan2(G.iy-G.py,G.ix-G.px);
+    let da=a1-a0;while(da>Math.PI)da-=2*Math.PI;while(da<-Math.PI)da+=2*Math.PI;
+    const a=a0+da*easeOut(WB.u);
+    const rx=G.px+L*Math.cos(a), ry=G.py+L*Math.sin(a);
+    ctx.save();ctx.strokeStyle='rgba(176,126,240,.5)';ctx.lineWidth=1.4;ctx.setLineDash([3,5]);
+    ctx.beginPath();ctx.arc(G.px,G.py,L,a0,a,da<0);ctx.stroke();ctx.restore();
+    dashSeg(ctx,G.px,G.py,rx,ry,'#7c3fd1',2.4,[7,5]);
+    ctx.save();ctx.beginPath();ctx.arc(rx,ry,6,0,Math.PI*2);ctx.fillStyle='#7c3fd1';ctx.shadowColor='#7c3fd1';ctx.shadowBlur=12;ctx.fill();ctx.restore();
+    if(WB.u>=1){
+      dashSeg(ctx,G.ex,G.ey,G.ix,G.iy,'#2563d4',1.8,[6,6]);
+      drawStarShape(ctx,G.ix,G.iy,12,'#1d4fae',true);
+      txt(ctx,'뇌가 보는 위치 = 상',G.ix,G.iy-24,{color:'#1d4fae',size:12,weight:'800',glow:'#2563d4'});
+      txt(ctx,'펼친 경로 (뇌의 상상)',(G.ex+G.ix)/2,(G.ey+G.iy)/2+18,{color:'#1d4fae',size:11});
+    }
+  }
+  drawStarShape(ctx,G.ox,G.oy,12,'#946400');
+  txt(ctx,'물체',G.ox,G.oy+24,{color:'#946400',size:11,weight:'800'});
+  drawEyeIcon(ctx,G.ex,G.ey,'#1d4fae');
+  txt(ctx,'눈',G.ex,G.ey+24,{color:'#1d4fae',size:11,weight:'800'});
+}
+$('whyBrainBtn').addEventListener('click',()=>{
+  if(WB.raf)cancelAnimationFrame(WB.raf);
+  WB.u=0;WB.played=true;sndClick();
+  const t0=performance.now();
+  (function anim(now){
+    WB.u=clamp((now-t0)/900,0,1);drawWhyBrain();
+    if(WB.u<1)WB.raf=requestAnimationFrame(anim);
+    else $('whyBrainVerdict').innerHTML='<b>|PO| = |PI|</b> — 접힌 경로를 펼친 끝점은 정확히 <b>거울 대칭 지점</b>! 이것이 상이 "그곳에" 보이는 이유다.';
+  })(t0);
+});
+$('whyBrainEye').addEventListener('input',e=>{
+  WB.eyeF=+e.target.value/100;
+  $('whyBrainEyeVal').textContent=e.target.value+'%';
+  if(WB.played)WB.u=1;
+  drawWhyBrain();
+});
+
+/* why 탭 애니메이션 루프 (빛다발 모드 3 구동) */
+const WE={active:false,raf:null};
+function echoLoop(now){
+  if(!WE.active)return;
+  if(WBU.mode===3)drawWhyBundle(now);
+  WE.raf=requestAnimationFrame(echoLoop);
+}
+
+/* 블록 3 — 합동 증명 (정적) */
+function drawWhyProof(){
+  const cv=$('whyProofCanvas');if(!cv||!cv.clientWidth)return;
+  const {ctx,w,h}=fitCanvas(cv,0.56);
+  const cx=.52*w, y0=.22*h, py=.78*h;
+  const O={x:cx-.30*w,y:y0}, B={x:cx,y:y0}, I={x:cx+.30*w,y:y0}, P={x:cx,y:py};
+  ctx.fillStyle='#fdfbf4';ctx.fillRect(0,0,w,h);
+  drawMirrorBar(ctx,cx,h*.06,h*.94,true);
+  txt(ctx,'거울',cx,h*.06-2,{color:'#5d6675',size:11,base:'bottom'});
+  // 합동 삼각형 음영
+  ctx.save();ctx.globalAlpha=.1;
+  ctx.fillStyle='#946400';ctx.beginPath();ctx.moveTo(O.x,O.y);ctx.lineTo(B.x,B.y);ctx.lineTo(P.x,P.y);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#2563d4';ctx.beginPath();ctx.moveTo(I.x,I.y);ctx.lineTo(B.x,B.y);ctx.lineTo(P.x,P.y);ctx.closePath();ctx.fill();
+  ctx.restore();
+  glowSeg(ctx,O.x,O.y,P.x,P.y,'#946400',2.4,8);
+  const ex=P.x-(O.x-P.x)*.55, ey=P.y+(O.y-P.y)*.55;
+  glowSeg(ctx,P.x,P.y,ex,ey,'#8a5e00',2.4,8);
+  arrowHead(ctx,lerp(P.x,ex,.7),lerp(P.y,ey,.7),Math.atan2(ey-P.y,ex-P.x),9,'#8a5e00');
+  dashSeg(ctx,P.x,P.y,I.x,I.y,'#2563d4',2,[7,6]);
+  ctx.save();ctx.strokeStyle='#6b5e45';ctx.lineWidth=1.6;
+  ctx.beginPath();ctx.moveTo(O.x,O.y);ctx.lineTo(B.x,B.y);ctx.stroke();
+  ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(B.x,B.y);ctx.lineTo(I.x,I.y);ctx.stroke();
+  ctx.strokeRect(B.x-10,B.y,10,10);
+  ctx.restore();
+  drawStarShape(ctx,O.x,O.y,11,'#946400');
+  drawStarShape(ctx,I.x,I.y,11,'#1d4fae',true);
+  ctx.save();ctx.fillStyle='#221b10';ctx.beginPath();ctx.arc(P.x,P.y,4,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(B.x,B.y,3,0,Math.PI*2);ctx.fill();ctx.restore();
+  txt(ctx,'O (물체)',O.x,O.y-20,{color:'#946400',size:12,weight:'800'});
+  txt(ctx,'I (상)',I.x,I.y-20,{color:'#1d4fae',size:12,weight:'800'});
+  txt(ctx,'B',B.x+14,B.y-12,{color:'#6b5e45',size:12,weight:'800'});
+  txt(ctx,'P (반사점)',P.x,P.y+20,{color:'#221b10',size:12,weight:'800'});
+  txt(ctx,'OB',(O.x+B.x)/2,y0-14,{color:'#8a5e00',size:11,weight:'800'});
+  txt(ctx,'IB',(I.x+B.x)/2,y0-14,{color:'#1d4fae',size:11,weight:'800'});
+  txt(ctx,'△OBP ≡ △IBP  →  OB = IB',cx,h*.93,{color:'#7a5300',size:13,weight:'800',font:"'JetBrains Mono',monospace"});
+}
+
+/* 블록 4 — 전신 거울 절반 [교육과정 밖] */
+const WH={H:170,D:55,M:100};
+function drawWhyHalf(){
+  const cv=$('whyHalfCanvas');if(!cv||!cv.clientWidth)return;
+  const {ctx,w,h}=fitCanvas(cv,0.6);
+  const base=.88*h, cx=.58*w;
+  const sc=(.66*h)/190;
+  const HP=WH.H*sc;
+  const px=cx-(.16+.36*(WH.D-20)/80)*w;
+  const head=base-HP, eye=base-0.93*HP, feet=base;
+  // 필요한 반사점: 머리끝 빛 = (머리+눈)/2, 발끝 빛 = (발+눈)/2
+  const reqT=base-0.965*HP, reqB=base-0.465*HP;
+  const mc=(reqT+reqB)/2, reqL=reqB-reqT;
+  const L=reqL*WH.M/100;
+  const segT=mc-L/2, segB=mc+L/2;
+  ctx.fillStyle='#fdfbf4';ctx.fillRect(0,0,w,h);
+  ctx.save();ctx.strokeStyle='rgba(0,0,0,.14)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,base);ctx.lineTo(w,base);ctx.stroke();ctx.restore();
+  // 벽(거울 자리) 흐린 기준선
+  ctx.save();ctx.strokeStyle='rgba(95,105,120,.25)';ctx.lineWidth=1;ctx.setLineDash([3,5]);
+  ctx.beginPath();ctx.moveTo(cx,head-20);ctx.lineTo(cx,base);ctx.stroke();ctx.restore();
+  // 실제 거울 (금색 글로우 세그먼트)
+  ctx.save();ctx.shadowColor='#946400';ctx.shadowBlur=16;
+  ctx.fillStyle='#946400';ctx.fillRect(cx-3,segT,6,segB-segT);ctx.restore();
+  txt(ctx,'거울 '+((WH.H/2)*WH.M/100).toFixed(0)+'cm',cx-12,segT-12,{color:'#7a5300',size:11,weight:'800',align:'right'});
+  // 필요한 최소 구간 (점선 브래킷 — 참조)
+  ctx.save();ctx.strokeStyle='#946400';ctx.lineWidth=1.4;ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.moveTo(cx+16,reqT);ctx.lineTo(cx+26,reqT);ctx.lineTo(cx+26,reqB);ctx.lineTo(cx+16,reqB);ctx.stroke();ctx.restore();
+  txt(ctx,'필요한 최소 = 키의 ½ ('+(WH.H/2).toFixed(0)+'cm)',cx+34,mc,{color:'#8a5e00',size:11,weight:'800',align:'left'});
+  // 사람 (alpha 지정 가능)
+  function person(x,ghost,alpha){
+    ctx.save();ctx.globalAlpha=alpha!==undefined?alpha:(ghost?.3:1);
+    if(ghost)ctx.setLineDash([5,5]);
+    ctx.strokeStyle=ghost?'#1d4fae':'#221b10';ctx.lineWidth=3;ctx.lineCap='round';
+    ctx.beginPath();ctx.arc(x,head+9,9,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x,head+18);ctx.lineTo(x,base-HP*.32);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x,base-HP*.32);ctx.lineTo(x-9,base);ctx.moveTo(x,base-HP*.32);ctx.lineTo(x+9,base);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x,head+26);ctx.lineTo(x-10,head+HP*.30);ctx.moveTo(x,head+26);ctx.lineTo(x+10,head+HP*.30);ctx.stroke();
+    ctx.restore();
+  }
+  person(px,false);
+  // 상: 전신은 항상 그대로(흐림) + 거울이 비춰 주는 범위만 또렷하게
+  const ix=2*cx-px;
+  person(ix,true,.14);
+  const yVisTop=Math.max(head,2*segT-eye), yVisBot=Math.min(feet,2*segB-eye);
+  if(yVisBot>yVisTop){
+    ctx.save();ctx.beginPath();ctx.rect(ix-30,yVisTop,60,yVisBot-yVisTop);ctx.clip();
+    person(ix,true,.55);ctx.restore();
+    // 보이는 범위 브래킷
+    ctx.save();ctx.strokeStyle='#1d4fae';ctx.lineWidth=1.6;
+    ctx.beginPath();ctx.moveTo(ix+22,yVisTop);ctx.lineTo(ix+30,yVisTop);ctx.lineTo(ix+30,yVisBot);ctx.lineTo(ix+22,yVisBot);ctx.stroke();ctx.restore();
+    txt(ctx,'보이는 범위',ix+38,(yVisTop+yVisBot)/2,{color:'#1d4fae',size:10.5,weight:'800',align:'left'});
+  }
+  txt(ctx,'상 — 항상 전신 크기!',ix,head-16,{color:'#1d4fae',size:11,weight:'800'});
+  // 눈
+  ctx.save();ctx.fillStyle='#1d4fae';ctx.beginPath();ctx.arc(px+6,eye,3,0,Math.PI*2);ctx.fill();ctx.restore();
+  // 머리끝 광선
+  const headOK=reqT>=segT-0.5&&reqT<=segB+0.5;
+  if(headOK){
+    glowSeg(ctx,px,head,cx,reqT,'#946400',1.8,6);
+    glowSeg(ctx,cx,reqT,px+6,eye,'#8a5e00',1.8,6);
+    dashSeg(ctx,cx,reqT,ix,head,'#946400',1.2,[5,6]);
+    txt(ctx,'머리끝에서 온 빛',(px+cx)/2,head-12,{color:'#8a5e00',size:10,weight:'800'});
+  }else{
+    dashSeg(ctx,px,head,cx,reqT,'#cf2a44',1.4,[4,5]);
+    txt(ctx,'✕ 거울 밖!',cx-30,reqT-2,{color:'#ab1f37',size:11,weight:'800'});
+  }
+  // 발끝 광선
+  const footOK=reqB>=segT-0.5&&reqB<=segB+0.5;
+  if(footOK){
+    glowSeg(ctx,px,feet,cx,reqB,'#2563d4',1.8,6);
+    glowSeg(ctx,cx,reqB,px+6,eye,'#1d4fae',1.8,6);
+    dashSeg(ctx,cx,reqB,ix,feet,'#2563d4',1.2,[5,6]);
+    txt(ctx,'발끝에서 온 빛',(px+cx)/2,feet-10,{color:'#1d4fae',size:10,weight:'800'});
+  }else{
+    dashSeg(ctx,px,feet,cx,reqB,'#cf2a44',1.4,[4,5]);
+    txt(ctx,'✕ 거울 밖!',cx-30,reqB+12,{color:'#ab1f37',size:11,weight:'800'});
+  }
+  const v=$('whyHalfVerdict');
+  if(WH.M>=100){
+    v.className='why-verdict ok';
+    v.innerHTML='✅ 거울이 필요 길이(<b>키의 ½ = '+(WH.H/2).toFixed(0)+'cm</b>) 이상 — 머리끝·발끝 빛이 모두 반사되어 <b>전신이 보인다!</b> 거리 슬라이더를 움직여 봐 — 멀어져도 필요한 최소 길이는 <b>변하지 않는다.</b>';
+  }else{
+    v.className='why-verdict';
+    v.innerHTML='⚠️ 거울이 필요 길이의 <b>'+WH.M+'%</b> — 그래도 <b>상은 여전히 전신 크기 그대로</b>(거울 뒤, 같은 거리)! 다만 머리끝/발끝 빛이 반사될 자리가 거울에 없어서 <b>보이는 범위가 잘렸을 뿐</b>. 거울 크기 = 상의 크기(✕), 거울 크기 = <b>보이는 창의 크기</b>(○).';
+  }
+}
+$('whyHalfH').addEventListener('input',e=>{WH.H=+e.target.value;$('whyHalfHVal').textContent=WH.H+'cm';drawWhyHalf();});
+$('whyHalfD').addEventListener('input',e=>{WH.D=+e.target.value;$('whyHalfDVal').textContent=WH.D<40?'가까이':WH.D<75?'중간':'멀리';drawWhyHalf();});
+$('whyHalfM').addEventListener('input',e=>{WH.M=+e.target.value;$('whyHalfMVal').textContent=WH.M+'%';drawWhyHalf();});
+
+/* 블록 5 — 두 거울 사이 상의 개수 [교육과정 밖] */
+const TWO={vals:[180,120,90,72,60,45,36,30],idx:2,phi:45,r:0.55,show:99};
+function tmImages(theta,phi0){
+  // 물리 규칙: 거울 '앞'에 있는 물체/상만 그 거울에 반사될 수 있다
+  const norm=v=>((v%360)+360)%360;
+  const frontM1=a=>{a=norm(a);return a>0.01&&a<179.99;};                 // 거울1(0°)의 앞면
+  const frontM2=a=>{a=norm(a-theta+180);return a>0.01&&a<179.99;};      // 거울2(θ°)의 앞면
+  const seen=new Map();seen.set(Math.round(norm(phi0)*10),{ang:norm(phi0),depth:0});
+  let frontier=[norm(phi0)];
+  for(let d=1;d<=14&&frontier.length;d++){
+    const nf=[];
+    frontier.forEach(p=>{
+      const cands=[];
+      if(frontM1(p))cands.push(norm(-p));
+      if(frontM2(p))cands.push(norm(2*theta-p));
+      cands.forEach(q=>{
+        const k=Math.round(q*10);
+        if(!seen.has(k)){seen.set(k,{ang:q,depth:d});nf.push(q);}
+      });
+    });
+    frontier=nf;
+  }
+  return [...seen.values()].filter(v=>v.depth>0);
+}
+const TWO_COL=['#b8860b','#c25500','#ab1f37','#6230b3'];
+function drawWhyTwo(){
+  const cv=$('whyTwoCanvas');if(!cv||!cv.clientWidth)return;
+  const {ctx,w,h}=fitCanvas(cv,0.66);
+  const theta=TWO.vals[TWO.idx];
+  const C={x:.5*w,y:.54*h}, R=Math.min(w,h)*.42;
+  const pt=(ang,r)=>({x:C.x+r*Math.cos(rad(ang)),y:C.y-r*Math.sin(rad(ang))});
+  ctx.fillStyle='#fdfbf4';ctx.fillRect(0,0,w,h);
+  // 가상의 방 경계 스포크 (θ의 배수마다)
+  ctx.save();ctx.strokeStyle='rgba(95,105,120,.30)';ctx.lineWidth=1;ctx.setLineDash([4,6]);
+  for(let a=0;a<360;a+=theta){
+    const e=pt(-a,R);  // 시계 방향으로 방이 펼쳐짐
+    ctx.beginPath();ctx.moveTo(C.x,C.y);ctx.lineTo(e.x,e.y);ctx.stroke();
+  }
+  ctx.setLineDash([]);ctx.restore();
+  ctx.save();ctx.strokeStyle='rgba(0,0,0,.06)';ctx.setLineDash([3,6]);
+  ctx.beginPath();ctx.arc(C.x,C.y,R*TWO.r,0,Math.PI*2);ctx.stroke();ctx.restore();
+  // 진짜 방(물체가 있는 부채꼴) 음영
+  ctx.save();ctx.globalAlpha=.07;ctx.fillStyle='#946400';
+  ctx.beginPath();ctx.moveTo(C.x,C.y);ctx.arc(C.x,C.y,R,-rad(theta),0);ctx.closePath();ctx.fill();ctx.restore();
+  // 거울 두 장
+  [0,theta].forEach(a=>{const e=pt(a,R);glowSeg(ctx,C.x,C.y,e.x,e.y,'#5d6675',3.5,12);});
+  const lb1=pt(0,R+16),lb2=pt(theta,R+16);
+  txt(ctx,'거울 1',Math.min(lb1.x,w-26),lb1.y,{color:'#5d6675',size:11,weight:'800'});
+  txt(ctx,'거울 2',clamp(lb2.x,26,w-26),Math.max(lb2.y,12),{color:'#5d6675',size:11,weight:'800'});
+  // 물체(드래그 가능) + 상들(세대별 색·단계 공개)
+  const imgs=tmImages(theta,TWO.phi).sort((a,b)=>a.depth-b.depth);
+  let shown=0, maxD=0;
+  imgs.forEach(o=>{
+    maxD=Math.max(maxD,o.depth);
+    if(o.depth>TWO.show)return;
+    shown++;
+    const p=pt(o.ang,R*TWO.r);
+    const col=TWO_COL[Math.min(o.depth-1,3)];
+    ctx.save();ctx.globalAlpha=.9;ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=10;
+    ctx.beginPath();ctx.arc(p.x,p.y,7,0,Math.PI*2);ctx.fill();ctx.restore();
+    txt(ctx,String(o.depth),p.x,p.y-15,{color:col,size:10,weight:'800'});
+  });
+  const o=pt(TWO.phi,R*TWO.r);
+  ctx.save();ctx.fillStyle='#946400';ctx.shadowColor='#946400';ctx.shadowBlur=14;
+  ctx.beginPath();ctx.arc(o.x,o.y,9,0,Math.PI*2);ctx.fill();ctx.restore();
+  txt(ctx,'물체 (드래그!)',o.x,o.y-20,{color:'#946400',size:11,weight:'800'});
+  const n=Math.round(360/theta)-1;
+  $('whyTwoTheta').textContent=theta+'°';
+  $('whyTwoDiv').textContent=Math.round(360/theta);
+  $('whyTwoCount').textContent=(TWO.show>=99?n:shown)+(TWO.show>=99?'개':'개 / '+n+'개');
+  const v=$('whyTwoVerdict');
+  if(TWO.show<99){
+    v.className='why-verdict';
+    v.innerHTML=TWO.show===0
+      ?'지금은 <b>물체만</b>. ▶ 버튼을 눌러 첫 반사를 일으켜 보자 — 거울이 두 장이니 상이 <b>몇 개</b> 생길까?'
+      :'<b>'+TWO.show+'번 반사</b>까지 공개 — 상 '+shown+'개. '+(TWO.show<maxD?'아직 더 깊은 상이 숨어 있다, ▶ 한 번 더!':'끝! 더 깊이 반사해도 이미 있는 상과 겹쳐서 <b>새 상이 안 생긴다</b> — 그래서 개수가 360÷θ−1에서 멈춘다.');
+  }else{
+    v.className='why-verdict ok';
+    const odd=(Math.round(360/theta)%2===1), centered=Math.abs(TWO.phi-theta/2)<0.5;
+    if(odd&&!centered){
+      v.innerHTML='👀 <b>공식('+n+'개)보다 1개 많은 '+shown+'개?!</b> 360÷θ가 <b>홀수</b>일 땐, 물체가 정중앙이 아니면 마지막 두 상이 서로 겹치지 못해 1개 더 생긴다. 물체를 <b>한가운데로 드래그</b>해 보자 — 둘이 하나로 합쳐진다! (교과서 공식은 가장 단순한 경우)';
+      $('whyTwoCount').textContent=shown+'개';
+      return;
+    }
+    v.innerHTML=theta===180?'거울이 평평하게 펴졌다 — <b>평면거울 1개</b>와 같아서 상은 1개.':
+      theta===60?'<b>만화경의 각도!</b> 원본+상 5개 = 6각 대칭 무늬. 점선 방 6개에 하나씩 들어 있는 게 보이지?':
+      theta===30?'상이 <b>11개</b>! 각도가 0°(평행 거울)에 가까울수록 방이 무한히 많아진다 — 엘리베이터 무한 거울의 원리.':
+      '점선으로 나뉜 <b>가상의 방 '+Math.round(360/theta)+'개</b>마다 나(또는 상)가 하나씩 — 물체를 드래그하면 전원이 같이 움직인다!';
+  }
+}
+$('whyTwo').addEventListener('input',e=>{
+  TWO.idx=+e.target.value;
+  $('whyTwoVal').textContent=TWO.vals[TWO.idx]+'°';
+  TWO.phi=clamp(TWO.phi,3,TWO.vals[TWO.idx]-3);
+  TWO.show=99;
+  drawWhyTwo();sndClick();
+});
+$('twoStep').addEventListener('click',()=>{
+  if(TWO.show>=99)TWO.show=0;
+  TWO.show++;drawWhyTwo();sndClick();
+});
+$('twoReset').addEventListener('click',()=>{TWO.show=0;drawWhyTwo();sndClick();});
+$('twoAll').addEventListener('click',()=>{TWO.show=99;drawWhyTwo();sndClick();});
+(function(){
+  const cv=$('whyTwoCanvas');let drag=false;
+  const upd=e=>{
+    const p=ptr(cv,e);
+    const w=cv.clientWidth,h=w*0.66;
+    const C={x:.5*w,y:.54*h},R=Math.min(w,h)*.42;
+    const dx=p.x-C.x, dy=C.y-p.y;
+    let ang=deg(Math.atan2(dy,dx));if(ang<0)ang+=360;
+    const theta=TWO.vals[TWO.idx];
+    let ph=clamp(ang,3,theta-3);
+    if(Math.abs(ph-theta/2)<2.2)ph=theta/2;   // 이등분선 스냅 — 상 합쳐짐 시연
+    TWO.phi=ph;
+    TWO.r=clamp(Math.hypot(dx,dy)/R,0.25,0.9);
+    drawWhyTwo();
+  };
+  cv.addEventListener('pointerdown',e=>{drag=true;cv.setPointerCapture(e.pointerId);upd(e);});
+  cv.addEventListener('pointermove',e=>{if(drag)upd(e);});
+  cv.addEventListener('pointerup',()=>drag=false);
+  cv.addEventListener('pointercancel',()=>drag=false);
+})();
+
+/* ============================================================
+   폰카 실험실 — 비대칭 얼굴 거울/사진 비교
+   ============================================================ */
+const FACE={mirror:false};
+function drawFace(){
+  const cv=$('faceCanvas');if(!cv||!cv.clientWidth)return;
+  const {ctx,w,h}=fitCanvas(cv,0.62);
+  ctx.fillStyle='#fdfbf4';ctx.fillRect(0,0,w,h);
+  const cx=w/2, cy=h*0.52, R=Math.min(w*0.22,h*0.36);
+  ctx.save();
+  ctx.translate(cx,cy);
+  if(FACE.mirror)ctx.scale(-1,1);
+  // 얼굴
+  ctx.fillStyle='#f3c89a';ctx.strokeStyle='#caa276';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.ellipse(0,0,R*.82,R,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+  // 머리카락 — 가르마가 (사진 기준) 왼쪽으로 치우침
+  ctx.fillStyle='#3a2c20';
+  ctx.beginPath();
+  ctx.moveTo(-R*.84,-R*.05);
+  ctx.quadraticCurveTo(-R*.95,-R*.95,-R*.18,-R*1.04);
+  ctx.quadraticCurveTo(R*.85,-R*1.12,R*.86,-R*.18);
+  ctx.quadraticCurveTo(R*.62,-R*.52,R*.30,-R*.56);
+  ctx.quadraticCurveTo(-R*.30,-R*.66,-R*.46,-R*.40);
+  ctx.quadraticCurveTo(-R*.62,-R*.18,-R*.84,-R*.05);
+  ctx.closePath();ctx.fill();
+  // 가르마 선
+  ctx.save();ctx.strokeStyle='#1f1812';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(-R*.42,-R*.92);ctx.quadraticCurveTo(-R*.44,-R*.66,-R*.46,-R*.42);ctx.stroke();ctx.restore();
+  // 눈 — 오른쪽(사진 기준) 눈썹이 더 올라감
+  ctx.fillStyle='#1c1c28';
+  ctx.beginPath();ctx.ellipse(-R*.32,-R*.10,R*.075,R*.10,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(R*.32,-R*.10,R*.075,R*.10,0,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#2a2118';ctx.lineWidth=4;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(-R*.46,-R*.28);ctx.quadraticCurveTo(-R*.32,-R*.34,-R*.18,-R*.29);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(R*.18,-R*.34);ctx.quadraticCurveTo(R*.32,-R*.42,R*.46,-R*.36);ctx.stroke();
+  // 코
+  ctx.strokeStyle='#caa276';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(0,-R*.05);ctx.quadraticCurveTo(R*.06,R*.18,-R*.02,R*.24);ctx.stroke();
+  // 입 — 입꼬리가 (사진 기준) 오른쪽만 올라감
+  ctx.strokeStyle='#b0563f';ctx.lineWidth=4;
+  ctx.beginPath();ctx.moveTo(-R*.26,R*.52);ctx.quadraticCurveTo(0,R*.62,R*.28,R*.44);ctx.stroke();
+  // 점 — (사진 기준) 왼쪽 뺨
+  ctx.fillStyle='#5a4030';
+  ctx.beginPath();ctx.arc(-R*.48,R*.30,R*.045,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+  // 주석 화살표: 점 위치
+  const mx=cx+(FACE.mirror?R*.48:-R*.48);
+  dashSeg(ctx,mx,cy+R*.30+18,mx,cy+R*.30+44,'#ab1f37',1.6,[4,4]);
+  txt(ctx,'점',mx,cy+R*.30+56,{color:'#ab1f37',size:12,weight:'800'});
+  const gx=cx+(FACE.mirror?R*.44:-R*.44);
+  dashSeg(ctx,gx,cy-R*.98,gx,cy-R*1.0-22,'#1d4fae',1.6,[4,4]);
+  txt(ctx,'가르마',gx,cy-R*1.0-34,{color:'#1d4fae',size:12,weight:'800'});
+  txt(ctx,FACE.mirror?'🪞 거울 모드 — 내가 매일 보는 나':'📷 사진 모드 — 남들이 보는 나',
+      cx,h*.07,{color:FACE.mirror?'#1d4fae':'#8a5e00',size:15,weight:'800',font:"'Black Han Sans',sans-serif",glow:FACE.mirror?'#2563d4':'#946400'});
+}
+$('faceFlipBtn').addEventListener('click',()=>{
+  FACE.mirror=!FACE.mirror;sndClick();drawFace();
+  $('faceVerdict').className='why-verdict'+(FACE.mirror?' ok':'');
+  $('faceVerdict').innerHTML=FACE.mirror
+    ?'지금은 <b>거울 모드</b> — 점·가르마·입꼬리가 전부 반대쪽으로! 내 뇌에는 이쪽이 "내 얼굴"로 저장되어 있다.'
+    :'지금은 <b>사진 모드</b> — 남들이 보는 얼굴입니다. 친구들에겐 이쪽이 익숙한 나!';
+});
+
+/* ---------- 손들기 비교: 거울 vs 사진 ---------- */
+const HAND={up:false};
+function handFigure(ctx,x,y,S,raiseSide,col){
+  // 정면을 보는 사람. raiseSide: 'L'|'R' (화면 기준), 든 손에 노란 장갑
+  ctx.save();ctx.strokeStyle=col;ctx.lineWidth=S*.16;ctx.lineCap='round';
+  ctx.beginPath();ctx.arc(x,y-S*1.15,S*.34,0,Math.PI*2);ctx.stroke();           // 머리
+  ctx.beginPath();ctx.moveTo(x,y-S*.78);ctx.lineTo(x,y+S*.25);ctx.stroke();      // 몸
+  ctx.beginPath();ctx.moveTo(x,y+S*.25);ctx.lineTo(x-S*.38,y+S*1.05);
+  ctx.moveTo(x,y+S*.25);ctx.lineTo(x+S*.38,y+S*1.05);ctx.stroke();               // 다리
+  const dirUp=raiseSide==='R'?1:-1, dirDn=-dirUp;
+  ctx.beginPath();ctx.moveTo(x,y-S*.55);ctx.lineTo(x+dirDn*S*.5,y+S*.05);ctx.stroke(); // 내린 팔
+  if(HAND.up){
+    ctx.beginPath();ctx.moveTo(x,y-S*.55);ctx.lineTo(x+dirUp*S*.52,y-S*1.25);ctx.stroke(); // 든 팔
+    ctx.save();ctx.fillStyle='#946400';ctx.shadowColor='#946400';ctx.shadowBlur=14;
+    ctx.beginPath();ctx.arc(x+dirUp*S*.56,y-S*1.32,S*.17,0,Math.PI*2);ctx.fill();ctx.restore();
+    txt(ctx,'오른손',x+dirUp*S*.56,y-S*1.62,{color:'#8a5e00',size:11,weight:'800'});
+  }else{
+    ctx.beginPath();ctx.moveTo(x,y-S*.55);ctx.lineTo(x+dirUp*S*.5,y+S*.05);ctx.stroke();
+  }
+  ctx.restore();
+}
+function drawHand(){
+  const cv=$('handCanvas');if(!cv||!cv.clientWidth)return;
+  const {ctx,w,h}=fitCanvas(cv,0.56);
+  ctx.fillStyle='#fdfbf4';ctx.fillRect(0,0,w,h);
+  const fw=w*.46, fx1=w*.02, fx2=w*.52, fy=h*.12, fh=h*.72;
+  [[fx1,'#1d4fae','🪞 거울 속 나'],[fx2,'#946400','📷 사진 속 나 (친구가 본 나)']].forEach(([fx,col,label])=>{
+    ctx.save();ctx.strokeStyle=col;ctx.globalAlpha=.55;ctx.lineWidth=1.6;
+    ctx.strokeRect(fx,fy,fw,fh);ctx.restore();
+    txt(ctx,label,fx+fw/2,fy-9,{color:col,size:12,weight:'800'});
+  });
+  const S=Math.min(fw*.22,fh*.30), cy=fy+fh*.55;
+  handFigure(ctx,fx1+fw/2,cy,S,'R','#1d4fae');   // 거울: 화면 오른쪽에서 손
+  handFigure(ctx,fx2+fw/2,cy,S,'L','#946400');   // 사진: 화면 왼쪽에서 손
+  if(HAND.up){
+    txt(ctx,'→ 화면 오른쪽!',fx1+fw/2,fy+fh+16,{color:'#1d4fae',size:12,weight:'800'});
+    txt(ctx,'→ 화면 왼쪽!',fx2+fw/2,fy+fh+16,{color:'#8a5e00',size:12,weight:'800'});
+    txt(ctx,'🟡 이 손 = 똑같은 내 오른손',fx1+fw/2,fy+fh+h*.045,{color:'#1d4fae',size:11,weight:'800'});
+    txt(ctx,'🟡 이 손도 = 똑같은 내 오른손',fx2+fw/2,fy+fh+h*.045,{color:'#8a5e00',size:11,weight:'800'});
+    txt(ctx,'같은 오른손인데 — 화면에서는 오른쪽 vs 왼쪽, 반대편에 나타난다!',w/2,h*.05,{color:'#6230b3',size:12,weight:'800',glow:'#7c3fd1'});
+  }else{
+    txt(ctx,'버튼을 눌러 오른손을 들어 보세요',w/2,h*.05,{color:'#7d6f51',size:12});
+  }
+}
+$('handBtn').addEventListener('click',()=>{
+  HAND.up=!HAND.up;sndClick();drawHand();
+  $('handBtn').textContent=HAND.up?'🙇 오른손 내리기':'🙋 오른손 들어 보기';
+});
+
+/* ---------- 별빛 배경: 빛의 실험실 ---------- */
+(function(){
+  const cv=$('bgStars');if(!cv)return;
+  const ctx=cv.getContext('2d');
+  let W,H,stars=[],orbs=[];
+  function size(){
+    W=cv.width=innerWidth;H=cv.height=innerHeight;
+    const n=Math.min(150,Math.round(W*H/9000));
+    stars=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,
+      r:.3+Math.random()*1.3,p:Math.random()*6.28,s:.4+Math.random()*1.4,
+      c:['#e63946','#f4791f','#d9a400','#2bb24c','#2f6fd6','#8b46cf'][Math.floor(Math.random()*6)]}));
+    orbs=Array.from({length:7},()=>({x:Math.random()*W,y:Math.random()*H,
+      vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.22,r:1.4+Math.random()*2.2,
+      c:Math.random()<.5?'244,121,31':'47,111,214'}));
+  }
+  size();addEventListener('resize',size);
+  let last=0;
+  (function loop(t){
+    requestAnimationFrame(loop);
+    if(t-last<33)return;last=t;          // ~30fps로 절전
+    ctx.clearRect(0,0,W,H);
+    for(const s of stars){
+      const a=.16+.5*(0.5+0.5*Math.sin(t/1000*s.s+s.p));
+      ctx.globalAlpha=a;ctx.fillStyle=s.c;
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.3);ctx.fill();
+    }
+    ctx.globalAlpha=1;
+    for(const p of orbs){
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<-24)p.x=W+24;if(p.x>W+24)p.x=-24;
+      if(p.y<-24)p.y=H+24;if(p.y>H+24)p.y=-24;
+      const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*7);
+      g.addColorStop(0,'rgba('+p.c+',.45)');g.addColorStop(1,'rgba('+p.c+',0)');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,p.r*7,0,6.3);ctx.fill();
+    }
+  })(0);
+})();
+
+/* 업적 시스템 제거 — 호출부 호환용 no-op */
+function unlockMedal(){}
+
+
+/* ============================================================
+   3D 시뮬레이터 (three.js) — ① 빛 퍼짐  ② 거울 속 글자
+   ============================================================ */
+function orbitify(el,cam,target,opts){
+  const o=Object.assign({yaw:0.6,pitch:0.35,dist:6,minP:-0.1,maxP:1.2},opts||{});
+  let yaw=o.yaw,pitch=o.pitch,drag=false,lx=0,ly=0;
+  function apply(){
+    cam.position.set(
+      target.x+o.dist*Math.cos(pitch)*Math.sin(yaw),
+      target.y+o.dist*Math.sin(pitch),
+      target.z+o.dist*Math.cos(pitch)*Math.cos(yaw));
+    cam.lookAt(target.x,target.y,target.z);
+  }
+  el.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;el.setPointerCapture(e.pointerId);el.style.cursor='grabbing';});
+  el.addEventListener('pointermove',e=>{
+    if(!drag)return;
+    yaw-=(e.clientX-lx)*0.008;pitch+=(e.clientY-ly)*0.006;
+    pitch=Math.max(o.minP,Math.min(o.maxP,pitch));
+    lx=e.clientX;ly=e.clientY;apply();
+  });
+  const up=()=>{drag=false;el.style.cursor='grab';};
+  el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);
+  apply();return apply;
+}
+function make3d(el){
+  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+  renderer.setSize(el.clientWidth,el.clientHeight);
+  el.appendChild(renderer.domElement);
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(50,el.clientWidth/el.clientHeight,0.1,100);
+  addEventListener('resize',()=>{
+    if(!el.clientWidth)return;
+    renderer.setSize(el.clientWidth,el.clientHeight);
+    cam.aspect=el.clientWidth/el.clientHeight;cam.updateProjectionMatrix();
+  });
+  return{renderer,scene,cam};
+}
+/* ---------- ① 빛 퍼짐 3D ---------- */
+let RAD3D=null;
+function init3dRad(){
+  if(RAD3D)return;
+  const el=$('rad3d');if(!el||!el.clientWidth)return;
+  if(!window.THREE){el.innerHTML='<div style="padding:20px;color:#897b5e;font-size:.85rem">3D 라이브러리를 불러오지 못했어요(인터넷 연결 확인). 위의 2D 시뮬레이터로 학습을 계속하세요!</div>';RAD3D='fail';return;}
+  const {renderer,scene,cam}=make3d(el);
+  const grid=new THREE.GridHelper(10,20,0xd3c9af,0xe7e0cd);grid.position.y=-1.6;scene.add(grid);
+  // 광원 물체
+  const core=new THREE.Mesh(new THREE.SphereGeometry(0.22,24,24),new THREE.MeshBasicMaterial({color:0xf2b13e}));
+  scene.add(core);
+  const halo=new THREE.Mesh(new THREE.SphereGeometry(0.34,24,24),new THREE.MeshBasicMaterial({color:0xffc914,transparent:true,opacity:.25}));
+  scene.add(halo);
+  // 광자 입자 — 공간의 모든 방향
+  const N=500, R=4.4;
+  const pos=new Float32Array(N*3), dir=[], spd=[];
+  for(let i=0;i<N;i++){
+    const u=Math.random()*2-1, ph=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u);
+    const v=new THREE.Vector3(s*Math.cos(ph),u,s*Math.sin(ph));
+    dir.push(v);spd.push(1.6+Math.random()*1.6);
+    const r=Math.random()*R;
+    pos[i*3]=v.x*r;pos[i*3+1]=v.y*r;pos[i*3+2]=v.z*r;
+  }
+  const geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  const pts=new THREE.Points(geo,new THREE.PointsMaterial({color:0xb8860b,size:0.07,transparent:true,opacity:.85}));
+  scene.add(pts);
+  // 퍼지는 파면 구
+  const waves=[0,1,2].map(k=>{
+    const m=new THREE.Mesh(new THREE.SphereGeometry(1,20,14),
+      new THREE.MeshBasicMaterial({color:0xc9952c,wireframe:true,transparent:true,opacity:.16}));
+    m.userData.k=k;scene.add(m);return m;
+  });
+  orbitify(el,cam,new THREE.Vector3(0,0,0),{dist:7,yaw:0.7,pitch:0.4});
+  let prev=performance.now();
+  (function loop(now){
+    requestAnimationFrame(loop);
+    if(!el.clientWidth)return;
+    const dt=Math.min((now-prev)/1000,.05);prev=now;
+    const p=geo.attributes.position.array;
+    for(let i=0;i<N;i++){
+      let x=p[i*3],y=p[i*3+1],z=p[i*3+2];
+      const r=Math.hypot(x,y,z), d=dir[i];
+      const nr=r+spd[i]*dt;
+      if(nr>R){p[i*3]=d.x*0.1;p[i*3+1]=d.y*0.1;p[i*3+2]=d.z*0.1;}
+      else{p[i*3]=d.x*nr;p[i*3+1]=d.y*nr;p[i*3+2]=d.z*nr;}
+    }
+    geo.attributes.position.needsUpdate=true;
+    waves.forEach(w=>{
+      const s=((now/1300+w.userData.k/3)%1)*R;
+      w.scale.setScalar(Math.max(s,0.01));
+      w.material.opacity=.20*(1-s/R);
+    });
+    halo.scale.setScalar(1+0.12*Math.sin(now/300));
+    renderer.render(scene,cam);
+  })(prev);
+  RAD3D=true;
+}
+/* ---------- ② 거울 속 글자 3D ---------- */
+let MIR3D=null;
+function init3dMir(){
+  if(MIR3D)return;
+  const el=$('mir3d');if(!el||!el.clientWidth)return;
+  if(!window.THREE){el.innerHTML='<div style="padding:20px;color:#897b5e;font-size:.85rem">3D 라이브러리를 불러오지 못했어요(인터넷 연결 확인). 직접 실험: 투명한 비닐에 글자를 쓰고 안 돌린 채 거울에 비춰 보세요 — 그대로 읽힙니다!</div>';MIR3D='fail';return;}
+  const {renderer,scene,cam}=make3d(el);
+  const grid=new THREE.GridHelper(10,20,0xd3c9af,0xe7e0cd);grid.position.y=-1.4;scene.add(grid);
+  // 거울 평면 (z=0, 법선 +z) — 반투명이라 거울 너머 상이 보임
+  const mir=new THREE.Mesh(new THREE.PlaneGeometry(3.4,2.9),
+    new THREE.MeshBasicMaterial({color:0x9fb4d0,transparent:true,opacity:.22,side:THREE.DoubleSide}));
+  mir.position.y=0.1;scene.add(mir);
+  const frame=new THREE.LineSegments(new THREE.EdgesGeometry(mir.geometry),
+    new THREE.LineBasicMaterial({color:0x241f18}));
+  frame.position.copy(mir.position);scene.add(frame);
+  // 글자 텍스처
+  const tc=document.createElement('canvas');tc.width=256;tc.height=320;
+  const tx=tc.getContext('2d');
+  tx.clearRect(0,0,256,320);
+  tx.fillStyle='#221b10';tx.font='900 200px sans-serif';tx.textAlign='center';tx.textBaseline='middle';
+  tx.fillText('F',128,150);
+  tx.fillStyle='#cf2a44';tx.beginPath();tx.arc(222,36,18,0,Math.PI*2);tx.fill();  // 방향 추적용 빨간 점(오른쪽 위)
+  tx.fillStyle='#2563d4';tx.font='900 44px sans-serif';tx.fillText('과학',128,278);
+  const tex=new THREE.CanvasTexture(tc);
+  // 카드 그룹 (z=+1.35)
+  const card=new THREE.Group();card.position.set(0,0.15,1.35);scene.add(card);
+  const backMat=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.96,side:THREE.DoubleSide});
+  const back=new THREE.Mesh(new THREE.PlaneGeometry(1.05,1.32),backMat);
+  const txtP=new THREE.Mesh(new THREE.PlaneGeometry(1.0,1.25),
+    new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide}));
+  txtP.position.z=0.012;card.add(back);card.add(txtP);
+  const edge=new THREE.LineSegments(new THREE.EdgesGeometry(back.geometry),
+    new THREE.LineBasicMaterial({color:0x946400}));
+  card.add(edge);
+  // 거울 속 상 = z축 반전 복제 (앞뒤만 뒤집는 거울의 물리 그대로)
+  const mGroup=new THREE.Group();mGroup.scale.z=-1;scene.add(mGroup);
+  const ghost=card.clone();
+  ghost.traverse(o=>{if(o.material){o.material=o.material.clone();o.material.transparent=true;o.material.opacity*=0.55;}});
+  mGroup.add(ghost);
+  // 모드 전환
+  const M3={mode:'me',rx:0,ry:0,backO:.96};
+  const targets={me:{rx:0,ry:0,backO:.96},vert:{rx:0,ry:Math.PI,backO:.96},horiz:{rx:Math.PI,ry:0,backO:.96},thru:{rx:0,ry:0,backO:.10}};
+  const verdicts={
+   me:'🙂 카드가 나를 향해 있다 — 거울에는 카드의 흰 등판만 보인다. 기억할 것 하나: 거울은 늘 〈내가 보낸 면의 뒷모습〉을 보여 준다.',
+   vert:'↩️ 거울 속 글자 = 이 글자를 <b>〈뒤에서 본 모습〉</b>! 종이를 형광등에 비춰 뒷면에서 봤던 바로 그 글자다. 좌우가 "바뀐" 게 아니라 — <b>뒷모습이 원래 이렇게 생겼다.</b>',
+   horiz:'⤵️ 같은 원리! 거울은 받은 면의 <b>뒷모습</b>을 보여 줄 뿐. 이번엔 카드를 위아래로 넘겼으니 그 뒷모습이 위아래로 뒤집혀 보인다 — 거울이 한 일은 아까와 완전히 똑같다.',
+   thru:'🔍 안 돌리면 글자의 <b>뒷면</b>이 거울을 향한다. 거울은 〈뒷면의 뒷모습〉 = <b>앞면 그대로</b>를 보여 준다 — 그래서 그대로 읽힌다! 유리창에 쓴 글자를 거울에 비추면 늘 이렇다.'};
+  document.querySelectorAll('#mir3dBtns .step-btn').forEach(b=>b.addEventListener('click',()=>{
+    M3.mode=b.dataset.m3d;
+    document.querySelectorAll('#mir3dBtns .step-btn').forEach(x=>x.classList.toggle('active',x===b));
+    const v=$('mir3dVerdict');v.className='why-verdict'+(M3.mode==='me'?'':' ok');v.innerHTML=verdicts[M3.mode];
+    sndClick();
+  }));
+  // 💡 빛: 글자(빨간 점●) → 거울 반사점 → 눈
+  const EYE=new THREE.Vector3(1.55,0.45,2.75);
+  const eyeM=new THREE.Mesh(new THREE.SphereGeometry(0.12,18,18),new THREE.MeshBasicMaterial({color:0x1d4fae}));
+  eyeM.position.copy(EYE);scene.add(eyeM);
+  function lbl(t,c,p,s){
+    const cv2=document.createElement('canvas');cv2.width=256;cv2.height=80;
+    const x=cv2.getContext('2d');x.font='900 44px sans-serif';x.textAlign='center';x.textBaseline='middle';
+    x.fillStyle=c;x.fillText(t,128,40);
+    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv2),transparent:true}));
+    sp.scale.set(1.5*(s||1),0.47*(s||1),1);sp.position.copy(p);scene.add(sp);return sp;
+  }
+  lbl('👁 눈','#1d4fae',EYE.clone().add(new THREE.Vector3(0,0.34,0)),0.9);
+  function dynLine(color,dashed){
+    const g=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]);
+    const m=dashed?new THREE.LineDashedMaterial({color,dashSize:.11,gapSize:.08}):new THREE.LineBasicMaterial({color});
+    const l=new THREE.Line(g,m);scene.add(l);return l;
+  }
+  const L1=dynLine(0xb8860b,false), L2=dynLine(0x8a5e00,false), L3=dynLine(0x2563d4,true);
+  const photon=new THREE.Mesh(new THREE.SphereGeometry(0.05,10,10),new THREE.MeshBasicMaterial({color:0xffc914}));
+  scene.add(photon);
+  const DOTLOCAL=new THREE.Vector3(0.367,0.484,0.02);  // 카드 위 빨간 점●
+  orbitify(el,cam,new THREE.Vector3(0,0.1,0.25),{dist:5.2,yaw:0.45,pitch:0.22,minP:-0.05,maxP:0.9});
+  (function loop(){
+    requestAnimationFrame(loop);
+    if(!el.clientWidth)return;
+    const tg=targets[M3.mode];
+    M3.rx+=(tg.rx-M3.rx)*0.10;M3.ry+=(tg.ry-M3.ry)*0.10;M3.backO+=(tg.backO-M3.backO)*0.10;
+    card.rotation.set(M3.rx,M3.ry,0);backMat.opacity=M3.backO;
+    ghost.position.copy(card.position);ghost.rotation.copy(card.rotation);
+    // 빛 경로 동적 갱신
+    card.updateMatrixWorld();
+    const F=DOTLOCAL.clone();card.localToWorld(F);
+    const Fi=new THREE.Vector3(F.x,F.y,-F.z);
+    const tP=EYE.z/(EYE.z+Math.max(F.z,0.05));
+    const P=new THREE.Vector3().lerpVectors(EYE,Fi,tP);
+    const lightOn=$('mir3dLight').checked;
+    [L1,L2,L3,photon,eyeM].forEach(o=>o.visible=lightOn);
+    if(lightOn){
+      L1.geometry.setFromPoints([F,P]);
+      L2.geometry.setFromPoints([P,EYE]);
+      L3.geometry.setFromPoints([P,Fi]);L3.computeLineDistances();
+      const u=(performance.now()/2000)%1;
+      const d1=F.distanceTo(P), d2=P.distanceTo(EYE), s=u*(d1+d2);
+      if(s<d1)photon.position.lerpVectors(F,P,s/d1);
+      else photon.position.lerpVectors(P,EYE,(s-d1)/d2);
+    }
+    ghost.traverse(o=>{if(o.material&&o.material.map)o.material.opacity=.55;else if(o.material&&o.material.color&&o.material.color.getHex()===0xffffff)o.material.opacity=M3.backO*0.55;});
+    renderer.render(scene,cam);
+  })();
+  MIR3D=true;
+}
+
+
+
+/* ---------- lab2 3D 접기/펼치기 ---------- */
+function wire3dToggle(btnId,wrapId,initFn,label){
+  const b=$(btnId),w=$(wrapId);
+  b.addEventListener('click',()=>{
+    const open=w.style.display==='none';
+    w.style.display=open?'block':'none';
+    b.innerHTML=label+(open?' <b>▴ 접기</b>':' <b>▾ 펼치기</b>');
+    if(open)requestAnimationFrame(()=>initFn());
+    sndClick();
+  });
+}
+/* ---------- ④ 반사 경로 3D: 물체 → 거울 → 눈 ---------- */
+let RAYS3D=null;
+function init3dRays(){
+  if(RAYS3D)return;
+  const el=$('rays3d');if(!el||!el.clientWidth)return;
+  if(!window.THREE){el.innerHTML='<div style="padding:20px;color:#897b5e;font-size:.85rem">3D 라이브러리를 불러오지 못했어요(인터넷 연결 확인). 위의 2D 시뮬레이터로 충분히 학습할 수 있어요!</div>';RAYS3D='fail';return;}
+  const {renderer,scene,cam}=make3d(el);
+  const grid=new THREE.GridHelper(12,24,0xd3c9af,0xe7e0cd);grid.position.y=-1.5;scene.add(grid);
+  // 거울 z=0
+  const mir=new THREE.Mesh(new THREE.PlaneGeometry(4.4,3.0),
+    new THREE.MeshBasicMaterial({color:0x9fb4d0,transparent:true,opacity:.20,side:THREE.DoubleSide}));
+  mir.position.y=0.1;scene.add(mir);
+  const fr=new THREE.LineSegments(new THREE.EdgesGeometry(mir.geometry),new THREE.LineBasicMaterial({color:0x241f18}));
+  fr.position.copy(mir.position);scene.add(fr);
+  // 물체(금별 구) / 눈 / 상(유령)
+  const O=new THREE.Vector3(-0.9,0.35,1.6), E=new THREE.Vector3(1.25,0.15,2.1);
+  const I=new THREE.Vector3(O.x,O.y,-O.z);
+  const obj=new THREE.Mesh(new THREE.SphereGeometry(0.16,20,20),new THREE.MeshBasicMaterial({color:0xb8860b}));
+  obj.position.copy(O);scene.add(obj);
+  const ghost=new THREE.Mesh(new THREE.SphereGeometry(0.16,20,20),
+    new THREE.MeshBasicMaterial({color:0x2563d4,transparent:true,opacity:.45}));
+  ghost.position.copy(I);scene.add(ghost);
+  const eye=new THREE.Mesh(new THREE.SphereGeometry(0.13,20,20),new THREE.MeshBasicMaterial({color:0x1d4fae}));
+  eye.position.copy(E);scene.add(eye);
+  function spriteLabel(text,color,pos,sc){
+    const c=document.createElement('canvas');c.width=256;c.height=80;
+    const x=c.getContext('2d');x.font='900 44px sans-serif';x.textAlign='center';x.textBaseline='middle';
+    x.fillStyle=color;x.fillText(text,128,40);
+    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true}));
+    sp.scale.set(1.6*(sc||1),0.5*(sc||1),1);sp.position.copy(pos);scene.add(sp);
+  }
+  spriteLabel('물체','#7a5300',O.clone().add(new THREE.Vector3(0,0.42,0)));
+  spriteLabel('내 눈 👁','#1d4fae',E.clone().add(new THREE.Vector3(0,0.4,0)));
+  spriteLabel('상','#2563d4',I.clone().add(new THREE.Vector3(0,0.42,0)));
+  // 여러 반사점: 눈 위치를 살짝 바꾼 가상의 관찰점 3곳 → 모든 연장선이 같은 상에서 만남
+  const EYES=[E, new THREE.Vector3(1.5,0.8,2.4), new THREE.Vector3(0.6,-0.4,2.5)];
+  const photons=[];
+  EYES.forEach((Ek,k)=>{
+    const t=Ek.z/(Ek.z+O.z);
+    const P=new THREE.Vector3().lerpVectors(Ek,I,t);   // E↔I 직선이 거울과 만나는 점 = 반사점
+    const main=k===0;
+    const mat=new THREE.LineBasicMaterial({color:main?0xb8860b:0xc9a84c,transparent:true,opacity:main?1:.45});
+    scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([O,P]),mat));
+    scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([P,Ek]),
+      new THREE.LineBasicMaterial({color:main?0x8a5e00:0xa98a3a,transparent:true,opacity:main?1:.45})));
+    const dl=new THREE.Line(new THREE.BufferGeometry().setFromPoints([P,I]),
+      new THREE.LineDashedMaterial({color:0x2563d4,dashSize:.12,gapSize:.09,transparent:true,opacity:main?.95:.5}));
+    dl.computeLineDistances();scene.add(dl);
+    if(!main){
+      const e2=new THREE.Mesh(new THREE.SphereGeometry(0.10,16,16),
+        new THREE.MeshBasicMaterial({color:0x5a7fc0,transparent:true,opacity:.9}));
+      e2.position.copy(Ek);scene.add(e2);
+      spriteLabel('친구 눈 👁','#3e5f9e',Ek.clone().add(new THREE.Vector3(0,0.32,0)),0.8);
+    }
+    const ph=new THREE.Mesh(new THREE.SphereGeometry(0.05,10,10),
+      new THREE.MeshBasicMaterial({color:0xffc914}));
+    scene.add(ph);
+    photons.push({m:ph,O,P,E:Ek,off:k*0.33});
+  });
+  orbitify(el,cam,new THREE.Vector3(0.2,0.1,0.6),{dist:6.6,yaw:0.55,pitch:0.3,minP:0.02,maxP:1.0});
+  (function loop(now){
+    requestAnimationFrame(loop);
+    if(!el.clientWidth)return;
+    const T=(now/2400)%1;
+    photons.forEach(p=>{
+      let u=(T+p.off)%1;
+      const d1=p.O.distanceTo(p.P), d2=p.P.distanceTo(p.E), s=u*(d1+d2);
+      if(s<d1)p.m.position.lerpVectors(p.O,p.P,s/d1);
+      else p.m.position.lerpVectors(p.P,p.E,(s-d1)/d2);
+    });
+    renderer.render(scene,cam);
+  })(0);
+  RAYS3D=true;
+}
+
+/* ---------- ③ 거울 속의 나 3D — 사람·깃발·좌표축·빛 ---------- */
+let COORD3D=null;
+function init3dCoord(){
+  if(COORD3D)return;
+  const el=$('coord3d');if(!el||!el.clientWidth)return;
+  if(!window.THREE){el.innerHTML='<div style="padding:20px;color:#897b5e;font-size:.85rem">3D 라이브러리를 불러오지 못했어요(인터넷 연결 확인). 교과서 보충 그림으로 학습을 계속하세요!</div>';COORD3D='fail';return;}
+  const {renderer,scene,cam}=make3d(el);
+  const grid=new THREE.GridHelper(12,24,0xd3c9af,0xe7e0cd);grid.position.y=-1.55;scene.add(grid);
+  // 거울 z=0
+  const mir=new THREE.Mesh(new THREE.PlaneGeometry(4.6,3.4),
+    new THREE.MeshBasicMaterial({color:0x9fb4d0,transparent:true,opacity:.18,side:THREE.DoubleSide}));
+  scene.add(mir);
+  const fr=new THREE.LineSegments(new THREE.EdgesGeometry(mir.geometry),new THREE.LineBasicMaterial({color:0x241f18}));
+  scene.add(fr);
+  // ----- 사람 만들기 (앞면에만 얼굴, 오른손에 깃발) -----
+  function makePerson(){
+    const g=new THREE.Group();
+    const skin=0xf3c98a, shirt=0x2f6fd6;
+    const body=new THREE.Mesh(new THREE.CylinderGeometry(0.26,0.30,0.85,18),new THREE.MeshBasicMaterial({color:shirt}));
+    body.position.y=-0.35;g.add(body);
+    const head=new THREE.Mesh(new THREE.SphereGeometry(0.30,22,22),new THREE.MeshBasicMaterial({color:skin}));
+    head.position.y=0.45;g.add(head);
+    // 얼굴(앞 +z에만!): 눈 2 + 입
+    [[-0.11,0.52],[0.11,0.52]].forEach(([ex,ey])=>{
+      const e=new THREE.Mesh(new THREE.SphereGeometry(0.045,10,10),new THREE.MeshBasicMaterial({color:0x221b10}));
+      e.position.set(ex,ey,0.27);g.add(e);
+    });
+    const mouth=new THREE.Mesh(new THREE.BoxGeometry(0.14,0.035,0.02),new THREE.MeshBasicMaterial({color:0xab1f37}));
+    mouth.position.set(0,0.36,0.295);g.add(mouth);
+    // 가슴의 "앞" 화살표 (+z 원뿔)
+    const nose=new THREE.Mesh(new THREE.ConeGeometry(0.09,0.34,14),new THREE.MeshBasicMaterial({color:0xcf2a44}));
+    nose.rotation.x=Math.PI/2;nose.position.set(0,-0.18,0.42);g.add(nose);
+    // 팔: 왼팔 내림, 오른팔(+x) 들어 깃발
+    const armM=new THREE.MeshBasicMaterial({color:skin});
+    const armL=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,0.5,10),armM);
+    armL.position.set(-0.34,-0.30,0);armL.rotation.z=0.25;g.add(armL);
+    const armR=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,0.55,10),armM);
+    armR.position.set(0.42,0.05,0);armR.rotation.z=-0.9;g.add(armR);
+    const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,0.8,8),new THREE.MeshBasicMaterial({color:0x6f6248}));
+    pole.position.set(0.66,0.45,0);g.add(pole);
+    const flag=new THREE.Mesh(new THREE.PlaneGeometry(0.42,0.27),
+      new THREE.MeshBasicMaterial({color:0xe63946,side:THREE.DoubleSide}));
+    flag.position.set(0.88,0.72,0);g.add(flag);
+    return g;
+  }
+  const me=makePerson();me.position.set(-0.35,0.25,1.55);scene.add(me);
+  // 거울 속 상: z반전 그룹 + 반투명 복제
+  const mg=new THREE.Group();mg.scale.z=-1;scene.add(mg);
+  const img=makePerson();
+  img.traverse(o=>{if(o.material){o.material=o.material.clone();o.material.transparent=true;o.material.opacity=.55;}});
+  img.position.copy(me.position);mg.add(img);
+  // ----- 좌표축 (교과서 보충): 실제/거울 속 — 발밑 -----
+  function triad(origin,zsign){
+    [[new THREE.Vector3(0,0,zsign),0xcf2a44],   // x: 거울 수직 (반전축)
+     [new THREE.Vector3(1,0,0),0x13853f],       // y: 좌우
+     [new THREE.Vector3(0,1,0),0x2563d4]        // z: 위아래
+    ].forEach(([d,c])=>scene.add(new THREE.ArrowHelper(d,origin,0.85,c,0.2,0.11)));
+  }
+  triad(new THREE.Vector3(-1.55,-1.0,1.0),+1);
+  triad(new THREE.Vector3(-1.55,-1.0,-1.0),-1);
+  function spLbl(t,c,p,s){
+    const cv2=document.createElement('canvas');cv2.width=256;cv2.height=80;
+    const x=cv2.getContext('2d');x.font='900 42px sans-serif';x.textAlign='center';x.textBaseline='middle';
+    x.fillStyle=c;x.fillText(t,128,40);
+    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv2),transparent:true}));
+    sp.scale.set(1.5*(s||1),0.47*(s||1),1);sp.position.copy(p);scene.add(sp);
+  }
+  spLbl('실제','#241f18',new THREE.Vector3(-1.55,-1.35,1.15));
+  spLbl('거울 속','#5b6573',new THREE.Vector3(-1.55,-1.35,-1.15));
+  spLbl('🚩 같은 쪽!','#8f1424',new THREE.Vector3(0.55,1.35,0),1.15);
+  // ----- 빛: 깃발 → 거울 반사점 → 눈, + 연장선 → 거울 속 깃발 -----
+  const F=new THREE.Vector3(0.53,0.97,1.55);          // 깃발 위치(월드)
+  const E=new THREE.Vector3(1.7,0.35,2.3);            // 관찰자 눈
+  const Iv=new THREE.Vector3(F.x,F.y,-F.z);
+  const tP=E.z/(E.z+F.z);
+  const P=new THREE.Vector3().lerpVectors(E,Iv,tP);
+  scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([F,P]),new THREE.LineBasicMaterial({color:0xb8860b})));
+  scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([P,E]),new THREE.LineBasicMaterial({color:0x8a5e00})));
+  const dl=new THREE.Line(new THREE.BufferGeometry().setFromPoints([P,Iv]),
+    new THREE.LineDashedMaterial({color:0x2563d4,dashSize:.12,gapSize:.09}));
+  dl.computeLineDistances();scene.add(dl);
+  const eyeM=new THREE.Mesh(new THREE.SphereGeometry(0.12,18,18),new THREE.MeshBasicMaterial({color:0x1d4fae}));
+  eyeM.position.copy(E);scene.add(eyeM);
+  spLbl('👁 눈','#1d4fae',E.clone().add(new THREE.Vector3(0,0.34,0)),0.9);
+  const photon=new THREE.Mesh(new THREE.SphereGeometry(0.055,10,10),new THREE.MeshBasicMaterial({color:0xffc914}));
+  scene.add(photon);
+  orbitify(el,cam,new THREE.Vector3(0.1,0,0.3),{dist:6.8,yaw:0.5,pitch:0.26,minP:0.02,maxP:0.95});
+  (function loop(now){
+    requestAnimationFrame(loop);
+    if(!el.clientWidth)return;
+    const u=(now/2200)%1;
+    const d1=F.distanceTo(P), d2=P.distanceTo(E), s=u*(d1+d2);
+    if(s<d1)photon.position.lerpVectors(F,P,s/d1);
+    else photon.position.lerpVectors(P,E,(s-d1)/d2);
+    renderer.render(scene,cam);
+  })(0);
+  COORD3D=true;
+}
+
+/* ============================================================
+   탭 전환 + 초기화
+   ============================================================ */
+function redrawTab(name){
+  if(name==='concept'){init3dMir();init3dCoord();}
+  if(name==='lab1'){drawFeat();drawQuiz();}
+  else if(name==='lab2')drawRay();
+  else if(name==='sniper')ptDraw();
+  else if(name==='decode')inspDraw();
+  else if(name==='phone'){drawFace();drawHand();}
+  else if(name==='why'){drawWhyBundle(performance.now());drawWhyBrain();drawWhyProof();drawWhyHalf();drawWhyTwo();}
+}
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));
+  window.scrollTo({top:0,behavior:'smooth'});
+  WE.active=(name==='why');
+  if(WE.active){WE.raf=requestAnimationFrame(echoLoop);}
+  else if(WE.raf)cancelAnimationFrame(WE.raf);
+  requestAnimationFrame(()=>redrawTab(name));
+}
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.goto)));
+window.addEventListener('resize',()=>{
+  const cur=document.querySelector('.tab-panel.active');
+  if(cur)redrawTab(cur.id.replace('tab-',''));
+});
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.section-title').forEach(el=>{
+    const d=document.createElement('div');d.className='glass-strip';
+    el.insertAdjacentElement('afterend',d);
+  });
+  $('featHVal').textContent=feat.h+'칸';
+  $('whyBrainEyeVal').textContent='66%';
+  $('whyHalfDVal').textContent='중간';
+  renderFeatLog();
+  ptNewRound();inspNew(true);
+  wire3dToggle('rad3dToggle','rad3dWrap',init3dRad,'🌐 3D로 보기 · 빛은 모든 방향으로');
+  wire3dToggle('rays3dToggle','rays3dWrap',init3dRays,'🪞 3D로 보기 · 반사되어 눈으로 들어오는 빛');
+  drawFeat();drawQuiz();
+});
+</script>
+</body>
+</html>
