@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>생활 속 거울과 렌즈 · 빛과 파동</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff; --bg2:#f7f4ea; --surface:#ffffff; --surface2:#f3eee0;
+  --line:#e7e0cd; --line2:#d3c9af;
+  --text:#221b10; --muted:#6b5e45; --faint:#7d6f51;
+  --gold:#946400; --gold-soft:#8a5e00; --gold-deep:#7d5500;
+  --cyan:#2563d4; --cyan-soft:#1d4fae; --cyan-deep:#173f8c;
+  --silver:#5d6675; --silver-soft:#454d5a; --silver-deep:#7f8a9c;
+  --green:#13853f; --rose:#cf2a44; --violet:#7c3fd1;
+  --font-display:'Black Han Sans',sans-serif;
+  --font-body:'Noto Sans KR',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --shadow:0 18px 46px -22px rgba(60,48,20,.22);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:
+  radial-gradient(1000px 620px at 12% -8%, rgba(230,57,70,.10), transparent 58%),
+  radial-gradient(900px 600px at 45% -10%, rgba(255,170,0,.12), transparent 56%),
+  radial-gradient(950px 640px at 82% -6%, rgba(37,99,212,.10), transparent 58%),
+  radial-gradient(800px 700px at 4% 78%, rgba(19,133,63,.08), transparent 56%),
+  radial-gradient(900px 760px at 96% 84%, rgba(124,63,209,.09), transparent 58%),
+  conic-gradient(from 192deg at 30% -8%, transparent 0deg 6deg, rgba(230,57,70,.06) 6deg 10deg, transparent 10deg 17deg, rgba(255,170,0,.07) 17deg 21deg, transparent 21deg 28deg, rgba(19,133,63,.05) 28deg 32deg, transparent 32deg),
+  conic-gradient(from 168deg at 72% -8%, transparent 0deg 5deg, rgba(37,99,212,.06) 5deg 9deg, transparent 9deg 15deg, rgba(124,63,209,.06) 15deg 19deg, transparent 19deg),
+  var(--bgimg),
+  #ffffff}
+body{--bgimg:url("bg-lens-main.png") center/cover no-repeat fixed}
+#bgStars{position:fixed;inset:0;z-index:-1;pointer-events:none}
+body::after{content:"";position:fixed;inset:0;z-index:-1;opacity:.5;background-image:radial-gradient(rgba(0,0,0,.04) 1px, transparent 1px);background-size:32px 32px;mask-image:linear-gradient(180deg,#000,transparent 90%)}
+.topbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:linear-gradient(180deg, rgba(255,255,255,.94), rgba(255,255,255,.78));border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1180px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;margin-right:auto}
+.brand .mark{width:42px;height:42px;border-radius:12px;flex:0 0 auto;position:relative;overflow:hidden;background:linear-gradient(115deg,#e63946 0% 33%,#ffaa00 33% 66%,#2563d4 66% 100%);box-shadow:0 0 22px rgba(95,105,120,.35), inset 0 0 10px rgba(0,0,0,.18)}
+.brand .mark::before{content:"";position:absolute;left:18%;top:24%;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+.brand .mark::after{content:"";position:absolute;right:18%;top:24%;width:8px;height:8px;border-radius:50%;border:1.6px dashed var(--cyan-soft);opacity:.95}
+.brand h1{font-family:var(--font-display);font-weight:400;font-size:1.18rem;letter-spacing:.5px;line-height:1.15}
+.brand h1 small{display:block;font-family:var(--font-body);font-weight:500;font-size:.7rem;color:var(--muted);letter-spacing:2px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab-btn{font-family:var(--font-body);font-weight:700;font-size:.86rem;color:var(--muted);background:transparent;border:1px solid transparent;border-radius:11px;padding:9px 15px;cursor:pointer;transition:.22s;display:flex;align-items:center;gap:7px;white-space:nowrap}
+.tab-btn:hover{color:var(--text);background:rgba(0,0,0,.04)}
+.tab-btn.active{color:var(--bg);background:linear-gradient(135deg,var(--gold),var(--gold-deep));box-shadow:0 8px 22px -8px rgba(207,143,31,.7)}
+.tab-btn .ico{font-size:1rem}
+main{max-width:1180px;margin:0 auto;padding:30px 22px 90px}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fadein .5s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.reveal{opacity:0}
+.tab-panel.active .reveal{animation:up .6s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.r1{animation-delay:.04s}.r2{animation-delay:.12s}.r3{animation-delay:.2s}.r4{animation-delay:.28s}.r5{animation-delay:.36s}.r6{animation-delay:.44s}
+.eyebrow{font-family:var(--font-mono);font-weight:700;font-size:.72rem;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+.section-title{font-family:var(--font-display);font-weight:400;font-size:2rem;line-height:1.1;margin:6px 0 2px;letter-spacing:.5px}
+.lead{color:var(--muted);max-width:62ch;font-size:1rem}
+.ws-chip{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:800;color:#0c2a26;background:linear-gradient(135deg,#9be8d2,#5fc9b0);border-radius:999px;padding:4px 11px;letter-spacing:.5px;vertical-align:middle;margin-left:8px}
+/* ===== hero — 거울 대칭 모티프 ===== */
+.hero{position:relative;border-radius:24px;overflow:hidden;padding:46px 38px 40px;background:
+  radial-gradient(700px 380px at 78% -10%, rgba(124,63,209,.10), transparent 60%),
+  radial-gradient(620px 420px at 8% 120%, rgba(255,170,0,.14), transparent 60%),
+  radial-gradient(540px 360px at 30% -10%, rgba(230,57,70,.08), transparent 60%),
+  linear-gradient(160deg,#ffffff,#faf6ec);border:1px solid var(--line);box-shadow:var(--shadow)}
+.hero .mirror-seam{position:absolute;top:0;bottom:0;left:62%;width:2px;background:linear-gradient(180deg,transparent,rgba(90,101,119,.85),transparent);box-shadow:0 0 18px rgba(124,63,209,.4);pointer-events:none}
+.hero .mirror-side{position:absolute;top:0;bottom:0;left:62%;right:0;background:linear-gradient(90deg,rgba(95,105,120,.05),rgba(176,126,240,.06));pointer-events:none}
+.hero .ghost-title{position:absolute;top:46px;left:62%;transform:scaleX(-1);transform-origin:left top;font-family:var(--font-display);font-weight:400;font-size:clamp(2.1rem,5vw,3.3rem);line-height:1.02;letter-spacing:.5px;color:transparent;-webkit-text-stroke:1px rgba(90,101,119,.35);pointer-events:none;white-space:pre-line;user-select:none}
+.hero h2{font-family:var(--font-display);font-weight:400;font-size:clamp(2.1rem,5vw,3.3rem);line-height:1.02;letter-spacing:.5px;position:relative;max-width:62%}
+.hero h2 .hl{color:var(--gold);text-shadow:0 0 30px rgba(242,177,62,.5)}
+.hero .whisper{position:relative;margin-top:10px;font-size:1rem;color:var(--silver);font-style:italic;letter-spacing:.5px}
+.hero p.desc{position:relative;margin-top:14px;color:#55503f;max-width:54ch;font-size:1.05rem}
+.hero .chip-row{position:relative;margin-top:22px;display:flex;gap:10px;flex-wrap:wrap}
+.chip{font-size:.8rem;font-weight:700;padding:7px 13px;border-radius:999px;background:rgba(0,0,0,.05);border:1px solid var(--line2);color:#55503f;display:flex;gap:7px;align-items:center}
+.chip b{color:var(--cyan-soft)}
+.bigq{margin-top:26px;border-radius:18px;padding:22px 24px;position:relative;overflow:hidden;background:linear-gradient(135deg, rgba(242,177,62,.14), rgba(95,105,120,.1));border:1px solid var(--line2)}
+.bigq .q-label{font-family:var(--font-mono);font-size:.72rem;letter-spacing:2px;color:var(--gold);font-weight:700}
+.bigq p{font-family:var(--font-display);font-weight:400;font-size:clamp(1.2rem,3vw,1.7rem);line-height:1.25;color:#221b10;margin-top:6px}
+@media(max-width:760px){.hero h2{max-width:100%}.hero .ghost-title,.hero .mirror-seam,.hero .mirror-side{display:none}}
+/* ===== 나만의 질문 ===== */
+.qmaker{margin-top:26px;border-radius:20px;border:1px solid var(--line);background:linear-gradient(165deg,var(--surface2),var(--surface));box-shadow:var(--shadow);padding:24px}
+.qmaker h3{font-family:var(--font-display);font-weight:400;font-size:1.3rem;letter-spacing:.3px}
+.qmaker .qm-sub{color:var(--muted);font-size:.88rem;margin:4px 0 14px}
+.qmaker .qm-row{display:flex;gap:10px;flex-wrap:wrap}
+.qmaker input{flex:1;min-width:220px;background:var(--bg2);border:1px solid var(--line2);border-radius:12px;color:var(--text);font-family:var(--font-body);font-size:.95rem;padding:12px 14px;outline:none}
+.qmaker input:focus{border-color:var(--gold)}
+.qm-add{font-family:var(--font-display);font-weight:400;font-size:1rem;letter-spacing:1px;color:var(--bg);border:none;border-radius:12px;padding:12px 22px;cursor:pointer;background:linear-gradient(135deg,var(--gold),var(--gold-deep));transition:.18s}
+.qm-add:hover{transform:translateY(-2px)}
+.qm-list{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.qm-item{display:flex;align-items:baseline;gap:10px;background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:10px 13px;font-size:.92rem;color:#3f382a}
+.qm-item .qn{font-family:var(--font-mono);font-weight:700;font-size:.74rem;color:var(--gold)}
+.qm-note{margin-top:10px;font-size:.78rem;color:var(--faint)}
+/* ===== hooks ===== */
+.hooks{margin-top:34px;display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px}
+.hook{position:relative;border-radius:20px;padding:26px 24px 24px;overflow:hidden;background:linear-gradient(165deg,var(--surface2),var(--surface));border:1px solid var(--line);box-shadow:var(--shadow);transition:.28s}
+.hook:hover{transform:translateY(-5px);border-color:var(--line2)}
+.hook::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--accent,var(--gold))}
+.hook .num{font-family:var(--font-mono);font-weight:700;font-size:.78rem;color:var(--faint)}
+.hook .emoji{font-size:2.1rem;line-height:1;margin:4px 0 10px;display:block;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
+.hook .hook-img{display:block;width:100%;height:150px;object-fit:cover;border-radius:13px;margin:10px 0 6px;border:1px solid var(--line)}
+.hook h3{font-family:var(--font-display);font-weight:400;font-size:1.32rem;line-height:1.18;letter-spacing:.3px}
+.hook .hook-body{color:#5a4f3a;font-size:.95rem;margin-top:10px}
+.hook .classroom{margin-top:14px;font-size:.86rem;color:var(--muted);border-left:3px solid var(--accent,var(--gold));padding:8px 0 8px 12px;background:rgba(0,0,0,.02);border-radius:0 8px 8px 0}
+.hook .classroom b{color:var(--text)}
+.hook .cta{margin-top:16px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-weight:700;font-size:.88rem;color:var(--bg);border:none;background:linear-gradient(135deg,var(--cyan),var(--cyan-deep));padding:10px 16px;border-radius:11px;transition:.2s}
+.hook .cta:hover{transform:translateX(3px);box-shadow:0 10px 24px -10px rgba(90,167,240,.7)}
+/* ===== sim cards ===== */
+.lab-grid{display:grid;gap:26px;margin-top:26px}
+.sim-card{border-radius:22px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:linear-gradient(165deg,var(--surface2),var(--surface))}
+.sim-head{padding:22px 24px 0;display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.sim-head .badge{font-family:var(--font-mono);font-weight:700;font-size:.72rem;letter-spacing:1px;padding:6px 11px;border-radius:9px;color:var(--bg);white-space:nowrap}
+.badge.gold{background:linear-gradient(135deg,var(--gold),var(--gold-deep))}
+.badge.cy{background:linear-gradient(135deg,var(--cyan),var(--cyan-deep))}
+.sim-head h3{font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:.3px;line-height:1.1}
+.sim-head .sub{color:var(--muted);font-size:.9rem;margin-top:2px}
+.sim-body{display:grid;grid-template-columns:1.5fr 1fr;gap:0;margin-top:18px}
+@media(max-width:820px){.sim-body{grid-template-columns:1fr}}
+.canvas-wrap{position:relative;padding:10px 14px 18px 22px}
+canvas{width:100%;display:block;border-radius:14px;touch-action:none}
+.sim-side{padding:14px 24px 24px;border-left:1px solid var(--line)}
+@media(max-width:820px){.sim-side{border-left:none;border-top:1px solid var(--line)}}
+.readouts{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.readout{flex:1;min-width:110px;background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:13px 15px;transition:.2s}
+.readout .rlabel{font-size:.74rem;color:var(--muted);font-weight:700;letter-spacing:.5px}
+.readout .rval{font-family:var(--font-mono);font-weight:700;font-size:1.7rem;margin-top:3px}
+.readout.gold .rval{color:var(--gold)}
+.readout.cyan .rval{color:var(--cyan-soft)}
+.ctl-label{font-size:.8rem;font-weight:700;color:var(--muted);margin:4px 0 8px;letter-spacing:.5px}
+.fire-light{width:100%;font-family:var(--font-display);font-weight:400;font-size:1.05rem;letter-spacing:1px;cursor:pointer;color:var(--bg);border:none;border-radius:13px;padding:13px;margin-bottom:14px;transition:.16s;display:flex;align-items:center;justify-content:center;gap:8px}
+.fire-light.gold{background:linear-gradient(135deg,var(--gold),var(--gold-deep));box-shadow:0 12px 28px -12px rgba(207,143,31,.8)}
+.fire-light.cyan{background:linear-gradient(135deg,var(--cyan),var(--cyan-deep));box-shadow:0 12px 28px -12px rgba(47,124,214,.8)}
+.fire-light:hover{transform:translateY(-2px)}
+.fire-light:active{transform:scale(.97)}
+.toggle-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.tg{display:flex;align-items:center;gap:7px;font-size:.84rem;color:var(--muted);cursor:pointer;user-select:none}
+.tg input{accent-color:var(--gold);width:16px;height:16px;cursor:pointer}
+.step-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.step-btn{flex:1;min-width:96px;font-family:var(--font-body);font-weight:700;font-size:.84rem;cursor:pointer;background:rgba(0,0,0,.04);border:1px solid var(--line2);color:var(--text);padding:11px 8px;border-radius:11px;transition:.18s;line-height:1.3}
+.step-btn small{display:block;font-weight:500;font-size:.7rem;color:var(--muted)}
+.step-btn:hover{border-color:var(--gold)}
+.step-btn.active{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:var(--bg);border-color:transparent}
+.step-btn.active small{color:rgba(255,255,255,.85)}
+.angle-slider-wrap{margin-bottom:14px}
+.angle-slider-wrap .asl-head{display:flex;justify-content:space-between;gap:10px;font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:8px}
+.angle-slider-wrap .asl-head span{font-family:var(--font-mono);color:var(--gold)}
+input[type=range].rng{width:100%;height:14px;border-radius:8px;appearance:none;-webkit-appearance:none;background:#1b2640;cursor:pointer;outline:none}
+input[type=range].rng::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-deep));cursor:pointer;box-shadow:0 0 12px rgba(242,177,62,.6);border:2px solid #fff3}
+input[type=range].rng::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--gold);cursor:pointer;border:2px solid #fff3}
+.gloss{margin-top:4px;margin-bottom:16px}
+.gloss-title{font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:8px;letter-spacing:.5px}
+.gloss-chips{display:flex;flex-wrap:wrap;gap:7px}
+.gloss-chip{font-family:var(--font-body);font-weight:700;font-size:.8rem;cursor:pointer;background:rgba(0,0,0,.05);border:1px solid var(--line2);color:#55503f;padding:6px 12px;border-radius:999px;transition:.16s}
+.gloss-chip:hover{border-color:var(--gold);color:#221b10;background:rgba(242,177,62,.08)}
+.gloss-chip.active{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:var(--bg);border-color:transparent}
+.gloss-def{margin-top:10px;font-size:.88rem;color:#3f382a;background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 14px;display:none}
+.gloss-def.show{display:block;animation:up .3s ease both}
+.gloss-def .gd-term{font-weight:700;color:#221b10;margin-right:6px}
+.qbox{background:linear-gradient(135deg,rgba(242,177,62,.1),rgba(242,177,62,.03));border:1px solid rgba(242,177,62,.25);border-radius:13px;padding:15px 16px;margin-top:4px}
+.qbox.cyanq{background:linear-gradient(135deg,rgba(90,167,240,.1),rgba(90,167,240,.03));border-color:rgba(90,167,240,.25)}
+.qbox .qtag{font-family:var(--font-mono);font-size:.68rem;letter-spacing:1.5px;font-weight:700;color:var(--gold)}
+.qbox.cyanq .qtag{color:var(--cyan-soft)}
+.qbox p{font-size:.92rem;margin-top:5px;color:#3f382a}
+.ansbtn{margin-top:11px;font-family:var(--font-body);font-weight:700;font-size:.8rem;cursor:pointer;background:transparent;border:1px dashed var(--line2);color:var(--muted);padding:8px 12px;border-radius:9px;transition:.18s}
+.ansbtn:hover{color:var(--text);border-color:var(--gold)}
+.answer{margin-top:11px;font-size:.9rem;color:#114d2c;background:rgba(68,200,120,.08);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:11px 13px;display:none}
+.answer.show{display:block;animation:up .35s ease both}
+.answer b{color:#221b10}
+.story-box{background:linear-gradient(135deg,rgba(176,126,240,.1),rgba(176,126,240,.03));border:1px solid rgba(176,126,240,.28);border-radius:13px;padding:15px 16px;margin-bottom:14px}
+.story-box .story-tag{font-family:var(--font-mono);font-size:.68rem;letter-spacing:1.5px;font-weight:700;color:var(--violet)}
+.story-box p{font-size:.9rem;margin-top:6px;color:#3f382a}
+.story-box p b{color:#221b10}
+.rec-panel{background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:14px 15px;margin-bottom:14px}
+.rec-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:10px}
+.rec-btn{margin-left:auto;font-family:var(--font-body);font-weight:700;font-size:.78rem;cursor:pointer;color:var(--bg);background:linear-gradient(135deg,var(--gold),var(--gold-deep));border:none;padding:7px 12px;border-radius:9px;transition:.16s}
+.rec-btn:hover{transform:translateY(-1px)}
+.rec-clear{font-family:var(--font-body);font-weight:700;font-size:.74rem;cursor:pointer;color:var(--muted);background:transparent;border:1px solid var(--line2);padding:7px 10px;border-radius:9px}
+.rec-clear:hover{color:var(--text);border-color:var(--rose)}
+.rec-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.rec-table th{text-align:center;color:var(--muted);font-weight:700;font-size:.76rem;padding:6px;border-bottom:1px solid var(--line2)}
+.rec-table td{text-align:center;padding:7px 6px;border-bottom:1px solid rgba(0,0,0,.04);font-family:var(--font-mono);font-weight:700;color:var(--gold-soft)}
+.rec-table tr.rec-empty td{font-family:var(--font-body);font-weight:500;color:var(--faint);font-size:.8rem;border-bottom:none}
+.find-rule{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line2)}
+.find-rule>p{font-size:.88rem;color:#3f382a;margin-bottom:10px}
+.find-rule>p b{color:#221b10}
+.rule-btns{display:flex;gap:8px;flex-wrap:wrap}
+.rule-btn{flex:1;min-width:96px;font-family:var(--font-body);font-weight:700;font-size:.82rem;cursor:pointer;background:rgba(0,0,0,.05);border:1px solid var(--line2);color:var(--text);padding:11px;border-radius:10px;transition:.16s}
+.rule-btn:hover{border-color:var(--gold);background:rgba(242,177,62,.08)}
+.rule-btn.picked-ok{background:rgba(68,200,120,.16);border-color:var(--green)}
+.rule-btn.picked-no{background:rgba(234,93,114,.14);border-color:var(--rose)}
+.rule-result{margin-top:12px;font-size:.9rem;display:none;border-radius:10px;padding:12px 14px}
+.rule-result.show{display:block;animation:up .3s ease both}
+.rule-result.ok{color:#0e5128;background:rgba(68,200,120,.1);border-left:3px solid var(--green)}
+.rule-result.no{color:#8f1424;background:rgba(234,93,114,.1);border-left:3px solid var(--rose)}
+.rule-result b{color:#221b10}
+.howto{font-size:.82rem;color:var(--faint);padding:0 24px 18px;display:flex;align-items:center;gap:8px}
+.howto::before{content:"☝";font-size:1rem}
+.adv-badge{font-family:var(--font-mono);font-weight:800;font-size:.66rem;letter-spacing:1px;color:var(--bg);background:var(--violet);border-radius:5px;padding:2px 6px;vertical-align:middle}
+.adv-out{font-size:.7rem;color:var(--violet);border:1px solid rgba(176,126,240,.5);border-radius:5px;padding:1px 6px;vertical-align:middle}
+.adv-note{font-size:.84rem;line-height:1.65;color:#3f382a;background:rgba(176,126,240,.07);border-left:3px solid var(--violet);border-radius:0 8px 8px 0;padding:10px 13px;margin:10px 0 14px}
+.adv-note b{color:#221b10}
+/* ===== game shell ===== */
+.game-wrap{margin-top:26px;border-radius:22px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:linear-gradient(165deg,var(--surface2),var(--surface))}
+.game-top{padding:22px 24px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.game-top h3{font-family:var(--font-display);font-weight:400;font-size:1.55rem;letter-spacing:.3px;line-height:1.1}
+.game-top .sub{color:var(--muted);font-size:.9rem;margin-top:3px;max-width:46ch}
+.score-pills{display:flex;gap:10px;flex-wrap:wrap}
+.pill{background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:9px 15px;text-align:center;min-width:74px}
+.pill .pl{font-size:.68rem;color:var(--muted);font-weight:700;letter-spacing:.5px}
+.pill .pv{font-family:var(--font-mono);font-weight:700;font-size:1.45rem;line-height:1.1;margin-top:2px}
+.pill.hit .pv{color:var(--green)}.pill.try .pv{color:var(--text)}.pill.streak .pv{color:var(--gold)}
+.pill.time .pv{color:var(--cyan-soft)}.pill.best .pv{color:var(--violet)}
+.pill.time.low .pv{color:var(--rose)}
+.game-canvas-wrap{padding:14px 18px 4px;position:relative}
+#snpCanvas{cursor:crosshair;border:1px solid var(--line);width:100%;display:block;border-radius:10px;touch-action:none}
+.game-panel{padding:8px 24px 22px}
+.coach{font-size:.86rem;color:#3f382a;background:rgba(176,126,240,.08);border-left:3px solid var(--violet);border-radius:0 8px 8px 0;padding:10px 12px;margin-bottom:14px}
+.coach b{color:#221b10}
+.gmode-select{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.gmodebtn{flex:1;min-width:150px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:14px 10px;border-radius:15px;border:1px solid var(--line2);background:var(--bg2);color:var(--muted);cursor:pointer;transition:.18s}
+.gmodebtn:hover{border-color:var(--cyan);color:#221b10;transform:translateY(-2px)}
+.gmodebtn .gm-i{font-size:1.5rem;line-height:1}
+.gmodebtn .gm-t{font-weight:800;font-size:1.05rem;font-family:'Black Han Sans',sans-serif;letter-spacing:.5px}
+.gmodebtn .gm-d{font-size:.74rem;opacity:.8}
+.gmodebtn.active{background:linear-gradient(135deg,rgba(90,167,240,.22),rgba(176,126,240,.18));border-color:var(--cyan);color:#221b10;box-shadow:0 6px 20px rgba(90,167,240,.18)}
+.game-controls{padding:0;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.fire-btn{font-family:var(--font-display);font-weight:400;font-size:1.1rem;letter-spacing:1px;cursor:pointer;color:var(--bg);border:none;border-radius:13px;padding:13px 30px;transition:.18s;background:linear-gradient(135deg,var(--gold),var(--gold-deep));box-shadow:0 12px 28px -12px rgba(242,177,62,.75)}
+.fire-btn:hover{transform:translateY(-2px)}
+.fire-btn:active{transform:translateY(1px)}
+.fire-btn:disabled{opacity:.4;cursor:default;transform:none;box-shadow:none}
+.next-btn{font-family:var(--font-body);font-weight:700;font-size:.92rem;cursor:pointer;color:var(--bg);border:none;border-radius:13px;padding:13px 24px;background:linear-gradient(135deg,var(--cyan),var(--cyan-deep));transition:.18s}
+.next-btn:hover{transform:translateY(-2px)}
+.mbtn{font-family:var(--font-body);font-weight:700;font-size:.86rem;cursor:pointer;border:1px solid var(--line2);background:rgba(0,0,0,.04);color:var(--text);border-radius:11px;padding:11px 16px;transition:.18s}
+.mbtn:hover{border-color:var(--gold);background:rgba(242,177,62,.07)}
+.game-msg{flex:1;min-width:230px;font-size:.9rem;color:var(--muted);padding:11px 15px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);transition:.2s}
+.game-msg.hit{color:#0e5128;border-color:rgba(68,200,120,.4);background:rgba(68,200,120,.08)}
+.game-msg.miss{color:#8f1424;border-color:rgba(234,93,114,.4);background:rgba(234,93,114,.08)}
+.game-msg b{color:#221b10}
+@media(max-width:560px){.fire-btn{width:100%;text-align:center;padding:14px 20px}.game-controls{justify-content:center}}
+/* ===== 거울 암호 ===== */
+.dec-stage{padding:10px 24px 4px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.mword-frame{position:relative;width:min(540px,100%);border-radius:18px;border:2px solid var(--line2);background:
+  linear-gradient(115deg, rgba(95,105,120,.10), rgba(176,126,240,.08) 50%, rgba(90,167,240,.08));
+  box-shadow:inset 0 0 40px rgba(95,105,120,.08), 0 14px 40px -18px rgba(0,0,0,.8);
+  padding:38px 20px;text-align:center;overflow:hidden}
+.mword-frame::before{content:"";position:absolute;top:-40%;left:-20%;width:55%;height:180%;background:linear-gradient(100deg,transparent,rgba(0,0,0,.07),transparent);transform:rotate(8deg);pointer-events:none}
+.mword-frame .frame-tag{position:absolute;top:10px;left:14px;font-family:var(--font-mono);font-size:.66rem;letter-spacing:2px;color:var(--silver-deep)}
+.mword{display:inline-block;transform:scaleX(-1);font-family:var(--font-display);font-weight:400;font-size:clamp(2.2rem,7vw,3.6rem);letter-spacing:4px;color:var(--silver-soft);text-shadow:0 0 26px rgba(95,105,120,.45)}
+.dec-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(540px,100%)}
+@media(max-width:480px){.dec-opts{grid-template-columns:1fr}}
+.dec-opt{font-family:var(--font-body);font-weight:800;font-size:1.05rem;cursor:pointer;background:var(--bg2);border:1px solid var(--line2);color:var(--text);padding:15px 10px;border-radius:13px;transition:.15s}
+.dec-opt:hover{border-color:var(--gold);background:rgba(242,177,62,.07)}
+.dec-opt.ok{background:rgba(68,200,120,.18);border-color:var(--green);color:#221b10}
+.dec-opt.no{background:rgba(234,93,114,.16);border-color:var(--rose);color:#221b10;animation:shake .3s}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.amb-demo{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:12px;background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:16px}
+.lr-axis{display:flex;align-items:center;gap:7px;background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:9px 14px;font-size:.88rem;font-weight:700;color:var(--text)}
+.lr-dot{width:11px;height:11px;border-radius:50%;display:inline-block;flex:none}
+.lr-state{margin-left:6px;font-size:.8rem;font-weight:800;padding:3px 9px;border-radius:8px;background:rgba(0,0,0,.06);color:var(--dim);transition:.2s}
+.lr-state.flip{background:rgba(234,93,114,.18);color:#ab1f37}
+.lr-state.keep{background:rgba(68,200,120,.16);color:#0e6e34}
+.amb-word{font-family:var(--font-mono);font-weight:700;font-size:clamp(1rem,3.4vw,1.5rem);letter-spacing:2px;color:#8f1424;padding:9px 14px;border:2px solid rgba(234,93,114,.5);border-radius:10px}
+.amb-word.flip{transform:scaleX(-1);color:var(--cyan-soft);border-color:rgba(90,167,240,.5)}
+.amb-arrow{font-size:1.4rem;color:var(--muted)}
+/* ===== concept ===== */
+.concept-grid{margin-top:26px;display:grid;gap:20px}
+.cblock{border-radius:20px;border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden;background:linear-gradient(165deg,var(--surface2),var(--surface))}
+.cblock-head{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:13px;flex-wrap:wrap}
+.cblock-head .cn{font-family:var(--font-display);font-weight:400;font-size:1.1rem;width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;border-radius:12px;color:var(--bg);background:linear-gradient(135deg,var(--gold),var(--gold-deep))}
+.cblock-head h3{font-family:var(--font-display);font-weight:400;font-size:1.4rem;letter-spacing:.3px}
+.cblock-body{padding:22px 24px}
+.why-text{color:#3f382a;font-size:.95rem;line-height:1.7}
+.why-text b{color:#221b10}
+.def-list{display:grid;gap:14px}
+.def{display:flex;gap:14px;align-items:baseline}
+.def .term{font-weight:700;color:var(--gold);min-width:120px;flex:0 0 auto;font-size:.98rem}
+.def .term.cy{color:var(--cyan-soft)}
+.def .desc{color:#3f382a;font-size:.95rem}
+.def .desc b{color:#221b10}
+.law{margin-top:18px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;background:var(--bg2);border:1px solid var(--line2);border-radius:14px;padding:18px}
+.law .formula{font-family:var(--font-mono);font-weight:700;font-size:1.2rem;color:#221b10;text-align:center}
+.law .formula .op{color:var(--gold)}
+.law .note{font-size:.84rem;color:var(--muted);max-width:44ch}
+.fig-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+@media(max-width:680px){.fig-row{grid-template-columns:1fr}}
+.concept-fig{border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--bg2)}
+.concept-fig img{width:100%;display:block}
+.img-placeholder{aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;color:var(--faint);padding:20px;background:repeating-linear-gradient(45deg, rgba(0,0,0,.015) 0 12px, transparent 12px 24px), var(--bg2)}
+.img-placeholder .ph-ico{font-size:2.4rem;opacity:.6}
+.img-placeholder p{font-size:.84rem;line-height:1.5}
+.img-placeholder code{font-family:var(--font-mono);font-size:.78rem;color:var(--gold-soft);background:rgba(242,177,62,.1);padding:3px 8px;border-radius:6px;display:inline-block;margin-top:4px}
+.concept-fig figcaption{padding:11px 15px;font-size:.84rem;color:var(--muted);font-weight:700;border-top:1px solid var(--line);display:flex;align-items:center;gap:8px}
+.concept-fig figcaption::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.steps4{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:14px}
+.step4{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:16px 14px;position:relative}
+.step4 .s4n{font-family:var(--font-mono);font-weight:700;font-size:.7rem;color:var(--cyan-soft);letter-spacing:1px}
+.step4 p{font-size:.88rem;color:#3f382a;margin-top:6px}
+.step4 p b{color:#221b10}
+.misc-note{margin-top:18px;font-size:.86rem;color:var(--muted);background:rgba(176,126,240,.07);border-left:3px solid var(--violet);border-radius:0 8px 8px 0;padding:12px 15px}
+.misc-note b{color:#221b10}
+.sum-table{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:8px}
+.sum-table th{font-family:var(--font-body);font-weight:800;font-size:.8rem;color:var(--gold);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line2);letter-spacing:.5px}
+.sum-table td{padding:11px 12px;border-bottom:1px solid rgba(0,0,0,.05);color:#3f382a;vertical-align:top}
+.sum-table td:first-child{font-weight:800;color:#221b10;white-space:nowrap}
+.sum-table td b{color:#221b10}
+/* ===== why panels ===== */
+.why-sim{margin-top:16px}
+.why-sim canvas{width:100%;max-width:640px;margin:0 auto;display:block;border:1px solid var(--line);border-radius:12px;background:#fdfbf4}
+.why-readout{display:flex;gap:10px;margin:14px auto 0;max-width:640px;flex-wrap:wrap}
+.reason-cell{flex:1;min-width:110px;text-align:center;background:rgba(0,0,0,.03);border:1px solid var(--line);border-radius:10px;padding:9px}
+.reason-cell .rc-l{font-size:.7rem;color:var(--muted);font-weight:700}
+.reason-cell .rc-v{font-family:var(--font-mono);font-weight:700;font-size:1.3rem;margin-top:2px;color:var(--gold)}
+.why-controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:14px}
+.why-hint{font-size:.82rem;color:var(--muted);flex:1;min-width:200px}
+.why-hint b{color:var(--violet)}
+.why-verdict{margin-top:12px;padding:11px 14px;border-radius:11px;border-left:3px solid var(--violet);background:rgba(176,126,240,.08);color:#3f382a;font-size:.9rem}
+.why-verdict.ok{border-left-color:var(--green);background:rgba(68,200,120,.1)}
+.why-verdict b{color:#221b10}
+.why-proof{margin-top:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--line2);background:rgba(242,177,62,.05)}
+.why-proof .wp-title{font-weight:800;color:var(--gold);font-size:.95rem;margin-bottom:8px}
+.why-proof p{color:#3f382a;font-size:.9rem;line-height:1.7;margin:6px 0}
+.why-proof b{color:#221b10}
+.why-proof .wp-eq{font-family:var(--font-mono);font-size:.9rem;color:#7a5300;background:rgba(0,0,0,.3);border-radius:8px;padding:9px 12px;margin:8px 0;overflow-x:auto;white-space:nowrap}
+.why-proof .wp-eq b{color:#221b10}
+.why-sliders{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:16px}
+@media(max-width:560px){.why-sliders{grid-template-columns:1fr;gap:8px}}
+/* ===== yt slot ===== */
+.yt-slot{margin-top:16px;border:2px dashed var(--line2);border-radius:13px;padding:24px 18px;text-align:center;color:var(--faint);font-size:.85rem;line-height:1.7}
+.yt-slot .ys-ico{font-size:1.6rem;display:block;margin-bottom:4px;opacity:.7}
+.yt-slot code{font-family:var(--font-mono);font-size:.76rem;color:var(--gold-soft);background:rgba(242,177,62,.1);padding:2px 7px;border-radius:6px}
+.yt-embed{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#000;margin:12px auto;display:none}
+.yt-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+/* ===== medals ===== */
+.medal-showcase{margin-top:24px;border-radius:20px;border:1px solid var(--line);box-shadow:var(--shadow);background:linear-gradient(165deg,var(--surface2),var(--surface));padding:22px 24px}
+.medal-showcase .ms-head{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.medal-showcase .ms-head h3{font-family:var(--font-display);font-weight:400;font-size:1.35rem;letter-spacing:.3px}
+.medal-showcase .ms-sub{color:var(--muted);font-size:.86rem;margin-bottom:18px}
+.medal-showcase .ms-sub code{font-family:var(--font-mono);font-size:.78rem;color:var(--gold-soft);background:rgba(242,177,62,.1);padding:2px 7px;border-radius:6px}
+.medal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:16px}
+.medal{position:relative;border-radius:16px;border:1px solid var(--line);background:var(--bg2);padding:18px 14px 16px;text-align:center;transition:.3s}
+.medal.unlocked{border-color:var(--accent2,var(--gold));box-shadow:0 0 26px -10px var(--accent2,var(--gold))}
+.medal .ring{width:94px;height:94px;margin:0 auto 12px;border-radius:50%;position:relative;display:grid;place-items:center;background:var(--surface);border:3px solid var(--line2);overflow:hidden;transition:.3s}
+.medal.unlocked .ring{border-color:var(--accent2,var(--gold));box-shadow:0 0 18px -4px var(--accent2,var(--gold)), inset 0 0 14px rgba(0,0,0,.45)}
+.medal .ring img{width:100%;height:100%;object-fit:cover;display:block}
+.medal.locked .ring img{filter:grayscale(1) brightness(.42)}
+.medal .ring .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;padding:6px;color:var(--faint);background:repeating-linear-gradient(45deg,rgba(0,0,0,.02) 0 8px,transparent 8px 16px),var(--surface)}
+.medal .ring .ph .pi{font-size:1.4rem;opacity:.6}
+.medal .ring .ph small{font-size:.6rem;line-height:1.3}
+.medal.locked .ring .lock{position:absolute;inset:0;display:grid;place-items:center;font-size:1.7rem;background:rgba(20,16,13,.5);color:#55503f;z-index:2}
+.medal .mname{font-family:var(--font-display);font-weight:400;font-size:1.05rem;letter-spacing:.3px;color:#221b10}
+.medal.locked .mname{color:var(--muted)}
+.medal .mcond{font-size:.73rem;color:var(--muted);margin-top:5px;line-height:1.4;min-height:30px}
+.medal .mstate{margin-top:8px;font-family:var(--font-mono);font-weight:700;font-size:.68rem;letter-spacing:1px;padding:4px 10px;border-radius:999px;display:inline-block}
+.medal.locked .mstate{color:var(--faint);background:rgba(0,0,0,.04);border:1px solid var(--line2)}
+.medal.unlocked .mstate{color:var(--bg);background:var(--accent2,var(--gold))}
+.medal .medal-code{font-family:var(--font-mono);font-size:.6rem;color:var(--faint);margin-top:7px;word-break:break-all}
+.medal-toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(50px);z-index:300;opacity:0;pointer-events:none;transition:.45s cubic-bezier(.2,.8,.3,1);display:flex;align-items:center;gap:13px;background:linear-gradient(135deg,#2b2317,#171209);border:2px solid #f2b13e;border-radius:16px;padding:13px 22px 13px 13px;box-shadow:0 20px 50px -16px rgba(0,0,0,.85), 0 0 30px -10px var(--gold);max-width:92vw}
+.medal-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.medal-toast .tmedal{width:52px;height:52px;border-radius:50%;flex:0 0 auto;overflow:hidden;border:2px solid var(--gold);background:var(--surface);display:grid;place-items:center}
+.medal-toast .tmedal img{width:100%;height:100%;object-fit:cover}
+.medal-toast .tmedal .tph{font-size:1.4rem}
+.medal-toast .tt small{font-family:var(--font-mono);font-size:.64rem;letter-spacing:1.5px;color:var(--gold);font-weight:700}
+.medal-toast .tt h4{font-family:var(--font-display);font-weight:400;font-size:1.12rem;color:#221b10;line-height:1.1;margin-top:2px}
+.medal-toast .tt p{font-size:.74rem;color:var(--muted);margin-top:2px}
+footer{max-width:1180px;margin:0 auto;padding:30px 22px 50px;color:var(--faint);font-size:.8rem;border-top:1px solid var(--line);text-align:center}
+footer .fdot{color:var(--gold)}
+
+/* 작도 물체 피커 */
+.objp{width:52px;height:52px;border-radius:13px;border:2px solid var(--line2);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:0;font-size:.74rem;font-weight:800;color:var(--muted);transition:.15s;flex:none}
+.objp[data-obj=star]{width:auto;padding:0 14px}
+.objp img{width:100%;height:100%;object-fit:cover;display:block}
+.objp:hover{transform:translateY(-2px)}
+.objp.active{border-color:var(--sapphire);box-shadow:0 0 0 3px rgba(47,111,214,.22)}
+/* ===== 빛의 대성당 — 스테인드글라스 양식 ===== */
+:root{--ruby:#e63946;--tangerine:#f4791f;--amber:#ffc914;--emerald:#2bb24c;--sapphire:#2f6fd6;--amethyst:#8b46cf;--lead:#241f18}
+/* 스테인드글라스 띠 (섹션 제목 아래 자동 삽입) */
+.glass-strip{height:11px;border-radius:3px;margin:12px 0 20px;max-width:560px;
+ background:linear-gradient(90deg,
+  var(--ruby) 0 14%, var(--lead) 14% 16%,
+  var(--tangerine) 16% 30%, var(--lead) 30% 32%,
+  var(--amber) 32% 47%, var(--lead) 47% 49%,
+  var(--emerald) 49% 64%, var(--lead) 64% 66%,
+  var(--sapphire) 66% 81%, var(--lead) 81% 83%,
+  var(--amethyst) 83% 100%);
+ box-shadow:0 4px 16px rgba(36,31,24,.18), inset 0 2px 4px rgba(255,255,255,.45), inset 0 -2px 4px rgba(0,0,0,.25);
+ border:2px solid var(--lead)}
+/* 카드 = 납선 액자 + 색유리 모서리 빛 */
+.cblock,.game-wrap,.hero{border:3px solid var(--lead);
+ box-shadow:0 0 0 1px rgba(36,31,24,.06), var(--shadow)}
+.cblock{background:
+ linear-gradient(155deg, rgba(234,93,114,.06), transparent 26%),
+ linear-gradient(205deg, rgba(90,167,240,.06), transparent 26%),
+ linear-gradient(330deg, rgba(176,126,240,.05), transparent 24%),
+ var(--surface)}
+.cblock-head{position:relative;padding-bottom:10px}
+.cblock-head::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:2px;opacity:.85;
+ background:linear-gradient(90deg,var(--ruby),var(--tangerine),var(--amber),var(--emerald),var(--sapphire),var(--amethyst))}
+/* 탭 = 색유리 판 (5색 순환) */
+.tabs .tab-btn{border-top:3px solid transparent}
+.tabs .tab-btn:nth-child(6n+1){border-top-color:var(--ruby)}
+.tabs .tab-btn:nth-child(6n+2){border-top-color:var(--tangerine)}
+.tabs .tab-btn:nth-child(6n+3){border-top-color:var(--amber)}
+.tabs .tab-btn:nth-child(6n+4){border-top-color:var(--emerald)}
+.tabs .tab-btn:nth-child(6n+5){border-top-color:var(--sapphire)}
+.tabs .tab-btn:nth-child(6n+6){border-top-color:var(--amethyst)}
+.tabs .tab-btn.active{background:linear-gradient(180deg, rgba(255,201,20,.30), rgba(255,201,20,.08));
+ box-shadow:inset 0 0 0 2px var(--lead), 0 6px 18px -8px rgba(196,150,0,.6)}
+/* 장미창 — 히어로 우측 상단 */
+.hero::after{content:"";position:absolute;top:-70px;right:-70px;width:280px;height:280px;border-radius:50%;
+ pointer-events:none;opacity:.85;
+ background:
+  repeating-conic-gradient(from 0deg,
+   var(--ruby) 0deg 27deg, var(--lead) 27deg 30deg,
+   var(--tangerine) 30deg 57deg, var(--lead) 57deg 60deg,
+   var(--amber) 60deg 87deg, var(--lead) 87deg 90deg,
+   var(--emerald) 90deg 117deg, var(--lead) 117deg 120deg,
+   var(--sapphire) 120deg 147deg, var(--lead) 147deg 150deg,
+   var(--amethyst) 150deg 177deg, var(--lead) 177deg 180deg);
+ -webkit-mask:radial-gradient(circle, transparent 0 17%, #000 18% 30%, transparent 31% 36%, #000 37% 58%, transparent 59% 64%, #000 65% 96%, transparent 97%);
+ mask:radial-gradient(circle, transparent 0 17%, #000 18% 30%, transparent 31% 36%, #000 37% 58%, transparent 59% 64%, #000 65% 96%, transparent 97%);
+ filter:drop-shadow(0 0 26px rgba(242,177,62,.45))}
+/* 섹션 제목 — 다색 유리 그라데이션 텍스트 */
+.section-title{background:linear-gradient(100deg,#c2243d 0%,#c25500 28%,#1c4e9e 66%,#5f28a8 100%);
+ -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+ filter:drop-shadow(0 2px 10px rgba(36,31,24,.12))}
+.eyebrow::before{content:"✦ "}
+.eyebrow::after{content:" ✦"}
+.misc-note,.adv-note,.why-proof{border-style:double;border-width:3px}
+.fire-light,.next-btn{box-shadow:inset 0 0 0 2px var(--lead), inset 0 2px 6px rgba(255,255,255,.25), 0 10px 26px -12px rgba(242,177,62,.6)}
+footer{border-top:3px double var(--line2)}
+@media (max-width:680px){.hero::after{width:180px;height:180px;top:-46px;right:-46px;opacity:.35}}
+
+/* ===== 렌즈 단원 전용 ===== */
+.case-stage{padding:12px 24px 4px;display:grid;grid-template-columns:1.3fr 1fr;gap:18px;align-items:start}
+@media(max-width:820px){.case-stage{grid-template-columns:1fr}}
+.case-card{border-radius:18px;border:1px solid var(--line2);background:
+  linear-gradient(135deg, rgba(47,111,214,.08), rgba(124,63,209,.06));
+  padding:22px 22px 18px;position:relative;overflow:hidden}
+.case-card .case-tag{font-family:var(--font-mono);font-size:.68rem;letter-spacing:2px;color:#1d4fae;font-weight:700}
+.case-card .case-emoji{font-size:2.6rem;line-height:1;margin:8px 0 6px;display:block}
+.case-card .case-line{font-family:var(--font-display);font-weight:400;font-size:1.35rem;line-height:1.3;color:#221b10}
+.case-card .case-sub{font-size:.88rem;color:var(--muted);margin-top:8px}
+.rx-opts{display:grid;gap:10px}
+.rx-opt{display:flex;align-items:center;gap:12px;text-align:left;font-family:var(--font-body);font-weight:800;font-size:1rem;cursor:pointer;background:var(--bg2);border:1px solid var(--line2);color:var(--text);padding:14px 16px;border-radius:14px;transition:.15s}
+.rx-opt .rx-i{font-size:1.4rem}
+.rx-opt small{display:block;font-weight:500;font-size:.74rem;color:var(--muted)}
+.rx-opt:hover{border-color:var(--amber);background:rgba(255,201,20,.12)}
+.rx-opt.ok{background:rgba(43,178,76,.16);border-color:var(--emerald);color:#0e5128}
+.rx-opt.no{background:rgba(230,57,70,.12);border-color:var(--ruby);color:#8f1424;animation:shake .3s}
+.life-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.life-opt{font-family:var(--font-body);font-weight:800;font-size:.95rem;cursor:pointer;background:var(--bg2);border:1px solid var(--line2);color:var(--text);padding:14px 8px;border-radius:13px;transition:.15s}
+.life-opt small{display:block;font-weight:500;font-size:.7rem;color:var(--muted)}
+.life-opt:hover{border-color:var(--sapphire);background:rgba(47,111,214,.08)}
+.life-opt.ok{background:rgba(43,178,76,.16);border-color:var(--emerald);color:#0e5128}
+.life-opt.no{background:rgba(230,57,70,.12);border-color:var(--ruby);color:#8f1424;animation:shake .3s}
+.checklist{background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:14px 15px;margin-bottom:14px}
+.checklist .ck-head{font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:10px}
+.ck-chips{display:flex;flex-wrap:wrap;gap:8px}
+.ck-chip{font-size:.78rem;font-weight:700;padding:7px 12px;border-radius:999px;border:1px dashed var(--line2);color:var(--faint);transition:.25s;display:flex;align-items:center;gap:6px}
+.ck-chip::before{content:"○"}
+.ck-chip.done{border:1px solid var(--emerald);color:#0e5128;background:rgba(43,178,76,.12)}
+.ck-chip.done::before{content:"✓";color:var(--emerald);font-weight:900}
+.howto{font-size:.82rem;color:var(--faint);padding:0 24px 18px;display:flex;align-items:center;gap:8px}
+.howto::before{content:"☝";font-size:1rem}
+/* ===== 가독성 핀 고정 (어두운 토스트 위 밝은 글씨) ===== */
+.medal-toast .tt h4{color:#fff}
+.medal-toast .tt p{color:#cfc3a4}
+.medal-toast .tt small{color:#f2b13e}
+</style>
+</head>
+<body>
+<canvas id="bgStars"></canvas>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="mark"></div>
+      <h1>생활 속 거울과 렌즈<small>중2 과학 · 빛과 파동 · 03</small></h1>
+    </div>
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="intro"><span class="ico">👁</span>도입</button>
+      <button class="tab-btn" data-tab="mirror"><span class="ico">🥄</span>거울 관찰소</button>
+      <button class="tab-btn" data-tab="lens"><span class="ico">🔍</span>렌즈 관찰소</button>
+      <button class="tab-btn" data-tab="concept"><span class="ico">📖</span>개념 정리</button>
+      <button class="tab-btn" data-tab="sort"><span class="ico">🗂️</span>분류 탐구</button>
+      <button class="tab-btn" data-tab="life"><span class="ico">🚗</span>생활 탐험</button>
+      <button class="tab-btn" data-tab="medals"><span class="ico">🎖️</span>업적</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= 도입 ================= -->
+<section class="tab-panel active" id="tab-intro">
+  <div class="hero reveal r1">
+    <div class="ghost-title">같은 나인데
+왜 다르게 비칠까</div>
+    <h2>당신의 눈도 결국<br><span class="hl">하나의 렌즈</span>다</h2>
+    <div class="whisper">(거울은 빛을 반사하고, 렌즈는 빛을 굴절시킨다 — 모양이 다르면, 보이는 세상이 다르다.)</div>
+    <p class="desc">숟가락, 사이드미러, 치과 거울, 루페, 안경 — 전부 빛을 <b>반사</b>하거나 <b>굴절</b>시키는 광학 장치다. 오늘의 미션은 하나: 생활 속 거울과 렌즈를 <b>모양에 따라 분류</b>하고, 각각이 <b>무엇을 위해</b> 그 모양인지 알아내는 것.</p>
+    <div class="chip-row">
+      <span class="chip">🪞 거울 — <b>평면 · 볼록 · 오목</b></span>
+      <span class="chip">🔍 렌즈 — <b>볼록 · 오목</b></span>
+      <span class="chip">👁 눈 속 수정체도 <b>볼록렌즈</b></span>
+    </div>
+    <div class="bigq">
+      <span class="q-label">▶ 단원 여는 질문</span>
+      <p>숟가락의 양면에 비친 내 얼굴은 왜 서로 다르게 보일까?</p>
+    </div>
+  </div>
+
+  <div class="qmaker reveal r2">
+    <h3>❓ 나만의 질문 만들기 <span class="ws-chip">📄 활동지 연계</span></h3>
+    <div class="qm-sub">이 단원을 배우며 궁금한 점을 직접 적어 보자. 예) 사이드미러 속 차는 왜 작아 보일까? / 치과 거울은 왜 오목할까? / 근시 안경알은 왜 가장자리가 두꺼울까?</div>
+    <div class="qm-row">
+      <input id="qmInput" type="text" maxlength="80" placeholder="나의 질문을 입력하세요…">
+      <button class="qm-add" id="qmAdd">질문 등록 +</button>
+    </div>
+    <div class="qm-list" id="qmList"></div>
+    <div class="qm-note">※ 등록한 질문은 화면을 새로고침하면 사라져요. 마음에 드는 질문은 꼭 <b>활동지</b>에 옮겨 적자!</div>
+  </div>
+
+  <div class="hooks">
+    <article class="hook reveal r3" style="--accent:var(--gold)">
+      <span class="num">HOOK 01</span><span class="emoji">🥄</span>
+      <img class="hook-img" src="hook-l1.png" alt="" onerror="this.style.display='none';">
+      <h3>숟가락 하나는<br>사실 거울 두 개다</h3>
+      <p class="hook-body">숟가락 바깥쪽(볼록한 면)에 비친 나는 <b>작고 바로</b>, 안쪽(오목한 면)에 비친 나는 전혀 다르게 보인다. 같은 금속인데 <b>면이 휜 방향</b> 하나로 보이는 모습이 완전히 달라진다 — 오늘 수업의 모든 비밀이 급식실 숟가락에 들어 있다.</p>
+      <div class="classroom">교실 연결 · 수업 시작 전 숟가락을 하나씩 나눠 주고 "두 면에 비친 모습의 차이를 3가지 찾아라"로 열면, 분류 탐구의 동기가 저절로 생긴다.</div>
+      <button class="cta" data-goto="mirror">거울 관찰소로 →</button>
+    </article>
+    <article class="hook reveal r4" style="--accent:var(--cyan)">
+      <span class="num">HOOK 02</span><span class="emoji">🚗</span>
+      <img class="hook-img" src="hook-l2.png" alt="" onerror="this.style.display='none';">
+      <h3>"사물이 보이는 것보다<br>가까이 있음"의 진짜 의미</h3>
+      <p class="hook-body">자동차 측면 거울에는 이 경고문이 새겨져 있다. <b>볼록 거울</b>은 <b>넓은 범위(시야)</b>를 보여주는 대신 모습을 <b>작게</b> 비춘다 — 작아 보이니 멀리 있다고 착각하게 되는 것. 편의점 천장의 둥근 거울, 굽은 도로의 안전 거울도 같은 이유로 볼록하다.</p>
+      <div class="classroom">교실 연결 · "넓게 보기와 크게 보기는 동시에 안 된다"는 트레이드오프를 던지면, 생활 탐험 게임의 판단 기준이 된다.</div>
+      <button class="cta" data-goto="mirror">시야를 직접 비교 →</button>
+    </article>
+    <article class="hook reveal r5" style="--accent:var(--rose)">
+      <span class="num">HOOK 03</span><span class="emoji">🦷</span>
+      <img class="hook-img" src="hook-l3.png" alt="" onerror="this.style.display='none';">
+      <h3>치과 의사는 왜<br>오목 거울을 쓸까</h3>
+      <p class="hook-body">어금니 뒤쪽 작은 충치를 맨눈으로 보긴 어렵다. 치과용 거울은 <b>오목 거울</b> — 가까이 있는 물체를 <b>크게</b> 비춰 준다. 아침마다 보는 <b>화장용 확대 거울</b>도 똑같은 오목 거울이다. "크게 보고 싶다"는 곳엔 어김없이 오목한 면이 숨어 있다.</p>
+      <div class="classroom">교실 연결 · 화장용 확대 거울(준비물)을 돌려 보게 하면 "얼굴이 크게 보인다"는 관찰이 즉시 나온다 — 교과서 탐구의 핵심 관찰.</div>
+      <button class="cta" data-goto="sort">분류 탐구로 →</button>
+    </article>
+    <article class="hook reveal r6" style="--accent:var(--violet)">
+      <span class="num">HOOK 04</span><span class="emoji">👓</span>
+      <img class="hook-img" src="hook-l4.png" alt="" onerror="this.style.display='none';">
+      <h3>근시 안경알은 왜<br>가장자리가 두꺼울까</h3>
+      <p class="hook-body">근시는 <b>가까운 것은 잘 보이지만 멀리 있는 것이 흐리게</b> 보이는 눈이다. 근시용 안경알을 옆에서 보면 <b>가운데가 얇고 가장자리가 두껍다</b> — 바로 <b>오목 렌즈</b>다. 멀리 있는 물체를 <b>선명하게</b> 보여 주는 게 오목 렌즈의 일. 반대로 가운데가 두꺼운 <b>볼록 렌즈</b>(루페, 현미경)는 물체를 <b>크게</b> 보여 준다.</p>
+      <div class="classroom">교실 연결 · 안경 쓰는 학생의 안경알 두께를 (허락 받고) 관찰하면, "렌즈는 가운데·가장자리 두께로 구분한다"는 교과서 보충 개념이 손에 잡힌다.</div>
+      <button class="cta" data-goto="lens">렌즈 관찰소로 →</button>
+    </article>
+  </div>
+</section>
+
+<!-- ================= 거울 관찰소 ================= -->
+<section class="tab-panel" id="tab-mirror">
+  <div class="reveal r1">
+    <span class="eyebrow">탐구 · 거울 세 종류 비교 관찰</span>
+    <h2 class="section-title">거울 관찰소 — 시야와 보이는 모습 비교 <span class="ws-chip">📄 활동지 ①</span></h2>
+    <p class="lead">거울은 모양에 따라 <b>평면 · 볼록 · 오목</b> 거울로 분류한다. 거울을 바꿔 가며 — <b>시야</b>(눈으로 볼 수 있는 범위)와 <b>비치는 모습</b>이 어떻게 달라지는지 직접 비교해 보자.</p>
+  </div>
+
+  <div class="lab-grid">
+    <div class="sim-card reveal r2">
+      <div class="sim-head">
+        <span class="badge gold">탐구 1</span>
+        <div>
+          <h3>시야 비교기 — 이 거울로는 어디까지 보일까?</h3>
+          <div class="sub">노란 영역 = 거울을 통해 보이는 범위(시야). 거울을 바꿔 보세요!</div>
+        </div>
+      </div>
+      <div class="sim-body">
+        <div class="canvas-wrap"><canvas id="mirCanvas"></canvas></div>
+        <div class="sim-side">
+          <div class="step-row" id="mirModeBtns">
+            <button class="step-btn active" data-mode="plane">🪞 평면 거울<small>세면대 거울</small></button>
+            <button class="step-btn" data-mode="convex">🥄 볼록 거울<small>도로 안전 거울</small></button>
+            <button class="step-btn" data-mode="concave">🍜 오목 거울<small>치과 거울</small></button>
+          </div>
+          <div class="readouts">
+            <div class="readout cyan"><div class="rlabel">시야 (보이는 범위)</div><div class="rval small" id="mirFov">–</div></div>
+            <div class="readout gold"><div class="rlabel">비치는 모습</div><div class="rval small" id="mirLook">–</div></div>
+          </div>
+          <div class="gloss">
+            <div class="gloss-title">📕 용어 사전 (클릭)</div>
+            <div class="gloss-chips">
+              <button class="gloss-chip" data-term="시야" data-box="mirDef">시야</button>
+              <button class="gloss-chip" data-term="반사" data-box="mirDef">반사</button>
+              <button class="gloss-chip" data-term="평면거울" data-box="mirDef">평면거울</button>
+              <button class="gloss-chip" data-term="볼록거울" data-box="mirDef">볼록거울</button>
+              <button class="gloss-chip" data-term="오목거울" data-box="mirDef">오목거울</button>
+            </div>
+            <div class="gloss-def" id="mirDef"></div>
+          </div>
+          <div class="checklist">
+            <div class="ck-head">📋 관찰 미션 — 세 거울을 모두 비교하라!</div>
+            <div class="ck-chips">
+              <span class="ck-chip" id="ckMir1">평면 거울 관찰</span>
+              <span class="ck-chip" id="ckMir2">볼록 거울 관찰</span>
+              <span class="ck-chip" id="ckMir3">오목 거울 관찰</span>
+            </div>
+          </div>
+          <div class="why-verdict" id="mirVerdict">거울 종류를 바꿔 가며 시야의 변화를 관찰해 보세요.</div>
+          <div class="qbox" style="margin-top:0">
+            <span class="qtag">탐구 질문 · 활동지 ①</span>
+            <p>도로 안전 거울과 자동차 측면 거울은 왜 하필 '볼록' 거울일까?</p>
+            <button class="ansbtn" data-ans="mirAns">정리해 볼까 →</button>
+            <div class="answer" id="mirAns">볼록 거울은 거울 면에 들어온 빛이 반사한 뒤 <b>넓게 퍼져 나가기</b> 때문에, 평면거울보다 <b>시야가 넓다</b>. 운전자나 보행자에게 중요한 건 '크게 보기'가 아니라 <b>'한눈에 넓게 보기'</b> — 그래서 굽은 도로와 자동차 옆에는 볼록 거울을 단다. 대신 모습이 <b>작게</b> 보여서 "사물이 보이는 것보다 가까이 있음"이라는 경고문이 붙는다.</div>
+          </div>
+        </div>
+      </div>
+      <div class="howto">실물 미션 · 숟가락 <b>바깥쪽(볼록)</b>과 <b>안쪽(오목)</b>에 얼굴을 비춰 보고, 세면대 <b>평면거울</b>과 비교해 활동지 표에 기록하자.</div>
+    </div>
+  </div>
+  <div class="yt-slot reveal r4"><span class="ys-ico">🎬</span>영상으로 한 번 더 — 영상 자리 · 코드 교체 위치 → <code>YT-SLOT-1</code></div>
+</section>
+
+<!-- ================= 렌즈 관찰소 ================= -->
+<section class="tab-panel" id="tab-lens">
+  <div class="reveal r1">
+    <span class="eyebrow">탐구 · 렌즈 두 종류 비교 관찰</span>
+    <h2 class="section-title">렌즈 관찰소 — 두께로 구분하고, 통해서 본다 <span class="ws-chip">📄 활동지 ②</span></h2>
+    <p class="lead">렌즈는 <b>가운데와 가장자리의 두께 차이</b>로 분류한다. 가운데가 두꺼우면 <b>볼록 렌즈</b>, 가운데가 얇으면 <b>오목 렌즈</b>. 직접 렌즈를 빚어 보고, 그 렌즈 너머로 글자를 들여다보자.</p>
+  </div>
+
+  <div class="lab-grid">
+    <div class="sim-card reveal r2">
+      <div class="sim-head">
+        <span class="badge cy">탐구 2-1</span>
+        <div>
+          <h3>렌즈 공방 — 단면을 빚어 종류를 판별하라</h3>
+          <div class="sub">슬라이더로 가운데·가장자리 두께를 바꾸면, 단면 모양이 변한다.</div>
+        </div>
+      </div>
+      <div class="sim-body">
+        <div class="canvas-wrap"><canvas id="shapeCanvas"></canvas></div>
+        <div class="sim-side">
+          <div class="angle-slider-wrap">
+            <div class="asl-head"><label>↔️ 가운데 두께</label><span id="thCVal">보통</span></div>
+            <input type="range" class="rng" id="thC" min="4" max="40" step="1" value="22">
+          </div>
+          <div class="angle-slider-wrap">
+            <div class="asl-head"><label>↕️ 가장자리 두께</label><span id="thEVal">보통</span></div>
+            <input type="range" class="rng" id="thE" min="4" max="40" step="1" value="22">
+          </div>
+          <div class="readouts">
+            <div class="readout cyan"><div class="rlabel">판별 결과</div><div class="rval small" id="shapeKind">–</div></div>
+          </div>
+          <div class="why-verdict" id="shapeVerdict">두 슬라이더를 움직여 볼록 렌즈와 오목 렌즈를 모두 만들어 보세요.</div>
+          <div class="misc-note">📐 <b>교과서 보충</b> — 볼록 렌즈와 오목 렌즈는 모양이 다양하기 때문에, 겉보기 볼록함·오목함보다 <b>가운데와 가장자리의 두께 차</b>로 구분하는 것이 더 정확하다.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sim-card reveal r3">
+      <div class="sim-head">
+        <span class="badge cy">탐구 2-2</span>
+        <div>
+          <h3>렌즈 너머 보기 — 루페 vs 근시용 안경</h3>
+          <div class="sub">렌즈를 드래그해 글자 위로 옮겨 보세요. 무엇이 달라질까?</div>
+        </div>
+      </div>
+      <div class="sim-body">
+        <div class="canvas-wrap"><canvas id="lookCanvas"></canvas></div>
+        <div class="sim-side">
+          <div class="step-row" id="lookModeBtns">
+            <button class="step-btn cyb active" data-mode="convex">🔍 볼록 렌즈<small>루페(확대경)</small></button>
+            <button class="step-btn cyb" data-mode="concave">👓 오목 렌즈<small>근시용 안경</small></button>
+          </div>
+          <div class="readouts">
+            <div class="readout cyan"><div class="rlabel">글자가 보이는 모습</div><div class="rval small" id="lookSize">–</div></div>
+          </div>
+          <div class="gloss">
+            <div class="gloss-title">📘 용어 사전 (클릭)</div>
+            <div class="gloss-chips">
+              <button class="gloss-chip" data-term="굴절" data-box="lenDef">굴절</button>
+              <button class="gloss-chip" data-term="볼록렌즈" data-box="lenDef">볼록렌즈</button>
+              <button class="gloss-chip" data-term="오목렌즈" data-box="lenDef">오목렌즈</button>
+              <button class="gloss-chip" data-term="루페" data-box="lenDef">루페</button>
+              <button class="gloss-chip" data-term="근시" data-box="lenDef">근시</button>
+            </div>
+            <div class="gloss-def" id="lenDef"></div>
+          </div>
+          <div class="checklist">
+            <div class="ck-head">📋 관찰 미션 — 렌즈 마스터의 4단계</div>
+            <div class="ck-chips">
+              <span class="ck-chip" id="ckLen1">볼록 렌즈 빚기</span>
+              <span class="ck-chip" id="ckLen2">오목 렌즈 빚기</span>
+              <span class="ck-chip" id="ckLen3">루페로 글자 보기</span>
+              <span class="ck-chip" id="ckLen4">근시 안경으로 보기</span>
+            </div>
+          </div>
+          <div class="qbox" style="margin-top:0">
+            <span class="qtag">탐구 질문 · 활동지 ②</span>
+            <p>현미경에 볼록 렌즈를 쓰는 까닭은? 근시용 안경에 오목 렌즈를 쓰는 까닭은?</p>
+            <button class="ansbtn" data-ans="lenAns">정리해 볼까 →</button>
+            <div class="answer" id="lenAns"><b>현미경</b>은 아주 작은 물체를 <b>크게</b> 보기 위한 도구 — 물체를 크게 보여 주는 <b>볼록 렌즈</b>를 쓴다. <b>근시</b>는 가까운 것은 잘 보이지만 <b>멀리 있는 것이 흐리게</b> 보이는 눈 — 멀리 있는 물체를 <b>선명하게</b> 보여 주는 <b>오목 렌즈</b> 안경으로 도와준다. "크게 보고 싶다 → 볼록", "멀리 선명하게 보고 싶다 → 오목"!</div>
+          </div>
+        </div>
+      </div>
+      <div class="howto">실물 미션 · <b>루페(확대경)</b>와 <b>근시용 안경</b>으로 교과서 글자를 보고, 보이는 모습의 차이를 활동지 표에 기록하자. (친구 안경은 꼭 허락 받고!)</div>
+    </div>
+  </div>
+  <div class="yt-slot reveal r4"><span class="ys-ico">🎬</span>영상으로 한 번 더 — 영상 자리 · 코드 교체 위치 → <code>YT-SLOT-2</code></div>
+</section>
+
+<!-- ================= 개념 정리 ================= -->
+<section class="tab-panel" id="tab-concept">
+  <div class="reveal r1">
+    <span class="eyebrow">정리 · 스스로 확인하기</span>
+    <h2 class="section-title">개념 정리하기 <span class="ws-chip">📄 활동지 ①~③</span></h2>
+    <p class="lead">교과서 그림 3-5 '여러 가지 거울과 렌즈의 사용'의 핵심을 한눈에. 분류 기준은 <b>모양</b>, 판단 기준은 <b>쓰임새</b>다.</p>
+  </div>
+  <div class="concept-grid">
+    <div class="cblock reveal r2">
+      <div class="cblock-head"><div class="cn">1</div><h3>거울 — 모양에 따라 세 종류</h3></div>
+      <div class="cblock-body">
+        <div class="def-list">
+          <div class="def"><span class="term">평면거울</span><span class="desc">면이 평평한 거울. 물체의 모습을 <b>그대로</b> 볼 때 사용한다. → 세면대 거울, 무용실 거울, 전신 거울</span></div>
+          <div class="def"><span class="term">볼록거울</span><span class="desc">가운데가 볼록 튀어나온 거울. <b>넓은 범위</b>를 볼 때 사용한다. 모습은 작게 보인다. → 도로 안전 거울, 자동차 측면 거울, 편의점 보안 거울</span></div>
+          <div class="def"><span class="term">오목거울</span><span class="desc">가운데가 오목 들어간 거울. 물체를 <b>크게</b> 볼 때 사용한다. → 치과용 거울, 화장용 확대 거울</span></div>
+        </div>
+        <div class="fig-row">
+          <figure class="concept-fig">
+            <img src="fig-l1.png" alt="거울의 종류에 따른 사용" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="img-placeholder" style="display:none"><span class="ph-ico">🖼️</span><p>그림 · 거울의 종류에 따른 사용 (세면대/도로 안전/치과)<br><code>fig-l1.png</code></p></div>
+            <figcaption>그림 1 · 거울의 종류에 따른 사용</figcaption>
+          </figure>
+          <figure class="concept-fig">
+            <img src="fig-l2.png" alt="볼록 거울의 시야" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="img-placeholder" style="display:none"><span class="ph-ico">🖼️</span><p>그림 · 볼록 거울의 시야 비교 (평면 vs 볼록)<br><code>fig-l2.png</code></p></div>
+            <figcaption>그림 2 · 볼록 거울의 시야</figcaption>
+          </figure>
+        </div>
+        <div class="misc-note">👀 <b>보충 · 시야</b> — 눈으로 볼 수 있는 범위를 <b>시야</b>라고 한다. 볼록 거울은 거울 면에 입사한 빛이 반사한 후에 <b>넓게 퍼져 나가므로</b> 평면거울에 비해 시야가 넓다.</div>
+        <div class="misc-note">🥄 <b>숟가락 한 줄 요약</b> — 바깥쪽(볼록)은 '넓게 보기 담당', 안쪽(오목)은 '크게 보기 담당'. 한 숟가락에 거울 두 종류!</div>
+      </div>
+    </div>
+    <div class="cblock reveal r3">
+      <div class="cblock-head"><div class="cn" style="background:linear-gradient(135deg,var(--cyan),var(--cyan-deep))">2</div><h3>렌즈 — 두께 차이로 두 종류</h3></div>
+      <div class="cblock-body">
+        <div class="def-list">
+          <div class="def"><span class="term cy">볼록렌즈</span><span class="desc">가운데 부분이 가장자리보다 <b>두꺼운</b> 렌즈. 물체를 <b>크게 보기 위해</b> 사용한다. → 현미경, 루페(확대경), 망원경, 카메라</span></div>
+          <div class="def"><span class="term cy">오목렌즈</span><span class="desc">가운데 부분이 가장자리보다 <b>얇은</b> 렌즈. <b>멀리 있는 물체를 선명하게</b> 보기 위해 사용한다. → 근시용 안경</span></div>
+        </div>
+        <div class="fig-row">
+          <figure class="concept-fig">
+            <img src="fig-l3.png" alt="렌즈의 종류에 따른 사용" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="img-placeholder" style="display:none"><span class="ph-ico">🖼️</span><p>그림 · 렌즈의 종류에 따른 사용 (근시용 안경/현미경)<br><code>fig-l3.png</code></p></div>
+            <figcaption>그림 3 · 렌즈의 종류에 따른 사용</figcaption>
+          </figure>
+          <figure class="concept-fig">
+            <img src="fig-l4.png" alt="볼록 렌즈와 오목 렌즈의 단면" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="img-placeholder" style="display:none"><span class="ph-ico">🖼️</span><p>그림 · 다양한 모양의 볼록·오목 렌즈 단면<br><code>fig-l4.png</code></p></div>
+            <figcaption>그림 4 · 다양한 렌즈 단면 — 두께 차로 구분!</figcaption>
+          </figure>
+        </div>
+        <div class="misc-note">📐 <b>보충 · 렌즈 구분법</b> — 볼록 렌즈와 오목 렌즈는 모양이 다양하기 때문에 볼록함·오목함으로 구분하기보다, <b>가운데와 가장자리의 두께 차</b>로 구분하는 것이 더 정확하다.</div>
+        <div class="misc-note">👓 <b>보충 · 근시</b> — 가까이 있는 물체는 잘 보이지만 <b>멀리 있는 물체는 잘 보이지 않는</b> 경우를 근시라고 한다. 근시용 안경에는 오목 렌즈가 쓰인다.</div>
+      </div>
+    </div>
+    <div class="cblock reveal r4">
+      <div class="cblock-head"><div class="cn">★</div><h3>한눈에 정리 — 다섯 광학 장치 분류표</h3></div>
+      <div class="cblock-body">
+        <table class="sum-table">
+          <thead><tr><th>종류</th><th>모양</th><th>비치는/보이는 모습</th><th>무엇을 위해?</th><th>생활 속 예</th></tr></thead>
+          <tbody>
+            <tr><td>평면거울</td><td>평평</td><td>모습 <b>그대로</b></td><td>그대로 보기</td><td>세면대 거울, 무용실 거울, 손거울</td></tr>
+            <tr><td>볼록거울</td><td>가운데 볼록</td><td><b>작게</b>, 넓은 범위가 한눈에</td><td><b>넓게</b> 보기 (시야 ↑)</td><td>도로 안전 거울, 자동차 측면 거울, 자전거 손목 거울</td></tr>
+            <tr><td>오목거울</td><td>가운데 오목</td><td>가까운 물체가 <b>크게</b></td><td><b>크게</b> 보기</td><td>치과용 거울, 화장용 확대 거울</td></tr>
+            <tr><td>볼록렌즈</td><td>가운데가 <b>두껍다</b></td><td>물체가 <b>크게</b></td><td><b>크게</b> 보기</td><td>현미경, 루페(확대경), 카메라</td></tr>
+            <tr><td>오목렌즈</td><td>가운데가 <b>얇다</b></td><td>흐리던 먼 곳이 <b>선명하게</b></td><td><b>멀리 선명하게</b> 보기</td><td>근시용 안경</td></tr>
+          </tbody>
+        </table>
+        <div class="law"><span class="formula">거울 = 반사 <span class="op">|</span> 렌즈 = 굴절</span><span class="note">거울은 빛을 튕겨 내고(반사), 렌즈는 빛을 통과시키며 꺾는다(굴절). 이름이 비슷해도 원리가 다르다!</span></div>
+        <div class="qbox" style="margin-top:16px">
+          <span class="qtag">사고력 · 활동지 ③</span>
+          <p>"넓게 보기"와 "크게 보기"를 동시에 해 주는 거울을 만들 수 있을까?</p>
+          <button class="ansbtn" data-ans="thinkAns">정리해 볼까 →</button>
+          <div class="answer" id="thinkAns">하나의 거울로는 어렵다! 볼록 거울은 넓은 범위를 담는 대신 모습이 <b>작아지고</b>, 오목 거울은 크게 보여 주는 대신 <b>좁은 범위</b>만 담는다 — 넓게 보기와 크게 보기는 <b>맞바꿈(트레이드오프) 관계</b>다. 그래서 우리는 목적에 따라 거울을 <b>골라 쓴다</b>: 주차장 모퉁이엔 볼록, 치과 진료실엔 오목. "어떤 거울·렌즈를 쓸까?"라는 질문의 답은 언제나 <b>"무엇을 위해 보는가?"</b>에 있다.</div>
+        </div>
+        <div class="misc-note" style="border-color:var(--rose);background:rgba(230,57,70,.06)">자주 나오는 오개념 · "볼록 <b>거울</b>과 볼록 <b>렌즈</b>는 같은 원리다" (✕ — 거울은 <b>반사</b>, 렌즈는 <b>굴절</b>) · "볼록 거울로 보면 크게 보인다" (✕ — <b>작게</b>·넓게 보인다. 크게 보이는 건 <b>오목 거울</b>) · "오목 렌즈는 돋보기처럼 쓸 수 있다" (✕ — 오목 렌즈로는 크게 보이지 않는다. 크게 보기는 <b>볼록 렌즈</b>의 일).</div>
+        <div class="misc-note">🌈 <b>다음 시간 예고</b> — 빛이 렌즈에서 꺾일 때(굴절), 색깔마다 꺾이는 정도가 다르다면? 프리즘과 무지개의 비밀 — <b>빛의 분산</b>으로 이어진다.</div>
+      </div>
+    </div>
+  </div>
+  <div class="yt-slot reveal r6"><span class="ys-ico">🎬</span>영상으로 한 번 더 — 영상 자리 · 코드 교체 위치 → <code>YT-SLOT-3</code></div>
+</section>
+
+<!-- ================= 분류 탐구 (교과서 해 보기) ================= -->
+<section class="tab-panel" id="tab-sort">
+  <div class="reveal r1">
+    <span class="eyebrow">탐구 · 교과서 '해 보기' — 자료 수집하기</span>
+    <h2 class="section-title">분류 탐구 🗂️ — 일상생활 속 거울과 렌즈 분류하기 <span class="ws-chip">📄 활동지 ④</span></h2>
+    <p class="lead"><b>준비물 다섯 가지</b>가 차례로 등장한다. 모양과 비친 모습을 단서로 <b>다섯 분류</b> 중 하나로 분류하라. 다섯 개를 모두 올바르게 분류하면 '분류 마스터' 훈장! 실제 수업에서는 <b>실물을 직접 관찰</b>하며 같은 표를 채운다.</p>
+  </div>
+
+  <div class="game-wrap reveal r2">
+    <div class="game-top">
+      <div>
+        <h3>🧰 준비물 상자</h3>
+        <div class="sub">손거울 · 화장용 확대 거울 · 자전거 손목 거울 · 루페(확대경) · 근시용 안경</div>
+      </div>
+      <div class="score-pills">
+        <div class="pill hit"><div class="pl">분류 완료</div><div class="pv" id="sortScore">0/5</div></div>
+      </div>
+    </div>
+    <div class="case-stage" style="grid-template-columns:1fr">
+      <div class="case-card">
+        <span class="case-tag">준비물 <span id="sortNo">–</span></span>
+        <span class="case-emoji" id="sortEmoji">🧰</span>
+        <div class="case-line" id="sortLine">'탐구 시작'을 눌러 첫 준비물을 꺼내세요!</div>
+        <div class="case-sub" id="sortSub">관찰 단서가 여기에 표시됩니다.</div>
+      </div>
+    </div>
+    <div class="game-panel">
+      <div class="life-opts" id="sortOpts">
+        <button class="life-opt" data-opt="0">🪞 평면거울<small>모습 그대로</small></button>
+        <button class="life-opt" data-opt="1">🥄 볼록거울<small>작게 · 넓게</small></button>
+        <button class="life-opt" data-opt="2">🍜 오목거울<small>크게 (반사)</small></button>
+        <button class="life-opt" data-opt="3">🔍 볼록렌즈<small>크게 (굴절)</small></button>
+        <button class="life-opt" data-opt="4">👓 오목렌즈<small>멀리 선명하게</small></button>
+      </div>
+      <div class="game-controls" style="margin-top:14px">
+        <button class="next-btn" id="sortStart">🧰 탐구 시작</button>
+        <div class="game-msg" id="sortMsg">모양과 비친 모습이 분류의 단서!</div>
+      </div>
+    </div>
+    <div class="game-panel">
+      <div class="checklist">
+        <div class="ck-head">📋 분류 진행 상황</div>
+        <div class="ck-chips">
+          <span class="ck-chip" id="ckSort0">손거울</span>
+          <span class="ck-chip" id="ckSort1">자전거 손목 거울</span>
+          <span class="ck-chip" id="ckSort2">화장용 확대 거울</span>
+          <span class="ck-chip" id="ckSort3">루페(확대경)</span>
+          <span class="ck-chip" id="ckSort4">근시용 안경</span>
+        </div>
+      </div>
+      <div class="qbox" style="margin-top:16px">
+        <span class="qtag">정리 · 교과서 해 보기 2번</span>
+        <p>분류한 거울과 렌즈로 물체를 보며 — 각각에 비친 모습을 비교하고, 쓰임새와 관련지어 이야기해 보자.</p>
+        <button class="ansbtn" data-ans="sortAns">예시 답안 보기 →</button>
+        <div class="answer" id="sortAns"><b>손거울(평면거울)</b> — 물체의 모습이 그대로 보이므로 전신 거울 등으로 사용한다. · <b>자전거 손목 거울(볼록거울)</b> — 넓은 범위를 볼 수 있으므로 안전한 시야 확보를 위해 사용한다. · <b>화장용 확대 거울(오목거울)</b> — 물체의 모습이 크게 보이므로 물체를 자세히 보아야 할 때 사용한다. · <b>루페·확대경(볼록렌즈)</b> — 물체의 모습이 크게 보이므로 물체를 자세히 보아야 할 때 사용한다. · <b>근시용 안경(오목렌즈)</b> — 멀리 있는 물체가 흐리게 보이는 사람이 사용하면 물체를 선명하게 볼 수 있다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 생활 탐험 ================= -->
+<section class="tab-panel" id="tab-life">
+  <div class="reveal r1">
+    <span class="eyebrow">게임 · 생활 속 광학 장치 찾기</span>
+    <h2 class="section-title">생활 탐험 🚗 — 이건 무슨 거울/렌즈일까?</h2>
+    <p class="lead">생활 속 물건이 등장한다. 그 물건에 숨어 있는 거울 또는 렌즈를 골라라! 판단 기준은 단 하나 — <b>"무엇을 위해 보는가?"</b> (그대로 · 넓게 · 크게 · 멀리 선명하게). 누적 <b>8문제</b> 정답 시 훈장, 60초 도전에서 <b>6문제</b> 이상이면 보너스 훈장!</p>
+  </div>
+
+  <div class="game-wrap reveal r2">
+    <div class="game-top">
+      <div>
+        <h3>🔎 광학 장치 수배 중</h3>
+        <div class="sub">힌트: 넓게 보기=볼록거울 / 크게 보기=오목거울·볼록렌즈 / 멀리 선명히=오목렌즈</div>
+      </div>
+      <div class="score-pills">
+        <div class="pill hit"><div class="pl">정답</div><div class="pv" id="lifeScore">0</div></div>
+        <div class="pill streak"><div class="pl">연속</div><div class="pv" id="lifeStreak">0</div></div>
+        <div class="pill time" id="lifeTimePill"><div class="pl">남은 시간</div><div class="pv" id="lifeTime">60</div></div>
+        <div class="pill best"><div class="pl">최고</div><div class="pv" id="lifeBest">0</div></div>
+      </div>
+    </div>
+    <div class="case-stage" style="grid-template-columns:1fr">
+      <div class="case-card">
+        <span class="case-tag">WANTED · 광학 장치</span>
+        <span class="case-emoji" id="lifeEmoji">❔</span>
+        <div class="case-line" id="lifeLine">'새 문제'를 눌러 시작하세요!</div>
+        <div class="case-sub" id="lifeSub"></div>
+      </div>
+    </div>
+    <div class="game-panel">
+      <div class="life-opts" id="lifeOpts">
+        <button class="life-opt" data-opt="0">🪞 평면거울<small>그대로 보기</small></button>
+        <button class="life-opt" data-opt="1">🥄 볼록거울<small>넓게 보기</small></button>
+        <button class="life-opt" data-opt="2">🍜 오목거울<small>크게 보기 (반사)</small></button>
+        <button class="life-opt" data-opt="3">🔍 볼록렌즈<small>크게 보기 (굴절)</small></button>
+        <button class="life-opt" data-opt="4">👓 오목렌즈<small>멀리 선명하게</small></button>
+      </div>
+      <div class="game-controls" style="margin-top:14px">
+        <button class="next-btn" id="lifeNew">🎲 새 문제</button>
+        <button class="mbtn" id="lifeChalBtn">⏱ 60초 도전!</button>
+        <div class="game-msg" id="lifeMsg">버튼을 눌러 첫 문제를 받으세요.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 업적 ================= -->
+<section class="tab-panel" id="tab-medals">
+  <div class="reveal r1">
+    <span class="eyebrow">기록 · 나의 도전</span>
+    <h2 class="section-title">업적 보관함 🎖️</h2>
+    <p class="lead">탐구와 게임을 정복하고 다섯 개의 훈장을 모두 모아 보자. (훈장은 이 화면을 열어 둔 동안만 유지돼요 — 다 모았다면 선생님께 화면을 보여 주자!)</p>
+  </div>
+  <div class="medal-showcase reveal r2">
+    <div class="ms-head"><h3>훈장 컬렉션</h3></div>
+    <div class="ms-sub">훈장 이미지는 같은 폴더에 <code>medal-mirror.jpg</code> <code>medal-lens.jpg</code> <code>medal-sorter.jpg</code> <code>medal-explorer.jpg</code> <code>medal-speed.jpg</code> 파일을 넣으면 표시됩니다.</div>
+    <div class="medal-grid" id="medalGrid"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="medal-toast" id="medalToast">
+  <div class="tmedal" id="medalToastImg"><span class="tph">🎖️</span></div>
+  <div class="tt"><small>MEDAL UNLOCKED</small><h4 id="medalToastName">훈장 획득!</h4><p id="medalToastDesc"></p></div>
+</div>
+
+<footer>
+  중2 과학 · 빛과 파동 <span class="fdot">●</span> 생활 속 거울과 렌즈 <span class="fdot">●</span> 모양으로 분류하고, 쓰임새로 이해한다<br>
+  드래그 · 탭 · 슬라이더로 직접 만져 보며 배우는 학습 공간<br>
+  제작 · 해누리중 조승재 (과학이조선생)
+</footer>
+
+<script>
+/* ============================================================
+   생활 속 거울과 렌즈 — 단일 파일 학습 공간
+   ============================================================ */
+const $=id=>document.getElementById(id);
+if(!CanvasRenderingContext2D.prototype.roundRect){
+  CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
+    if(typeof r==='number')r={tl:r,tr:r,br:r,bl:r};else r=r||{tl:0,tr:0,br:0,bl:0};
+    this.beginPath();this.moveTo(x+r.tl,y);
+    this.lineTo(x+w-r.tr,y);this.arcTo(x+w,y,x+w,y+r.tr,r.tr);
+    this.lineTo(x+w,y+h-r.br);this.arcTo(x+w,y+h,x+w-r.br,y+h,r.br);
+    this.lineTo(x+r.bl,y+h);this.arcTo(x,y+h,x,y+h-r.bl,r.bl);
+    this.closePath();return this;};
+}
+const deg=r=>r*180/Math.PI, rad=d=>d*Math.PI/180;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+
+function fitCanvas(cv,aspect){
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const w=cv.clientWidth, h=Math.round(w*aspect);
+  if(cv.width!==Math.round(w*dpr)||cv.height!==Math.round(h*dpr)){
+    cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr);
+    cv.style.height=h+'px';
+  }
+  const ctx=cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,w,h};
+}
+function ptr(cv,e){const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left),y:(e.clientY-r.top)};}
+function glowSeg(ctx,x1,y1,x2,y2,color,width,blur){
+  ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';
+  ctx.shadowColor=color;ctx.shadowBlur=blur||10;
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore();
+}
+function dashSeg(ctx,x1,y1,x2,y2,color,width,pattern){
+  ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(pattern||[7,6]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore();
+}
+function arrowHead(ctx,x,y,ang,size,color,hollow){
+  ctx.save();ctx.translate(x,y);ctx.rotate(ang);
+  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-size,-size*0.55);ctx.lineTo(-size,size*0.55);ctx.closePath();
+  if(hollow){ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();}
+  else{ctx.fillStyle=color;ctx.fill();}
+  ctx.restore();
+}
+function txt(ctx,str,x,y,o){
+  o=o||{};ctx.save();
+  ctx.font=(o.weight||'700')+' '+(o.size||12)+'px '+(o.font||"'Noto Sans KR',sans-serif");
+  ctx.fillStyle=o.color||'#6b5e45';ctx.textAlign=o.align||'center';ctx.textBaseline=o.base||'middle';
+  if(o.glow){ctx.shadowColor=o.glow;ctx.shadowBlur=10;}
+  ctx.fillText(str,x,y);ctx.restore();
+}
+/* ---------- Web Audio ---------- */
+let AC=null;
+function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();return AC;}
+function blip(freq,dur,type,gain,when){
+  const a=ac();if(!a)return;const t=a.currentTime+(when||0);
+  const o=a.createOscillator(),g=a.createGain();
+  o.type=type||'sine';o.frequency.setValueAtTime(freq,t);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(gain||.16,t+.012);
+  g.gain.exponentialRampToValueAtTime(.0001,t+(dur||.18));
+  o.connect(g).connect(a.destination);o.start(t);o.stop(t+(dur||.18)+.05);
+}
+const sndClick=()=>blip(620,.08,'triangle',.1);
+const sndHit=()=>{blip(523,.12,'triangle',.16);blip(659,.12,'triangle',.16,.07);blip(784,.2,'triangle',.18,.14);};
+const sndMiss=()=>{blip(240,.2,'sawtooth',.1);blip(170,.26,'sawtooth',.09,.08);};
+const sndFanfare=()=>{[523,659,784,1047].forEach((f,i)=>blip(f,.3,'triangle',.16,i*.12));};
+
+/* ---------- 용어 사전 (교과서 범위) ---------- */
+const GLOSSARY={
+ '평면거울':'면이 평평한 거울. 물체의 모습을 그대로 볼 수 있다. 세면대 거울, 무용실 거울처럼 모습을 그대로 확인할 때 사용한다.',
+ '볼록거울':'가운데가 볼록하게 튀어나온 거울. 넓은 범위를 볼 때 사용한다. 도로 안전 거울, 자동차 측면 거울이 볼록거울이다.',
+ '오목거울':'가운데가 오목하게 들어간 거울. 물체를 크게 볼 때 사용한다. 치과용 거울, 화장용 확대 거울이 오목거울이다.',
+ '볼록렌즈':'가운데 부분이 가장자리보다 두꺼운 렌즈. 현미경, 루페처럼 물체를 크게 보기 위해 사용한다.',
+ '오목렌즈':'가운데 부분이 가장자리보다 얇은 렌즈. 근시용 안경처럼 멀리 있는 물체를 선명하게 보기 위해 사용한다.',
+ '반사':'빛이 거울 같은 물체의 표면에 부딪혀 진행 방향이 바뀌어 되돌아 나오는 현상. 거울이 상을 만드는 원리다.',
+ '굴절':'빛이 공기에서 유리·물처럼 다른 물질로 들어갈 때 경계면에서 진행 방향이 꺾이는 현상. 렌즈가 작동하는 원리다.',
+ '시야':'눈으로 볼 수 있는 범위. 볼록거울은 거울 면에 입사한 빛이 반사한 후에 넓게 퍼져 나가므로 평면거울에 비해 시야가 넓다.',
+ '근시':'가까이 있는 물체는 잘 보이지만 멀리 있는 물체는 잘 보이지 않는 경우. 근시용 안경에는 오목렌즈가 쓰인다.',
+ '루페':'확대경. 가운데가 두꺼운 볼록렌즈로, 작은 물체를 크게 볼 때 사용한다. 보석 감정, 곤충 관찰 등에 쓴다.'
+};
+document.querySelectorAll('.gloss-chip').forEach(ch=>{
+  ch.addEventListener('click',()=>{
+    const box=$(ch.dataset.box), term=ch.dataset.term;
+    const wasActive=ch.classList.contains('active');
+    ch.closest('.gloss').querySelectorAll('.gloss-chip').forEach(c=>c.classList.remove('active'));
+    if(wasActive){box.classList.remove('show');return;}
+    ch.classList.add('active');
+    box.innerHTML='<span class="gd-term">'+term+'</span>'+GLOSSARY[term];
+    box.classList.add('show');sndClick();
+  });
+});
+document.querySelectorAll('.ansbtn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const a=$(b.dataset.ans);a.classList.toggle('show');
+    b.textContent=a.classList.contains('show')?'접기 ↑':'정리해 볼까 →';sndClick();
+  });
+});
+let qmN=0;
+function qmAddFn(){
+  const inp=$('qmInput');const v=inp.value.trim();
+  if(!v)return;
+  if(qmN>=8){$('qmInput').placeholder='질문은 8개까지! 활동지에 옮겨 적어 보세요 ✏️';return;}
+  qmN++;
+  const d=document.createElement('div');d.className='qm-item';
+  d.innerHTML='<span class="qn">Q'+qmN+'</span><span></span>';
+  d.lastElementChild.textContent=v;
+  $('qmList').appendChild(d);inp.value='';sndClick();
+}
+$('qmAdd').addEventListener('click',qmAddFn);
+$('qmInput').addEventListener('keydown',e=>{if(e.key==='Enter')qmAddFn();});
+
+/* ============================================================
+   탐구 1 — 거울 관찰소: 시야 비교기 (mirCanvas)
+   ============================================================ */
+const MIR={mode:'plane',seen:{p:false,cx:false,cc:false}};
+const MIR_CFG={
+ plane:{mult:1.0,scale:1.0,fov:'보통',look:'그대로 (같은 크기)',emoji:'🪞'},
+ convex:{mult:2.1,scale:0.55,fov:'넓다! 🔭',look:'작게 보인다',emoji:'🥄'},
+ concave:{mult:0.45,scale:1.8,fov:'좁다',look:'크게 보인다',emoji:'🍜'}
+};
+const MIR_OBJS=[
+ {e:'🚗',x:.20,y:.16},{e:'🌳',x:.42,y:.10},{e:'🚲',x:.58,y:.26},
+ {e:'🧍',x:.30,y:.42},{e:'🐕',x:.55,y:.56},
+ {e:'⚽',x:.24,y:.72},{e:'🏠',x:.46,y:.84},{e:'📦',x:.63,y:.70}
+];
+function drawMirFov(){
+  const cv=$('mirCanvas');if(!cv||!cv.clientWidth)return;
+  const {ctx,w,h}=fitCanvas(cv,0.7);
+  ctx.fillStyle='#fdfbf4';ctx.fillRect(0,0,w,h);
+  const cfg=MIR_CFG[MIR.mode];
+  const roomB=h*0.80;
+  const ex=w*0.085, ey=roomB*0.5;
+  const mx=w*0.82, mh=roomB*0.16;
+  const a0=Math.atan(mh/(mx-ex));
+  const th=Math.min(a0*cfg.mult,1.25);
+  const farX=0, dy=Math.tan(th)*(mx-farX);
+  ctx.save();
+  const grad=ctx.createLinearGradient(mx,0,farX,0);
+  grad.addColorStop(0,'rgba(242,177,62,.45)');grad.addColorStop(1,'rgba(242,177,62,.07)');
+  ctx.fillStyle=grad;
+  ctx.beginPath();ctx.moveTo(mx,ey);
+  ctx.lineTo(farX,clamp(ey-dy,2,roomB-2));ctx.lineTo(farX,clamp(ey+dy,2,roomB-2));
+  ctx.closePath();ctx.fill();
+  ctx.strokeStyle='rgba(148,100,0,.65)';ctx.lineWidth=1.4;ctx.setLineDash([5,5]);
+  ctx.beginPath();ctx.moveTo(mx,ey);ctx.lineTo(farX,clamp(ey-dy,2,roomB-2));
+  ctx.moveTo(mx,ey);ctx.lineTo(farX,clamp(ey+dy,2,roomB-2));ctx.stroke();
+  ctx.restore();
+  glowSeg(ctx,ex+14,ey,mx-4,ey-mh,'#1d4fae',1.6,7);
+  glowSeg(ctx,ex+14,ey,mx-4,ey+mh,'#1d4fae',1.6,7);
+  arrowHead(ctx,mx-4,ey-mh,Math.atan2(-mh,mx-ex),9,'#1d4fae');
+  arrowHead(ctx,mx-4,ey+mh,Math.atan2(mh,mx-ex),9,'#1d4fae');
+  ctx.save();
+  const g2=ctx.createLinearGradient(mx-5,0,mx+6,0);
+  g2.addColorStop(0,'#eef1f6');g2.addColorStop(.5,'#a3adbf');g2.addColorStop(1,'#5a6577');
+  ctx.strokeStyle=g2;ctx.lineWidth=7;ctx.lineCap='round';
+  ctx.shadowColor='rgba(95,105,120,.7)';ctx.shadowBlur=14;
+  ctx.beginPath();
+  if(MIR.mode==='plane'){ctx.moveTo(mx,ey-mh);ctx.lineTo(mx,ey+mh);}
+  else if(MIR.mode==='convex'){ctx.moveTo(mx+7,ey-mh);ctx.quadraticCurveTo(mx-13,ey,mx+7,ey+mh);}
+  else{ctx.moveTo(mx-7,ey-mh);ctx.quadraticCurveTo(mx+13,ey,mx-7,ey+mh);}
+  ctx.stroke();ctx.restore();
+  ctx.save();ctx.strokeStyle='rgba(95,105,120,.45)';ctx.lineWidth=1.2;
+  for(let t=0;t<=1;t+=0.14){
+    let qx=mx;
+    if(MIR.mode==='convex')qx=(1-t)*(1-t)*(mx+7)+2*(1-t)*t*(mx-13)+t*t*(mx+7);
+    if(MIR.mode==='concave')qx=(1-t)*(1-t)*(mx-7)+2*(1-t)*t*(mx+13)+t*t*(mx-7);
+    const qy=ey-mh+2*mh*t;
+    ctx.beginPath();ctx.moveTo(qx+4,qy);ctx.lineTo(qx+12,qy+6);ctx.stroke();
+  }
+  ctx.restore();
+  txt(ctx,cfg.emoji+' '+(MIR.mode==='plane'?'평면 거울':MIR.mode==='convex'?'볼록 거울':'오목 거울'),mx,ey+mh+20,{color:'#5d6675',size:12,weight:'800'});
+  ctx.save();ctx.font='26px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('👁️',ex,ey);ctx.restore();
+  txt(ctx,'내 눈',ex,ey+24,{color:'#1d4fae',size:11,weight:'800'});
+  let visible=[];
+  for(const o of MIR_OBJS){
+    const ox=o.x*w, oy=o.y*roomB;
+    const inFov=Math.abs(oy-ey)<=Math.tan(th)*(mx-ox);
+    if(inFov)visible.push(o);
+    ctx.save();ctx.globalAlpha=inFov?1:0.18;
+    ctx.font='22px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(o.e,ox,oy);
+    if(inFov){ctx.strokeStyle='rgba(148,100,0,.85)';ctx.lineWidth=1.6;
+      ctx.beginPath();ctx.arc(ox,oy,17,0,Math.PI*2);ctx.stroke();}
+    ctx.restore();
+  }
+  txt(ctx,'⬛ 위에서 본 모습 — 노란 영역 = 이 거울로 보이는 범위(시야)',w*0.5,roomB-12,{color:'#7d6f51',size:10.5,weight:'700'});
+  ctx.save();ctx.fillStyle='rgba(0,0,0,.04)';
+  ctx.strokeStyle='rgba(0,0,0,.14)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.roundRect(w*0.02,roomB+6,w*0.96,h-roomB-12,10);ctx.fill();ctx.stroke();ctx.restore();
+  txt(ctx,'거울에 비친 모습 →',w*0.115,(roomB+h)/2,{color:'#6b5e45',size:11,weight:'800'});
+  const fs=Math.round(20*cfg.scale);
+  const startX=w*0.24, gap=Math.max(fs*1.5,30);
+  ctx.save();ctx.font=fs+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  visible.slice(0,Math.floor((w*0.74)/gap)).forEach((o,i)=>{
+    ctx.fillText(o.e,startX+i*gap,(roomB+h)/2);
+  });
+  ctx.restore();
+  if(!visible.length)txt(ctx,'(시야 안에 물체가 없어요)',w*0.5,(roomB+h)/2,{color:'#7d6f51',size:11});
+  $('mirFov').textContent=cfg.fov;
+  $('mirLook').textContent=cfg.look;
+  const v=$('mirVerdict');v.className='why-verdict ok';
+  if(MIR.mode==='plane'){MIR.seen.p=true;
+    v.innerHTML='🪞 평면 거울 — 모습이 <b>그대로</b> 보인다. 내 모습을 정확히 확인할 때(세면대·무용실 거울) 사용!';}
+  else if(MIR.mode==='convex'){MIR.seen.cx=true;
+    v.innerHTML='🥄 볼록 거울 — 반사된 빛이 <b>넓게 퍼져</b> 나가 <b>시야가 넓다</b>! 작게 보이는 대신 많은 물체가 한눈에 — 도로 안전 거울·자동차 측면 거울의 이유.';}
+  else{MIR.seen.cc=true;
+    v.innerHTML='🍜 오목 거울 — 시야는 좁지만 물체가 <b>크게</b> 보인다. 치과 거울·화장용 확대 거울처럼 <b>자세히 볼 때</b> 사용!';}
+  $('ckMir1').classList.toggle('done',MIR.seen.p);
+  $('ckMir2').classList.toggle('done',MIR.seen.cx);
+  $('ckMir3').classList.toggle('done',MIR.seen.cc);
+  if(MIR.seen.p&&MIR.seen.cx&&MIR.seen.cc)unlockMedal('mirror');
+}
+document.querySelectorAll('#mirModeBtns .step-btn').forEach(b=>b.addEventListener('click',()=>{
+  MIR.mode=b.dataset.mode;
+  document.querySelectorAll('#mirModeBtns .step-btn').forEach(x=>x.classList.toggle('active',x===b));
+  sndClick();drawMirFov();
+}));
+
+/* ============================================================
+   탐구 2-1 — 렌즈 공방: 두께로 판별 (shapeCanvas)
+   ============================================================ */
+const SHAPE={tc:22,te:22,made:{cvx:false,ccv:false}};
+function drawShape(){
+  const cv=$('shapeCanvas');if(!cv||!cv.clientWidth)return;
+  const {ctx,w,h}=fitCanvas(cv,0.78);
+  ctx.fillStyle='#fdfbf4';ctx.fillRect(0,0,w,h);
+  const cx=w*0.5, cy=h*0.46, H=h*0.30;
+  const k=w/340;
+  const tc=SHAPE.tc*k, te=SHAPE.te*k;
+  dashSeg(ctx,w*0.08,cy,w*0.92,cy,'rgba(95,105,120,.3)',1,[3,6]);
+  const rX=cx+te/2, lX=cx-te/2;
+  const cR=cx+tc-te/2, cL=cx-tc+te/2;
+  ctx.save();
+  ctx.fillStyle='rgba(37,99,212,.12)';ctx.strokeStyle='#1d4fae';ctx.lineWidth=2.4;
+  ctx.shadowColor='#2563d4';ctx.shadowBlur=12;
+  ctx.beginPath();
+  ctx.moveTo(rX,cy-H);
+  ctx.quadraticCurveTo(cR,cy,rX,cy+H);
+  ctx.lineTo(lX,cy+H);
+  ctx.quadraticCurveTo(cL,cy,lX,cy-H);
+  ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.restore();
+  function thickMark(x1,x2,y,color,label){
+    glowSeg(ctx,x1,y,x2,y,color,2,6);
+    arrowHead(ctx,x1,y,Math.PI,7,color);arrowHead(ctx,x2,y,0,7,color);
+    txt(ctx,label,(x1+x2)/2,y+(y<cy?-14:16),{color,size:11,weight:'800'});
+  }
+  thickMark(cx-tc/2,cx+tc/2,cy,'#946400','가운데 '+SHAPE.tc);
+  thickMark(cx-te/2,cx+te/2,cy-H-12,'#ab1f37','가장자리 '+SHAPE.te);
+  const kind=SHAPE.tc>SHAPE.te+1?'convex':SHAPE.te>SHAPE.tc+1?'concave':'flat';
+  const kindTxt=kind==='convex'?'볼록 렌즈! 🔍':kind==='concave'?'오목 렌즈! 👓':'그냥 유리판 😅';
+  $('shapeKind').textContent=kindTxt;
+  txt(ctx,kindTxt,cx,h*0.92,{color:kind==='convex'?'#946400':kind==='concave'?'#1d4fae':'#6b5e45',size:16,weight:'800',font:"'Black Han Sans',sans-serif",glow:kind==='flat'?null:'#946400'});
+  const v=$('shapeVerdict');
+  if(kind==='convex'){SHAPE.made.cvx=true;v.className='why-verdict ok';
+    v.innerHTML='가운데가 가장자리보다 <b>두껍다</b> → <b>볼록 렌즈</b>. 물체를 <b>크게</b> 보기 위해 사용한다 (현미경, 루페).';}
+  else if(kind==='concave'){SHAPE.made.ccv=true;v.className='why-verdict ok';
+    v.innerHTML='가운데가 가장자리보다 <b>얇다</b> → <b>오목 렌즈</b>. <b>멀리 있는 물체를 선명하게</b> 보기 위해 사용한다 (근시용 안경).';}
+  else{v.className='why-verdict';
+    v.innerHTML='가운데와 가장자리 두께가 같으면 렌즈가 아니라 그냥 유리판! 두 슬라이더에 <b>차이</b>를 만들어 보자.';}
+  updateLenChecks();
+}
+$('thC').addEventListener('input',e=>{SHAPE.tc=+e.target.value;$('thCVal').textContent=SHAPE.tc<14?'얇게':SHAPE.tc<30?'보통':'두껍게';drawShape();});
+$('thE').addEventListener('input',e=>{SHAPE.te=+e.target.value;$('thEVal').textContent=SHAPE.te<14?'얇게':SHAPE.te<30?'보통':'두껍게';drawShape();});
+
+/* ============================================================
+   탐구 2-2 — 렌즈 너머 보기 (lookCanvas)
+   ============================================================ */
+const LOOK={mode:'convex',xF:.30,yF:.5,drag:false,seen:{cvx:false,ccv:false}};
+const LOOK_LINES=['과학은 세상을 보는','새로운 눈이다'];
+function drawLookText(ctx,w,h,scale,ox,oy){
+  ctx.save();
+  if(scale!==1){ctx.translate(ox,oy);ctx.scale(scale,scale);ctx.translate(-ox,-oy);}
+  ctx.font="800 "+Math.round(w*0.072)+"px 'Noto Sans KR',sans-serif";
+  ctx.fillStyle='#5d6675';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(LOOK_LINES[0],w*0.5,h*0.40);
+  ctx.fillText(LOOK_LINES[1],w*0.5,h*0.62);
+  ctx.restore();
+}
+function drawLook(){
+  const cv=$('lookCanvas');if(!cv||!cv.clientWidth)return;
+  const {ctx,w,h}=fitCanvas(cv,0.62);
+  ctx.fillStyle='#f6f2e6';ctx.fillRect(0,0,w,h);
+  drawLookText(ctx,w,h,1,0,0);
+  const lx=LOOK.xF*w, ly=LOOK.yF*h, r=h*0.30;
+  const conv=LOOK.mode==='convex';
+  const scale=conv?1.75:0.62;
+  ctx.save();
+  ctx.beginPath();ctx.arc(lx,ly,r,0,Math.PI*2);ctx.clip();
+  ctx.fillStyle='#f6f2e6';ctx.fillRect(0,0,w,h);
+  ctx.fillStyle=conv?'rgba(242,177,62,.10)':'rgba(37,99,212,.05)';ctx.fillRect(0,0,w,h);
+  drawLookText(ctx,w,h,scale,lx,ly);
+  ctx.restore();
+  ctx.save();
+  ctx.strokeStyle=conv?'#946400':'#1d4fae';
+  ctx.lineWidth=conv?6:4;
+  ctx.shadowColor=conv?'#946400':'#2563d4';ctx.shadowBlur=14;
+  ctx.beginPath();ctx.arc(lx,ly,r,0,Math.PI*2);ctx.stroke();
+  if(conv){
+    ctx.lineWidth=9;ctx.lineCap='round';
+    ctx.beginPath();
+    ctx.moveTo(lx+r*0.72,ly+r*0.72);
+    ctx.lineTo(lx+r*1.35,ly+r*1.35);
+    ctx.stroke();
+  }else{
+    ctx.lineWidth=1.6;ctx.shadowBlur=4;
+    ctx.beginPath();ctx.arc(lx,ly,r-7,0,Math.PI*2);ctx.stroke();
+  }
+  ctx.restore();
+  txt(ctx,conv?'🔍 루페 (볼록 렌즈)':'👓 근시용 안경 (오목 렌즈)',lx,clamp(ly-r-14,12,h),{color:conv?'#8a5e00':'#1d4fae',size:12,weight:'800'});
+  txt(ctx,'렌즈를 드래그해 글자 위로!',w*0.5,h*0.93,{color:'#7d6f51',size:10.5,weight:'700'});
+  $('lookSize').textContent=conv?'크게 보인다 🔍':'작게 — 멀리도 선명하게 👓';
+  const overText=ly>h*0.25&&ly<h*0.75&&lx>w*0.12&&lx<w*0.88;
+  if(overText){
+    if(conv)LOOK.seen.cvx=true;else LOOK.seen.ccv=true;
+    updateLenChecks();
+  }
+}
+function updateLenChecks(){
+  $('ckLen1').classList.toggle('done',SHAPE.made.cvx);
+  $('ckLen2').classList.toggle('done',SHAPE.made.ccv);
+  $('ckLen3').classList.toggle('done',LOOK.seen.cvx);
+  $('ckLen4').classList.toggle('done',LOOK.seen.ccv);
+  if(SHAPE.made.cvx&&SHAPE.made.ccv&&LOOK.seen.cvx&&LOOK.seen.ccv)unlockMedal('lens');
+}
+document.querySelectorAll('#lookModeBtns .step-btn').forEach(b=>b.addEventListener('click',()=>{
+  LOOK.mode=b.dataset.mode;
+  document.querySelectorAll('#lookModeBtns .step-btn').forEach(x=>x.classList.toggle('active',x===b));
+  sndClick();drawLook();
+}));
+(function(){
+  const cv=$('lookCanvas');
+  const move=p=>{LOOK.xF=clamp(p.x/cv.clientWidth,0.06,0.94);LOOK.yF=clamp(p.y/cv.clientHeight,0.1,0.9);drawLook();};
+  cv.addEventListener('pointerdown',e=>{LOOK.drag=true;cv.setPointerCapture(e.pointerId);move(ptr(cv,e));});
+  cv.addEventListener('pointermove',e=>{if(LOOK.drag)move(ptr(cv,e));});
+  cv.addEventListener('pointerup',()=>LOOK.drag=false);
+  cv.addEventListener('pointercancel',()=>LOOK.drag=false);
+})();
+
+/* ============================================================
+   분류 탐구 — 교과서 '해 보기' (준비물 5종)
+   ============================================================ */
+const SORT_ITEMS=[
+ {e:'🤳',name:'손거울',a:0,clue:'들고 다니며 얼굴을 비추는 작은 거울. 면이 평평하고, 비친 얼굴이 실물과 같은 크기로 그대로 보인다.',use:'물체의 모습을 <b>그대로</b> 볼 수 있어, 내 모습을 확인할 때 사용한다.'},
+ {e:'🚲',name:'자전거 손목 거울',a:1,clue:'손목에 차고 뒤를 보는 둥글게 튀어나온 거울. 뒤쪽 도로가 작게 — 그러나 한눈에 넓게 보인다.',use:'<b>넓은 범위</b>를 볼 수 있으므로 안전한 시야 확보를 위해 사용한다.'},
+ {e:'💄',name:'화장용 확대 거울',a:2,clue:'가까이 대면 얼굴이 크게 보이는 거울. 만져 보면 면이 안쪽으로 오목하게 들어가 있다.',use:'물체의 모습이 <b>크게</b> 보이므로 자세히 보아야 할 때 사용한다.'},
+ {e:'🔍',name:'루페(확대경)',a:3,clue:'유리를 통과해서 보면 글자가 크게 보인다. 만져 보니 가운데가 가장자리보다 두껍다.',use:'물체의 모습이 <b>크게</b> 보이므로 자세히 보아야 할 때 사용한다. (가운데가 두껍다 = 볼록!)'},
+ {e:'👓',name:'근시용 안경',a:4,clue:'쓰면 멀리 있는 칠판 글씨가 또렷해진다. 알의 가운데가 가장자리보다 얇다.',use:'<b>멀리 있는 물체가 흐리게</b> 보이는 사람이 사용하면 물체를 <b>선명하게</b> 볼 수 있다. (가운데가 얇다 = 오목!)'}
+];
+const SORT={idx:-1,done:0,busy:false};
+function sortShow(){
+  const it=SORT_ITEMS[SORT.idx];
+  $('sortNo').textContent=(SORT.idx+1)+' / 5';
+  $('sortEmoji').textContent=it.e;
+  $('sortLine').textContent=it.name;
+  $('sortSub').textContent='관찰 단서 — '+it.clue;
+  document.querySelectorAll('#sortOpts .life-opt').forEach(b=>b.classList.remove('ok','no'));
+  SORT.busy=false;
+}
+$('sortStart').addEventListener('click',()=>{
+  SORT.idx=0;SORT.done=0;
+  SORT_ITEMS.forEach((_,i)=>$('ckSort'+i).classList.remove('done'));
+  $('sortScore').textContent='0/5';
+  $('sortMsg').className='game-msg';
+  $('sortMsg').innerHTML='준비물 1번 등장! 모양과 비친 모습을 단서로 분류하라.';
+  $('sortStart').textContent='🔄 처음부터 다시';
+  sortShow();sndClick();
+});
+document.querySelectorAll('#sortOpts .life-opt').forEach(b=>b.addEventListener('click',()=>{
+  if(SORT.idx<0||SORT.idx>=SORT_ITEMS.length||SORT.busy)return;
+  const it=SORT_ITEMS[SORT.idx];
+  const ok=+b.dataset.opt===it.a;
+  const msg=$('sortMsg');
+  if(ok){
+    SORT.busy=true;
+    b.classList.add('ok');sndHit();
+    SORT.done++;
+    $('ckSort'+SORT.idx).classList.add('done');
+    $('sortScore').textContent=SORT.done+'/5';
+    msg.className='game-msg hit';
+    msg.innerHTML='✅ <b>'+it.name+'</b> 분류 성공! '+it.use;
+    SORT.idx++;
+    if(SORT.idx>=SORT_ITEMS.length){
+      unlockMedal('sorter');
+      setTimeout(()=>{
+        msg.innerHTML='🎉 <b>다섯 가지 준비물 분류 완료!</b> 아래 \'정리\' 질문으로 — 비친 모습과 쓰임새를 연결해 활동지에 정리하자.';
+        $('sortEmoji').textContent='🏆';
+        $('sortLine').textContent='분류 마스터 등극!';
+        $('sortSub').textContent='실물 준비물로도 같은 분류를 해 보자.';
+        $('sortNo').textContent='완료';
+      },1800);
+    }else{
+      setTimeout(sortShow,1800);
+    }
+  }else{
+    b.classList.add('no');sndMiss();
+    msg.className='game-msg miss';
+    msg.innerHTML='다시 생각! 단서를 읽어 보자 — <b>모습이 그대로?</b>(평면) <b>작지만 넓게?</b>(볼록거울) <b>크게?</b>(오목거울/볼록렌즈 — 반사인지 굴절인지!) <b>멀리 선명하게?</b>(오목렌즈)';
+  }
+}));
+
+/* ============================================================
+   생활 탐험 — 광학 장치 매칭 게임
+   ============================================================ */
+const LIFE_OPTS=['평면거울','볼록거울','오목거울','볼록렌즈','오목렌즈'];
+const LIFE_ITEMS=[
+ {e:'🚗',q:'자동차 측면 거울 — "사물이 보이는 것보다 가까이 있음"',a:1,x:'<b>넓은 범위</b>를 보기 위한 볼록거울. 대신 작게 보여서 멀리 있다고 착각하게 된다.'},
+ {e:'🏪',q:'편의점 천장 구석의 둥근 보안 거울',a:1,x:'매장 전체를 <b>한눈에 넓게</b> 담는 볼록거울.'},
+ {e:'🛣️',q:'굽은 산길 모퉁이의 둥근 도로 안전 거울',a:1,x:'반대편 도로를 <b>넓게</b> 비춰 주는 볼록거울 — 시야가 넓다!'},
+ {e:'🥄',q:'숟가락의 볼록한 바깥면에 비친 내 얼굴',a:1,x:'작게, 그리고 주변까지 넓게 보인다 — 볼록거울의 특징.'},
+ {e:'💄',q:'얼굴이 크게 보이는 화장용 확대 거울',a:2,x:'가까이 있는 얼굴을 <b>크게</b> 비춘다 — 크게 보기는 오목거울의 일.'},
+ {e:'🦷',q:'치과에서 어금니 뒤를 비추는 작은 거울',a:2,x:'좁은 입속 치아를 <b>크게</b> 보는 오목거울.'},
+ {e:'🧍',q:'옷가게의 전신 거울',a:0,x:'내 모습을 <b>그대로</b> 확인한다 — 평면거울.'},
+ {e:'🛗',q:'엘리베이터 벽면의 큰 거울',a:0,x:'평면거울 — 모습 그대로, 공간도 넓어 보이는 효과까지!'},
+ {e:'💃',q:'무용실 벽면 가득한 거울',a:0,x:'동작을 <b>그대로</b> 확인해야 하니 평면거울.'},
+ {e:'🔍',q:'작은 글씨를 크게 보는 루페(확대경)',a:3,x:'가운데가 두꺼운 <b>볼록렌즈</b> — 크게 보기 담당.'},
+ {e:'🔬',q:'아주 작은 세포를 보는 현미경의 렌즈',a:3,x:'작은 물체를 <b>크게</b> 보기 위한 볼록렌즈.'},
+ {e:'🔭',q:'멀리 있는 별을 보는 망원경의 큰 렌즈',a:3,x:'멀리 있는 것을 <b>크게·자세히</b> 보는 볼록렌즈.'},
+ {e:'📷',q:'카메라 맨 앞의 렌즈',a:3,x:'가운데가 두꺼운 <b>볼록렌즈</b>로 빛을 받아들여 사진을 만든다.'},
+ {e:'👁️',q:'사람 눈 속의 수정체',a:3,x:'당신의 눈도 결국 하나의 렌즈 — 가운데가 두꺼운 <b>볼록렌즈</b>다!'},
+ {e:'🕶️',q:'근시인 친구의 안경 (가장자리가 두껍다)',a:4,x:'가운데가 얇은 <b>오목렌즈</b> — 멀리 있는 물체를 선명하게!'},
+ {e:'📖',q:'할머니가 신문 볼 때 쓰는 돋보기 안경 (가운데가 두껍다)',a:3,x:'가까운 글씨를 <b>크게</b> 보여 주는 볼록렌즈.'},
+ {e:'💎',q:'보석 감정사가 눈에 대고 보는 작은 확대 렌즈',a:3,x:'보석의 세부를 <b>크게</b> — 루페와 같은 볼록렌즈.'},
+ {e:'🐜',q:'곤충 관찰 채집통 뚜껑에 달린 렌즈 (만지면 가운데가 두껍다)',a:3,x:'곤충을 <b>크게</b> 관찰하는 볼록렌즈.'}
+];
+const LIFE={cur:null,answered:false,total:0,streak:0,best:0,
+  run:'free',timeLeft:60,timer:null,chalScore:0,recent:[]};
+function lifeNewQ(keepMsg){
+  let it;
+  do{it=LIFE_ITEMS[Math.floor(Math.random()*LIFE_ITEMS.length)];}while(LIFE.recent.includes(it));
+  LIFE.recent.push(it);if(LIFE.recent.length>6)LIFE.recent.shift();
+  LIFE.cur=it;LIFE.answered=false;
+  $('lifeEmoji').textContent=it.e;
+  $('lifeLine').textContent=it.q;
+  $('lifeSub').textContent='이 물건에 숨어 있는 광학 장치는? — "무엇을 위해 보는가?"';
+  document.querySelectorAll('#lifeOpts .life-opt').forEach(b=>b.classList.remove('ok','no'));
+  if(!keepMsg){$('lifeMsg').className='game-msg';$('lifeMsg').innerHTML='다섯 후보 중 정답을 고르세요!';}
+}
+document.querySelectorAll('#lifeOpts .life-opt').forEach(b=>b.addEventListener('click',()=>{
+  if(!LIFE.cur||LIFE.answered)return;
+  if(LIFE.run==='chal'&&LIFE.timeLeft<=0)return;
+  LIFE.answered=true;
+  const ok=+b.dataset.opt===LIFE.cur.a;
+  const msg=$('lifeMsg');
+  b.classList.add(ok?'ok':'no');
+  if(ok){
+    LIFE.total++;LIFE.streak++;
+    if(LIFE.run==='chal')LIFE.chalScore++;
+    sndHit();
+    msg.className='game-msg hit';
+    msg.innerHTML='🎉 <b>정답! '+LIFE_OPTS[LIFE.cur.a]+'</b> — '+LIFE.cur.x;
+    if(LIFE.total>=8)unlockMedal('explorer');
+    setTimeout(()=>lifeNewQ(true),LIFE.run==='chal'?900:2200);
+  }else{
+    LIFE.streak=0;sndMiss();
+    document.querySelectorAll('#lifeOpts .life-opt').forEach(x=>{if(+x.dataset.opt===LIFE.cur.a)x.classList.add('ok');});
+    msg.className='game-msg miss';
+    msg.innerHTML='아쉽다! 정답은 <b>'+LIFE_OPTS[LIFE.cur.a]+'</b> — '+LIFE.cur.x;
+    setTimeout(()=>lifeNewQ(true),LIFE.run==='chal'?1300:2600);
+  }
+  $('lifeScore').textContent=LIFE.run==='chal'?LIFE.chalScore:LIFE.total;
+  $('lifeStreak').textContent=LIFE.streak;
+}));
+$('lifeNew').addEventListener('click',()=>{lifeNewQ();sndClick();});
+$('lifeChalBtn').addEventListener('click',()=>{
+  if(LIFE.timer)clearInterval(LIFE.timer);
+  LIFE.run='chal';LIFE.timeLeft=60;LIFE.chalScore=0;LIFE.streak=0;
+  $('lifeTime').textContent=60;
+  $('lifeScore').textContent=0;$('lifeStreak').textContent=0;
+  $('lifeMsg').className='game-msg';
+  $('lifeMsg').innerHTML='⏱ 60초 도전! 직감 말고 <b>"무엇을 위해 보는가"</b>로 풀자! (6문제 이상 = 보너스 훈장)';
+  lifeNewQ(true);sndClick();
+  LIFE.timer=setInterval(()=>{
+    LIFE.timeLeft--;
+    $('lifeTime').textContent=LIFE.timeLeft;
+    $('lifeTimePill').classList.toggle('low',LIFE.timeLeft<=10);
+    if(LIFE.timeLeft<=0){
+      clearInterval(LIFE.timer);LIFE.timer=null;LIFE.run='free';
+      LIFE.best=Math.max(LIFE.best,LIFE.chalScore);
+      $('lifeBest').textContent=LIFE.best;
+      $('lifeMsg').className='game-msg hit';
+      $('lifeMsg').innerHTML='⏱ 종료! <b>'+LIFE.chalScore+'문제</b> 정답'+(LIFE.chalScore>=LIFE.best?' — 최고 기록!':'');
+      if(LIFE.chalScore>=6)unlockMedal('speed');
+      $('lifeScore').textContent=LIFE.total;
+    }
+  },1000);
+});
+
+/* ---------- 별빛 배경 ---------- */
+(function(){
+  const cv=$('bgStars');if(!cv)return;
+  const ctx=cv.getContext('2d');
+  let W,H,stars=[],orbs=[];
+  function size(){
+    W=cv.width=innerWidth;H=cv.height=innerHeight;
+    const n=Math.min(150,Math.round(W*H/9000));
+    stars=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,
+      r:.3+Math.random()*1.3,p:Math.random()*6.28,s:.4+Math.random()*1.4,
+      c:['#e63946','#f4791f','#d9a400','#2bb24c','#2f6fd6','#8b46cf'][Math.floor(Math.random()*6)]}));
+    orbs=Array.from({length:7},()=>({x:Math.random()*W,y:Math.random()*H,
+      vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.22,r:1.4+Math.random()*2.2,
+      c:Math.random()<.5?'244,121,31':'47,111,214'}));
+  }
+  size();addEventListener('resize',size);
+  let last=0;
+  (function loop(t){
+    requestAnimationFrame(loop);
+    if(t-last<33)return;last=t;
+    ctx.clearRect(0,0,W,H);
+    for(const s of stars){
+      const a=.16+.5*(0.5+0.5*Math.sin(t/1000*s.s+s.p));
+      ctx.globalAlpha=a;ctx.fillStyle=s.c;
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.3);ctx.fill();
+    }
+    ctx.globalAlpha=1;
+    for(const p of orbs){
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<-24)p.x=W+24;if(p.x>W+24)p.x=-24;
+      if(p.y<-24)p.y=H+24;if(p.y>H+24)p.y=-24;
+      const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*7);
+      g.addColorStop(0,'rgba('+p.c+',.45)');g.addColorStop(1,'rgba('+p.c+',0)');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,p.r*7,0,6.3);ctx.fill();
+    }
+  })(0);
+})();
+
+/* ============================================================
+   업적
+   ============================================================ */
+const MEDALS=[
+ {id:'mirror',name:'거울 관찰자',cond:'평면·볼록·오목 거울의 시야를 모두 비교 관찰',img:'medal-mirror.jpg',accent:'#946400',icon:'🥄'},
+ {id:'lens',name:'렌즈 장인',cond:'볼록·오목 렌즈를 빚고, 두 렌즈 너머로 글자 관찰',img:'medal-lens.jpg',accent:'#2563d4',icon:'🔍'},
+ {id:'sorter',name:'분류 마스터',cond:'준비물 다섯 가지를 모두 올바르게 분류',img:'medal-sorter.jpg',accent:'#13853f',icon:'🗂️'},
+ {id:'explorer',name:'생활 광학 탐험가',cond:'생활 탐험 누적 8문제 정답',img:'medal-explorer.jpg',accent:'#ab1f37',icon:'🚗'},
+ {id:'speed',name:'번개 탐험가',cond:'60초 도전에서 6문제 이상 정답',img:'medal-speed.jpg',accent:'#7c3fd1',icon:'⚡'}
+];
+const unlocked=new Set();
+function renderMedals(){
+  $('medalGrid').innerHTML=MEDALS.map(m=>{
+    const on=unlocked.has(m.id);
+    return '<div class="medal '+(on?'unlocked':'locked')+'" style="--accent2:'+m.accent+'">'
+     +'<div class="ring">'
+     +'<img src="'+m.img+'" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">'
+     +'<div class="ph" style="display:none"><span class="pi">'+m.icon+'</span><small>'+m.img+'</small></div>'
+     +(on?'':'<div class="lock">🔒</div>')
+     +'</div>'
+     +'<div class="mname">'+m.name+'</div>'
+     +'<div class="mcond">'+m.cond+'</div>'
+     +'<div class="mstate">'+(on?'획득!':'잠김')+'</div>'
+     +'<div class="medal-code">'+m.img+'</div>'
+     +'</div>';
+  }).join('');
+}
+function unlockMedal(id){
+  if(unlocked.has(id))return;
+  unlocked.add(id);renderMedals();
+  const m=MEDALS.find(x=>x.id===id);
+  const tImg=$('medalToastImg');
+  tImg.innerHTML='<img src="'+m.img+'" alt="" onerror="this.outerHTML=\'<span class=tph>'+m.icon+'</span>\'">';
+  $('medalToastName').textContent=m.name;
+  $('medalToastDesc').textContent=m.cond;
+  const toast=$('medalToast');
+  toast.classList.add('show');sndFanfare();
+  clearTimeout(toast._t);
+  toast._t=setTimeout(()=>toast.classList.remove('show'),3200);
+}
+
+/* ============================================================
+   탭 전환 + 초기화
+   ============================================================ */
+function redrawTab(name){
+  if(name==='mirror')drawMirFov();
+  else if(name==='lens'){drawShape();drawLook();}
+}
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));
+  window.scrollTo({top:0,behavior:'smooth'});
+  requestAnimationFrame(()=>redrawTab(name));
+}
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.goto)));
+window.addEventListener('resize',()=>{
+  const cur=document.querySelector('.tab-panel.active');
+  if(cur)redrawTab(cur.id.replace('tab-',''));
+});
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.section-title').forEach(el=>{
+    const d=document.createElement('div');d.className='glass-strip';
+    el.insertAdjacentElement('afterend',d);
+  });
+  renderMedals();
+  drawMirFov();drawShape();drawLook();
+  lifeNewQ(true);
+});
+
+</script>
+</body>
+</html>
