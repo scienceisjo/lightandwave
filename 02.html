@@ -2755,15 +2755,18 @@ function closeHook(){
   $('hookModal').classList.remove('show');
   document.body.style.overflow='';
 }
-document.querySelectorAll('[data-hook]').forEach(card=>{
-  card.addEventListener('click',()=>openHook(card.dataset.hook));
-  card.setAttribute('tabindex','0');
-  card.setAttribute('role','button');
-  card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openHook(card.dataset.hook);}});
-});
-$('hookModalClose').addEventListener('click',closeHook);
-$('hookModal').addEventListener('click',closeHook);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('hookModal').classList.contains('show'))closeHook();});
+function wireHookModal(){
+  document.querySelectorAll('[data-hook]').forEach(card=>{
+    card.addEventListener('click',()=>openHook(card.dataset.hook));
+    card.setAttribute('tabindex','0');
+    card.setAttribute('role','button');
+    card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openHook(card.dataset.hook);}});
+  });
+  const mc=$('hookModalClose'), mv=$('hookModal');
+  if(mc)mc.addEventListener('click',closeHook);
+  if(mv)mv.addEventListener('click',closeHook);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&mv&&mv.classList.contains('show'))closeHook();});
+}
 
 /* ---------- 별빛 배경: 빛의 실험실 ---------- */
 (function(){
@@ -3235,6 +3238,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   wire3dToggle('rad3dToggle','rad3dWrap',init3dRad,'🌐 3D로 보기 · 빛은 모든 방향으로');
   wire3dToggle('rays3dToggle','rays3dWrap',init3dRays,'🪞 3D로 보기 · 반사되어 눈으로 들어오는 빛');
   drawFeat();drawQuiz();
+  wireHookModal();
 });
 </script>
 
