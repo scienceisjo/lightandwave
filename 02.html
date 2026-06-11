@@ -982,6 +982,22 @@ footer{border-top:3px double var(--line2)}
         <div class="game-msg" id="inspMsg">규칙을 어긴 상을 찾아 <b>오른쪽(거울 나라)</b>에서 탭하세요. 누적 <b>8건</b> 검거 시 훈장!</div>
       </div>
       <div class="misc-note">🕵️ 검수 요령 — ① 거울까지의 <b>거리</b>가 짝과 같은가(㉡) ② <b>크기</b>가 같은가(㉠) ③ <b>같은 높이</b>인가(대칭) ④ 좌우 모양이 <b>뒤집혀</b> 있는가(반전 — 단, 별처럼 좌우대칭인 물체는 뒤집어도 티가 안 난다!). 하나라도 어기면 가짜다.</div>
+      <div style="margin-top:14px">
+        <button class="mbtn" id="insp3dToggle" style="width:100%">🧊 3D 사건 현장으로 수사하기 <b>▾ 펼치기</b></button>
+      </div>
+      <div id="insp3dWrap" style="display:none;margin-top:12px">
+        <div style="font-weight:800;font-size:.88rem;color:#6230b3;margin-bottom:6px">🧊 입체 거울 나라 — 거울 면(가운데 유리판) 뒤의 상 4개 중 <b>법칙을 어긴 가짜</b>를 찾아 클릭! <span style="font-weight:600;color:var(--faint)">(빈 곳을 드래그하면 시점 회전)</span></div>
+        <div class="game-top" style="margin-bottom:8px">
+          <div class="sub" id="insp3dSub">실제 물체(앞)와 거울 상(뒤)을 입체로 비교하세요. 가짜는 거리·크기·높이·반전 중 하나를 어겼습니다.</div>
+          <div class="score-pills">
+            <div class="pill hit"><div class="pl">검거</div><div class="pv" id="insp3dScore">0</div></div>
+            <div class="pill streak"><div class="pl">연속</div><div class="pv" id="insp3dStreak">0</div></div>
+          </div>
+        </div>
+        <div id="insp3d" style="height:380px;border-radius:14px;background:#fdfbf4;border:1px solid var(--line2);cursor:grab;touch-action:none;overflow:hidden"></div>
+        <div class="game-msg" id="insp3dMsg" style="margin-top:10px">거울 뒤(보라빛 쪽)의 상 4개를 살펴보고 가짜를 클릭하세요.</div>
+        <button class="mbtn" id="insp3dNew" style="margin-top:10px">🎲 새 사건 (3D)</button>
+      </div>
     </div>
   </div>
   <div class="game-wrap reveal r3" style="margin-top:18px">
@@ -1616,15 +1632,39 @@ $('quizCanvas').addEventListener('pointerdown',e=>{
 /* ============================================================
    탐구 2 — 빛의 경로 (rayCanvas)
    ============================================================ */
-const ray={o:{fx:.18,fy:.28},e:{fx:.30,fy:.66},step:0,t:1,drag:null,raf:null};
-const RAY_MX=.58;
+const ray={o:{fx:.22,fy:.40},e:{fx:.36,fy:.66},step:0,t:1,drag:null,raf:null};
+const RAY_MX=.56;
+const RAY_OBJ_H=.34;  // 물체(화살표) 높이 = 캔버스 높이의 34%
 function rayGeom(w,h){
   const cx=RAY_MX*w;
-  const ox=ray.o.fx*w, oy=ray.o.fy*h, ex=ray.e.fx*w, ey=ray.e.fy*h;
-  const ix=2*cx-ox, iy=oy;
-  const E=[{x:ex,y:ey-10},{x:ex,y:ey+10}];
-  const P=E.map(pt=>{const t=(cx-ix)/(pt.x-ix);return{x:cx,y:iy+t*(pt.y-iy)};});
-  return{cx,ox,oy,ex,ey,ix,iy,E,P};
+  const objH=RAY_OBJ_H*h;
+  // 물체: 위아래로 긴 화살표. o.fy = 화살표 '중심'
+  const ocx=ray.o.fx*w, ocy=ray.o.fy*h;
+  const oTop={x:ocx,y:ocy-objH/2}, oBot={x:ocx,y:ocy+objH/2};
+  const ex=ray.e.fx*w, ey=ray.e.fy*h;
+  // 상: 거울 기준 좌우대칭 → 위 끝·아래 끝 각각 대칭 이동
+  const iTop={x:2*cx-oTop.x,y:oTop.y}, iBot={x:2*cx-oBot.x,y:oBot.y};
+  // 각 끝점에서 나온 빛이 눈으로: 반사점 P = (상 끝점 ↔ 눈) 직선이 거울과 만나는 점
+  function reflectPoint(I){const t=(cx-I.x)/(ex-I.x);return{x:cx,y:I.y+t*(ey-I.y)};}
+  const Ptop=reflectPoint(iTop), Pbot=reflectPoint(iBot);
+  return{cx,ocx,ocy,objH,oTop,oBot,ex,ey,iTop,iBot,Ptop,Pbot,
+    // 호환용(기존 코드가 참조)
+    ox:ocx,oy:ocy,ix:2*cx-ocx,iy:ocy,
+    E:[{x:ex,y:ey},{x:ex,y:ey}], P:[Ptop,Pbot],
+    ends:[{O:oTop,I:iTop,P:Ptop,name:'top'},{O:oBot,I:iBot,P:Pbot,name:'bot'}]};
+}
+// 화살표 그리기 헬퍼 (위아래로 긴, 머리는 위)
+function drawObjArrow(ctx,cx,topY,botY,color,ghost){
+  ctx.save();
+  if(ghost)ctx.globalAlpha=.5;
+  ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=4;ctx.lineCap='round';
+  if(ghost){ctx.setLineDash([6,5]);}
+  ctx.shadowColor=color;ctx.shadowBlur=ghost?0:8;
+  ctx.beginPath();ctx.moveTo(cx,botY);ctx.lineTo(cx,topY+9);ctx.stroke();
+  ctx.setLineDash([]);
+  // 화살촉 (위)
+  ctx.beginPath();ctx.moveTo(cx,topY);ctx.lineTo(cx-8,topY+13);ctx.lineTo(cx+8,topY+13);ctx.closePath();ctx.fill();
+  ctx.restore();
 }
 function growLine(ctx,x1,y1,x2,y2,t,fn){const x=lerp(x1,x2,t),y=lerp(y1,y2,t);fn(x1,y1,x,y);}
 function drawRay(){
@@ -1664,85 +1704,113 @@ function drawRay(){
       ctx.beginPath();ctx.arc(G.ox,G.oy,r,0,Math.PI*2);ctx.stroke();
     }
     ctx.setLineDash([]);ctx.restore();
-    if(ray.step===1)txt(ctx,'빛은 모든 방향으로, 멀리멀리!',G.ox,Math.max(16,G.oy-Math.min(w,h)*0.34),{color:'#8a5e00',size:12,weight:'800'});
+    if(ray.step===1)txt(ctx,'빛은 모든 방향으로, 멀리멀리!',G.ocx,Math.max(14,G.oTop.y-20),{color:'#8a5e00',size:12,weight:'800'});
   }
-  // STEP2 — 물체→거울 입사, 입사각=반사각
+  // STEP2 — 물체 양 끝(위·아래)에서 거울로 입사, 입사각=반사각
   if(ray.step>=2){
     const t2=ray.step===2?t:1;
-    G.P.forEach((P,i)=>{
-      growLine(ctx,G.ox,G.oy,P.x,P.y,t2,(a,b,c,d)=>glowSeg(ctx,a,b,c,d,'#946400',2.6,9));
-      if(t2>=1)arrowHead(ctx,lerp(G.ox,P.x,.55),lerp(G.oy,P.y,.55),Math.atan2(P.y-G.oy,P.x-G.ox),9,'#946400');
+    const COL=['#946400','#c25500'];  // top=금색, bottom=주황
+    G.ends.forEach((seg,i)=>{
+      growLine(ctx,seg.O.x,seg.O.y,seg.P.x,seg.P.y,t2,(a,b,c,d)=>glowSeg(ctx,a,b,c,d,COL[i],2.4,8));
+      if(t2>=1)arrowHead(ctx,lerp(seg.O.x,seg.P.x,.55),lerp(seg.O.y,seg.P.y,.55),Math.atan2(seg.P.y-seg.O.y,seg.P.x-seg.O.x),8,COL[i]);
     });
-    const P0=G.P[0];
-    if($('rayNormal').checked)dashSeg(ctx,P0.x,P0.y,P0.x-56,P0.y,'#6f6248',1.4,[5,5]);
-    const aIn=Math.atan2(G.oy-P0.y,G.ox-P0.x), aOut=Math.atan2(G.E[0].y-P0.y,G.E[0].x-P0.x);
+    // 각도는 위 끝(top) 기준으로 표시
+    const top=G.ends[0];
+    if($('rayNormal').checked)dashSeg(ctx,top.P.x,top.P.y,top.P.x-54,top.P.y,'#6f6248',1.4,[5,5]);
+    const aIn=Math.atan2(top.O.y-top.P.y,top.O.x-top.P.x), aOut=Math.atan2(G.ey-top.P.y,G.ex-top.P.x);
     const thI=Math.round(Math.abs(deg(aIn))<=90?Math.abs(deg(aIn)):180-Math.abs(deg(aIn)));
     const thO=Math.round(Math.abs(deg(aOut))<=90?Math.abs(deg(aOut)):180-Math.abs(deg(aOut)));
     if($('rayAngles').checked&&t2>=1){
       ctx.save();ctx.strokeStyle='#946400';ctx.lineWidth=1.6;
-      ctx.beginPath();ctx.arc(P0.x,P0.y,26,Math.PI,aIn,aIn<Math.PI);ctx.stroke();
+      ctx.beginPath();ctx.arc(top.P.x,top.P.y,26,Math.PI,aIn,aIn<Math.PI);ctx.stroke();
       ctx.strokeStyle='#2563d4';
-      ctx.beginPath();ctx.arc(P0.x,P0.y,34,Math.PI,aOut,aOut<Math.PI);ctx.stroke();ctx.restore();
-      txt(ctx,thI+'°',P0.x-46,P0.y-16,{color:'#946400',size:11,weight:'800'});
-      txt(ctx,thO+'°',P0.x-46,P0.y+18,{color:'#1d4fae',size:11,weight:'800'});
+      ctx.beginPath();ctx.arc(top.P.x,top.P.y,34,Math.PI,aOut,aOut<Math.PI);ctx.stroke();ctx.restore();
+      txt(ctx,thI+'°',top.P.x-46,top.P.y-15,{color:'#946400',size:11,weight:'800'});
+      txt(ctx,thO+'°',top.P.x-46,top.P.y+17,{color:'#1d4fae',size:11,weight:'800'});
     }
     $('rayInc').textContent=thI+'°';$('rayRef').textContent=thO+'°';
   }else{$('rayInc').textContent='–';$('rayRef').textContent='–';}
-  // STEP3 — 반사 광선이 눈으로
+  // STEP3 — 반사 광선이 눈으로 (위 끝·아래 끝에서 반사된 빛 모두)
   if(ray.step>=3){
     const t3=ray.step===3?t:1;
-    G.P.forEach((P,i)=>{
-      const E=G.E[i];
-      growLine(ctx,P.x,P.y,E.x,E.y,t3,(a,b,c,d)=>glowSeg(ctx,a,b,c,d,'#8a5e00',2.6,9));
-      if(t3>=1)arrowHead(ctx,lerp(P.x,E.x,.6),lerp(P.y,E.y,.6),Math.atan2(E.y-P.y,E.x-P.x),9,'#8a5e00');
+    const COL=['#8a5e00','#a8480f'];
+    G.ends.forEach((seg,i)=>{
+      growLine(ctx,seg.P.x,seg.P.y,G.ex,G.ey,t3,(a,b,c,d)=>glowSeg(ctx,a,b,c,d,COL[i],2.4,8));
+      if(t3>=1)arrowHead(ctx,lerp(seg.P.x,G.ex,.6),lerp(seg.P.y,G.ey,.6),Math.atan2(G.ey-seg.P.y,G.ex-seg.P.x),8,COL[i]);
     });
   }
-  // 🧠 뇌가 믿는 직선 경로 (토글)
+  // 🧠 뇌가 믿는 직선 경로 (토글) — 양 끝 연장선이 상의 양 끝에서 수렴
   if(ray.step>=3&&$('rayBrain').checked){
     const t3=ray.step===3?t:1;
     if(t3>=1){
-      G.E.forEach((E,i)=>{
-        const P=G.P[i];
-        glowSeg(ctx,E.x,E.y,G.ix,G.iy,'#7c3fd1',1.6,8);
-        arrowHead(ctx,lerp(G.ix,E.x,.88),lerp(G.iy,E.y,.88),Math.atan2(E.y-G.iy,E.x-G.ix),8,'#7c3fd1');
+      G.ends.forEach(seg=>{
+        glowSeg(ctx,G.ex,G.ey,seg.I.x,seg.I.y,'#7c3fd1',1.6,8);
+        arrowHead(ctx,lerp(seg.I.x,G.ex,.88),lerp(seg.I.y,G.ey,.88),Math.atan2(G.ey-seg.I.y,G.ex-seg.I.x),8,'#7c3fd1');
       });
       txt(ctx,'🧠 "직진해서 왔겠지!"',G.ex,Math.max(14,G.ey-34),{color:'#6230b3',size:11,weight:'800'});
     }
   }
 
-  // STEP4 — 연장선과 상
+  // STEP4 — 연장선과 상 (양 끝 연장선이 만나는 곳에 상의 위·아래 끝)
   if(ray.step>=4){
     const tt=ray.step===4?t:1;
-    G.P.forEach(P=>{
-      growLine(ctx,P.x,P.y,G.ix,G.iy,tt,(a,b,c,d)=>dashSeg(ctx,a,b,c,d,'#2563d4',2,[7,6]));
+    G.ends.forEach(seg=>{
+      growLine(ctx,seg.P.x,seg.P.y,seg.I.x,seg.I.y,tt,(a,b,c,d)=>dashSeg(ctx,a,b,c,d,'#2563d4',2,[7,6]));
     });
     if(tt>=1){
       if(RAYOBJ.img){
-        const hh=Math.min(w,h)*0.20, wd=Math.min(hh*RAYOBJ.aspect, w*0.16);
+        // 강아지 사진: 상의 위 끝(iTop)~아래 끝(iBot)에 좌우반전으로 맞춰 배치
+        const imgH=Math.abs(G.iBot.y-G.iTop.y);
+        const wd=Math.min(imgH*RAYOBJ.aspect, w*0.20);
+        const topY=G.iTop.y;
         ctx.save();ctx.globalAlpha=.55;
-        ctx.translate(G.ix,0);ctx.scale(-1,1);
-        ctx.drawImage(RAYOBJ.img,-wd/2,G.iy,wd,hh);ctx.restore();
+        ctx.translate(G.iTop.x,0);ctx.scale(-1,1);
+        ctx.drawImage(RAYOBJ.img,-wd/2,topY,wd,imgH);ctx.restore();
         ctx.save();ctx.strokeStyle='#2563d4';ctx.lineWidth=2;ctx.setLineDash([6,5]);
-        ctx.strokeRect(G.ix-wd/2,G.iy,wd,hh);ctx.restore();
-        txt(ctx,'상 — 여기 보인다! (좌우 모양 반전)',G.ix,G.iy-14,{color:'#1d4fae',size:12,weight:'800',glow:'#2563d4'});
+        ctx.strokeRect(G.iTop.x-wd/2,topY,wd,imgH);ctx.restore();
+        // 위·아래 끝 표시점
+        ['#2563d4'].forEach(()=>{});
+        ctx.save();ctx.fillStyle='#1d4fae';
+        ctx.beginPath();ctx.arc(G.iTop.x,G.iTop.y,4,0,Math.PI*2);ctx.fill();
+        ctx.beginPath();ctx.arc(G.iBot.x,G.iBot.y,4,0,Math.PI*2);ctx.fill();ctx.restore();
+        txt(ctx,'상 — 윗빛은 상의 위, 아랫빛은 상의 아래!',G.iTop.x,topY-12,{color:'#1d4fae',size:11.5,weight:'800',glow:'#2563d4'});
       }else{
-        drawStarShape(ctx,G.ix,G.iy,13,'#1d4fae',true);
-        txt(ctx,'상 — 여기 보인다!',G.ix,G.iy-24,{color:'#1d4fae',size:12,weight:'800',glow:'#2563d4'});
+        // 상도 화살표로 (좌우대칭이라 화살표 머리는 그대로 위)
+        drawObjArrow(ctx,G.iTop.x,G.iTop.y,G.iBot.y,'#2563d4',true);
+        ctx.save();ctx.fillStyle='#1d4fae';
+        ctx.beginPath();ctx.arc(G.iTop.x,G.iTop.y,4.5,0,Math.PI*2);ctx.fill();
+        ctx.beginPath();ctx.arc(G.iBot.x,G.iBot.y,4.5,0,Math.PI*2);ctx.fill();ctx.restore();
+        txt(ctx,'상 — 여기 보인다!',G.iTop.x,Math.min(G.iTop.y,G.iBot.y)-14,{color:'#1d4fae',size:12,weight:'800',glow:'#2563d4'});
+        txt(ctx,'윗빛 → 상의 위 끝 · 아랫빛 → 상의 아래 끝',G.iTop.x,Math.max(G.iTop.y,G.iBot.y)+16,{color:'#1d4fae',size:10.5,weight:'700'});
       }
     }
   }
-  // 물체·눈
+  // ===== 물체 (위아래로 긴 화살표) =====
   if(RAYOBJ.img){
-    const hh=Math.min(w,h)*0.20, wd=Math.min(hh*RAYOBJ.aspect, w*0.16);
+    // 화살표 높이를 기준으로, 종횡비 유지 (위·아래 끝점은 사진의 실제 위/아래)
+    const imgH=Math.abs(G.oBot.y-G.oTop.y);
+    const wd=Math.min(imgH*RAYOBJ.aspect, w*0.20);
+    const topY=G.oTop.y;
     ctx.save();ctx.shadowColor='rgba(148,100,0,.5)';ctx.shadowBlur=10;
-    ctx.drawImage(RAYOBJ.img,G.ox-wd/2,G.oy,wd,hh);ctx.restore();
-    ctx.save();ctx.strokeStyle='#946400';ctx.lineWidth=2.2;ctx.strokeRect(G.ox-wd/2,G.oy,wd,hh);ctx.restore();
+    ctx.drawImage(RAYOBJ.img,G.ocx-wd/2,topY,wd,imgH);ctx.restore();
+    ctx.save();ctx.strokeStyle='#946400';ctx.lineWidth=2.2;ctx.strokeRect(G.ocx-wd/2,topY,wd,imgH);ctx.restore();
     ctx.save();ctx.fillStyle='#946400';ctx.shadowColor='#946400';ctx.shadowBlur=8;
-    ctx.beginPath();ctx.arc(G.ox,G.oy,4.5,0,Math.PI*2);ctx.fill();ctx.restore();
-    txt(ctx,'물체 (드래그) — 빛은 윗부분 ●에서 출발',G.ox,G.oy+hh+15,{color:'#946400',size:11,weight:'800'});
+    ctx.beginPath();ctx.arc(G.oTop.x,G.oTop.y,5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#c25500';ctx.shadowColor='#c25500';
+    ctx.beginPath();ctx.arc(G.oBot.x,G.oBot.y,5,0,Math.PI*2);ctx.fill();ctx.restore();
+    txt(ctx,'맨 위 ●',G.ocx-wd/2-4,G.oTop.y,{color:'#946400',size:10,weight:'800',align:'right'});
+    txt(ctx,'맨 아래 ●',G.ocx-wd/2-4,G.oBot.y,{color:'#c25500',size:10,weight:'800',align:'right'});
+    txt(ctx,'물체 (드래그) — 위·아래 끝에서 빛 출발',G.ocx,G.oBot.y+18,{color:'#946400',size:11,weight:'800'});
   }else{
-    drawStarShape(ctx,G.ox,G.oy,13,'#946400');
-    txt(ctx,'물체 (드래그)',G.ox,G.oy+26,{color:'#946400',size:11,weight:'800'});
+    drawObjArrow(ctx,G.ocx,G.oTop.y,G.oBot.y,'#946400',false);
+    // 위·아래 끝 점
+    ctx.save();ctx.fillStyle='#946400';
+    ctx.beginPath();ctx.arc(G.oTop.x,G.oTop.y,5,0,Math.PI*2);ctx.fill();ctx.restore();
+    ctx.save();ctx.fillStyle='#c25500';
+    ctx.beginPath();ctx.arc(G.oBot.x,G.oBot.y,5,0,Math.PI*2);ctx.fill();ctx.restore();
+    txt(ctx,'맨 위',G.oTop.x+16,G.oTop.y,{color:'#946400',size:10,weight:'800',align:'left'});
+    txt(ctx,'맨 아래',G.oBot.x+16,G.oBot.y,{color:'#c25500',size:10,weight:'800',align:'left'});
+    txt(ctx,'물체 (드래그)',G.ocx,Math.max(G.oTop.y,G.oBot.y)+20,{color:'#946400',size:11,weight:'800'});
   }
   drawEyeIcon(ctx,G.ex,G.ey,'#1d4fae');
   txt(ctx,'눈 (드래그)',G.ex,G.ey+26,{color:'#1d4fae',size:11,weight:'800'});
@@ -1753,9 +1821,9 @@ function raySetStep(s){
   const v=$('rayVerdict');
   v.className='why-verdict'+(s===4?' ok':'');
   v.innerHTML=s===1?'<b>① 물체에서 빛이 사방으로 퍼져 나간다.</b> 그중 일부가 거울로 향한다.'
-   :s===2?'<b>② 입사각과 동일한 반사각으로 빛이 반사한다.</b> 법선·각도 표시를 켜고 두 각을 비교해 보세요 — 빛의 반사 법칙!'
+   :s===2?'<b>② 입사각과 동일한 반사각으로 빛이 반사한다.</b> 물체 위 끝(금색)·아래 끝(주황) 두 광선 모두 이 법칙을 지켜요. 법선·각도 표시를 켜고 비교해 보세요!'
    :s===3?'<b>③ 반사한 빛이 눈에 들어온다.</b> 우리 눈은 이렇게 들어온 반사 광선만을 감각한다.'
-   :'<b>④ 반사하는 빛의 연장선이 만나는 지점에 상이 생긴다!</b> (주의 — 그 자리에 빛이 모여 있는 건 아니에요. 빛은 전부 거울 앞쪽에!) 눈을 드래그해도 상의 위치는 그대로예요. 친구가 앉아서 보든 서서 보든, 누가 어디서 보든 — 상의 위치는 <b>물체와 거울</b>이 정합니다!';
+   :'<b>④ 연장선이 만나는 곳에 상이 생긴다!</b> 물체 <b>맨 위(●)</b>에서 반사된 빛의 연장선은 <b>상의 위 끝</b>에서, <b>맨 아래(●)</b>에서 반사된 빛은 <b>상의 아래 끝</b>에서 만나요 — 그래서 물체 전체의 상이 또렷이 맺힙니다. (주의: 그 자리에 빛이 모여 있는 건 아니에요. 빛은 전부 거울 앞쪽에!) 누가 어디서 보든 상의 위치는 <b>물체와 거울</b>이 정합니다!';
   if(ray.raf)cancelAnimationFrame(ray.raf);
   const t0=performance.now();
   (function anim(now){
@@ -1765,12 +1833,18 @@ function raySetStep(s){
   sndClick();
 }
 document.querySelectorAll('#tab-lab2 .step-btn').forEach(b=>b.addEventListener('click',()=>raySetStep(+b.dataset.step)));
-/* ---------- 🐶 반려동물 사진 공유 로더 (Pet/pet1 ~ pet6, 다중 확장자/경로 폴백) ---------- */
+/* ---------- 🐶 반려동물 사진 공유 로더 (소문자 우선 + 화면 진단 박스) ---------- */
 const RAYOBJ={img:null,aspect:1};
 const PETS=[];
 (function(){
   const rayPick=$('rayObjPicker'), featPick=$('featObjPicker');
   if(!rayPick||!featPick){console.warn('[Pet] 피커 컨테이너 없음');return;}
+  // 화면에 진단 상태 박스 (작도 피커 위에)
+  const status=document.createElement('div');
+  status.id='petStatus';
+  status.style.cssText='font-size:.78rem;font-weight:700;color:#7a5300;background:rgba(148,100,0,.06);border:1px dashed rgba(148,100,0,.4);padding:8px 12px;border-radius:8px;margin-bottom:8px;width:100%';
+  status.innerHTML='🐶 반려동물 사진 검색 중…';
+  rayPick.parentNode.insertBefore(status,rayPick);
   function raySel(btn,img){
     rayPick.querySelectorAll('.objp').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
@@ -1787,25 +1861,40 @@ const PETS=[];
   if(starBtn)starBtn.addEventListener('click',e=>raySel(e.currentTarget,null));
   function addThumb(pick,im,onClick){
     const b=document.createElement('button');b.className='objp';
-    const th=document.createElement('img');th.src=im.src;b.appendChild(th);
+    b.style.cssText='padding:0;width:54px;height:54px;border-radius:10px;overflow:hidden;border:2px solid var(--line2);cursor:pointer;background:#fff';
+    const th=document.createElement('img');
+    th.src=im.src;th.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
+    b.appendChild(th);
     b.addEventListener('click',()=>onClick(b,im));
     pick.appendChild(b);
   }
-  // pet1 ~ pet6 — 흔히 틀리는 모든 변형을 자동 시도
-  console.log('[🐶 Pet 로더] pet1~pet6 검색 시작…');
-  let loaded=0,failed=0;
+  console.log('[🐶 Pet 로더] 검색 시작');
+  let loaded=0,failed=0;const failedPaths=[];
+  function updateStatus(){
+    if(loaded===6){status.innerHTML='✅ <b>반려동물 사진 '+loaded+'장 모두 로드 완료!</b> 아래 썸네일을 클릭해 작도/실험 물체로 사용하세요.';status.style.background='rgba(43,178,76,.08)';status.style.borderColor='rgba(43,178,76,.4)';status.style.color='#0e6e34';}
+    else if(loaded+failed===6){
+      if(loaded===0)status.innerHTML='❌ <b>반려동물 사진을 하나도 못 찾았어요.</b> 깃허브에 올린 폴더가 mirror.html과 같은 위치에 있나요? 파일명은 정확히 <code>pet1.jpg</code>~<code>pet6.jpg</code>인가요? <b>F12 → Console</b>에서 자세한 시도 경로 확인 가능.';
+      else status.innerHTML='⚠️ <b>'+loaded+'/6장 로드</b> ('+failed+'장 실패). F12 → Console에서 실패한 파일명 확인 가능. 가장 흔한 원인: 파일명 오타, 대소문자, 확장자(.jpeg/.png).';
+      status.style.background='rgba(239,68,68,.08)';status.style.borderColor='rgba(239,68,68,.4)';status.style.color='#8f1424';
+    }
+    else status.innerHTML='🐶 반려동물 사진 검색 중… ('+loaded+'장 발견, '+failed+'장 실패)';
+  }
   for(let i=1;i<=6;i++)(function(idx){
     const candidates=[
-      'Pet/pet'+idx+'.jpg','Pet/pet'+idx+'.jpeg','Pet/pet'+idx+'.png',
-      'Pet/pet'+idx+'.JPG','Pet/pet'+idx+'.JPEG','Pet/pet'+idx+'.PNG',
-      'Pet/Pet'+idx+'.jpg','Pet/Pet'+idx+'.png',
+      // 소문자 폴더·소문자 파일 (사용자 환경)
       'pet/pet'+idx+'.jpg','pet/pet'+idx+'.jpeg','pet/pet'+idx+'.png',
-      './Pet/pet'+idx+'.jpg','./pet/pet'+idx+'.jpg'
+      './pet/pet'+idx+'.jpg','./pet/pet'+idx+'.jpeg','./pet/pet'+idx+'.png',
+      // 대문자 폴더 (이전 안내)
+      'Pet/pet'+idx+'.jpg','Pet/pet'+idx+'.jpeg','Pet/pet'+idx+'.png',
+      // 확장자 대문자
+      'pet/pet'+idx+'.JPG','pet/pet'+idx+'.PNG','Pet/pet'+idx+'.JPG',
+      // 같은 폴더 직접
+      'pet'+idx+'.jpg','pet'+idx+'.png','./pet'+idx+'.jpg'
     ];
     const im=new Image();let k=0;
     im.onload=()=>{
-      loaded++;
-      console.log('  ✓ pet'+idx+' 로드 성공 → '+im.src.replace(location.href.replace(/[^/]*$/,''),''));
+      loaded++;updateStatus();
+      console.log('  ✓ pet'+idx+' → '+im.src);
       PETS.push(im);
       addThumb(rayPick,im,(b,img)=>raySel(b,img));
       featPick.style.display='flex';
@@ -1814,12 +1903,10 @@ const PETS=[];
     im.onerror=()=>{
       k++;
       if(k<candidates.length)im.src=candidates[k];
-      else{failed++;console.warn('  ✗ pet'+idx+': 모든 경로 실패. 시도했던 경로:',candidates);}
+      else{failed++;failedPaths.push('pet'+idx);updateStatus();console.warn('  ✗ pet'+idx+' 모든 경로 실패. 시도:',candidates);}
     };
     im.src=candidates[0];
   })(i);
-  // 5초 후 결과 요약
-  setTimeout(()=>console.log('[🐶 Pet 로더] 결과 — 성공 '+loaded+'장 / 실패 '+failed+'장. 안 보이면 위 ✗ 줄의 시도 경로와 실제 파일명/대소문자를 비교하세요.'),5000);
 })();
 $('rayNormal').addEventListener('change',drawRay);
 $('rayAngles').addEventListener('change',drawRay);
@@ -1837,8 +1924,17 @@ $('rayBrain').addEventListener('change',e=>{$('rayBrainNote').style.display=e.ta
     if(!ray.drag)return;
     const p=ptr(cv,e), w=cv.clientWidth, h=cv.clientHeight;
     const o=ray[ray.drag];
-    if(ray.drag==='o'){o.fx=clamp(p.x/w,.06,RAY_MX-.14);o.fy=clamp(p.y/h,.10,.55);}
-    else{o.fx=clamp(p.x/w,.08,RAY_MX-.12);o.fy=clamp(p.y/h,.30,.92);}
+    const half=RAY_OBJ_H/2;
+    if(ray.drag==='o'){
+      // 물체 fx 하한: 상(2*MX-fx)이 0.93 안에 들어오도록 → fx >= 2*MX-0.93
+      const fxMin=Math.max(.07, 2*RAY_MX-0.93);
+      o.fx=clamp(p.x/w, fxMin, RAY_MX-.10);
+      // 화살표 위·아래 끝이 화면 안 (여백 0.04)
+      o.fy=clamp(p.y/h, half+.05, 1-half-.05);
+    }else{
+      o.fx=clamp(p.x/w,.05,RAY_MX-.08);
+      o.fy=clamp(p.y/h,.10,.94);
+    }
     ray.t=1;drawRay();
   });
   const up=()=>ray.drag=null;
@@ -3041,6 +3137,127 @@ function wire3dToggle(btnId,wrapId,initFn,label){
     sndClick();
   });
 }
+
+/* ---------- 🧊 거울 검수관 3D — 가짜 상 찾기 ---------- */
+let INSP3D=null;
+function init3dInsp(){
+  if(INSP3D&&INSP3D.scene)return INSP3D;
+  const el=$('insp3d');if(!el||!el.clientWidth)return;
+  if(!window.THREE){el.innerHTML='<div style="padding:20px;color:#897b5e;font-size:.85rem">3D 라이브러리를 불러오지 못했어요(인터넷 연결 확인). 위의 2D 사건 현장으로 수사를 계속하세요!</div>';INSP3D={fail:true};return;}
+  const {renderer,scene,cam}=make3d(el);
+  const grid=new THREE.GridHelper(16,16,0xd3c9af,0xe7e0cd);grid.position.y=-2.0;scene.add(grid);
+  const mir=new THREE.Mesh(new THREE.PlaneGeometry(9,5.2),
+    new THREE.MeshBasicMaterial({color:0x9b7ef0,transparent:true,opacity:.14,side:THREE.DoubleSide}));
+  mir.position.y=0.3;scene.add(mir);
+  const frame=new THREE.LineSegments(new THREE.EdgesGeometry(mir.geometry),new THREE.LineBasicMaterial({color:0x6230b3,transparent:true,opacity:.5}));
+  frame.position.copy(mir.position);scene.add(frame);
+  function bigLabel(text,color,pos,sc){
+    const c=document.createElement('canvas');c.width=512;c.height=96;
+    const x=c.getContext('2d');x.font='900 56px sans-serif';x.textAlign='center';x.textBaseline='middle';
+    x.fillStyle=color;x.fillText(text,256,48);
+    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthTest:false}));
+    sp.scale.set(3.2*(sc||1),0.6*(sc||1),1);sp.position.copy(pos);scene.add(sp);return sp;
+  }
+  bigLabel('실제 세계','#6f6248',new THREE.Vector3(0,2.5,2.4));
+  bigLabel('거울 나라','#6230b3',new THREE.Vector3(0,2.5,-2.4));
+  orbitify(el,cam,new THREE.Vector3(0,0.3,0),{dist:11,yaw:0.42,pitch:0.32,minP:-0.1,maxP:1.0});
+  INSP3D={renderer,scene,cam,el,objs:[],raycaster:new THREE.Raycaster(),solved:false,
+    score:0,streak:0,clickTargets:[],errIdx:0};
+  el.addEventListener('pointerdown',e=>{INSP3D._px=e.clientX;INSP3D._py=e.clientY;});
+  el.addEventListener('pointerup',e=>{
+    if(Math.abs(e.clientX-INSP3D._px)>5||Math.abs(e.clientY-INSP3D._py)>5)return;
+    if(INSP3D.solved)return;
+    const r=el.getBoundingClientRect();
+    const mouse=new THREE.Vector2(((e.clientX-r.left)/r.width)*2-1, -((e.clientY-r.top)/r.height)*2+1);
+    INSP3D.raycaster.setFromCamera(mouse,cam);
+    const hits=INSP3D.raycaster.intersectObjects(INSP3D.clickTargets,true);
+    if(hits.length){
+      let g=hits[0].object;while(g&&g.userData.idx===undefined)g=g.parent;
+      if(g)insp3dPick(g.userData.idx);
+    }
+  });
+  (function loop(now){
+    INSP3D.raf=requestAnimationFrame(loop);
+    if(!el.clientWidth)return;
+    INSP3D.objs.forEach(o=>{if(o.img3d)o.img3d.rotation.y=Math.sin(now/1400+o.phase)*0.3;});
+    renderer.render(scene,cam);
+  })(0);
+  return INSP3D;
+}
+function makeInspShape(color,S){
+  const THREE=window.THREE;
+  const g=new THREE.Group();
+  const mat=new THREE.MeshBasicMaterial({color,side:THREE.DoubleSide});
+  const pole=new THREE.Mesh(new THREE.BoxGeometry(S*0.18,S*1.6,S*0.18),mat);g.add(pole);
+  const flag=new THREE.Mesh(new THREE.PlaneGeometry(S*0.95,S*0.6),mat);
+  flag.position.set(S*0.55,S*0.55,0);g.add(flag);
+  const dot=new THREE.Mesh(new THREE.SphereGeometry(S*0.13,12,12),new THREE.MeshBasicMaterial({color:0x1c1713}));
+  dot.position.set(S*1.0,S*0.55,S*0.02);g.add(dot);
+  const base=new THREE.Mesh(new THREE.BoxGeometry(S*0.5,S*0.14,S*0.5),mat);
+  base.position.y=-S*0.8;g.add(base);
+  return g;
+}
+const INSP3D_COLORS=[0x946400,0xcf2a44,0x1d4fae,0x13853f];
+function insp3dNew(){
+  const ctx=init3dInsp();if(!ctx||ctx.fail)return;
+  const THREE=window.THREE;
+  ctx.objs.forEach(o=>{ctx.scene.remove(o.obj3d);ctx.scene.remove(o.imgGroup);if(o.cluePin)ctx.scene.remove(o.cluePin);});
+  ctx.objs=[];ctx.clickTargets=[];ctx.solved=false;
+  const xs=[-3,-1,1,3].sort(()=>Math.random()-.5);
+  const objs=[0,1,2,3].map(i=>({color:INSP3D_COLORS[i],x:xs[i],
+    d:1.3+Math.random()*1.4,s:0.55+Math.random()*0.18,y:0.3,phase:Math.random()*6.28,err:null}));
+  const idx=Math.floor(Math.random()*4);
+  const types=['dist','size','height','flip'];
+  objs[idx].err=types[Math.floor(Math.random()*types.length)];
+  ctx.errIdx=idx;
+  objs.forEach((o,i)=>{
+    const S=o.s*1.1;
+    const real=makeInspShape(o.color,S);
+    real.position.set(o.x,o.y,o.d);ctx.scene.add(real);o.obj3d=real;
+    const mg=new THREE.Group();mg.scale.z=-1;
+    const img=makeInspShape(o.color,S);
+    img.traverse(n=>{if(n.material){n.material=n.material.clone();n.material.transparent=true;n.material.opacity=.92;}});
+    let dz=o.d, yy=o.y, ss=1;
+    if(o.err==='dist')dz=o.d+(o.d<2?1.3:-1.1);
+    if(o.err==='height')yy=o.y+(Math.random()<.5?1.1:-1.1);
+    if(o.err==='size')ss=(Math.random()<.5?1.5:0.62);
+    img.scale.multiplyScalar(ss);
+    img.position.set(o.x,yy,dz);
+    if(o.err==='flip')img.scale.z*=-1;
+    mg.add(img);ctx.scene.add(mg);
+    o.img3d=img;o.imgGroup=mg;o.imgWorldX=o.x;o.imgWorldY=yy;o.imgWorldZ=-dz;
+    img.userData.idx=i;mg.userData.idx=i;
+    ctx.clickTargets.push(mg);ctx.objs.push(o);
+  });
+  $('insp3dMsg').className='game-msg';
+  $('insp3dMsg').innerHTML='거울 뒤(보라빛 쪽)의 상 4개 중 <b>법칙을 어긴 가짜</b>를 찾아 클릭!';
+  sndClick();
+}
+function insp3dPick(i){
+  const ctx=INSP3D;if(!ctx||ctx.solved)return;
+  const o=ctx.objs[i];const THREE=window.THREE;
+  const msg=$('insp3dMsg');
+  if(i===ctx.errIdx){
+    ctx.solved=true;ctx.score++;ctx.streak++;sndHit();
+    const ring=new THREE.Mesh(new THREE.TorusGeometry(o.s*1.7,0.06,8,32),new THREE.MeshBasicMaterial({color:0x13853f}));
+    ring.position.set(o.imgWorldX,o.imgWorldY+0.2,o.imgWorldZ);ring.rotation.x=Math.PI/2;
+    ctx.scene.add(ring);o.cluePin=ring;
+    const vt={dist:'거리 위반(㉡)! 상이 거울에서 짝과 다른 거리에 있었다.',
+      size:'크기 위반(㉠)! 상이 물체와 크기가 달랐다.',
+      height:'대칭 위반! 상이 물체와 다른 높이에 있었다.',
+      flip:'반전 누락! 거울상은 앞뒤가 반전돼야 하는데 표식(검은 점)이 물체와 같은 쪽이었다.'}[o.err];
+    msg.className='game-msg hit';
+    msg.innerHTML='🚨 <b>검거 성공!</b> '+vt+(ctx.streak>=3?' · '+ctx.streak+'연속!':'');
+    $('insp3dScore').textContent=ctx.score;$('insp3dStreak').textContent=ctx.streak;
+    setTimeout(insp3dNew,1800);
+  }else{
+    ctx.streak=0;sndMiss();
+    msg.className='game-msg miss';
+    msg.innerHTML='그 상은 <b>결백</b>하다! 거리·크기·높이·반전을 모두 지키고 있어. 다른 상을 살펴보자.';
+    $('insp3dStreak').textContent=0;
+  }
+}
+
 /* ---------- ④ 반사 경로 3D: 물체 → 거울 → 눈 ---------- */
 let RAYS3D=null;
 function init3dRays(){
@@ -3263,6 +3480,18 @@ document.addEventListener('DOMContentLoaded',()=>{
   ptNewRound();inspNew(true);
   wire3dToggle('rad3dToggle','rad3dWrap',init3dRad,'🌐 3D로 보기 · 빛은 모든 방향으로');
   wire3dToggle('rays3dToggle','rays3dWrap',init3dRays,'🪞 3D로 보기 · 반사되어 눈으로 들어오는 빛');
+  (function(){
+    const b=$('insp3dToggle'), wr=$('insp3dWrap');
+    if(b&&wr)b.addEventListener('click',()=>{
+      const open=wr.style.display==='none';
+      wr.style.display=open?'block':'none';
+      b.innerHTML='🧊 3D 사건 현장으로 수사하기 '+(open?'<b>▴ 접기</b>':'<b>▾ 펼치기</b>');
+      if(open)requestAnimationFrame(()=>{init3dInsp();insp3dNew();});
+      sndClick();
+    });
+    const nb=$('insp3dNew');
+    if(nb)nb.addEventListener('click',()=>insp3dNew());
+  })();
   drawFeat();drawQuiz();
   wireHookModal();
 });
