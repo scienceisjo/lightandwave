@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>좌우반전 챌린지 · 얼굴 대칭 찾기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0a0918;
+    --void-2:#13102a;
+    --panel:rgba(255,255,255,0.045);
+    --panel-2:rgba(255,255,255,0.075);
+    --line:rgba(255,255,255,0.10);
+    --line-bright:rgba(255,255,255,0.18);
+    --mist:#ece9fb;
+    --mist-dim:#9b94c4;
+    --mist-faint:#6c6593;
+    --cyan:#5ee7d8;
+    --magenta:#f06ad0;
+    --seam-glow:0 0 16px rgba(110,200,255,.55), 0 0 36px rgba(240,106,208,.40);
+    --mono:'Space Mono',ui-monospace,monospace;
+    --sans:'Pretendard',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    font-family:var(--sans);
+    color:var(--mist);
+    background:
+      radial-gradient(120% 90% at 50% -10%, #211a45 0%, transparent 55%),
+      radial-gradient(120% 120% at 50% 120%, #1a1336 0%, transparent 60%),
+      var(--void);
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:clamp(14px,3vw,30px) clamp(12px,3vw,24px) 40px;
+  }
+  .app{width:100%;max-width:760px;}
+
+  /* ---------- header ---------- */
+  header{text-align:center;margin-bottom:clamp(14px,2.4vw,22px);}
+  .eyebrow{
+    font-family:var(--mono);font-size:11px;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--mist-faint);
+    display:inline-flex;align-items:center;gap:10px;margin-bottom:12px;
+  }
+  .eyebrow::before,.eyebrow::after{content:"";width:22px;height:1px;background:linear-gradient(90deg,transparent,var(--line-bright));}
+  .eyebrow::after{transform:scaleX(-1);}
+  h1{
+    font-size:clamp(30px,7.4vw,46px);font-weight:800;letter-spacing:-.02em;line-height:1.02;
+    background:linear-gradient(96deg,var(--cyan) 8%, var(--mist) 42%, var(--mist) 58%, var(--magenta) 92%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .tagline{margin-top:11px;color:var(--mist-dim);font-size:clamp(13px,3.4vw,15px);line-height:1.5;}
+
+  /* ---------- mode tabs ---------- */
+  .tabs{
+    display:flex;gap:4px;padding:4px;margin:clamp(16px,2.6vw,22px) auto;
+    background:var(--panel);border:1px solid var(--line);border-radius:999px;width:max-content;max-width:100%;
+    backdrop-filter:blur(8px);
+  }
+  .tab{
+    appearance:none;border:0;cursor:pointer;color:var(--mist-dim);
+    font-family:var(--sans);font-size:clamp(12.5px,3.3vw,14px);font-weight:600;
+    padding:9px clamp(13px,3.6vw,22px);border-radius:999px;background:transparent;
+    transition:color .2s,background .2s;white-space:nowrap;
+  }
+  .tab[aria-selected="true"]{
+    color:#0a0918;
+    background:linear-gradient(120deg,var(--cyan),var(--magenta));
+    box-shadow:0 4px 18px -6px rgba(240,106,208,.6);
+  }
+  .tab:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+
+  /* ---------- stage ---------- */
+  .stage-wrap{position:relative;border-radius:22px;overflow:hidden;}
+  .grid{
+    display:flex;gap:0;background:#000;
+    border:1px solid var(--line);border-radius:22px;overflow:hidden;
+    box-shadow:0 30px 80px -40px rgba(0,0,0,.9), inset 0 0 0 1px rgba(255,255,255,.02);
+    position:relative;
+  }
+  .frame{position:relative;flex:1 1 0;min-width:0;background:#05040c;display:flex;align-items:center;justify-content:center;aspect-ratio:3/4;}
+  .grid.dual .frame{aspect-ratio:3/4;}
+  #video,.cv{width:100%;height:100%;object-fit:cover;display:block;}
+  .cv{position:absolute;inset:0;}
+  .frame-label{
+    position:absolute;left:12px;bottom:12px;z-index:4;
+    font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--mist);background:rgba(8,6,20,.6);border:1px solid var(--line);
+    padding:5px 10px;border-radius:8px;backdrop-filter:blur(6px);
+  }
+  .hidden{display:none !important;}
+
+  /* the signature: reflection axis */
+  .seam{
+    position:absolute;top:0;bottom:0;left:50%;width:2px;transform:translateX(-50%);
+    background:linear-gradient(180deg,transparent,rgba(120,210,255,.8) 18%,rgba(240,106,208,.85) 82%,transparent);
+    box-shadow:var(--seam-glow);z-index:5;pointer-events:none;opacity:.85;
+  }
+  .seam::before,.seam::after{
+    content:"";position:absolute;left:50%;transform:translateX(-50%);
+    width:7px;height:7px;border-radius:50%;background:#dff6ff;
+    box-shadow:0 0 10px rgba(150,220,255,.9);
+  }
+  .seam::before{top:14px;}.seam::after{bottom:14px;background:#ffe2f6;box-shadow:0 0 10px rgba(255,160,225,.9);}
+  .seam.pulse{animation:seampulse .26s ease-out;}
+  @keyframes seampulse{
+    0%{opacity:.85;filter:brightness(1);}
+    35%{opacity:1;filter:brightness(2.2) saturate(1.4);}
+    100%{opacity:.85;filter:brightness(1);}
+  }
+  /* divider between dual frames */
+  .grid.dual::after{
+    content:"";position:absolute;top:0;bottom:0;left:50%;width:2px;transform:translateX(-50%);z-index:6;
+    background:linear-gradient(180deg,transparent,rgba(120,210,255,.7) 18%,rgba(240,106,208,.7) 82%,transparent);
+    box-shadow:var(--seam-glow);pointer-events:none;
+  }
+
+  /* flip counter chip */
+  .counter{
+    position:absolute;top:12px;right:12px;z-index:7;
+    font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--mist);
+    background:rgba(8,6,20,.58);border:1px solid var(--line);padding:6px 11px;border-radius:9px;
+    backdrop-filter:blur(6px);display:flex;align-items:center;gap:7px;opacity:0;transition:opacity .3s;
+  }
+  .counter.on{opacity:1;}
+  .counter .dot{width:7px;height:7px;border-radius:50%;background:var(--magenta);box-shadow:0 0 8px var(--magenta);}
+  .counter.live .dot{animation:blink 1s steps(2,jump-none) infinite;}
+  @keyframes blink{50%{opacity:.25;}}
+
+  /* ---------- overlay (start / error) ---------- */
+  .overlay{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:30px;gap:16px;
+    background:radial-gradient(100% 100% at 50% 35%, rgba(33,26,69,.92),rgba(10,9,24,.97));
+    backdrop-filter:blur(4px);}
+  .overlay .lens{
+    width:70px;height:70px;border-radius:50%;position:relative;
+    background:radial-gradient(circle at 38% 34%, #3a3170, #14102a 70%);
+    border:1px solid var(--line-bright);
+    box-shadow:0 0 0 6px rgba(255,255,255,.03), inset 0 0 18px rgba(0,0,0,.6);
+    display:flex;align-items:center;justify-content:center;margin-bottom:4px;
+  }
+  .overlay .lens::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);
+    background:linear-gradient(180deg,transparent,var(--cyan),var(--magenta),transparent);box-shadow:var(--seam-glow);}
+  .overlay h2{font-size:clamp(18px,5vw,22px);font-weight:700;letter-spacing:-.01em;}
+  .overlay p{color:var(--mist-dim);font-size:14px;line-height:1.55;max-width:340px;}
+  .privacy{font-family:var(--mono);font-size:11px;color:var(--mist-faint);letter-spacing:.02em;
+    border:1px dashed var(--line);border-radius:10px;padding:9px 13px;line-height:1.5;max-width:330px;}
+
+  /* ---------- controls ---------- */
+  .controls{margin-top:18px;display:flex;flex-direction:column;gap:14px;}
+  .row{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;}
+
+  .btn{
+    appearance:none;cursor:pointer;font-family:var(--sans);font-weight:600;font-size:15px;
+    border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--mist);
+    padding:12px 18px;display:inline-flex;align-items:center;gap:9px;
+    transition:background .18s,border-color .18s,transform .08s;
+  }
+  .btn:hover{background:var(--panel-2);border-color:var(--line-bright);}
+  .btn:active{transform:translateY(1px);}
+  .btn:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+  .btn svg{width:18px;height:18px;}
+
+  .btn-primary{
+    border:0;color:#0a0918;font-weight:700;font-size:17px;padding:15px 40px;min-width:172px;justify-content:center;
+    background:linear-gradient(120deg,var(--cyan),var(--magenta));
+    box-shadow:0 12px 34px -12px rgba(240,106,208,.7);
+  }
+  .btn-primary.running{
+    background:linear-gradient(120deg,#3a3168,#4a2f55);color:var(--mist);
+    box-shadow:none;border:1px solid var(--line-bright);
+  }
+  .icon-btn{padding:11px;border-radius:12px;width:46px;height:46px;justify-content:center;}
+  .icon-btn.active{border-color:var(--cyan);color:var(--cyan);background:rgba(94,231,216,.08);}
+
+  /* speed control */
+  .speed{
+    display:flex;align-items:center;gap:14px;width:100%;max-width:430px;margin:2px auto 0;
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px 17px;
+  }
+  .speed label{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mist-faint);white-space:nowrap;}
+  .speed .val{font-family:var(--mono);font-size:13px;color:var(--cyan);white-space:nowrap;min-width:74px;text-align:right;}
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;flex:1;height:4px;border-radius:4px;outline:none;
+    background:linear-gradient(90deg,var(--cyan),var(--magenta));cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+    background:#fff;border:3px solid #1a1336;box-shadow:0 0 0 1px var(--line-bright),0 3px 10px rgba(0,0,0,.5);cursor:pointer;}
+  input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid #1a1336;cursor:pointer;}
+  input[type=range]:focus-visible{box-shadow:0 0 0 3px rgba(94,231,216,.35);}
+
+  /* ---------- help ---------- */
+  .help{margin-top:22px;border:1px solid var(--line);border-radius:16px;background:var(--panel);overflow:hidden;}
+  .help summary{
+    cursor:pointer;list-style:none;padding:15px 18px;font-weight:600;font-size:14.5px;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--mist);
+  }
+  .help summary::-webkit-details-marker{display:none;}
+  .help summary .chev{transition:transform .25s;color:var(--mist-dim);}
+  .help[open] summary .chev{transform:rotate(180deg);}
+  .help-body{padding:2px 18px 20px;color:var(--mist-dim);font-size:13.5px;line-height:1.62;}
+  .help-body h3{color:var(--mist);font-size:13px;font-weight:700;margin:16px 0 5px;letter-spacing:.01em;
+    display:flex;align-items:center;gap:8px;}
+  .help-body h3 .k{font-family:var(--mono);font-size:11px;color:var(--cyan);border:1px solid var(--line);border-radius:6px;padding:1px 6px;}
+  .help-body p{margin-bottom:4px;}
+  .help-body .sci{margin-top:16px;padding:13px 15px;border-radius:12px;border:1px solid var(--line);
+    background:linear-gradient(120deg,rgba(94,231,216,.05),rgba(240,106,208,.05));}
+  .help-body .sci strong{color:var(--mist);}
+
+  footer{margin-top:24px;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--mist-faint);}
+
+  @media (max-width:560px){
+    .icon-row{width:100%;}
+    .btn-primary{width:100%;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .seam.pulse{animation:none;}
+    .counter.live .dot{animation:none;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <span class="eyebrow">REFLECTION&nbsp;·&nbsp;SYMMETRY&nbsp;·&nbsp;LAB</span>
+    <h1>좌우반전 챌린지</h1>
+    <p class="tagline">화면을 좌우로 계속 뒤집어서 내 얼굴이 얼마나 대칭인지 확인해요.<br>코를 가운데 빛나는 축에 맞추고 시작하세요.</p>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="모드 선택">
+    <button class="tab" id="tab-challenge" role="tab" aria-selected="true" data-mode="challenge">챌린지</button>
+    <button class="tab" id="tab-compare" role="tab" aria-selected="false" data-mode="compare">나란히 비교</button>
+    <button class="tab" id="tab-symmetry" role="tab" aria-selected="false" data-mode="symmetry">완벽 대칭</button>
+  </div>
+
+  <div class="stage-wrap">
+    <div class="grid" id="grid">
+      <div class="frame" id="frameMain">
+        <video id="video" autoplay playsinline muted></video>
+        <canvas id="cvLeft" class="cv hidden"></canvas>
+        <div class="seam" id="seam"></div>
+        <div class="frame-label hidden" id="labelMain"></div>
+      </div>
+      <div class="frame hidden" id="frameRight">
+        <canvas id="cvRight" class="cv"></canvas>
+        <div class="frame-label" id="labelRight"></div>
+      </div>
+
+      <div class="counter" id="counter"><span class="dot"></span><span id="counterText">뒤집기 0</span></div>
+
+      <!-- start / error overlay -->
+      <div class="overlay" id="overlay">
+        <div class="lens"></div>
+        <h2 id="ovTitle">카메라를 켜고 시작해요</h2>
+        <p id="ovText">얼굴을 화면 중앙선에 맞추면 좌우 대칭을 더 정확하게 볼 수 있어요.</p>
+        <button class="btn btn-primary" id="ovBtn" style="min-width:auto;padding:13px 32px;">카메라 켜기</button>
+        <div class="privacy" id="ovPrivacy">영상은 이 기기 안에서만 처리됩니다. 어디에도 저장하거나 전송하지 않아요.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <!-- challenge-only controls -->
+    <div class="row" id="challengeRow">
+      <button class="btn btn-primary" id="startBtn">
+        <svg id="startIcon" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+        <span id="startText">시작</span>
+      </button>
+      <button class="btn" id="flipOnceBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h12a4 4 0 0 1 0 8h-1"/><path d="m16 21 4-4-4-4"/><path d="M20 17H8a4 4 0 0 1 0-8h1" opacity=".5"/></svg>
+        한 번 뒤집기
+      </button>
+    </div>
+
+    <div class="speed" id="speedRow">
+      <label for="speed">속도</label>
+      <input type="range" id="speed" min="1" max="10" value="7" aria-label="뒤집기 속도">
+      <span class="val" id="speedVal">1.6 회/초</span>
+    </div>
+
+    <!-- common controls -->
+    <div class="row icon-row">
+      <button class="btn icon-btn active" id="guideBtn" title="중앙선 표시" aria-label="중앙선 표시 켜기/끄기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v18"/><path d="M5 8h-.01M5 16h-.01M19 8h.01M19 16h.01"/></svg>
+      </button>
+      <button class="btn icon-btn" id="captureBtn" title="사진 저장" aria-label="현재 화면 저장">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.5"/></svg>
+      </button>
+      <button class="btn icon-btn" id="switchBtn" title="카메라 전환" aria-label="앞/뒤 카메라 전환">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h3l2-3h8l2 3h3"/><path d="M21 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7"/><path d="M9 13a3 3 0 0 1 5-2.2M15 13a3 3 0 0 1-5 2.2"/><path d="m13.5 9 .5 1.8 1.8-.3M10.5 17l-.5-1.8-1.8.3"/></svg>
+      </button>
+      <button class="btn icon-btn" id="fsBtn" title="전체화면" aria-label="전체화면">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <details class="help">
+    <summary>사용법 &amp; 원리 <span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></span></summary>
+    <div class="help-body">
+      <h3><span class="k">챌린지</span> 좌우로 뒤집어 흔들림 찾기</h3>
+      <p>얼굴을 가운데 빛나는 축에 맞추고 <strong style="color:var(--mist)">시작</strong>을 눌러요. 화면이 거울에 비친 모습과 실제 모습 사이를 계속 오가요. 눈·코·입을 보세요. 좌우로 <strong style="color:var(--mist)">움찔움찔 흔들리면 비대칭</strong>, 거의 안 움직이면 대칭에 가까워요. 속도를 바꿔가며 관찰해 보세요.</p>
+
+      <h3><span class="k">나란히 비교</span> 거울 모습 vs 실제 모습</h3>
+      <p>왼쪽은 거울에 비친 나(좌우 반전), 오른쪽은 남들이 보는 실제 나예요. 두 얼굴이 다르게 느껴질수록 비대칭이 큰 거예요.</p>
+
+      <h3><span class="k">완벽 대칭</span> 한쪽으로 만든 얼굴</h3>
+      <p>얼굴의 왼쪽 절반만, 오른쪽 절반만으로 만든 '완벽 대칭 얼굴' 두 개를 보여줘요. 둘이 전혀 다른 사람처럼 보인다면 좌우 차이가 꽤 큰 거랍니다.</p>
+
+      <div class="sci">
+        <strong>🔬 과학 한 스푼 — 거울은 정말 좌우를 바꿀까?</strong><br>
+        평면거울은 사실 <strong>좌우가 아니라 앞뒤(거울 면에 수직인 방향)</strong>를 뒤집어요. 우리가 "좌우가 바뀌었다"고 느끼는 건, 거울 속 상과 마주 보려고 몸을 빙 돌린다고 무의식적으로 상상하기 때문이에요. 위·아래가 그대로인 것도 같은 이유죠. 이 챌린지에서 보는 좌우반전이 바로 평면거울이 만드는 상(像)이에요.
+      </div>
+    </div>
+  </details>
+
+  <footer>MADE FOR 과학이조선생</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const video = $('video'), cvLeft = $('cvLeft'), cvRight = $('cvRight');
+  const ctxL = cvLeft.getContext('2d'), ctxR = cvRight.getContext('2d');
+  const grid = $('grid'), frameRight = $('frameRight'), labelMain = $('labelMain'), labelRight = $('labelRight');
+  const seam = $('seam'), counter = $('counter'), counterText = $('counterText');
+  const overlay = $('overlay'), ovTitle = $('ovTitle'), ovText = $('ovText'), ovBtn = $('ovBtn'), ovPrivacy = $('ovPrivacy');
+  const startBtn = $('startBtn'), startText = $('startText'), startIcon = $('startIcon');
+  const challengeRow = $('challengeRow'), speedRow = $('speedRow'), flipOnceBtn = $('flipOnceBtn');
+  const speed = $('speed'), speedVal = $('speedVal');
+  const guideBtn = $('guideBtn'), captureBtn = $('captureBtn'), switchBtn = $('switchBtn'), fsBtn = $('fsBtn');
+  const tabs = [...document.querySelectorAll('.tab')];
+
+  // offscreen buffer for symmetry compositing (already-seen orientation)
+  const srcCanvas = document.createElement('canvas');
+  const srcCtx = srcCanvas.getContext('2d');
+
+  let stream = null;
+  let facingMode = 'user';
+  let mode = 'challenge';
+  let running = false;       // challenge auto-flip active
+  let flipState = false;     // current flip toggle
+  let flipTimer = null;
+  let flipCount = 0;
+  let raf = null;
+  let guideOn = true;
+  let started = false;
+
+  // ---- speed mapping: level 1..10 -> interval ms (1500..200) ----
+  const intervalFromLevel = lvl => Math.round(1500 - (lvl - 1) * (1300 / 9));
+  function updateSpeedLabel(){
+    const ms = intervalFromLevel(+speed.value);
+    const fps = (1000 / ms);
+    speedVal.textContent = fps.toFixed(1) + ' 회/초';
+  }
+
+  // ---- camera ----
+  async function startCamera(){
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      return showError('지원 안 됨', '이 브라우저는 카메라 기능을 지원하지 않아요. 크롬·사파리 등 최신 브라우저에서 열어주세요.');
+    }
+    if(!window.isSecureContext){
+      return showError('보안 연결 필요', '카메라는 https 주소에서만 켤 수 있어요. 페이지를 배포(GitHub Pages 등)하거나 localhost에서 열어주세요.');
+    }
+    try{
+      if(stream) stream.getTracks().forEach(t => t.stop());
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode, width:{ideal:1280}, height:{ideal:720} },
+        audio: false
+      });
+      video.srcObject = stream;
+      await video.play().catch(()=>{});
+      started = true;
+      overlay.classList.add('hidden');
+      applyMode();
+    }catch(err){
+      let msg = '카메라를 켤 수 없어요. 잠시 후 다시 시도해 주세요.';
+      if(err && (err.name === 'NotAllowedError' || err.name === 'SecurityError'))
+        msg = '카메라 권한이 거부됐어요. 브라우저 주소창의 권한 설정에서 카메라를 허용한 뒤 다시 켜주세요.';
+      else if(err && err.name === 'NotFoundError')
+        msg = '사용할 수 있는 카메라를 찾지 못했어요. 카메라가 연결돼 있는지 확인해 주세요.';
+      showError('카메라 오류', msg);
+    }
+  }
+
+  function showError(title, text){
+    overlay.classList.remove('hidden');
+    ovTitle.textContent = title;
+    ovText.textContent = text;
+    ovBtn.textContent = '다시 시도';
+    ovPrivacy.classList.add('hidden');
+  }
+
+  // ---- transforms ----
+  function currentScaleX(){
+    const base = (facingMode === 'user') ? -1 : 1; // selfie shows mirror-like by default
+    return base * (flipState ? -1 : 1);
+  }
+  function applyChallengeTransform(){
+    video.style.transform = 'scaleX(' + currentScaleX() + ')';
+  }
+
+  // ---- flip loop (challenge) ----
+  function startFlipping(){
+    if(running) return;
+    running = true;
+    flipCount = 0;
+    counter.classList.add('on','live');
+    counterText.textContent = '뒤집기 0';
+    updateStartButton();
+    const tick = () => {
+      flipState = !flipState;
+      flipCount++;
+      counterText.textContent = '뒤집기 ' + flipCount;
+      applyChallengeTransform();
+      pulseSeam();
+    };
+    flipTimer = setInterval(tick, intervalFromLevel(+speed.value));
+  }
+  function stopFlipping(){
+    running = false;
+    if(flipTimer){ clearInterval(flipTimer); flipTimer = null; }
+    counter.classList.remove('live');
+    updateStartButton();
+  }
+  function restartFlipTimer(){
+    if(!running) return;
+    clearInterval(flipTimer);
+    flipTimer = setInterval(() => {
+      flipState = !flipState; flipCount++;
+      counterText.textContent = '뒤집기 ' + flipCount;
+      applyChallengeTransform(); pulseSeam();
+    }, intervalFromLevel(+speed.value));
+  }
+  function updateStartButton(){
+    if(running){
+      startBtn.classList.add('running');
+      startText.textContent = '멈춤';
+      startIcon.innerHTML = '<rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/>';
+    }else{
+      startBtn.classList.remove('running');
+      startText.textContent = '시작';
+      startIcon.innerHTML = '<path d="M8 5v14l11-7z" fill="currentColor"/>';
+    }
+  }
+  function pulseSeam(){
+    if(!guideOn) return;
+    seam.classList.remove('pulse');
+    void seam.offsetWidth;
+    seam.classList.add('pulse');
+  }
+
+  // ---- canvas render loop (compare / symmetry) ----
+  function setSize(cv, w, h){ if(cv.width !== w || cv.height !== h){ cv.width = w; cv.height = h; } }
+
+  function getSourceFrame(){
+    const w = video.videoWidth, h = video.videoHeight;
+    if(!w) return null;
+    srcCanvas.width = w; srcCanvas.height = h;
+    srcCtx.setTransform(1,0,0,1,0,0);
+    srcCtx.clearRect(0,0,w,h);
+    if(facingMode === 'user'){ srcCtx.translate(w,0); srcCtx.scale(-1,1); }
+    srcCtx.drawImage(video,0,0,w,h);
+    srcCtx.setTransform(1,0,0,1,0,0);
+    return { w, h };
+  }
+
+  function drawCompare(){
+    const w = video.videoWidth, h = video.videoHeight;
+    if(!w) return;
+    setSize(cvLeft,w,h); setSize(cvRight,w,h);
+    // left = mirror view
+    ctxL.setTransform(1,0,0,1,0,0); ctxL.clearRect(0,0,w,h);
+    ctxL.translate(w,0); ctxL.scale(-1,1); ctxL.drawImage(video,0,0,w,h);
+    ctxL.setTransform(1,0,0,1,0,0);
+    // right = true view
+    ctxR.setTransform(1,0,0,1,0,0); ctxR.clearRect(0,0,w,h);
+    ctxR.drawImage(video,0,0,w,h);
+  }
+
+  function drawSymmetry(){
+    const f = getSourceFrame();
+    if(!f) return;
+    const { w, h } = f, hw = Math.floor(w/2), rw = w - hw;
+    setSize(cvLeft,w,h); setSize(cvRight,w,h);
+    // left-left composite
+    ctxL.setTransform(1,0,0,1,0,0); ctxL.clearRect(0,0,w,h);
+    ctxL.drawImage(srcCanvas, 0,0,hw,h, 0,0,hw,h);
+    ctxL.save(); ctxL.translate(w,0); ctxL.scale(-1,1);
+    ctxL.drawImage(srcCanvas, 0,0,hw,h, 0,0,hw,h); ctxL.restore();
+    // right-right composite
+    ctxR.setTransform(1,0,0,1,0,0); ctxR.clearRect(0,0,w,h);
+    ctxR.drawImage(srcCanvas, hw,0,rw,h, hw,0,rw,h);
+    ctxR.save(); ctxR.translate(w,0); ctxR.scale(-1,1);
+    ctxR.drawImage(srcCanvas, hw,0,rw,h, hw,0,rw,h); ctxR.restore();
+  }
+
+  function renderLoop(){
+    if(mode === 'compare') drawCompare();
+    else if(mode === 'symmetry') drawSymmetry();
+    raf = requestAnimationFrame(renderLoop);
+  }
+  function startRender(){ if(!raf) raf = requestAnimationFrame(renderLoop); }
+  function stopRender(){ if(raf){ cancelAnimationFrame(raf); raf = null; } }
+
+  // ---- mode switching ----
+  function applyMode(){
+    stopFlipping();
+    stopRender();
+    flipState = false;
+    counter.classList.remove('on','live');
+    video.style.transform = '';
+
+    if(mode === 'challenge'){
+      grid.classList.remove('dual');
+      frameRight.classList.add('hidden');
+      video.classList.remove('hidden');
+      cvLeft.classList.add('hidden');
+      labelMain.classList.add('hidden');
+      challengeRow.classList.remove('hidden');
+      speedRow.classList.remove('hidden');
+      seam.classList.toggle('hidden', !guideOn);
+      applyChallengeTransform();
+    } else {
+      grid.classList.add('dual');
+      frameRight.classList.remove('hidden');
+      video.classList.add('hidden');
+      cvLeft.classList.remove('hidden');
+      labelMain.classList.remove('hidden');
+      challengeRow.classList.add('hidden');
+      speedRow.classList.add('hidden');
+      seam.classList.add('hidden'); // dual divider handles the axis
+      if(mode === 'compare'){
+        labelMain.textContent = '거울 모습';
+        labelRight.textContent = '실제 모습';
+      } else {
+        labelMain.textContent = '왼쪽 대칭';
+        labelRight.textContent = '오른쪽 대칭';
+      }
+      if(started) startRender();
+    }
+  }
+
+  function setMode(m){
+    mode = m;
+    tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.mode === m)));
+    if(started) applyMode();
+    else { // update which controls show even before camera starts
+      challengeRow.classList.toggle('hidden', m !== 'challenge');
+      speedRow.classList.toggle('hidden', m !== 'challenge');
+    }
+  }
+
+  // ---- capture ----
+  function captureImage(){
+    if(!started) return;
+    let out;
+    if(mode === 'challenge'){
+      const w = video.videoWidth, h = video.videoHeight;
+      if(!w) return;
+      out = document.createElement('canvas'); out.width = w; out.height = h;
+      const x = out.getContext('2d');
+      if(currentScaleX() < 0){ x.translate(w,0); x.scale(-1,1); }
+      x.drawImage(video,0,0,w,h);
+    } else {
+      const w = cvLeft.width, h = cvLeft.height;
+      if(!w) return;
+      const gap = Math.round(w * 0.025);
+      out = document.createElement('canvas'); out.width = w*2 + gap; out.height = h;
+      const x = out.getContext('2d');
+      x.fillStyle = '#0a0918'; x.fillRect(0,0,out.width,out.height);
+      x.drawImage(cvLeft, 0, 0);
+      x.drawImage(cvRight, w + gap, 0);
+    }
+    out.toBlob(b => {
+      if(!b) return;
+      const url = URL.createObjectURL(b);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'mirror-' + Date.now() + '.png';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    }, 'image/png');
+  }
+
+  // ---- events ----
+  ovBtn.addEventListener('click', startCamera);
+  startBtn.addEventListener('click', () => {
+    if(!started){ startCamera(); return; }
+    running ? stopFlipping() : startFlipping();
+  });
+  flipOnceBtn.addEventListener('click', () => {
+    if(!started) return;
+    if(running) stopFlipping();
+    flipState = !flipState;
+    flipCount++;
+    counter.classList.add('on');
+    counterText.textContent = '뒤집기 ' + flipCount;
+    applyChallengeTransform();
+    pulseSeam();
+  });
+  speed.addEventListener('input', () => { updateSpeedLabel(); restartFlipTimer(); });
+
+  tabs.forEach(t => t.addEventListener('click', () => setMode(t.dataset.mode)));
+
+  guideBtn.addEventListener('click', () => {
+    guideOn = !guideOn;
+    guideBtn.classList.toggle('active', guideOn);
+    if(mode === 'challenge') seam.classList.toggle('hidden', !guideOn);
+  });
+
+  captureBtn.addEventListener('click', captureImage);
+
+  switchBtn.addEventListener('click', async () => {
+    facingMode = (facingMode === 'user') ? 'environment' : 'user';
+    if(started) await startCamera();
+  });
+
+  fsBtn.addEventListener('click', () => {
+    const el = document.querySelector('.stage-wrap');
+    if(!document.fullscreenElement){
+      (el.requestFullscreen || el.webkitRequestFullscreen)?.call(el);
+    } else {
+      (document.exitFullscreen || document.webkitExitFullscreen)?.call(document);
+    }
+  });
+
+  // keyboard: space toggles challenge
+  document.addEventListener('keydown', e => {
+    if(e.code === 'Space' && started && mode === 'challenge' && e.target.tagName !== 'INPUT'){
+      e.preventDefault();
+      running ? stopFlipping() : startFlipping();
+    }
+  });
+
+  video.addEventListener('loadedmetadata', () => { if(mode !== 'challenge' && started) startRender(); });
+  document.addEventListener('visibilitychange', () => { if(document.hidden) stopFlipping(); });
+
+  // init
+  updateSpeedLabel();
+  setMode('challenge');
+})();
+</script>
+</body>
+</html>
