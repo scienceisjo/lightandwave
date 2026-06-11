@@ -1765,13 +1765,12 @@ function raySetStep(s){
   sndClick();
 }
 document.querySelectorAll('#tab-lab2 .step-btn').forEach(b=>b.addEventListener('click',()=>raySetStep(+b.dataset.step)));
-/* ---------- 🐶 반려동물 사진 공유 로더 (Pet/pet1.jpg ~ pet6.jpg) ----------
-   깃허브 같은 폴더의 Pet/ 하위에 pet1.jpg ~ pet6.jpg 6장을 올리면
-   ① 탐구1 '상의 특징' 실험과 ② 탐구2 '작도할 물체 고르기' 양쪽에 자동 등장 */
+/* ---------- 🐶 반려동물 사진 공유 로더 (Pet/pet1 ~ pet6, 다중 확장자/경로 폴백) ---------- */
 const RAYOBJ={img:null,aspect:1};
 const PETS=[];
 (function(){
   const rayPick=$('rayObjPicker'), featPick=$('featObjPicker');
+  if(!rayPick||!featPick){console.warn('[Pet] 피커 컨테이너 없음');return;}
   function raySel(btn,img){
     rayPick.querySelectorAll('.objp').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
@@ -1784,25 +1783,43 @@ const PETS=[];
     if(feat.nbOn){feat.nbOn=false;$('featNb').checked=false;}
     drawFeat();sndClick();
   }
-  rayPick.querySelector('[data-obj=star]').addEventListener('click',e=>raySel(e.currentTarget,null));
+  const starBtn=rayPick.querySelector('[data-obj=star]');
+  if(starBtn)starBtn.addEventListener('click',e=>raySel(e.currentTarget,null));
   function addThumb(pick,im,onClick){
     const b=document.createElement('button');b.className='objp';
     const th=document.createElement('img');th.src=im.src;b.appendChild(th);
     b.addEventListener('click',()=>onClick(b,im));
     pick.appendChild(b);
   }
-  // Pet/pet1.jpg ~ pet6.jpg 6장 (jpg→png 폴백)
-  for(let i=1;i<=6;i++){
-    const im=new Image();let tried=0;
+  // pet1 ~ pet6 — 흔히 틀리는 모든 변형을 자동 시도
+  console.log('[🐶 Pet 로더] pet1~pet6 검색 시작…');
+  let loaded=0,failed=0;
+  for(let i=1;i<=6;i++)(function(idx){
+    const candidates=[
+      'Pet/pet'+idx+'.jpg','Pet/pet'+idx+'.jpeg','Pet/pet'+idx+'.png',
+      'Pet/pet'+idx+'.JPG','Pet/pet'+idx+'.JPEG','Pet/pet'+idx+'.PNG',
+      'Pet/Pet'+idx+'.jpg','Pet/Pet'+idx+'.png',
+      'pet/pet'+idx+'.jpg','pet/pet'+idx+'.jpeg','pet/pet'+idx+'.png',
+      './Pet/pet'+idx+'.jpg','./pet/pet'+idx+'.jpg'
+    ];
+    const im=new Image();let k=0;
     im.onload=()=>{
+      loaded++;
+      console.log('  ✓ pet'+idx+' 로드 성공 → '+im.src.replace(location.href.replace(/[^/]*$/,''),''));
       PETS.push(im);
       addThumb(rayPick,im,(b,img)=>raySel(b,img));
       featPick.style.display='flex';
       addThumb(featPick,im,(b,img)=>featSel(img));
     };
-    im.onerror=()=>{if(tried===0){tried=1;im.src='Pet/pet'+i+'.png';}};
-    im.src='Pet/pet'+i+'.jpg';
-  }
+    im.onerror=()=>{
+      k++;
+      if(k<candidates.length)im.src=candidates[k];
+      else{failed++;console.warn('  ✗ pet'+idx+': 모든 경로 실패. 시도했던 경로:',candidates);}
+    };
+    im.src=candidates[0];
+  })(i);
+  // 5초 후 결과 요약
+  setTimeout(()=>console.log('[🐶 Pet 로더] 결과 — 성공 '+loaded+'장 / 실패 '+failed+'장. 안 보이면 위 ✗ 줄의 시도 경로와 실제 파일명/대소문자를 비교하세요.'),5000);
 })();
 $('rayNormal').addEventListener('change',drawRay);
 $('rayAngles').addEventListener('change',drawRay);
@@ -3211,15 +3228,24 @@ function redrawTab(name){
   else if(name==='why'){drawWhyBundle(performance.now());drawWhyBrain();drawWhyProof();drawWhyHalf();drawWhyTwo();}
 }
 function switchTab(name){
+  // 1) 탭 활성화는 무조건 먼저 (어떤 일이 있어도 전환은 성공해야 함)
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));
-  window.scrollTo({top:0,behavior:'smooth'});
-  WE.active=(name==='why');
-  if(WE.active){WE.raf=requestAnimationFrame(echoLoop);}
-  else if(WE.raf)cancelAnimationFrame(WE.raf);
-  requestAnimationFrame(()=>redrawTab(name));
+  try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){}
+  // 2) 부수 작업 (실패해도 전환에는 영향 없음)
+  try{
+    WE.active=(name==='why');
+    if(WE.active){WE.raf=requestAnimationFrame(echoLoop);}
+    else if(WE.raf)cancelAnimationFrame(WE.raf);
+  }catch(e){console.warn('[탭] WE 처리 실패:',e);}
+  // 3) 캔버스 다시 그리기 (실패해도 다른 탭은 정상)
+  requestAnimationFrame(()=>{
+    try{redrawTab(name);}catch(e){console.warn('[탭] redrawTab('+name+') 실패:',e);}
+  });
 }
 document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+// 폴백: 어떤 이유로든 탭 버튼 핸들러가 망가지면 URL 해시로라도 전환 가능 (#lab2 등)
+window.addEventListener('hashchange',()=>{const n=location.hash.replace('#','');if(n&&document.getElementById('tab-'+n))switchTab(n);});
 document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.goto)));
 window.addEventListener('resize',()=>{
   const cur=document.querySelector('.tab-panel.active');
