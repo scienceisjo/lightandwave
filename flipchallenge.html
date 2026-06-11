@@ -62,13 +62,14 @@
   .tabs{
     display:flex;gap:4px;padding:4px;margin:clamp(16px,2.6vw,22px) auto;
     background:var(--panel);border:1px solid var(--line);border-radius:999px;width:max-content;max-width:100%;
-    backdrop-filter:blur(8px);
+    backdrop-filter:blur(8px);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
   }
+  .tabs::-webkit-scrollbar{display:none;}
   .tab{
     appearance:none;border:0;cursor:pointer;color:var(--mist-dim);
     font-family:var(--sans);font-size:clamp(12.5px,3.3vw,14px);font-weight:600;
-    padding:9px clamp(13px,3.6vw,22px);border-radius:999px;background:transparent;
-    transition:color .2s,background .2s;white-space:nowrap;
+    padding:9px clamp(12px,3.2vw,19px);border-radius:999px;background:transparent;
+    transition:color .2s,background .2s;white-space:nowrap;flex:0 0 auto;
   }
   .tab[aria-selected="true"]{
     color:#0a0918;
@@ -78,7 +79,9 @@
   .tab:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
 
   /* ---------- stage ---------- */
-  .stage-wrap{position:relative;border-radius:22px;overflow:hidden;}
+  .stage-wrap{position:relative;margin:0 auto;width:100%;}
+  .stage-wrap.single{max-width:min(460px, calc(76vh * 0.75));}
+  .stage-wrap.dual-wide{max-width:760px;}
   .grid{
     display:flex;gap:0;background:#000;
     border:1px solid var(--line);border-radius:22px;overflow:hidden;
@@ -86,7 +89,6 @@
     position:relative;
   }
   .frame{position:relative;flex:1 1 0;min-width:0;background:#05040c;display:flex;align-items:center;justify-content:center;aspect-ratio:3/4;}
-  .grid.dual .frame{aspect-ratio:3/4;}
   #video,.cv{width:100%;height:100%;object-fit:cover;display:block;}
   .cv{position:absolute;inset:0;}
   .frame-label{
@@ -134,6 +136,16 @@
   .counter.live .dot{animation:blink 1s steps(2,jump-none) infinite;}
   @keyframes blink{50%{opacity:.25;}}
 
+  /* ---------- fullscreen ---------- */
+  .stage-wrap:fullscreen{width:100vw;height:100vh;max-width:none;margin:0;display:flex;align-items:center;justify-content:center;background:#000;}
+  .stage-wrap:fullscreen .grid{height:100%;width:auto;max-width:100vw;max-height:100vh;border:0;border-radius:0;box-shadow:none;}
+  .stage-wrap:fullscreen .frame{flex:0 0 auto;height:100%;width:auto;}
+  .stage-wrap:fullscreen .frame-label{display:none;}
+  .stage-wrap:-webkit-full-screen{width:100vw;height:100vh;max-width:none;margin:0;display:flex;align-items:center;justify-content:center;background:#000;}
+  .stage-wrap:-webkit-full-screen .grid{height:100%;width:auto;max-width:100vw;max-height:100vh;border:0;border-radius:0;box-shadow:none;}
+  .stage-wrap:-webkit-full-screen .frame{flex:0 0 auto;height:100%;width:auto;}
+  .stage-wrap:-webkit-full-screen .frame-label{display:none;}
+
   /* ---------- overlay (start / error) ---------- */
   .overlay{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;
     text-align:center;padding:30px;gap:16px;
@@ -180,6 +192,13 @@
   .icon-btn{padding:11px;border-radius:12px;width:46px;height:46px;justify-content:center;}
   .icon-btn.active{border-color:var(--cyan);color:var(--cyan);background:rgba(94,231,216,.08);}
 
+  /* segmented sub-controls */
+  .seg{display:inline-flex;gap:3px;padding:3px;background:var(--panel);border:1px solid var(--line);border-radius:12px;}
+  .seg-btn{appearance:none;border:0;cursor:pointer;background:transparent;color:var(--mist-dim);
+    font-family:var(--sans);font-weight:600;font-size:13px;padding:9px 16px;border-radius:9px;transition:.18s;white-space:nowrap;}
+  .seg-btn.active{background:linear-gradient(120deg,var(--cyan),var(--magenta));color:#0a0918;}
+  .seg-btn:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+
   /* speed control */
   .speed{
     display:flex;align-items:center;gap:14px;width:100%;max-width:430px;margin:2px auto 0;
@@ -208,8 +227,9 @@
   .help-body{padding:2px 18px 20px;color:var(--mist-dim);font-size:13.5px;line-height:1.62;}
   .help-body h3{color:var(--mist);font-size:13px;font-weight:700;margin:16px 0 5px;letter-spacing:.01em;
     display:flex;align-items:center;gap:8px;}
-  .help-body h3 .k{font-family:var(--mono);font-size:11px;color:var(--cyan);border:1px solid var(--line);border-radius:6px;padding:1px 6px;}
+  .help-body h3 .k{font-family:var(--mono);font-size:11px;color:var(--cyan);border:1px solid var(--line);border-radius:6px;padding:1px 6px;white-space:nowrap;}
   .help-body p{margin-bottom:4px;}
+  .help-body kbd{font-family:var(--mono);font-size:11px;background:var(--panel-2);border:1px solid var(--line-bright);border-bottom-width:2px;border-radius:6px;padding:1px 7px;color:var(--mist);}
   .help-body .sci{margin-top:16px;padding:13px 15px;border-radius:12px;border:1px solid var(--line);
     background:linear-gradient(120deg,rgba(94,231,216,.05),rgba(240,106,208,.05));}
   .help-body .sci strong{color:var(--mist);}
@@ -239,9 +259,10 @@
     <button class="tab" id="tab-challenge" role="tab" aria-selected="true" data-mode="challenge">챌린지</button>
     <button class="tab" id="tab-compare" role="tab" aria-selected="false" data-mode="compare">나란히 비교</button>
     <button class="tab" id="tab-symmetry" role="tab" aria-selected="false" data-mode="symmetry">완벽 대칭</button>
+    <button class="tab" id="tab-dance" role="tab" aria-selected="false" data-mode="dance">거울춤</button>
   </div>
 
-  <div class="stage-wrap">
+  <div class="stage-wrap single">
     <div class="grid" id="grid">
       <div class="frame" id="frameMain">
         <video id="video" autoplay playsinline muted></video>
@@ -286,6 +307,23 @@
       <span class="val" id="speedVal">1.6 회/초</span>
     </div>
 
+    <!-- contextual sub-controls (symmetry / dance) -->
+    <div class="row hidden" id="subRow">
+      <div class="seg hidden" id="symLayoutGroup" role="group" aria-label="화면 수">
+        <button class="seg-btn active" data-layout="dual">두 화면</button>
+        <button class="seg-btn" data-layout="single">한 화면</button>
+      </div>
+      <div class="seg hidden" id="symSideGroup" role="group" aria-label="대칭 기준">
+        <button class="seg-btn active" data-side="left">왼쪽</button>
+        <button class="seg-btn" data-side="right">오른쪽</button>
+      </div>
+      <div class="seg hidden" id="danceAxisGroup" role="group" aria-label="대칭 축">
+        <button class="seg-btn active" data-axis="v">세로</button>
+        <button class="seg-btn" data-axis="h">가로</button>
+        <button class="seg-btn" data-axis="quad">사방</button>
+      </div>
+    </div>
+
     <!-- common controls -->
     <div class="row icon-row">
       <button class="btn icon-btn active" id="guideBtn" title="중앙선 표시" aria-label="중앙선 표시 켜기/끄기">
@@ -313,7 +351,13 @@
       <p>왼쪽은 거울에 비친 나(좌우 반전), 오른쪽은 남들이 보는 실제 나예요. 두 얼굴이 다르게 느껴질수록 비대칭이 큰 거예요.</p>
 
       <h3><span class="k">완벽 대칭</span> 한쪽으로 만든 얼굴</h3>
-      <p>얼굴의 왼쪽 절반만, 오른쪽 절반만으로 만든 '완벽 대칭 얼굴' 두 개를 보여줘요. 둘이 전혀 다른 사람처럼 보인다면 좌우 차이가 꽤 큰 거랍니다.</p>
+      <p>얼굴의 한쪽 절반만으로 만든 '완벽 대칭 얼굴'을 보여줘요. <strong style="color:var(--mist)">두 화면</strong>은 왼쪽·오른쪽 대칭을 나란히, <strong style="color:var(--mist)">한 화면</strong>은 하나만 크게 봐요. 둘이 전혀 다른 사람처럼 보인다면 좌우 차이가 꽤 큰 거랍니다.</p>
+
+      <h3><span class="k">거울춤</span> 움직임이 대칭으로 따라와요</h3>
+      <p>화면이 좌우(세로축)·상하(가로축)·사방으로 대칭이 돼요. 한쪽에서 춤추거나 손을 움직이면 반대쪽이 거울처럼 똑같이 따라와서 만화경 같은 모양이 만들어져요. <strong style="color:var(--mist)">전체화면</strong>으로 켜고 춰보세요.</p>
+
+      <h3><span class="k">전체화면 · 단축키</span></h3>
+      <p>전체화면(우측 아래 버튼)에서 <kbd>스페이스바</kbd>를 누를 때마다 화면이 한 번씩 좌우반전돼요. 발표·시연 때 직접 박자를 맞춰 뒤집기 좋아요. 거울춤에서는 대칭 기준 면이 좌우로 바뀝니다. (일반 화면에서는 스페이스바로 자동 뒤집기 시작·정지)</p>
 
       <div class="sci">
         <strong>🔬 과학 한 스푼 — 거울은 정말 좌우를 바꿀까?</strong><br>
@@ -333,33 +377,37 @@
   const ctxL = cvLeft.getContext('2d'), ctxR = cvRight.getContext('2d');
   const grid = $('grid'), frameRight = $('frameRight'), labelMain = $('labelMain'), labelRight = $('labelRight');
   const seam = $('seam'), counter = $('counter'), counterText = $('counterText');
+  const stageWrap = document.querySelector('.stage-wrap');
   const overlay = $('overlay'), ovTitle = $('ovTitle'), ovText = $('ovText'), ovBtn = $('ovBtn'), ovPrivacy = $('ovPrivacy');
   const startBtn = $('startBtn'), startText = $('startText'), startIcon = $('startIcon');
   const challengeRow = $('challengeRow'), speedRow = $('speedRow'), flipOnceBtn = $('flipOnceBtn');
+  const subRow = $('subRow'), symLayoutGroup = $('symLayoutGroup'), symSideGroup = $('symSideGroup'), danceAxisGroup = $('danceAxisGroup');
   const speed = $('speed'), speedVal = $('speedVal');
   const guideBtn = $('guideBtn'), captureBtn = $('captureBtn'), switchBtn = $('switchBtn'), fsBtn = $('fsBtn');
   const tabs = [...document.querySelectorAll('.tab')];
 
-  // offscreen buffer for symmetry compositing (already-seen orientation)
   const srcCanvas = document.createElement('canvas');
   const srcCtx = srcCanvas.getContext('2d');
 
   let stream = null;
   let facingMode = 'user';
   let mode = 'challenge';
-  let running = false;       // challenge auto-flip active
-  let flipState = false;     // current flip toggle
+  let running = false;
+  let flipState = false;
   let flipTimer = null;
   let flipCount = 0;
   let raf = null;
   let guideOn = true;
   let started = false;
+  let symLayout = 'dual';   // 'dual' | 'single'
+  let symSide = 'left';     // 'left' | 'right'
+  let danceAxis = 'v';      // 'v' | 'h' | 'quad'
+  let danceSide = 'left';   // source side / half
 
-  // ---- speed mapping: level 1..10 -> interval ms (1500..200) ----
+  // ---- speed mapping ----
   const intervalFromLevel = lvl => Math.round(1500 - (lvl - 1) * (1300 / 9));
   function updateSpeedLabel(){
-    const ms = intervalFromLevel(+speed.value);
-    const fps = (1000 / ms);
+    const fps = 1000 / intervalFromLevel(+speed.value);
     speedVal.textContent = fps.toFixed(1) + ' 회/초';
   }
 
@@ -402,7 +450,7 @@
 
   // ---- transforms ----
   function currentScaleX(){
-    const base = (facingMode === 'user') ? -1 : 1; // selfie shows mirror-like by default
+    const base = (facingMode === 'user') ? -1 : 1;
     return base * (flipState ? -1 : 1);
   }
   function applyChallengeTransform(){
@@ -417,14 +465,14 @@
     counter.classList.add('on','live');
     counterText.textContent = '뒤집기 0';
     updateStartButton();
-    const tick = () => {
-      flipState = !flipState;
-      flipCount++;
-      counterText.textContent = '뒤집기 ' + flipCount;
-      applyChallengeTransform();
-      pulseSeam();
-    };
-    flipTimer = setInterval(tick, intervalFromLevel(+speed.value));
+    flipTimer = setInterval(doFlipTick, intervalFromLevel(+speed.value));
+  }
+  function doFlipTick(){
+    flipState = !flipState;
+    flipCount++;
+    counterText.textContent = '뒤집기 ' + flipCount;
+    applyChallengeTransform();
+    pulseSeam();
   }
   function stopFlipping(){
     running = false;
@@ -435,11 +483,7 @@
   function restartFlipTimer(){
     if(!running) return;
     clearInterval(flipTimer);
-    flipTimer = setInterval(() => {
-      flipState = !flipState; flipCount++;
-      counterText.textContent = '뒤집기 ' + flipCount;
-      applyChallengeTransform(); pulseSeam();
-    }, intervalFromLevel(+speed.value));
+    flipTimer = setInterval(doFlipTick, intervalFromLevel(+speed.value));
   }
   function updateStartButton(){
     if(running){
@@ -453,14 +497,16 @@
     }
   }
   function pulseSeam(){
-    if(!guideOn) return;
+    if(!guideOn || mode !== 'challenge') return;
     seam.classList.remove('pulse');
     void seam.offsetWidth;
     seam.classList.add('pulse');
   }
 
-  // ---- canvas render loop (compare / symmetry) ----
+  // ---- canvas helpers ----
   function setSize(cv, w, h){ if(cv.width !== w || cv.height !== h){ cv.width = w; cv.height = h; } }
+  function mirrorH(ctx, w, fn){ ctx.save(); ctx.translate(w,0); ctx.scale(-1,1); fn(); ctx.restore(); }
+  function mirrorV(ctx, h, fn){ ctx.save(); ctx.translate(0,h); ctx.scale(1,-1); fn(); ctx.restore(); }
 
   function getSourceFrame(){
     const w = video.videoWidth, h = video.videoHeight;
@@ -478,89 +524,158 @@
     const w = video.videoWidth, h = video.videoHeight;
     if(!w) return;
     setSize(cvLeft,w,h); setSize(cvRight,w,h);
-    // left = mirror view
     ctxL.setTransform(1,0,0,1,0,0); ctxL.clearRect(0,0,w,h);
     ctxL.translate(w,0); ctxL.scale(-1,1); ctxL.drawImage(video,0,0,w,h);
     ctxL.setTransform(1,0,0,1,0,0);
-    // right = true view
     ctxR.setTransform(1,0,0,1,0,0); ctxR.clearRect(0,0,w,h);
     ctxR.drawImage(video,0,0,w,h);
   }
 
-  function drawSymmetry(){
-    const f = getSourceFrame();
-    if(!f) return;
-    const { w, h } = f, hw = Math.floor(w/2), rw = w - hw;
+  function halfComposite(ctx, src, side, w, h){
+    const hw = Math.floor(w/2), rw = w - hw;
+    ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,w,h);
+    if(side === 'left'){
+      ctx.drawImage(src, 0,0,hw,h, 0,0,hw,h);
+      mirrorH(ctx, w, () => ctx.drawImage(src, 0,0,hw,h, 0,0,hw,h));
+    } else {
+      ctx.drawImage(src, hw,0,rw,h, hw,0,rw,h);
+      mirrorH(ctx, w, () => ctx.drawImage(src, hw,0,rw,h, hw,0,rw,h));
+    }
+  }
+
+  function drawSymmetryDual(){
+    const f = getSourceFrame(); if(!f) return;
+    const { w, h } = f;
     setSize(cvLeft,w,h); setSize(cvRight,w,h);
-    // left-left composite
+    halfComposite(ctxL, srcCanvas, 'left', w, h);
+    halfComposite(ctxR, srcCanvas, 'right', w, h);
+  }
+
+  function drawSymmetrySingle(){
+    const f = getSourceFrame(); if(!f) return;
+    const { w, h } = f;
+    setSize(cvLeft,w,h);
+    halfComposite(ctxL, srcCanvas, symSide, w, h);
+  }
+
+  function drawDance(){
+    const f = getSourceFrame(); if(!f) return;
+    const { w, h } = f;
+    setSize(cvLeft,w,h);
     ctxL.setTransform(1,0,0,1,0,0); ctxL.clearRect(0,0,w,h);
-    ctxL.drawImage(srcCanvas, 0,0,hw,h, 0,0,hw,h);
-    ctxL.save(); ctxL.translate(w,0); ctxL.scale(-1,1);
-    ctxL.drawImage(srcCanvas, 0,0,hw,h, 0,0,hw,h); ctxL.restore();
-    // right-right composite
-    ctxR.setTransform(1,0,0,1,0,0); ctxR.clearRect(0,0,w,h);
-    ctxR.drawImage(srcCanvas, hw,0,rw,h, hw,0,rw,h);
-    ctxR.save(); ctxR.translate(w,0); ctxR.scale(-1,1);
-    ctxR.drawImage(srcCanvas, hw,0,rw,h, hw,0,rw,h); ctxR.restore();
+    if(danceAxis === 'v'){
+      halfComposite(ctxL, srcCanvas, danceSide, w, h);
+    } else if(danceAxis === 'h'){
+      const hh = Math.floor(h/2), rh = h - hh;
+      if(danceSide === 'left'){
+        ctxL.drawImage(srcCanvas, 0,0,w,hh, 0,0,w,hh);
+        mirrorV(ctxL, h, () => ctxL.drawImage(srcCanvas, 0,0,w,hh, 0,0,w,hh));
+      } else {
+        ctxL.drawImage(srcCanvas, 0,hh,w,rh, 0,hh,w,rh);
+        mirrorV(ctxL, h, () => ctxL.drawImage(srcCanvas, 0,hh,w,rh, 0,hh,w,rh));
+      }
+    } else { // quad kaleidoscope (top-left quadrant -> all four)
+      const hw = Math.floor(w/2), hh = Math.floor(h/2);
+      const q = () => ctxL.drawImage(srcCanvas, 0,0,hw,hh, 0,0,hw,hh);
+      q();                                              // TL
+      mirrorH(ctxL, w, q);                              // TR
+      mirrorV(ctxL, h, q);                              // BL
+      ctxL.save(); ctxL.translate(w,h); ctxL.scale(-1,-1); q(); ctxL.restore(); // BR
+    }
   }
 
   function renderLoop(){
     if(mode === 'compare') drawCompare();
-    else if(mode === 'symmetry') drawSymmetry();
+    else if(mode === 'symmetry') (symLayout === 'dual' ? drawSymmetryDual : drawSymmetrySingle)();
+    else if(mode === 'dance') drawDance();
     raf = requestAnimationFrame(renderLoop);
   }
   function startRender(){ if(!raf) raf = requestAnimationFrame(renderLoop); }
   function stopRender(){ if(raf){ cancelAnimationFrame(raf); raf = null; } }
 
   // ---- mode switching ----
+  function setStageWidth(single){
+    stageWrap.classList.toggle('single', single);
+    stageWrap.classList.toggle('dual-wide', !single);
+  }
+  function setActive(group, attr, val){
+    group.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b.getAttribute(attr) === val));
+  }
+
   function applyMode(){
-    stopFlipping();
-    stopRender();
+    stopFlipping(); stopRender();
     flipState = false;
     counter.classList.remove('on','live');
     video.style.transform = '';
+    challengeRow.classList.add('hidden'); speedRow.classList.add('hidden');
+    subRow.classList.add('hidden'); symLayoutGroup.classList.add('hidden');
+    symSideGroup.classList.add('hidden'); danceAxisGroup.classList.add('hidden');
+    labelMain.classList.add('hidden'); labelRight.classList.add('hidden');
+    seam.classList.add('hidden');
+
+    const single = (mode === 'challenge') || (mode === 'dance') || (mode === 'symmetry' && symLayout === 'single');
+    setStageWidth(single);
 
     if(mode === 'challenge'){
-      grid.classList.remove('dual');
-      frameRight.classList.add('hidden');
-      video.classList.remove('hidden');
-      cvLeft.classList.add('hidden');
-      labelMain.classList.add('hidden');
-      challengeRow.classList.remove('hidden');
-      speedRow.classList.remove('hidden');
-      seam.classList.toggle('hidden', !guideOn);
+      grid.classList.remove('dual'); frameRight.classList.add('hidden');
+      video.classList.remove('hidden'); cvLeft.classList.add('hidden');
+      challengeRow.classList.remove('hidden'); speedRow.classList.remove('hidden');
+      if(guideOn) seam.classList.remove('hidden');
       applyChallengeTransform();
-    } else {
-      grid.classList.add('dual');
-      frameRight.classList.remove('hidden');
-      video.classList.add('hidden');
-      cvLeft.classList.remove('hidden');
-      labelMain.classList.remove('hidden');
-      challengeRow.classList.add('hidden');
-      speedRow.classList.add('hidden');
-      seam.classList.add('hidden'); // dual divider handles the axis
-      if(mode === 'compare'){
-        labelMain.textContent = '거울 모습';
-        labelRight.textContent = '실제 모습';
-      } else {
-        labelMain.textContent = '왼쪽 대칭';
-        labelRight.textContent = '오른쪽 대칭';
-      }
-      if(started) startRender();
+      return;
     }
+
+    video.classList.add('hidden'); cvLeft.classList.remove('hidden');
+
+    if(mode === 'compare'){
+      grid.classList.add('dual'); frameRight.classList.remove('hidden');
+      labelMain.classList.remove('hidden'); labelRight.classList.remove('hidden');
+      labelMain.textContent = '거울 모습'; labelRight.textContent = '실제 모습';
+    } else if(mode === 'symmetry'){
+      subRow.classList.remove('hidden'); symLayoutGroup.classList.remove('hidden');
+      if(symLayout === 'dual'){
+        grid.classList.add('dual'); frameRight.classList.remove('hidden');
+        labelMain.classList.remove('hidden'); labelRight.classList.remove('hidden');
+        labelMain.textContent = '왼쪽 대칭'; labelRight.textContent = '오른쪽 대칭';
+      } else {
+        grid.classList.remove('dual'); frameRight.classList.add('hidden');
+        symSideGroup.classList.remove('hidden');
+        labelMain.classList.remove('hidden');
+        labelMain.textContent = symSide === 'left' ? '왼쪽 대칭' : '오른쪽 대칭';
+      }
+    } else if(mode === 'dance'){
+      grid.classList.remove('dual'); frameRight.classList.add('hidden');
+      subRow.classList.remove('hidden'); danceAxisGroup.classList.remove('hidden');
+      labelMain.classList.remove('hidden'); labelMain.textContent = '거울춤';
+    }
+    if(started) startRender();
   }
 
   function setMode(m){
     mode = m;
     tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.mode === m)));
-    if(started) applyMode();
-    else { // update which controls show even before camera starts
-      challengeRow.classList.toggle('hidden', m !== 'challenge');
-      speedRow.classList.toggle('hidden', m !== 'challenge');
+    applyMode();
+  }
+
+  // ---- manual flip (fullscreen spacebar / single-view) ----
+  function manualFlip(){
+    if(mode === 'challenge'){
+      if(running) stopFlipping();
+      flipState = !flipState; flipCount++;
+      counter.classList.add('on');
+      counterText.textContent = '뒤집기 ' + flipCount;
+      applyChallengeTransform(); pulseSeam();
+    } else if(mode === 'symmetry' && symLayout === 'single'){
+      symSide = symSide === 'left' ? 'right' : 'left';
+      setActive(symSideGroup, 'data-side', symSide);
+      labelMain.textContent = symSide === 'left' ? '왼쪽 대칭' : '오른쪽 대칭';
+    } else if(mode === 'dance'){
+      danceSide = danceSide === 'left' ? 'right' : 'left';
     }
   }
 
   // ---- capture ----
+  function isSingleCanvas(){ return mode === 'dance' || (mode === 'symmetry' && symLayout === 'single'); }
   function captureImage(){
     if(!started) return;
     let out;
@@ -571,6 +686,11 @@
       const x = out.getContext('2d');
       if(currentScaleX() < 0){ x.translate(w,0); x.scale(-1,1); }
       x.drawImage(video,0,0,w,h);
+    } else if(isSingleCanvas()){
+      const w = cvLeft.width, h = cvLeft.height;
+      if(!w) return;
+      out = document.createElement('canvas'); out.width = w; out.height = h;
+      out.getContext('2d').drawImage(cvLeft, 0, 0);
     } else {
       const w = cvLeft.width, h = cvLeft.height;
       if(!w) return;
@@ -600,16 +720,25 @@
   flipOnceBtn.addEventListener('click', () => {
     if(!started) return;
     if(running) stopFlipping();
-    flipState = !flipState;
-    flipCount++;
+    flipState = !flipState; flipCount++;
     counter.classList.add('on');
     counterText.textContent = '뒤집기 ' + flipCount;
-    applyChallengeTransform();
-    pulseSeam();
+    applyChallengeTransform(); pulseSeam();
   });
   speed.addEventListener('input', () => { updateSpeedLabel(); restartFlipTimer(); });
 
   tabs.forEach(t => t.addEventListener('click', () => setMode(t.dataset.mode)));
+
+  symLayoutGroup.querySelectorAll('.seg-btn').forEach(b => b.addEventListener('click', () => {
+    symLayout = b.dataset.layout; setActive(symLayoutGroup, 'data-layout', symLayout); applyMode();
+  }));
+  symSideGroup.querySelectorAll('.seg-btn').forEach(b => b.addEventListener('click', () => {
+    symSide = b.dataset.side; setActive(symSideGroup, 'data-side', symSide);
+    labelMain.textContent = symSide === 'left' ? '왼쪽 대칭' : '오른쪽 대칭';
+  }));
+  danceAxisGroup.querySelectorAll('.seg-btn').forEach(b => b.addEventListener('click', () => {
+    danceAxis = b.dataset.axis; setActive(danceAxisGroup, 'data-axis', danceAxis);
+  }));
 
   guideBtn.addEventListener('click', () => {
     guideOn = !guideOn;
@@ -625,21 +754,31 @@
   });
 
   fsBtn.addEventListener('click', () => {
-    const el = document.querySelector('.stage-wrap');
-    if(!document.fullscreenElement){
-      (el.requestFullscreen || el.webkitRequestFullscreen)?.call(el);
+    const fs = document.fullscreenElement || document.webkitFullscreenElement;
+    if(!fs){
+      (stageWrap.requestFullscreen || stageWrap.webkitRequestFullscreen)?.call(stageWrap);
     } else {
       (document.exitFullscreen || document.webkitExitFullscreen)?.call(document);
     }
   });
 
-  // keyboard: space toggles challenge
+  // keyboard: Space
   document.addEventListener('keydown', e => {
-    if(e.code === 'Space' && started && mode === 'challenge' && e.target.tagName !== 'INPUT'){
-      e.preventDefault();
+    if(e.code !== 'Space') return;
+    if(e.target && e.target.tagName === 'INPUT') return;
+    e.preventDefault();
+    if(e.repeat || !started) return;
+    const fs = document.fullscreenElement || document.webkitFullscreenElement;
+    if(fs){
+      manualFlip();
+    } else if(mode === 'challenge'){
       running ? stopFlipping() : startFlipping();
+    } else {
+      manualFlip();
     }
   });
+  // blur buttons after click so Space routes to the global handler
+  document.querySelectorAll('button').forEach(b => b.addEventListener('click', () => b.blur()));
 
   video.addEventListener('loadedmetadata', () => { if(mode !== 'challenge' && started) startRender(); });
   document.addEventListener('visibilitychange', () => { if(document.hidden) stopFlipping(); });
