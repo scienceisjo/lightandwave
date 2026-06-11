@@ -110,6 +110,43 @@ main{max-width:1180px;margin:0 auto;padding:30px 22px 90px}
 .hook .classroom b{color:var(--text)}
 .hook .cta{margin-top:16px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-weight:700;font-size:.88rem;color:var(--bg);border:none;background:linear-gradient(135deg,var(--cyan),var(--cyan-deep));padding:10px 16px;border-radius:11px;transition:.2s}
 .hook .cta:hover{transform:translateX(3px);box-shadow:0 10px 24px -10px rgba(90,167,240,.7)}
+.hook{cursor:pointer}
+.hook:hover{transform:translateY(-5px);border-color:var(--gold)}
+.hook .hook-expand{display:none}
+.hook.open .hook-expand{display:block}
+.hook .peek-toggle{margin-top:14px;display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:.84rem;color:var(--gold-deep);background:transparent;border:1.5px dashed var(--gold);padding:7px 14px;border-radius:10px;cursor:pointer;transition:.2s}
+.hook .peek-toggle:hover{background:rgba(148,100,0,.08)}
+.hook .peek-toggle .chev{transition:.25s;display:inline-block}
+.hook.open .peek-toggle .chev{transform:rotate(180deg)}
+.hook .pop-hint{position:absolute;top:14px;right:16px;font-size:.72rem;font-weight:800;color:var(--faint);padding:4px 10px;border-radius:999px;background:rgba(0,0,0,.04);border:1px solid var(--line);pointer-events:none}
+/* ===== 모달 ===== */
+.modal-veil{position:fixed;inset:0;background:rgba(36,31,24,.62);backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;z-index:1000;padding:5vh 16px;overflow-y:auto;animation:vfade .25s ease}
+.modal-veil.show{display:flex}
+@keyframes vfade{from{opacity:0}to{opacity:1}}
+.modal-card{position:relative;width:min(760px,100%);background:linear-gradient(165deg,#fffdf4,#f7f1e0);border-radius:22px;border:1px solid var(--line2);box-shadow:0 30px 80px -20px rgba(36,31,24,.5);padding:36px 32px 30px;animation:mpop .3s cubic-bezier(.2,1.2,.4,1)}
+@keyframes mpop{from{transform:scale(.92) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.modal-card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--accent,var(--gold));border-radius:22px 22px 0 0}
+.modal-close{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:1.2rem;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:.2s;z-index:2}
+.modal-close:hover{background:var(--rose);color:#fff;border-color:var(--rose);transform:rotate(90deg)}
+.modal-num{font-family:var(--font-mono);font-weight:700;font-size:.78rem;color:var(--faint);margin-bottom:6px}
+.modal-em{font-size:2.3rem;line-height:1;margin-bottom:10px;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
+.modal-card h3{font-family:var(--font-display);font-weight:400;font-size:1.7rem;line-height:1.18;letter-spacing:.3px;margin-bottom:16px}
+.modal-body{color:#3f382a;font-size:.96rem;line-height:1.65}
+.modal-body p{margin-top:12px}
+@media(max-width:600px){.modal-card{padding:28px 22px 22px}.modal-card h3{font-size:1.4rem}}
+/* ===== HOOK 00 큰 질문 인트로 ===== */
+.bigq{padding:24px 8px 6px;text-align:center}
+.bigq .lead-em{font-size:.92rem;font-weight:800;color:var(--gold-deep);letter-spacing:1.5px;margin-bottom:18px}
+.bigq .q{font-family:var(--font-display);font-weight:400;font-size:2rem;line-height:1.25;color:#221b10;margin:18px 0;padding:18px 12px;border-top:2px solid rgba(124,63,209,.3);border-bottom:2px solid rgba(124,63,209,.3)}
+.bigq .q em{font-style:normal;background:linear-gradient(120deg,transparent 60%,rgba(255,201,20,.45) 60%);padding:0 4px}
+.bigq .or{font-family:var(--font-mono);color:var(--muted);font-weight:700;font-size:.88rem;margin:6px 0}
+.bigq .more-btn{margin-top:24px;padding:13px 26px;font-weight:800;font-size:.95rem;color:#fff;background:linear-gradient(135deg,#7c3fd1,#5b28a3);border:none;border-radius:12px;cursor:pointer;box-shadow:0 12px 28px -10px rgba(124,63,209,.5);transition:.25s}
+.bigq .more-btn:hover{transform:translateY(-2px);box-shadow:0 16px 34px -10px rgba(124,63,209,.7)}
+.bigq .more-btn .chev{display:inline-block;margin-left:6px;transition:.25s}
+.bigq.expanded .more-btn{display:none}
+.bigq-rest{display:none;margin-top:24px;padding-top:20px;border-top:1px dashed var(--line2);animation:vfade .35s ease}
+.bigq.expanded .bigq-rest{display:block}
+@media(max-width:600px){.bigq .q{font-size:1.5rem}}
 /* ===== sim cards ===== */
 .lab-grid{display:grid;gap:26px;margin-top:26px}
 .sim-card{border-radius:22px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:linear-gradient(165deg,var(--surface2),var(--surface))}
@@ -507,45 +544,48 @@ footer{border-top:3px double var(--line2)}
     <div class="qm-note">※ 등록한 질문은 화면을 새로고침하면 사라져요. 마음에 드는 질문은 꼭 <b>활동지</b>에 옮겨 적자!</div>
   </div>
 
+  <div class="reveal r2" style="margin-top:14px;font-size:.88rem;color:var(--muted);text-align:center">💡 <b>카드를 클릭</b>하면 자세한 내용이 팝업으로 펼쳐집니다.</div>
   <div class="hooks">
-    <article class="hook reveal r3" style="--accent:var(--rose)">
+    <article class="hook reveal r2" style="--accent:var(--violet)" data-hook="hook00">
+      <span class="num">HOOK 00 · 수업 여는 활동</span><span class="emoji">🌊</span>
+      <h3>본다는 게 뭘까?<br><span style="font-size:.78em;color:var(--muted);font-weight:700">눈을 감고도 해변이 보이는 이유</span></h3>
+      <p class="hook-body" style="font-size:.88rem;color:var(--muted);margin-top:8px">눈으로 본다? 뇌로 본다? 평생 한 번도 의심해 본 적 없는 질문으로 단원을 연다. <b>카드를 클릭</b>해 핵심 질문과 수업 흐름을 보자.</p>
+      <div class="pop-hint">👆 클릭 · 팝업</div>
+    </article>
+    <article class="hook reveal r3" style="--accent:var(--rose)" data-hook="hook01">
       <span class="num">HOOK 01</span><span class="emoji">🪞</span>
       <img class="hook-img" src="hook-m1.png" alt="" onerror="this.style.display='none';">
       <h3>당신은 평생, 남들이 보는<br>당신 얼굴을 본 적이 없다</h3>
-      <p class="hook-body">거울 속 내 얼굴은 좌우가 바뀐 것처럼 보이는 <b>상</b>이고(사실 거울은 앞뒤를 뒤집을 뿐!), 셀카조차 카메라가 한 번 더 변환한 모습이다. '남들이 보는 그대로의 내 얼굴'을 직접 본 사람은 정작 나 자신뿐 — 거울로도, 사진으로도 그 진짜를 본 적이 없다.</p>
-      <div class="classroom">교실 연결 · 활동지 '더 생각해 보기'와 직결. \"거울은 정말 좌우를 바꿀까?\"라는 질문을 던지고 <b>📖 개념 정리의 3D 글자 시뮬레이터</b>로 진실(앞뒤 반전 + 내 회전)을 파헤친 뒤, \"그럼 어느 쪽이 진짜 나인가\" 토론으로 이어 간다.</div>
+      <p class="hook-body" style="font-size:.88rem;color:var(--muted);margin-top:8px">거울 속 내 얼굴은 좌우가 바뀐 듯 보이는 상. 사진은 또 카메라가 변환한 모습. 그럼 진짜 내 얼굴은…?</p>
+      <div class="pop-hint">👆 클릭 · 팝업</div>
     </article>
-    <article class="hook reveal r4" style="--accent:var(--violet)">
+    <article class="hook reveal r3" style="--accent:var(--violet)" data-hook="hook02">
       <span class="num">HOOK 02</span><span class="emoji">👻</span>
       <img class="hook-img" src="hook-m2.png" alt="" onerror="this.style.display='none';">
-      <h3>거울 뒤엔 빛이<br>단 한 줄기도 없다</h3>
-      <p class="hook-body">거울 뒤 그 자리에 빛은 실제로 도달하지 않는다. 그런데도 우리 눈(정확히는 뇌)은 그곳에 물체가 있다고 <b>착각</b>한다. 보이는 것과 있는 것이 다를 수 있다는, 과학에서 가장 짜릿한 사실 중 하나.</p>
-      <div class="classroom">교실 연결 · 단원 여는 질문 그 자체. "뇌는 왜 속을까?"라는 질문을 남겨 두면 <b>'왜 보일까?' 탭</b>의 심화 학습 동기가 된다.</div>
-      <button class="cta" data-goto="why">왜 보일까? 탭으로 →</button>
+      <h3>거울 뒤엔 아무것도 없는데</h3>
+      <p class="hook-body" style="font-size:.88rem;color:var(--muted);margin-top:8px">거울 뒤 30 cm에 또렷이 보이는 그것 — 빛은 진짜 그곳에서 오는 걸까? "허상"의 정체를 파헤친다.</p>
+      <div class="pop-hint">👆 클릭 · 팝업</div>
     </article>
-    <article class="hook reveal r5" style="--accent:var(--gold)">
+    <article class="hook reveal r3" style="--accent:var(--gold)" data-hook="hook03">
       <span class="num">HOOK 03</span><span class="emoji">🚑</span>
       <img class="hook-img" src="hook-m3.png" alt="" onerror="this.style.display='none';">
-      <h3>구급차 글자가<br>거꾸로 쓰여 있는 이유</h3>
-      <p class="hook-body">구급차 앞면에는 <b>ƎƆИA⅃UᙠMA</b>처럼 뒤집힌 글자가 적혀 있다. 앞차 운전자가 <b>백미러(거울)</b>로 보면 똑바로 읽히기 때문! 거울 대칭을 일상에서 거꾸로 이용한 디자인이다.</p>
-      <div class="classroom">교실 연결 · 활동지 ②의 규칙(㉠㉡㉢)+반전이 그대로 게임의 단서가 된다. 거울 검수관에서 '반전 누락' 위조를 잡아낸 뒤, "정말 뒤집힌 건 좌우일까?"로 핵심 질문을 던진다.</div>
-      <button class="cta" data-goto="decode">거울 검수관 출동하기 →</button>
+      <h3>구급차 앞 글자는 왜<br>거꾸로 쓰여 있을까</h3>
+      <p class="hook-body" style="font-size:.88rem;color:var(--muted);margin-top:8px">앞차 운전자가 백미러로 봤을 때 똑바로 읽히도록 — 거울의 "뒷모습 보여 주기" 성질을 거꾸로 이용한 디자인.</p>
+      <div class="pop-hint">👆 클릭 · 팝업</div>
     </article>
-    <article class="hook reveal r6" style="--accent:var(--cyan)">
+    <article class="hook reveal r3" style="--accent:var(--cyan)" data-hook="hook04">
       <span class="num">HOOK 04</span><span class="emoji">♾️</span>
       <img class="hook-img" src="hook-m4.png" alt="" onerror="this.style.display='none';">
-      <h3>거울 두 장이면<br>무한이 열린다</h3>
-      <p class="hook-body">엘리베이터 양쪽 거울 사이에 서면 내 모습이 끝없이 이어진다. 상이 또 상을 만들기 때문. 두 거울 사이 <b>각도를 줄일수록 상의 개수는 늘어난다</b> — 만화경의 원리다. <span class="adv-out">교육과정 밖</span></p>
-      <div class="classroom">교실 연결 · '왜 보일까?' 탭의 심화 시뮬레이터에서 각도 슬라이더로 직접 확인할 수 있다.</div>
-      <button class="cta" data-goto="why">무한 거울 실험하러 가기 →</button>
+      <h3>거울 두 개를 마주 놓으면<br>왜 무한히 보일까</h3>
+      <p class="hook-body" style="font-size:.88rem;color:var(--muted);margin-top:8px">엘리베이터에서 본 그 무한 풍경 — 상이 상을 비추고, 그 상이 또… 만화경의 비밀까지.</p>
+      <div class="pop-hint">👆 클릭 · 팝업</div>
     </article>
-    <article class="hook reveal r6" style="--accent:var(--green)">
+    <article class="hook reveal r3" style="--accent:var(--green)" data-hook="hook05">
       <span class="num">HOOK 05</span><span class="emoji">📸</span>
       <img class="hook-img" src="hook-m5.png" alt="" onerror="this.style.display='none';">
       <h3>남이 찍어준 내 사진은<br>왜 어색할까</h3>
-      <p class="hook-body">친구가 찍어준 사진 속 나는 어딘가 낯설다. 그런데 셀카 <b>미리보기</b>의 나는 자연스럽다 — 왜? 휴대폰 미리보기는 <b>거울 모드</b>(거울 속 나), 저장된 사진은 <b>사진 모드</b>(남이 보는 나)이기 때문. 아이폰의 <b>'전면 카메라 좌우 반전'</b> 설정이 바로 이 둘을 바꾸는 스위치다. 내가 매일 보는 건 거울 속 나 — 그래서 <b>진짜 내 모습(사진)이 오히려 어색하다!</b></p>
-      <div class="classroom">교실 연결 · "둘 중 진짜 나는 누구일까?"로 열고, 📸 <b>사진 속 나</b> 탭의 시뮬레이터에서 비대칭 얼굴 비교로 궁금증을 해결한다.</div>
-      <button class="cta" data-goto="phone">궁금증 해결하러 →</button>
+      <p class="hook-body" style="font-size:.88rem;color:var(--muted);margin-top:8px">셀카 미리보기와 저장된 사진이 다른 이유 — 거울 모드 vs 사진 모드. 매일 본 건 거울 속의 나였다!</p>
+      <div class="pop-hint">👆 클릭 · 팝업</div>
     </article>
   </div>
 </section>
@@ -829,10 +869,27 @@ footer{border-top:3px double var(--line2)}
         <p class="why-text" style="margin-top:18px">이번엔 <b>사람</b>으로 — 거울 앞에 <b>오른손에 깃발🚩을 든 사람</b>이 서 있다. 거울 속 상을 보면: 깃발은 <b>둘 다 화면의 같은 쪽</b>(좌우 그대로!), 위아래도 그대로. 달라진 건 단 하나 — <b>얼굴(앞)이 서로 마주 본다</b>. 즉 거울 면에 수직인 <b>앞뒤만 반전</b>된 것! 발밑의 좌표 화살표(교과서 보충 그림)도 함께 보자: 🟢y(좌우)·🔵z(위아래)는 같은 방향, 🔴x(앞뒤)만 반대다. 깃발에서 출발한 <b>빛이 거울에서 반사되어 눈으로</b> 들어가는 경로(금색)와, 거울 뒤 상으로 이어지는 연장선(파란 점선)도 흐른다.</p>
         <div id="coord3d" style="height:330px;border-radius:14px;background:#fdfbf4;border:1px solid var(--line2);cursor:grab;touch-action:none;overflow:hidden;margin-top:6px"></div>
         <div class="why-verdict ok" style="margin-top:10px">드래그해 빙 돌려 보자 — 어느 각도에서도 <b>깃발 손은 같은 쪽, 얼굴만 마주 봄</b>. 거울에 생기는 상은 <b>거울을 중심으로 물체와 대칭</b>이고, 그 대칭의 정체는 좌우가 아니라 <b>앞뒤 반전</b>이다!</div>
-        <div style="display:flex;flex-direction:column;align-items:center;margin-top:18px;gap:8px">
-          <div style="font-weight:800;font-size:.9rem;color:#7a5300">🎬 좌우반전 챌린지 — 보고 직접 따라 해 보기!</div>
-          <div style="width:min(300px,86%);aspect-ratio:9/16;border:3px solid var(--lead);border-radius:18px;overflow:hidden;box-shadow:0 14px 36px -16px rgba(60,48,20,.4)">
-            <iframe src="https://www.youtube.com/embed/3IWs5QvSv10" title="좌우반전 챌린지" style="width:100%;height:100%;border:none;display:block" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div style="margin-top:20px">
+          <div style="font-weight:900;font-size:.95rem;color:#7a5300;margin-bottom:10px;text-align:center">🎬 더 보고 깊이 이해하기 — 영상 3편</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;align-items:start">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+              <div style="aspect-ratio:9/16;width:100%;max-width:260px;border:3px solid var(--lead);border-radius:18px;overflow:hidden;box-shadow:0 14px 36px -16px rgba(60,48,20,.4)">
+                <iframe src="https://www.youtube.com/embed/3IWs5QvSv10" title="좌우반전 챌린지" style="width:100%;height:100%;border:none;display:block" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+              <div style="font-weight:800;font-size:.82rem;color:#7a5300;text-align:center">🪞 좌우반전 챌린지<br><span style="font-weight:600;color:var(--muted);font-size:.76rem">직접 따라 해 보기</span></div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+              <div style="aspect-ratio:9/16;width:100%;max-width:260px;border:3px solid var(--lead);border-radius:18px;overflow:hidden;box-shadow:0 14px 36px -16px rgba(60,48,20,.4)">
+                <iframe src="https://www.youtube.com/embed/26Y12rJ03xo" title="거울 속 글자 쇼츠" style="width:100%;height:100%;border:none;display:block" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+              <div style="font-weight:800;font-size:.82rem;color:#7a5300;text-align:center">🔍 짧게 보는 원리<br><span style="font-weight:600;color:var(--muted);font-size:.76rem">쇼츠로 한 번 더</span></div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;grid-column:span 1">
+              <div style="aspect-ratio:16/9;width:100%;border:3px solid var(--lead);border-radius:14px;overflow:hidden;box-shadow:0 14px 36px -16px rgba(60,48,20,.4)">
+                <iframe src="https://www.youtube.com/embed/-CwWMPS16tY" title="거울 좌우반전 깊이 이해" style="width:100%;height:100%;border:none;display:block" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+              <div style="font-weight:800;font-size:.82rem;color:#7a5300;text-align:center">🧠 본격 해설<br><span style="font-weight:600;color:var(--muted);font-size:.76rem">제대로 파고들기</span></div>
+            </div>
           </div>
         </div>
         <div class="qbox" style="margin-top:16px">
@@ -1708,8 +1765,8 @@ function raySetStep(s){
   sndClick();
 }
 document.querySelectorAll('#tab-lab2 .step-btn').forEach(b=>b.addEventListener('click',()=>raySetStep(+b.dataset.step)));
-/* ---------- 🐶 반려동물 사진 공유 로더 (obj-01 ~ obj-30, png→jpg 폴백) ----------
-   깃허브 같은 폴더에 obj-01.png(또는 .jpg) ~ obj-30.png 업로드하면
+/* ---------- 🐶 반려동물 사진 공유 로더 (Pet/pet1.jpg ~ pet6.jpg) ----------
+   깃허브 같은 폴더의 Pet/ 하위에 pet1.jpg ~ pet6.jpg 6장을 올리면
    ① 탐구1 '상의 특징' 실험과 ② 탐구2 '작도할 물체 고르기' 양쪽에 자동 등장 */
 const RAYOBJ={img:null,aspect:1};
 const PETS=[];
@@ -1734,8 +1791,8 @@ const PETS=[];
     b.addEventListener('click',()=>onClick(b,im));
     pick.appendChild(b);
   }
-  for(let i=1;i<=30;i++){
-    const n=String(i).padStart(2,'0');
+  // Pet/pet1.jpg ~ pet6.jpg 6장 (jpg→png 폴백)
+  for(let i=1;i<=6;i++){
     const im=new Image();let tried=0;
     im.onload=()=>{
       PETS.push(im);
@@ -1743,8 +1800,8 @@ const PETS=[];
       featPick.style.display='flex';
       addThumb(featPick,im,(b,img)=>featSel(img));
     };
-    im.onerror=()=>{if(tried===0){tried=1;im.src='obj-'+n+'.jpg';}};
-    im.src='obj-'+n+'.png';
+    im.onerror=()=>{if(tried===0){tried=1;im.src='Pet/pet'+i+'.png';}};
+    im.src='Pet/pet'+i+'.jpg';
   }
 })();
 $('rayNormal').addEventListener('change',drawRay);
@@ -2611,6 +2668,103 @@ $('handBtn').addEventListener('click',()=>{
   $('handBtn').textContent=HAND.up?'🙇 오른손 내리기':'🙋 오른손 들어 보기';
 });
 
+
+/* ============================================================
+   HOOK 카드 → 모달 팝업 시스템
+   ============================================================ */
+const HOOK_CONTENT={
+  hook00:{accent:'var(--violet)',num:'HOOK 00 · 수업 여는 활동',emoji:'🌊',title:'본다는 게 뭘까?',
+    big:`<div class="bigq" id="bigq00">
+      <div class="lead-em">이 단원을 여는 두 가지 질문</div>
+      <div class="q"><em>우리는 눈으로 볼까,<br>아니면 뇌로 볼까?</em></div>
+      <div class="or">그리고…</div>
+      <div class="q"><em>선천적 시각장애인은<br>'빨간 사과'를 떠올릴 수 있을까?</em></div>
+      <button class="more-btn" id="bigqMore">자세히 보기 <span class="chev">▾</span></button>
+      <div class="bigq-rest">
+        <p style="text-align:left">눈으로 본다? 뇌로 본다? 평생 한 번도 의심해 본 적 없는 질문을 던지며 단원을 연다. <b>눈을 감고 해변을 떠올려 보자.</b> 누군가는 사진처럼 또렷이, 누군가는 흐릿하게 — 같은 말을 들었는데 '보이는 정도'가 사람마다 다르다. 그런데 눈을 감았는데 어떻게 "보였다"고 말할 수 있을까?</p>
+        <p style="text-align:left">이 단원은 결국 그 질문을 향한다. <b>빛 → 눈 → 전기신호 → 뇌의 해석 → "보인다"</b>. 뇌는 평생 사과를 본 적도, 친구 얼굴을 본 적도 없다 — 오직 전기신호만 받았을 뿐.</p>
+        <div style="margin-top:18px;padding:16px;border-radius:12px;background:rgba(124,63,209,.07);border:1px solid rgba(124,63,209,.25);text-align:left">
+          <div style="font-weight:900;font-size:.94rem;color:#5b28a3;margin-bottom:10px">🎯 수업 흐름 (선생님용 · 11단계)</div>
+          <div style="font-size:.86rem;line-height:1.7;color:#3f382a">① <b>눈 감기</b> → 해변 상상(5초) → ② <b>1~5점 손가락 투표</b> → ③ "사람마다 다르다고?!" 충격 → ④ <b>"눈을 감았는데 왜 보였다고?"</b> → ⑤ '본다 = ?' 칠판에 받기 → ⑥ "눈 없으면 못 보나? 근데 방금 봤잖아?" 반전 → ⑦ <b>빛→눈→전기신호→뇌</b> 칠판 → ⑧ "뇌는 평생 아무것도 본 적이 없다" 두 번째 충격 → ⑨ 후천적 실명 시 엄마 얼굴 떠올릴 수 있을까? → ⑩ <b>선천적 시각장애인은 빨간 사과를 상상할 수 있을까?</b>(토론) → ⑪ 우리는 눈으로 볼까, 뇌로 볼까?</div>
+        </div>
+        <div style="margin-top:16px;padding:14px 16px;border-radius:12px;background:linear-gradient(135deg,rgba(124,63,209,.08),rgba(37,111,214,.06));border:1px solid rgba(124,63,209,.25)">
+          <div style="font-weight:900;font-size:.92rem;color:#5b28a3;margin-bottom:10px">📋 칠판에 — '본다'의 진짜 정체</div>
+          <div style="display:flex;justify-content:center;gap:10px;align-items:center;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-weight:700;color:#241f18;font-size:.82rem">
+            <span style="padding:7px 12px;border-radius:8px;background:#fff3c2;border:1px solid #d4a843">💡 빛</span>
+            <span style="color:#7c3fd1;font-size:1.2rem">→</span>
+            <span style="padding:7px 12px;border-radius:8px;background:#e3eeff;border:1px solid #6f9bd9">👁 눈</span>
+            <span style="color:#7c3fd1;font-size:1.2rem">→</span>
+            <span style="padding:7px 12px;border-radius:8px;background:#ffe0e6;border:1px solid #d97a8c">⚡ 전기신호</span>
+            <span style="color:#7c3fd1;font-size:1.2rem">→</span>
+            <span style="padding:7px 12px;border-radius:8px;background:#e0f0e4;border:1px solid #7ab48a">🧠 뇌의 해석</span>
+            <span style="color:#7c3fd1;font-size:1.2rem">→</span>
+            <span style="padding:7px 12px;border-radius:8px;background:#2b2317;color:#fff;border:1px solid #241f18">"보인다"</span>
+          </div>
+        </div>
+      </div>
+    </div>`},
+  hook01:{accent:'var(--rose)',num:'HOOK 01',emoji:'🪞',title:'당신은 평생, 남들이 보는 당신 얼굴을 본 적이 없다',
+    body:`<p>거울 속 내 얼굴은 좌우가 바뀐 것처럼 보이는 <b>상</b>이고(사실 거울은 앞뒤를 뒤집을 뿐!), 셀카조차 카메라가 한 번 더 변환한 모습이다. '남들이 보는 그대로의 내 얼굴'을 직접 본 사람은 정작 나 자신뿐 — 거울로도, 사진으로도 그 진짜를 본 적이 없다.</p>
+    <div class="classroom" style="margin-top:14px"><b>교실 연결</b> · 이 충격을 도입으로 던지면 "그럼 진짜 내 얼굴은 어디서 볼 수 있죠?"라는 질문이 폭발한다. 답은 단원 끝에서 — <b>📸 사진 속 나</b> 탭에서 직접 확인하게 된다.</div>`},
+  hook02:{accent:'var(--violet)',num:'HOOK 02',emoji:'👻',title:'거울 뒤엔 아무것도 없는데, 왜 보일까',
+    body:`<p>거울 뒤 30 cm 지점에 또렷이 보이는 그것 — 빛은 진짜 그곳에서 오는 걸까? 거울 뒤를 손으로 더듬어도 아무것도 없다. 그런데 분명히 '있는 것처럼' 보인다. 이것이 <b>허상(虛像)</b>의 정체이고, 이 단원의 가장 큰 미스터리다.</p>
+    <div class="classroom" style="margin-top:14px"><b>교실 연결</b> · 학생들에게 "거울 뒤를 만질 수 있다면 뭐가 있을까?"라고 물어 보자. 직관 vs 실제의 충돌이 학습의 동력이 된다.</div>`},
+  hook03:{accent:'var(--gold)',num:'HOOK 03',emoji:'🚑',title:'구급차 앞면 글자는 왜 거꾸로 쓰여 있을까',
+    body:`<p>구급차 앞면에는 <b>AMBULANCE</b>가 좌우로 뒤집힌 채 쓰여 있다. 왜? 앞차 운전자가 <b>백미러(거울)</b>로 봤을 때 똑바로 읽히도록 — 거울이 항상 "뒷모습"을 보여 준다는 성질을 거꾸로 이용한 디자인이다. 한국에서는 "119 구급대" 글자가 같은 방식으로 쓰여 있다.</p>
+    <div class="classroom" style="margin-top:14px"><b>교실 연결</b> · 📖 개념 정리 탭의 <b>3D 글자 시뮬레이터</b>와 실제 구급차 사진을 비교해 보면 "왜 굳이 이런 고생을?"의 답이 한눈에 나온다.</div>
+    <a class="mbtn" href="https://www.sobangnews.kr/news/articleView.html?idxno=36456" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;margin-top:14px">🚑 실제 구급차 거울 문자 기사 보기 ↗</a>`},
+  hook04:{accent:'var(--cyan)',num:'HOOK 04',emoji:'♾️',title:'거울 두 개를 마주 놓으면 왜 무한히 보일까',
+    body:`<p>엘리베이터에서 본 그 무한 풍경 — 거울이 만든 상이 또 다른 거울에 비치며 <b>상의 상</b>이 생긴다. 그 상이 또 비치고… 두 거울이 평행에 가까울수록 상의 개수는 무한대로 늘어난다. 만화경(角度 60°)도 같은 원리로 6각 대칭 무늬를 만든다.</p>
+    <div class="classroom" style="margin-top:14px"><b>교실 연결</b> · 🌙 교과서 밖 탭의 <b>두 거울의 마법</b> 시뮬레이터에서 각도를 직접 바꿔 보고, 상 개수 공식 <b>360°÷θ − 1</b>의 의미를 발견하게 된다.</div>`},
+  hook05:{accent:'var(--green)',num:'HOOK 05',emoji:'📸',title:'남이 찍어준 내 사진은 왜 어색할까',
+    body:`<p>친구가 찍어준 사진 속 나는 어딘가 낯설다. 그런데 셀카 <b>미리보기</b>의 나는 자연스럽다 — 왜? 휴대폰 미리보기는 <b>거울 모드</b>(거울 속 나), 저장된 사진은 <b>사진 모드</b>(남이 보는 나)이기 때문. 아이폰의 <b>'전면 카메라 좌우 반전'</b> 설정이 바로 이 둘을 바꾸는 스위치다.</p>
+    <p>내가 매일 보는 건 거울 속 나 — 그래서 <b>진짜 내 모습(사진)이 오히려 어색하다!</b></p>
+    <div class="classroom" style="margin-top:14px"><b>교실 연결</b> · "둘 중 진짜 나는 누구일까?"로 열고, 📸 <b>사진 속 나</b> 탭의 시뮬레이터에서 비대칭 얼굴 비교로 궁금증을 해결한다.</div>
+    <button class="mbtn" data-goto="phone" style="margin-top:14px">📸 사진 속 나 탭으로 이동 →</button>`}
+};
+function openHook(key){
+  const h=HOOK_CONTENT[key];if(!h)return;
+  const body=$('hookModalBody');
+  const card=$('hookModalCard');
+  card.style.setProperty('--accent',h.accent);
+  let html='<div class="modal-num">'+h.num+'</div>';
+  html+='<div class="modal-em">'+h.emoji+'</div>';
+  html+='<h3>'+h.title+'</h3>';
+  if(h.big){html+=h.big;}
+  else{html+='<div class="modal-body">'+h.body+'</div>';}
+  body.innerHTML=html;
+  $('hookModal').classList.add('show');
+  document.body.style.overflow='hidden';
+  // HOOK 00 — '자세히 보기' 토글
+  const moreBtn=$('bigqMore');
+  if(moreBtn){
+    moreBtn.addEventListener('click',()=>{
+      $('bigq00').classList.toggle('expanded');
+      sndClick();
+    });
+  }
+  // 모달 안 data-goto 버튼
+  body.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>{
+    closeHook();const t=b.dataset.goto;
+    document.querySelector('[data-tab="'+t+'"]').click();
+    document.getElementById('tab-'+t).scrollIntoView({behavior:'smooth',block:'start'});
+  }));
+  sndClick();
+}
+function closeHook(){
+  $('hookModal').classList.remove('show');
+  document.body.style.overflow='';
+}
+document.querySelectorAll('[data-hook]').forEach(card=>{
+  card.addEventListener('click',()=>openHook(card.dataset.hook));
+  card.setAttribute('tabindex','0');
+  card.setAttribute('role','button');
+  card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openHook(card.dataset.hook);}});
+});
+$('hookModalClose').addEventListener('click',closeHook);
+$('hookModal').addEventListener('click',closeHook);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('hookModal').classList.contains('show'))closeHook();});
+
 /* ---------- 별빛 배경: 빛의 실험실 ---------- */
 (function(){
   const cv=$('bgStars');if(!cv)return;
@@ -3083,5 +3237,12 @@ document.addEventListener('DOMContentLoaded',()=>{
   drawFeat();drawQuiz();
 });
 </script>
+
+<div class="modal-veil" id="hookModal" role="dialog" aria-modal="true">
+  <div class="modal-card" id="hookModalCard" onclick="event.stopPropagation()">
+    <button class="modal-close" id="hookModalClose" aria-label="닫기">✕</button>
+    <div id="hookModalBody"></div>
+  </div>
+</div>
 </body>
 </html>
