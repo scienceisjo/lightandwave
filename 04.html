@@ -242,6 +242,33 @@ input[type=range].rng::-moz-range-thumb{width:24px;height:24px;border-radius:50%
 .yt-slot{margin-top:16px;border:2px dashed var(--line2);border-radius:13px;padding:24px 18px;text-align:center;color:var(--faint);font-size:.85rem;line-height:1.7}
 .yt-slot .ys-ico{font-size:1.6rem;display:block;margin-bottom:4px;opacity:.7}
 .yt-slot code{font-family:var(--font-mono);font-size:.76rem;color:var(--gold-soft);background:#eef3fe;padding:2px 7px;border-radius:6px}
+.prep-grid{display:flex;flex-wrap:wrap;gap:10px}
+.prep-item{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:700;color:var(--text);background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:9px 13px}
+.img-slot{margin-top:16px;border:2px dashed var(--line2);border-radius:13px;padding:22px 18px;text-align:center;color:var(--faint);font-size:.84rem;line-height:1.7;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(0,0,0,.012) 10px,rgba(0,0,0,.012) 20px)}
+.img-slot .is-ico{font-size:1.7rem;display:block;margin-bottom:4px;opacity:.7}
+.img-slot code{font-family:var(--font-mono);font-size:.74rem;color:var(--gold-soft);background:#eef3fe;padding:2px 7px;border-radius:6px}
+.fig-box{margin-top:16px;border:1px solid var(--line);border-radius:14px;background:#fcfdff;padding:14px 12px 12px;text-align:center}
+.fig-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+.fig-cap{font-size:.8rem;color:var(--muted);margin-top:8px;font-weight:700;line-height:1.5}
+.fig-cap code{font-family:var(--font-mono);font-size:.72rem;color:var(--gold-soft);background:#eef3fe;padding:1px 6px;border-radius:5px}
+.layout-note{font-size:.9rem;font-weight:700;color:var(--text);background:#eef3fe;border:1px solid #d8e3fb;border-radius:11px;padding:11px 14px;margin-bottom:14px}
+.proc{list-style:none;counter-reset:proc;padding:0;margin:0 0 6px}
+.proc li{counter-increment:proc;position:relative;padding:12px 14px 12px 46px;font-size:.92rem;color:var(--text);line-height:1.55;border-bottom:1px solid rgba(0,0,0,.04)}
+.proc li:last-child{border-bottom:none}
+.proc li::before{content:counter(proc);position:absolute;left:12px;top:11px;width:24px;height:24px;display:grid;place-items:center;border-radius:8px;background:var(--gold);color:var(--bg);font-family:var(--font-mono);font-weight:700;font-size:.82rem}
+.obs-tag{display:inline-block;font-size:.72rem;font-weight:700;color:var(--bg);background:var(--cyan);border-radius:6px;padding:2px 8px;margin-right:6px}
+.cau{list-style:none;padding:0;margin:0}
+.cau li{position:relative;padding:9px 12px 9px 22px;font-size:.9rem;color:var(--text);line-height:1.5;border-bottom:1px solid rgba(0,0,0,.04)}
+.cau li:last-child{border-bottom:none}
+.cau li::before{content:"\2022";position:absolute;left:6px;top:9px;color:var(--gold);font-weight:800}
+.revbtn{margin-top:4px;font-family:var(--font-body);font-weight:700;font-size:.82rem;cursor:pointer;background:transparent;border:1px dashed var(--line2);color:var(--muted);padding:9px 14px;border-radius:9px;transition:.18s}
+.revbtn:hover{color:var(--text);border-color:var(--gold)}
+.result-table{width:100%;border-collapse:collapse;font-size:.86rem;margin-bottom:14px}
+.result-table thead th{text-align:center;color:var(--muted);font-weight:700;font-size:.8rem;padding:9px 8px;border-bottom:1px solid var(--line2);background:var(--bg2)}
+.result-table tbody th{text-align:left;color:var(--text);font-weight:800;white-space:nowrap;background:transparent;padding:9px 12px 9px 0;border-bottom:1px solid rgba(0,0,0,.05);vertical-align:top}
+.result-table td{padding:9px 10px;border-bottom:1px solid rgba(0,0,0,.05);color:var(--text);line-height:1.5;vertical-align:top}
+.result-table td.hide{color:transparent;background:repeating-linear-gradient(45deg,#eef1f6,#eef1f6 7px,#e3e7ee 7px,#e3e7ee 14px);border-radius:6px;user-select:none}
+.result-table.show td.hide{color:var(--text);background:transparent}
 footer{max-width:min(1500px,94vw);margin:0 auto;padding:30px 22px 50px;color:var(--faint);font-size:.8rem;border-top:1px solid var(--line);text-align:center}
 footer .fdot{color:var(--gold)}
 .mcq{display:grid;gap:8px;margin-top:10px}
@@ -295,6 +322,7 @@ footer{border-top:1px solid var(--line)}
     </div>
     <nav class="tabs">
       <button class="tab-btn active" data-tab="intro"><span class="ico">🥄</span>도입</button>
+      <button class="tab-btn" data-tab="guide"><span class="ico">🧪</span>탐구 안내서</button>
       <button class="tab-btn" data-tab="mirror"><span class="ico">🪞</span>거울 실험실</button>
       <button class="tab-btn" data-tab="lens"><span class="ico">🔍</span>렌즈 실험실</button>
       <button class="tab-btn" data-tab="concept"><span class="ico">📖</span>개념 정리</button>
@@ -383,6 +411,121 @@ footer{border-top:1px solid var(--line)}
   </div>
 </section>
 
+<!-- ================= 탐구 안내서 ================= -->
+<section class="tab-panel" id="tab-guide">
+  <div class="reveal r1" style="margin-bottom:18px">
+    <span class="eyebrow">탐구 안내 · 비상교육 중학 과학 2 · 100~101쪽</span>
+    <h2 class="section-title">탐구 안내서 — 스마트 기기로 상 촬영하기 <span class="ws-chip">📄 교과서 탐구</span></h2>
+    <p class="lead">볼록·오목 거울과 볼록·오목 렌즈 앞(또는 뒤)에 물체를 놓고 <b>스마트 기기로 상을 촬영</b>하며, 거리에 따라 상의 <b>크기·모양</b>이 어떻게 변하는지 관찰하고 비교한다. 아래 순서와 주의사항을 그대로 따라 해 보자.</p>
+  </div>
+
+  <div class="qbox cyanq reveal r2" style="margin-bottom:18px">
+    <span class="qtag">무엇을 알아볼까</span>
+    <p>여러 가지 <b>거울과 렌즈에 의해 생기는 상</b>을 관찰하고, 그 <b>특징(크기·모양)을 비교</b>할 수 있다.</p>
+  </div>
+
+  <!-- 준비물 -->
+  <div class="cblock reveal r2" style="margin-bottom:18px">
+    <div class="cblock-head"><div class="cn">🧰</div><h3>준비물</h3></div>
+    <div class="cblock-body">
+      <div class="prep-grid">
+        <div class="prep-item">🪞<span>볼록 거울</span></div>
+        <div class="prep-item">🥄<span>오목 거울</span></div>
+        <div class="prep-item">🔍<span>볼록 렌즈</span></div>
+        <div class="prep-item">👓<span>오목 렌즈</span></div>
+        <div class="prep-item">🧸<span>물체(인형 등)</span></div>
+        <div class="prep-item">📱<span>스마트 기기</span></div>
+        <div class="prep-item">🛠️<span>스마트 기기 거치대</span></div>
+      </div>
+      <div class="fig-box"><svg viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="40" y1="172" x2="660" y2="172" stroke="#d4d4d8" stroke-width="2.5"/><text x="350" y="24" font-size="13.5" font-weight="700" fill="#3f3f46" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">실험 장치 — 카메라 · 물체 · 거울을 일직선으로 정렬</text><line x1="95" y1="92" x2="615" y2="92" stroke="#bcd0f5" stroke-width="1.4" stroke-dasharray="6 5"/><text x="355" y="62" font-size="11" font-weight="700" fill="#2563eb" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">◀ 카메라 렌즈를 기준으로 한 일직선 ▶</text><line x1="120" y1="114" x2="120" y2="172" stroke="#9ca3af" stroke-width="3"/><path d="M 107,172 L 133,172 L 120,163 Z" fill="#9ca3af"/><rect x="108" y="70" width="24" height="44" rx="5" fill="#3f3f46" stroke="#27272a" stroke-width="1.4"/><rect x="112" y="74" width="16" height="36" rx="3" fill="#1e293b"/><circle cx="132" cy="92" r="5.2" fill="#1d4ed8"/><circle cx="132" cy="92" r="2.4" fill="#93c5fd"/><ellipse cx="355" cy="117" rx="12" ry="3.5" fill="#d4d4d8"/><path d="M 345,115 Q 343,91 349,85 L 361,85 Q 367,91 365,115 Z" fill="#9ca3af" stroke="#6b7280" stroke-width="1.1"/><circle cx="355" cy="78" r="8.5" fill="#9ca3af" stroke="#6b7280" stroke-width="1.1"/><path d="M 600,54 Q 587,92 600,130" fill="none" stroke="#cbd5e1" stroke-width="9" stroke-linecap="round"/><path d="M 600,54 Q 587,92 600,130" fill="none" stroke="#9aa3ad" stroke-width="3.5" stroke-linecap="round"/><line x1="603" y1="73.0" x2="609" y2="78.0" stroke="#b0b6bf" stroke-width="1"/><line x1="603" y1="92.0" x2="609" y2="97.0" stroke="#b0b6bf" stroke-width="1"/><line x1="603" y1="111.0" x2="609" y2="116.0" stroke="#b0b6bf" stroke-width="1"/><line x1="600" y1="130" x2="600" y2="172" stroke="#9ca3af" stroke-width="3"/><path d="M 588,172 L 612,172 L 600,164 Z" fill="#9ca3af"/><text x="120" y="190" font-size="13" font-weight="700" fill="#52525b" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">스마트 기기 (거치대)</text><text x="355" y="190" font-size="13" font-weight="700" fill="#52525b" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">물체</text><text x="600" y="190" font-size="13" font-weight="700" fill="#52525b" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">거울 (틀만 · 볼록 예시)</text></svg><div class="fig-cap">실험 장치 모식도 — 교과서 사진을 넣으려면 이 그림을 <code>&lt;img&gt;</code>로 교체하세요</div></div>
+    </div>
+  </div>
+
+  <!-- 탐구 1: 거울 -->
+  <div class="cblock reveal r3" style="margin-bottom:18px">
+    <div class="cblock-head"><div class="cn">1</div><h3>거울에 의한 상의 특징 관찰하기</h3></div>
+    <div class="cblock-body">
+      <div class="layout-note">📐 배치 순서 — <b>스마트 기기(카메라) → 물체 → 거울</b> &nbsp;·&nbsp; 물체가 거울과 스마트 기기 <b>사이</b>에 위치!</div>
+      <ol class="proc">
+        <li><b>볼록 거울</b>을 스마트 기기와 멀리 떨어진 곳에 <b>마주 보게</b> 놓고, 화면에 거울이 잘 보이도록 스마트 기기의 위치와 각도를 조절한다.</li>
+        <li><span class="obs-tag">관찰</span> 물체를 볼록 거울 앞에 <b>거의 닿을 정도</b>로 놓았다가 <b>점점 멀어지게</b> 하면서 상이 어떻게 변하는지 <b>동영상으로 촬영</b>한다.</li>
+        <li><span class="obs-tag">관찰</span> 볼록 거울 대신 <b>오목 거울</b>을 놓고 과정 2를 반복한다.</li>
+      </ol>
+      <div class="fig-box"><svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" role="img"><text x="350" y="22" font-size="13" font-weight="700" fill="#3f3f46" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">거울에 나타나는 상 — 카메라 → 물체 → 거울 (물체가 사이 · 거울 틀만 표시)</text><rect x="8" y="75" width="74" height="24" rx="7" fill="#2563eb"/><text x="45" y="92" font-size="12.5" font-weight="800" fill="#fff" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">볼록 거울</text><line x1="95" y1="88" x2="630" y2="88" stroke="#bcd0f5" stroke-width="1.4" stroke-dasharray="6 5"/><line x1="135" y1="110" x2="135" y2="132" stroke="#9ca3af" stroke-width="3"/><path d="M 122,132 L 148,132 L 135,123 Z" fill="#9ca3af"/><rect x="123" y="66" width="24" height="44" rx="5" fill="#3f3f46" stroke="#27272a" stroke-width="1.4"/><rect x="127" y="70" width="16" height="36" rx="3" fill="#1e293b"/><circle cx="147" cy="88" r="5.2" fill="#1d4ed8"/><circle cx="147" cy="88" r="2.4" fill="#93c5fd"/><ellipse cx="330" cy="113" rx="12" ry="3.5" fill="#d4d4d8"/><path d="M 320,111 Q 318,87 324,81 L 336,81 Q 342,87 340,111 Z" fill="#9ca3af" stroke="#6b7280" stroke-width="1.1"/><circle cx="330" cy="74" r="8.5" fill="#9ca3af" stroke="#6b7280" stroke-width="1.1"/><text x="330" y="58" font-size="11.5" font-weight="700" fill="#71717a" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">물체</text><line x1="250" y1="132" x2="405" y2="132" stroke="#2563eb" stroke-width="1.5"/><path d="M 250,132 l 7,-4 l 0,8 Z" fill="#2563eb"/><path d="M 405,132 l -7,-4 l 0,8 Z" fill="#2563eb"/><text x="327" y="147" font-size="12" font-weight="700" fill="#2563eb" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">가까이 ↔ 멀리</text><path d="M 595,52 Q 582,88 595,124" fill="none" stroke="#cbd5e1" stroke-width="9" stroke-linecap="round"/><path d="M 595,52 Q 582,88 595,124" fill="none" stroke="#9aa3ad" stroke-width="3.5" stroke-linecap="round"/><line x1="598" y1="70.0" x2="604" y2="75.0" stroke="#b0b6bf" stroke-width="1"/><line x1="598" y1="88.0" x2="604" y2="93.0" stroke="#b0b6bf" stroke-width="1"/><line x1="598" y1="106.0" x2="604" y2="111.0" stroke="#b0b6bf" stroke-width="1"/><line x1="595" y1="124" x2="595" y2="144" stroke="#9ca3af" stroke-width="3"/><path d="M 583,144 L 607,144 L 595,136 Z" fill="#9ca3af"/><text x="135" y="150" font-size="11.5" font-weight="700" fill="#71717a" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">카메라</text><text x="595" y="154" font-size="11.5" font-weight="700" fill="#71717a" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">거울 (틀)</text><rect x="8" y="195" width="74" height="24" rx="7" fill="#0ea5a4"/><text x="45" y="212" font-size="12.5" font-weight="800" fill="#fff" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">오목 거울</text><line x1="95" y1="208" x2="630" y2="208" stroke="#bcd0f5" stroke-width="1.4" stroke-dasharray="6 5"/><line x1="135" y1="230" x2="135" y2="252" stroke="#9ca3af" stroke-width="3"/><path d="M 122,252 L 148,252 L 135,243 Z" fill="#9ca3af"/><rect x="123" y="186" width="24" height="44" rx="5" fill="#3f3f46" stroke="#27272a" stroke-width="1.4"/><rect x="127" y="190" width="16" height="36" rx="3" fill="#1e293b"/><circle cx="147" cy="208" r="5.2" fill="#1d4ed8"/><circle cx="147" cy="208" r="2.4" fill="#93c5fd"/><ellipse cx="330" cy="233" rx="12" ry="3.5" fill="#d4d4d8"/><path d="M 320,231 Q 318,207 324,201 L 336,201 Q 342,207 340,231 Z" fill="#9ca3af" stroke="#6b7280" stroke-width="1.1"/><circle cx="330" cy="194" r="8.5" fill="#9ca3af" stroke="#6b7280" stroke-width="1.1"/><text x="330" y="178" font-size="11.5" font-weight="700" fill="#71717a" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">물체</text><line x1="250" y1="252" x2="405" y2="252" stroke="#2563eb" stroke-width="1.5"/><path d="M 250,252 l 7,-4 l 0,8 Z" fill="#2563eb"/><path d="M 405,252 l -7,-4 l 0,8 Z" fill="#2563eb"/><text x="327" y="267" font-size="12" font-weight="700" fill="#2563eb" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">가까이 ↔ 멀리</text><path d="M 595,172 Q 608,208 595,244" fill="none" stroke="#cbd5e1" stroke-width="9" stroke-linecap="round"/><path d="M 595,172 Q 608,208 595,244" fill="none" stroke="#9aa3ad" stroke-width="3.5" stroke-linecap="round"/><line x1="598" y1="190.0" x2="604" y2="195.0" stroke="#b0b6bf" stroke-width="1"/><line x1="598" y1="208.0" x2="604" y2="213.0" stroke="#b0b6bf" stroke-width="1"/><line x1="598" y1="226.0" x2="604" y2="231.0" stroke="#b0b6bf" stroke-width="1"/><line x1="595" y1="244" x2="595" y2="264" stroke="#9ca3af" stroke-width="3"/><path d="M 583,264 L 607,264 L 595,256 Z" fill="#9ca3af"/><text x="135" y="270" font-size="11.5" font-weight="700" fill="#71717a" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">카메라</text><text x="595" y="274" font-size="11.5" font-weight="700" fill="#71717a" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">거울 (틀)</text></svg><div class="fig-cap">그림 3-6 모식도 — 거울 <b>틀</b>만 표시(상은 위 거울 실험실에서 관찰) · 교체하려면 <code>&lt;img&gt;</code> 사용</div></div>
+    </div>
+  </div>
+
+  <!-- 탐구 2: 렌즈 -->
+  <div class="cblock reveal r4" style="margin-bottom:18px">
+    <div class="cblock-head"><div class="cn">2</div><h3>렌즈에 의한 상의 특징 관찰하기</h3></div>
+    <div class="cblock-body">
+      <div class="layout-note">📐 배치 순서 — <b>스마트 기기(카메라) → 렌즈 → 물체</b> &nbsp;·&nbsp; 물체가 렌즈 <b>뒤</b>에 위치!</div>
+      <ol class="proc">
+        <li><b>볼록 렌즈</b>를 스마트 기기와 멀리 떨어진 곳에 <b>마주 보게</b> 놓고, 화면에 렌즈가 잘 보이도록 스마트 기기의 위치와 각도를 조절한다.</li>
+        <li><span class="obs-tag">관찰</span> 물체를 볼록 렌즈 <b>뒤에 거의 닿을 정도</b>로 놓았다가 <b>점점 멀어지게</b> 하면서 상이 어떻게 변하는지 <b>동영상으로 촬영</b>한다.</li>
+        <li><span class="obs-tag">관찰</span> 볼록 렌즈 대신 <b>오목 렌즈</b>를 놓고 과정 2를 반복한다.</li>
+      </ol>
+      <div class="fig-box"><svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" role="img"><text x="350" y="22" font-size="13" font-weight="700" fill="#3f3f46" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">렌즈를 통해 나타나는 상 — 카메라 → 렌즈 → 물체 (물체가 렌즈 뒤 · 렌즈 틀만 표시)</text><rect x="8" y="75" width="74" height="24" rx="7" fill="#2563eb"/><text x="45" y="92" font-size="12.5" font-weight="800" fill="#fff" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">볼록 렌즈</text><line x1="95" y1="88" x2="630" y2="88" stroke="#bcd0f5" stroke-width="1.4" stroke-dasharray="6 5"/><line x1="135" y1="110" x2="135" y2="132" stroke="#9ca3af" stroke-width="3"/><path d="M 122,132 L 148,132 L 135,123 Z" fill="#9ca3af"/><rect x="123" y="66" width="24" height="44" rx="5" fill="#3f3f46" stroke="#27272a" stroke-width="1.4"/><rect x="127" y="70" width="16" height="36" rx="3" fill="#1e293b"/><circle cx="147" cy="88" r="5.2" fill="#1d4ed8"/><circle cx="147" cy="88" r="2.4" fill="#93c5fd"/><path d="M 360,52 Q 372,88 360,124 Q 348,88 360,52 Z" fill="rgba(37,99,235,0.09)" stroke="#2563eb" stroke-width="2"/><line x1="360" y1="124" x2="360" y2="144" stroke="#9ca3af" stroke-width="3"/><path d="M 348,144 L 372,144 L 360,136 Z" fill="#9ca3af"/><ellipse cx="560" cy="113" rx="12" ry="3.5" fill="#d4d4d8"/><path d="M 550,111 Q 548,87 554,81 L 566,81 Q 572,87 570,111 Z" fill="#9ca3af" stroke="#6b7280" stroke-width="1.1"/><circle cx="560" cy="74" r="8.5" fill="#9ca3af" stroke="#6b7280" stroke-width="1.1"/><text x="560" y="58" font-size="11.5" font-weight="700" fill="#71717a" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">물체</text><line x1="470" y1="132" x2="625" y2="132" stroke="#2563eb" stroke-width="1.5"/><path d="M 470,132 l 7,-4 l 0,8 Z" fill="#2563eb"/><path d="M 625,132 l -7,-4 l 0,8 Z" fill="#2563eb"/><text x="547" y="147" font-size="12" font-weight="700" fill="#2563eb" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">가까이 ↔ 멀리</text><text x="135" y="150" font-size="11.5" font-weight="700" fill="#71717a" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">카메라</text><text x="360" y="154" font-size="11.5" font-weight="700" fill="#71717a" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">렌즈 (틀)</text><rect x="8" y="195" width="74" height="24" rx="7" fill="#0ea5a4"/><text x="45" y="212" font-size="12.5" font-weight="800" fill="#fff" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">오목 렌즈</text><line x1="95" y1="208" x2="630" y2="208" stroke="#bcd0f5" stroke-width="1.4" stroke-dasharray="6 5"/><line x1="135" y1="230" x2="135" y2="252" stroke="#9ca3af" stroke-width="3"/><path d="M 122,252 L 148,252 L 135,243 Z" fill="#9ca3af"/><rect x="123" y="186" width="24" height="44" rx="5" fill="#3f3f46" stroke="#27272a" stroke-width="1.4"/><rect x="127" y="190" width="16" height="36" rx="3" fill="#1e293b"/><circle cx="147" cy="208" r="5.2" fill="#1d4ed8"/><circle cx="147" cy="208" r="2.4" fill="#93c5fd"/><path d="M 355,172 L 365,172 Q 356,208 365,244 L 355,244 Q 364,208 355,172 Z" fill="rgba(37,99,235,0.06)" stroke="#2563eb" stroke-width="2"/><line x1="360" y1="244" x2="360" y2="264" stroke="#9ca3af" stroke-width="3"/><path d="M 348,264 L 372,264 L 360,256 Z" fill="#9ca3af"/><ellipse cx="560" cy="233" rx="12" ry="3.5" fill="#d4d4d8"/><path d="M 550,231 Q 548,207 554,201 L 566,201 Q 572,207 570,231 Z" fill="#9ca3af" stroke="#6b7280" stroke-width="1.1"/><circle cx="560" cy="194" r="8.5" fill="#9ca3af" stroke="#6b7280" stroke-width="1.1"/><text x="560" y="178" font-size="11.5" font-weight="700" fill="#71717a" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">물체</text><line x1="470" y1="252" x2="625" y2="252" stroke="#2563eb" stroke-width="1.5"/><path d="M 470,252 l 7,-4 l 0,8 Z" fill="#2563eb"/><path d="M 625,252 l -7,-4 l 0,8 Z" fill="#2563eb"/><text x="547" y="267" font-size="12" font-weight="700" fill="#2563eb" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">가까이 ↔ 멀리</text><text x="135" y="270" font-size="11.5" font-weight="700" fill="#71717a" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">카메라</text><text x="360" y="274" font-size="11.5" font-weight="700" fill="#71717a" text-anchor="middle" font-family="'Pretendard','Noto Sans KR',sans-serif">렌즈 (틀)</text></svg><div class="fig-cap">그림 3-7 모식도 — 렌즈 <b>틀</b>만 표시(상은 위 렌즈 실험실에서 관찰) · 교체하려면 <code>&lt;img&gt;</code> 사용</div></div>
+    </div>
+  </div>
+
+  <!-- 주의사항 -->
+  <div class="cblock reveal r5" style="margin-bottom:18px">
+    <div class="cblock-head"><div class="cn" style="background:var(--rose)">!</div><h3>주의사항</h3></div>
+    <div class="cblock-body">
+      <ul class="cau">
+        <li><b>일직선 상에서 움직이기</b> — 물체를 멀어지게 할 때 상이 화면 바깥으로 벗어나지 않도록 한다.</li>
+        <li><b>거리 고정</b> — 거울·렌즈와 스마트 기기 사이의 거리는 <b>일정하게</b> 유지한다.</li>
+        <li><b>움직이는 건 물체뿐</b> — 촬영 중 거울·렌즈와 스마트 기기의 위치는 고정하고, 물체의 위치만 옮긴다.</li>
+        <li>⚠️ <b>안전</b> — 거울·렌즈·스마트 기기를 떨어뜨려 파손하거나 다치지 않도록 주의한다.</li>
+        <li>🔋 <b>준비</b> — 동영상 촬영은 배터리 소모가 크므로 실험 전에 미리 충전한다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 스마트 기기 정렬 꿀팁 -->
+  <div class="story-box reveal r5">
+    <span class="story-tag">📱 스마트 기기 정렬 꿀팁</span>
+    <p>① 정렬은 스마트 기기 본체가 아니라 <b>카메라 렌즈를 기준</b>으로 맞춘다.<br>② <b>거울 실험</b>은 물체가 거울과 스마트 기기 사이에 있어 <b>상이 물체에 가려질</b> 수 있다 — 촬영 전 미리 물체를 움직여 상이 잘 보이는 각도를 찾은 뒤 촬영하자.<br>③ 물체를 이동시켜 보며 상이 <b>화면(화각)을 벗어나지 않는</b> 위치를 먼저 확인한다.</p>
+  </div>
+
+  <!-- 활동 도우미 -->
+  <div class="qbox reveal r5" style="margin-top:18px">
+    <span class="qtag">🔎 활동 도우미 — 무엇을 볼까</span>
+    <p><b>상의 크기</b>: 물체의 크기와 <b>비교</b>해 큰지 작은지 본다.<br><b>상의 모양</b>: <b>바로 선 상</b>(정립)인지 <b>거꾸로 선 상</b>(도립)인지 본다.</p>
+  </div>
+
+  <!-- 결과 정리표 -->
+  <div class="cblock reveal r6" style="margin-top:18px">
+    <div class="cblock-head"><div class="cn" style="background:var(--green)">✓</div><h3>정리해 볼까 — 상의 특징 비교</h3></div>
+    <div class="cblock-body">
+      <p style="color:var(--muted);font-size:.92rem;margin-bottom:14px">촬영한 동영상을 보며 <b>거리가 멀어질 때</b> 상의 크기·모양 변화를 정리하자. 먼저 스스로 떠올려 본 뒤 <b>정답 보기</b>로 확인!</p>
+      <table class="result-table">
+        <thead><tr><th></th><th>상의 크기 변화</th><th>상의 모양 변화</th></tr></thead>
+        <tbody>
+          <tr><th>볼록 거울</th><td class="hide">거리가 멀어질수록 점점 작아진다</td><td class="hide">거리와 관계없이 항상 바로 선 상</td></tr>
+          <tr><th>오목 거울</th><td class="hide">가까울 때 큰 상 → 멀어지면 점점 작아진다</td><td class="hide">가까울 때 바로 선 상 → 멀어지면 어느 순간 거꾸로 선 상</td></tr>
+          <tr><th>볼록 렌즈</th><td class="hide">가까울 때 큰 상 → 멀어지면 점점 작아진다</td><td class="hide">가까울 때 바로 선 상 → 멀어지면 어느 순간 거꾸로 선 상</td></tr>
+          <tr><th>오목 렌즈</th><td class="hide">거리가 멀어질수록 점점 작아진다</td><td class="hide">거리와 관계없이 항상 바로 선 상</td></tr>
+        </tbody>
+      </table>
+      <button class="revbtn" id="guideReveal">정답 보기 →</button>
+      <div class="misc-note" style="margin-top:14px">💡 <b>핵심</b> — <b>볼록 거울 · 오목 렌즈</b>: 항상 작고 바로 선 상. &nbsp;|&nbsp; <b>오목 거울 · 볼록 렌즈</b>: 가까울 땐 크고 바로 선 상, 멀어지면 어느 순간 거꾸로 선 상. (둘씩 짝꿍!)</div>
+    </div>
+  </div>
+
+  <!-- 더 해 보기 -->
+  <div class="story-box reveal r6" style="margin-top:18px">
+    <span class="story-tag">➕ 더 해 보기</span>
+    <p>우리 주변의 다양한 거울·렌즈 — <b>화장용 확대 거울, 자전거 손목 거울, 루페(확대경), 근시용 안경</b> 등으로도 물체와의 거리를 달리하며 상을 관찰하고, 각각에 생기는 상의 특징을 비교해 이야기해 보자.</p>
+  </div>
+
+  <!-- 가상 실험 안내 -->
+  <div class="img-slot reveal r6" style="border-style:solid;border-color:var(--line);background:var(--bg2);color:var(--muted);margin-top:18px">
+    <span class="is-ico">🧪</span>준비물이 없어도 괜찮아요 — 위 <b>🪞 거울 실험실</b> · <b>🔍 렌즈 실험실</b> 탭에서 카메라·물체·거울(렌즈)을 그대로 배치한 <b>가상 실험</b>으로 직접 확인할 수 있어요.
+  </div>
+</section>
+
 <!-- ================= 거울 실험실 ================= -->
 <section class="tab-panel" id="tab-mirror">
   <div class="reveal r1">
@@ -397,7 +540,7 @@ footer{border-top:1px solid var(--line)}
         <span class="badge gold">탐구 1</span>
         <div>
           <h3>거울 관찰 카메라 📹</h3>
-          <div class="sub">스마트 기기로 촬영하듯, 아래 동그란 화면에 거울 속 상이 실시간으로 비친다. 흐린 모습은 <b>물체의 원래 크기</b> — 항상 비교하며 관찰!</div>
+          <div class="sub"><b>카메라 → 물체 → 거울</b> 순으로 놓고 실제 실험처럼! 위 그림에 빛의 경로가, 아래 동그란 <b>카메라 화면</b>에 거울 속 상이 비친다. <b>볼록 거울</b>은 노란 부채꼴처럼 <b>넓은 범위가 한 거울에</b> 담긴다. 흐린 모습은 <b>물체의 원래 크기</b>(비교용)!</div>
         </div>
       </div>
       <div class="sim-body">
@@ -478,7 +621,7 @@ footer{border-top:1px solid var(--line)}
         <span class="badge cy">탐구 2</span>
         <div>
           <h3>렌즈 관찰 카메라 📹</h3>
-          <div class="sub">돋보기(루페)와 근시용 안경 — 두 렌즈로 같은 물체를 들여다본다. 거울 실험실과 결과를 비교해 보면 놀라운 닮은꼴이 보인다!</div>
+          <div class="sub"><b>카메라 → 렌즈 → 물체</b> 순으로 놓고 실제 실험처럼! 위 그림에 빛의 경로가, 아래 동그란 <b>카메라 화면</b>에 렌즈를 통해 보이는 상이 비친다. 거울 실험실과 비교하면 놀라운 닮은꼴이 보인다!</div>
         </div>
       </div>
       <div class="sim-body">
@@ -670,6 +813,21 @@ footer{border-top:1px solid var(--line)}
     </div>
     <div class="game-canvas-wrap"><canvas id="rcCanvas"></canvas></div>
     <div class="game-panel">
+      <p class="ctl-label" style="margin-top:6px">🎬 빛의 여행 — 단계별로 눌러 보기</p>
+      <div class="game-controls" style="gap:10px">
+        <button class="next-btn" id="rcS1" style="background:var(--gold)">① 빛 쏘기</button>
+        <button class="next-btn" id="rcS2" style="background:var(--silver)">② 반사·굴절</button>
+        <button class="next-btn" id="rcS3">③ 상 맺힘 ✨</button>
+        <button class="mbtn" id="rcReset">↺ 처음부터</button>
+      </div>
+      <div class="game-msg" id="rcVerdict" style="margin-top:12px;min-width:0">①②③ 버튼을 차례로 눌러 빛이 어디서 모이는지 따라가 보세요. 물체는 드래그·슬라이더로도 옮길 수 있어요!</div>
+      <p class="ctl-label" style="margin-top:2px">📍 물체 위치 빠른 이동 (초점 F 기준!)</p>
+      <div class="step-row" id="rcQuick">
+        <button class="step-btn" data-q="in">초점 안쪽<small>F보다 가까이</small></button>
+        <button class="step-btn" data-q="2f">2F 위치<small>초점거리 ×2</small></button>
+        <button class="step-btn" data-q="out">초점 바깥<small>F보다 멀리</small></button>
+        <button class="step-btn" data-q="far">🔭 아주 멀리<small>평행광(∞)</small></button>
+      </div>
       <div class="readouts">
         <div class="readout cyan"><div class="rlabel">상의 모양</div><div class="rval" id="rcKind" style="font-size:1.12rem;line-height:1.7">–</div></div>
         <div class="readout gold"><div class="rlabel">상의 크기 (물체 대비)</div><div class="rval" id="rcSize">–</div></div>
@@ -689,21 +847,6 @@ footer{border-top:1px solid var(--line)}
           <input type="range" class="rng" id="rcH" min="1" max="2.4" step="0.1" value="1.7">
         </div>
       </div>
-      <p class="ctl-label" style="margin-top:2px">📍 물체 위치 빠른 이동 (초점 F 기준!)</p>
-      <div class="step-row" id="rcQuick">
-        <button class="step-btn" data-q="in">초점 안쪽<small>F보다 가까이</small></button>
-        <button class="step-btn" data-q="2f">2F 위치<small>초점거리 ×2</small></button>
-        <button class="step-btn" data-q="out">초점 바깥<small>F보다 멀리</small></button>
-        <button class="step-btn" data-q="far">🔭 아주 멀리<small>평행광(∞)</small></button>
-      </div>
-      <p class="ctl-label" style="margin-top:6px">🎬 빛의 여행 — 단계별로 눌러 보기</p>
-      <div class="game-controls" style="gap:10px">
-        <button class="next-btn" id="rcS1" style="background:var(--gold)">① 빛 쏘기</button>
-        <button class="next-btn" id="rcS2" style="background:var(--silver)">② 반사·굴절</button>
-        <button class="next-btn" id="rcS3">③ 상 맺힘 ✨</button>
-        <button class="mbtn" id="rcReset">↺ 처음부터</button>
-      </div>
-      <div class="game-msg" id="rcVerdict" style="margin-top:12px;min-width:0">①②③ 버튼을 차례로 눌러 빛이 어디서 모이는지 따라가 보세요. 물체는 드래그·슬라이더로도 옮길 수 있어요!</div>
       <div class="toggle-row" style="margin-top:14px">
         <label class="tg"><input type="checkbox" id="rc1" checked> ① 나란한 광선</label>
         <label class="tg"><input type="checkbox" id="rc2" checked> ② 중심·꼭짓점 광선</label>
@@ -1016,6 +1159,23 @@ footer{border-top:1px solid var(--line)}
   </div>
 
   <div class="concept-grid">
+    <div class="cblock reveal r2" id="acc-block">
+      <div class="cblock-head"><div class="cn" style="background:var(--gold)">★</div><h3>수정체는 두께를 바꿔 초점을 맞춘다 — 눈의 조절 작용</h3></div>
+      <div class="cblock-body">
+        <p class="why-text">우리 눈 속 <b>수정체</b>는 작은 유리알 같은 <b>볼록 렌즈</b>다. 눈으로 들어온 빛을 굴절시켜 <b>망막</b>의 한 점(초점)에 모은다. 초점이 망막에 정확히 닿아야 또렷이 보인다. 그런데 물체의 거리가 달라지면? 수정체가 <b>두께를 바꿔</b> 빛이 굴절되는 정도를 조절해, 초점을 늘 망막에 맞춘다. 버튼으로 먼 물체와 가까운 물체를 비교해 보자.</p>
+        <div class="why-sim"><canvas id="accCanvas"></canvas></div>
+        <div class="step-row" id="accState" style="margin-top:14px">
+          <button class="step-btn active" data-st="far">먼 물체<small>수정체 얇아짐</small></button>
+          <button class="step-btn" data-st="near">가까운 물체<small>수정체 두꺼워짐</small></button>
+        </div>
+        <div class="readouts" style="margin-top:14px">
+          <div class="readout gold"><div class="rlabel">수정체 두께</div><div class="rval" id="accThick" style="font-size:1.05rem;line-height:1.6">–</div></div>
+          <div class="readout cyan"><div class="rlabel">빛을 굴절시키는 정도</div><div class="rval" id="accPower" style="font-size:1.05rem;line-height:1.6">–</div></div>
+          <div class="readout rosey"><div class="rlabel">초점 위치</div><div class="rval" id="accFocus" style="font-size:1.0rem;line-height:1.6">–</div></div>
+        </div>
+        <div class="why-verdict ok" id="accVerdict" style="margin-top:14px">버튼으로 물체 거리를 바꿔 보세요. 수정체 두께가 변하며 초점이 늘 망막에 맞춰지는 모습을 봅니다.</div>
+      </div>
+    </div>
     <div class="cblock reveal r3">
       <div class="cblock-head"><div class="cn" style="background:var(--cyan)">1</div><h3>🔭 근시 — 가까운 건 잘, 먼 건 흐릿</h3></div>
       <div class="cblock-body">
@@ -1152,6 +1312,26 @@ REFRACT</div>
       </div>
     </div>
   </div>
+
+  <!-- 장면 5: 렌즈 = 굴절 장치 (두 번 굴절 + 볼록/오목) -->
+  <div class="cblock reveal r6" id="tr-block">
+    <div class="cblock-head"><div class="cn" style="background:var(--gold)">5</div><h3>렌즈는 굴절로 빛을 모으고 퍼뜨린다 — 두 번 꺾이는 빛</h3></div>
+    <div class="cblock-body">
+      <p class="why-text">렌즈는 <b>빛을 굴절시키는 장치</b>다. 대체로 <b>유리</b>로 만드는데, 직진하던 빛이 렌즈로 <b>들어가면서 한 번</b>, 렌즈에서 공기 중으로 <b>나가면서 또 한 번</b>, 모두 <b>두 번 굴절</b>한다. 가운데가 볼록한 <b>볼록 렌즈</b>는 나란한 빛을 안쪽으로 꺾어 <b>한 점(초점)에 모으고</b>, 가운데가 오목한 <b>오목 렌즈</b>는 바깥으로 꺾어 <b>넓게 퍼뜨린다</b>.</p>
+      <div class="why-sim"><canvas id="trCanvas"></canvas></div>
+      <div class="step-row" id="trType" style="margin-top:14px">
+        <button class="step-btn active" data-t="cvx">볼록 렌즈<small>빛을 모음 · 확대</small></button>
+        <button class="step-btn" data-t="ccv">오목 렌즈<small>빛을 퍼뜨림</small></button>
+      </div>
+      <div class="readouts" style="margin-top:14px">
+        <div class="readout gold"><div class="rlabel">빛이 꺾이는 횟수</div><div class="rval" id="trRefr" style="font-size:1.0rem;line-height:1.55">앞면 + 뒷면 = 2번</div></div>
+        <div class="readout cyan"><div class="rlabel">나란한 빛의 운명</div><div class="rval" id="trFate" style="font-size:1.0rem;line-height:1.55">–</div></div>
+        <div class="readout rosey"><div class="rlabel">주로 쓰이는 곳</div><div class="rval" id="trUse" style="font-size:1.0rem;line-height:1.55">–</div></div>
+      </div>
+      <div class="why-verdict ok" id="trVerdict" style="margin-top:14px">버튼으로 렌즈를 바꿔 보세요. 빛이 렌즈 앞면과 뒷면에서 두 번 굴절하는 모습을 봅니다.</div>
+    </div>
+  </div>
+
 </section>
 
 <footer>
@@ -1269,6 +1449,16 @@ document.querySelectorAll('.ansbtn').forEach(b=>{
     b.textContent=a.classList.contains('show')?'접기 ↑':'정리해 볼까 →';sndClick();
   });
 });
+/* ---------- 탐구 안내서: 정답 보기 ---------- */
+(function(){
+  const rb=document.getElementById('guideReveal');
+  if(rb)rb.addEventListener('click',()=>{
+    const tbl=document.querySelector('#tab-guide .result-table');
+    if(!tbl)return;
+    const on=tbl.classList.toggle('show');
+    rb.textContent=on?'정답 숨기기 ↑':'정답 보기 →';sndClick();
+  });
+})();
 /* ---------- 나만의 질문 ---------- */
 let qmN=0;
 function qmAddFn(){
@@ -1438,7 +1628,7 @@ function drawLensDev(ctx,x,y0,y1,id){
    탐구 — 거울/렌즈 관찰 실험실 (공용 팩토리)
    ============================================================ */
 function makeObs(cfg){
-  const S={mode:0,d:6,log:[],drag:false};
+  const S={mode:0,d:6,log:[],drag:false,moved:false,sx:0,sy:0,sel:null};
   const cv=$(cfg.cv);
   const md=()=>cfg.modes[S.mode];
   function calc(){
@@ -1447,82 +1637,225 @@ function makeObs(cfg){
     const di=d*f/(d-f);
     return{focus:false,di,m:-di/d};
   }
-  function geom(w,h){return{axis:h*0.27,devX:w*0.80,cell:w*0.052,h0:h*0.155,ccx:w*0.5,ccy:h*0.665,cr:h*0.262};}
+  function geom(w,h){
+    const cell=w*0.046, axis=h*0.265, camX=w*0.075, h0=h*0.105;
+    const devX = cfg.layout==='lens' ? w*0.44 : w*0.80;
+    const ccx=w*0.5, ccy=h*0.735, cr=h*0.150;
+    return {cell,axis,camX,h0,devX,ccx,ccy,cr};
+  }
+  function camera(ctx,x,axis,u){
+    const bw=u*1.7, bh=u*1.25;
+    ctx.save();
+    ctx.fillStyle='#3f3f46';ctx.strokeStyle='#27272a';ctx.lineWidth=1.4;
+    ctx.fillRect(x-bw*0.5,axis-bh*0.5,bw,bh);ctx.strokeRect(x-bw*0.5,axis-bh*0.5,bw,bh);
+    ctx.fillStyle='#52525b';ctx.fillRect(x-bw*0.18,axis-bh*0.5-u*0.32,bw*0.36,u*0.34);
+    ctx.beginPath();ctx.fillStyle='#1d4ed8';ctx.arc(x+bw*0.5,axis,u*0.45,0,7);ctx.fill();
+    ctx.strokeStyle='#dbeafe';ctx.lineWidth=2;ctx.stroke();
+    ctx.beginPath();ctx.fillStyle='#93c5fd';ctx.arc(x+bw*0.5,axis,u*0.22,0,7);ctx.fill();
+    ctx.restore();
+  }
+  const OBJ_EXPLAIN='💡 <b>물체의 한 점에서 빛은 사방으로 퍼져 나가요.</b> 그중 거울(렌즈)에 닿은 <b>여러 갈래</b>가 반사·굴절되어 <b>한 점에서 온 것처럼</b> 모이는데(또는 한 점에서 나온 듯 퍼지는데), 그 점이 바로 <b>상</b>이에요. 그래서 빛은 2개가 아니라 <b>수많은 갈래</b>랍니다! (그림에선 대표 몇 개만 그린 거예요.)';
+  function imgExplain(dev,c){
+    const lens=cfg.layout==='lens';
+    if(c.focus)return '초점 부근이라 반사·굴절광이 거의 평행해 상이 무한히 멀어져요.';
+    if(!lens){
+      if(dev.id==='cvx')return '<b>볼록 거울</b>은 빛을 <b>퍼뜨려요</b>. 반사된 빛이 퍼지면 눈은 거울 <b>뒤 한 점</b>에서 온 듯 느껴 <b>작고 바로 선 허상</b>을 봐요. 멀수록 더 작아져요.';
+      return c.m>0
+        ? '<b>오목 거울 + 가까운 물체</b> — 반사된 빛이 퍼지며 거울 <b>뒤 한 점</b>에서 온 듯 보여 <b>크고 바로 선 허상</b>! (확대 거울)'
+        : '<b>오목 거울 + 먼 물체</b> — 반사된 빛이 거울 <b>앞 한 점</b>에 실제로 모여 <b>거꾸로 선 실상</b>이 생겨요.';
+    }else{
+      if(dev.id==='ccv')return '<b>오목 렌즈</b>는 빛을 <b>퍼뜨려요</b>. 굴절된 빛이 퍼지며 <b>한 점</b>에서 온 듯 보여 <b>작고 바로 선 허상</b>이 생겨요. (근시 안경)';
+      return c.m>0
+        ? '<b>볼록 렌즈 + 가까운 물체</b> — 굴절된 빛이 퍼지며 <b>한 점</b>에서 온 듯 보여 <b>크고 바로 선 허상</b>! (돋보기)'
+        : '<b>볼록 렌즈 + 먼 물체</b> — 굴절된 빛이 <b>반대편 한 점</b>에 실제로 모여 <b>거꾸로 선 실상</b>이 생겨요.';
+    }
+  }
+  function ring(ctx,x,y,rw,rh,col){
+    ctx.save();ctx.strokeStyle=col;ctx.lineWidth=2;ctx.setLineDash([5,4]);
+    ctx.strokeRect(x-rw/2,y-rh,rw,rh);ctx.restore();
+  }
   function draw(){
     if(!cv||!cv.clientWidth)return;
-    const {ctx,w,h}=fitCanvas(cv,0.66);
-    const g=geom(w,h);
+    const {ctx,w,h}=fitCanvas(cv,0.74);
+    const g=geom(w,h); const {cell,axis,camX,h0,devX,ccx,ccy,cr}=g;
+    const lens=cfg.layout==='lens', dev=md(), c=calc();
     ctx.fillStyle='#ffffff';ctx.fillRect(0,0,w,h);
-    ctx.save();ctx.strokeStyle='rgba(0,0,0,.14)';ctx.lineWidth=1.5;
-    ctx.beginPath();ctx.moveTo(w*0.04,g.axis);ctx.lineTo(g.devX+w*0.07,g.axis);ctx.stroke();ctx.restore();
-    ctx.save();ctx.strokeStyle='rgba(0,0,0,.10)';ctx.lineWidth=1;
-    for(let k=0;k<=10;k++){const xx=g.devX-k*g.cell;ctx.beginPath();ctx.moveTo(xx,g.axis-4);ctx.lineTo(xx,g.axis+4);ctx.stroke();}
-    ctx.restore();
-    cfg.drawDevice(ctx,g.devX,g.axis-h*0.20,g.axis+h*0.035,md().id);
-    txt(ctx,md().name,g.devX,g.axis-h*0.20-13,{color:cfg.devColor,size:12,weight:'800'});
-    const ox=g.devX-S.d*g.cell;
-    drawObjStanding(ctx,ox,g.axis,g.h0,1,{color:'#52525b'});
-    txt(ctx,'물체 (드래그 ↔)',ox,g.axis+16,{color:'#52525b',size:11,weight:'800'});
-    dashSeg(ctx,ox,g.axis+30,g.devX,g.axis+30,'#2563eb',1.3,[4,4]);
-    txt(ctx,S.d.toFixed(1)+'칸',(ox+g.devX)/2,g.axis+42,{color:'#2563eb',size:11,weight:'800'});
-    const c=calc();
-    txt(ctx,'📹 '+cfg.viewLabel,g.ccx,g.ccy-g.cr-14,{color:'#52525b',size:12.5,weight:'800'});
-    ctx.save();
-    ctx.beginPath();ctx.arc(g.ccx,g.ccy,g.cr,0,Math.PI*2);ctx.clip();
-    ctx.fillStyle='#ffffff';ctx.fillRect(g.ccx-g.cr,g.ccy-g.cr,g.cr*2,g.cr*2);
-    drawObjCentered(ctx,g.ccx,g.ccy,g.h0*1.7,1,0.13);
-    if(c.focus){
-      txt(ctx,'✨',g.ccx,g.ccy-16,{size:30});
-      txt(ctx,'상이 사라졌다?!',g.ccx,g.ccy+18,{color:'#1d4ed8',size:13,weight:'800'});
-    }else{
-      drawObjCentered(ctx,g.ccx,g.ccy,g.h0*1.7,c.m,1);
+    ctx.save();ctx.strokeStyle='rgba(0,0,0,.12)';ctx.lineWidth=1.3;
+    ctx.beginPath();ctx.moveTo(w*0.02,axis);ctx.lineTo(w*0.99,axis);ctx.stroke();ctx.restore();
+
+    const ox = lens ? devX + S.d*cell : devX - S.d*cell;
+    const Otop={x:ox, y:axis-h0};
+    const camLens={x:camX+cell*0.95, y:axis};
+    const devTop=axis-h*0.185, devBot=axis+h*0.185;
+
+    // ===== 넓은 시야 부채꼴 (볼록 거울만) =====
+    if(!lens && dev.id==='cvx'){
+      const R=2*Math.abs(dev.f)*cell, Cm={x:devX+R,y:axis};
+      const span=h*0.13, far=w*0.30, rr=[];
+      for(let i=-2;i<=2;i++){
+        const P={x:devX, y:axis+i*span/2};
+        let din={x:P.x-camLens.x,y:P.y-camLens.y};let L=Math.hypot(din.x,din.y);din={x:din.x/L,y:din.y/L};
+        let n={x:P.x-Cm.x,y:P.y-Cm.y};let Ln=Math.hypot(n.x,n.y);n={x:n.x/Ln,y:n.y/Ln};
+        const dot=din.x*n.x+din.y*n.y, dr={x:din.x-2*dot*n.x,y:din.y-2*dot*n.y};
+        rr.push({P, e:{x:P.x+dr.x*far,y:P.y+dr.y*far}});
+      }
+      ctx.save();ctx.fillStyle='rgba(245,200,60,0.10)';
+      ctx.beginPath();ctx.moveTo(rr[0].P.x,rr[0].P.y);ctx.lineTo(rr[0].e.x,rr[0].e.y);
+      ctx.lineTo(rr[4].e.x,rr[4].e.y);ctx.lineTo(rr[4].P.x,rr[4].P.y);ctx.closePath();ctx.fill();ctx.restore();
+      rr.forEach(r=>{ dashSeg(ctx,camLens.x,camLens.y,r.P.x,r.P.y,'rgba(190,160,40,.35)',1,[4,4]);
+        glowSeg(ctx,r.P.x,r.P.y,r.e.x,r.e.y,'#d9b24a',1.1,0); });
+      txt(ctx,'🌐 거울 하나에 이렇게 넓은 범위가 담겨요 (넓은 시야)',w*0.5,h*0.04,{color:'#b8860b',size:11.5,weight:'800'});
     }
+
+    // ===== 장치 =====
+    cfg.drawDevice(ctx,devX,devTop,devBot,dev.id);
+    txt(ctx,dev.name,devX,devTop-12,{color:cfg.devColor,size:12,weight:'800'});
+
+    // ===== 빛의 경로 (물체 한 점 → 여러 갈래 → 장치 → 상) =====
+    let I=null, virtual=false;
+    if(!c.focus){
+      I={x:devX - c.di*cell, y:axis - c.m*h0}; virtual = c.di<0;
+      const yBand=h*0.205;
+      // 물체에서 사방으로 퍼지는 옅은 광선 — "빛은 한 줄이 아니다"
+      const sprayAng = lens ? [-2.3,-1.7,-1.1,0.5,1.1] : [-1.9,-1.2,0.6,1.2,2.5];
+      sprayAng.forEach(a=>{
+        const ex=Otop.x+Math.cos(a)*w*0.045, ey=Otop.y+Math.sin(a)*w*0.045;
+        glowSeg(ctx,Otop.x,Otop.y,ex,ey,'rgba(150,160,170,.4)',1,0);
+      });
+      // 장치 위 여러 점(부채꼴) — 대표 광선 (카메라/광학대 영역 안에서 끊음)
+      const apH=h*0.10, N=4;
+      for(let k=0;k<N;k++){
+        const P={x:devX, y:axis - apH + (2*apH)*(k/(N-1))};
+        // 입사: 물체 끝 → 장치
+        glowSeg(ctx,Otop.x,Otop.y,P.x,P.y,'#9aa3ad',1.3,0);
+        // 반사/굴절 방향: 실상이면 상으로, 허상이면 상에서 나온 듯 → 왼쪽(카메라)
+        let dir = virtual ? {x:P.x-I.x,y:P.y-I.y} : {x:I.x-P.x,y:I.y-P.y};
+        const L=Math.hypot(dir.x,dir.y)||1; dir={x:dir.x/L,y:dir.y/L};
+        if(dir.x>-1e-3) continue;
+        const sCam=(camLens.x-P.x)/dir.x;
+        const sY = dir.y<-1e-4 ? (axis-yBand-P.y)/dir.y : (dir.y>1e-4 ? (axis+yBand-P.y)/dir.y : 1e9);
+        const s=Math.max(0,Math.min(sCam,sY));
+        const End={x:P.x+dir.x*s, y:P.y+dir.y*s};
+        glowSeg(ctx,P.x,P.y,End.x,End.y,'#2563eb',1.5,1.5);
+        if(virtual) dashSeg(ctx,P.x,P.y,I.x,I.y,'#9bc0ee',1.1,[5,4]);
+      }
+      // 대표 화살표(가운데 입사·반사 1개씩)
+      {
+        const Pm={x:devX,y:axis};
+        arrowHead(ctx,lerp(Otop.x,Pm.x,.5),lerp(Otop.y,Pm.y,.5),Math.atan2(Pm.y-Otop.y,Pm.x-Otop.x),7,'#9aa3ad');
+        let dm=virtual?{x:Pm.x-I.x,y:Pm.y-I.y}:{x:I.x-Pm.x,y:I.y-Pm.y};const Lm=Math.hypot(dm.x,dm.y)||1;dm={x:dm.x/Lm,y:dm.y/Lm};
+        if(dm.x<0){const sc=(camLens.x-Pm.x)/dm.x*0.6; arrowHead(ctx,Pm.x+dm.x*sc,Pm.y+dm.y*sc,Math.atan2(dm.y,dm.x),7,'#2563eb');}
+      }
+      // 상 (화면 안 + 너무 크지 않을 때)
+      if(I.x>w*0.02 && I.x<w*0.995 && Math.abs(c.m)<=3.4){
+        drawObjStanding(ctx,I.x,axis,h0,c.m,{color:c.m>0?'#1d4ed8':'#dc2626'});
+        txt(ctx,(virtual?'상(허상)':'상(실상)')+' · '+(Math.abs(c.m)>=1?'크게':'작게'),
+          I.x, c.m>0?axis-Math.abs(c.m)*h0-7:axis+Math.abs(c.m)*h0+14,
+          {color:c.m>0?'#1d4ed8':'#dc2626',size:10.5,weight:'800'});
+        if(S.sel==='img'){const ih=h0*Math.abs(c.m), iw=(OBJ.img?ih*OBJ.aspect:26)+12;
+          ring(ctx,I.x, c.m>0?axis:axis+ih, iw, ih, '#1d4ed8');}
+      }
+      else if(I.x>=w*0.93 && Math.abs(c.m)<=3.4){
+        txt(ctx,'🔍 크게 확대된 허상은 '+(lens?'렌즈 뒤':'거울 뒤')+' 멀리 (화면 밖) — 카메라 화면 참고!',w*0.5,h*0.42,{color:'#1d4ed8',size:10.5,weight:'800'});
+      }
+    }else{
+      txt(ctx,'초점 부근 — 반사·굴절광이 거의 평행 (상이 무한히 멀어짐)',(devX+camX)/2,axis-h*0.115,{color:'#1d4ed8',size:11,weight:'700'});
+    }
+
+    // ===== 물체 (광선 위에) =====
+    drawObjStanding(ctx,ox,axis,h0,1,{color:'#52525b'});
+    txt(ctx,'물체 (드래그 ↔)',ox,axis+16,{color:'#52525b',size:11,weight:'800'});
+    dashSeg(ctx,ox,axis+30,devX,axis+30,'#2563eb',1.2,[4,4]);
+    txt(ctx,S.d.toFixed(1)+'칸',(ox+devX)/2,axis+42,{color:'#2563eb',size:10.5,weight:'800'});
+    if(S.sel==='obj'){const ow=(OBJ.img?h0*OBJ.aspect:26)+12; ring(ctx,ox,axis,ow,h0,'#52525b');}
+
+    // ===== 카메라 =====
+    camera(ctx,camX,axis,cell);
+    txt(ctx,'📷 카메라',camX,axis-h*0.085,{color:'#3f3f46',size:11,weight:'800'});
+
+    // 클릭 안내
+    txt(ctx,'💡 물체나 상을 클릭하면 "왜 이렇게 보이는지" 설명이 아래에 나와요',w*0.5,h*0.485,{color:'#94a3b8',size:10.5,weight:'700'});
+
+    // ===== 카메라 화면 (원형) =====
+    txt(ctx,'📷 카메라 화면 — '+cfg.viewLabel,ccx,ccy-cr-12,{color:'#3f3f46',size:12.5,weight:'800'});
+    ctx.save();ctx.beginPath();ctx.arc(ccx,ccy,cr,0,Math.PI*2);ctx.clip();
+    ctx.fillStyle='#0b1220';ctx.fillRect(ccx-cr,ccy-cr,cr*2,cr*2);
+    drawObjCentered(ctx,ccx,ccy,h0*1.55,1,0.15);
+    if(c.focus){ txt(ctx,'✨',ccx,ccy-16,{size:28}); txt(ctx,'상이 사라졌다?!',ccx,ccy+16,{color:'#93c5fd',size:13,weight:'800'}); }
+    else drawObjCentered(ctx,ccx,ccy,h0*1.55,c.m,1);
     ctx.restore();
-    ctx.save();ctx.strokeStyle='#52525b';ctx.lineWidth=3;
-    ctx.shadowColor='rgba(148,100,0,.4)';ctx.shadowBlur=10;
-    ctx.beginPath();ctx.arc(g.ccx,g.ccy,g.cr,0,Math.PI*2);ctx.stroke();ctx.restore();
-    txt(ctx,'흐린 모습 = 물체의 원래 크기 (비교용)',g.ccx,g.ccy+g.cr+14,{color:'#71717a',size:10.5});
+    ctx.save();ctx.strokeStyle='#3f3f46';ctx.lineWidth=4;ctx.shadowColor='rgba(0,0,0,.3)';ctx.shadowBlur=8;
+    ctx.beginPath();ctx.arc(ccx,ccy,cr,0,Math.PI*2);ctx.stroke();ctx.restore();
+    ctx.save();ctx.strokeStyle='#6b7280';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(ccx,ccy,cr-5,0,7);ctx.stroke();ctx.restore();
+    txt(ctx,'흐린 모습 = 물체의 원래 크기 (비교용)',ccx,ccy+cr+15,{color:'#71717a',size:10.5});
+
+    // ===== 읽기값 / 메시지 =====
     if(c.focus){
-      $(cfg.sizeEl).textContent='✨?';
-      $(cfg.shapeEl).textContent='상 없음';
-      $(cfg.shapeEl).style.color='#1d4ed8';
+      $(cfg.sizeEl).textContent='✨?';$(cfg.shapeEl).textContent='상 없음';$(cfg.shapeEl).style.color='#1d4ed8';
     }else{
       const pct=Math.abs(c.m)*100;
       $(cfg.sizeEl).textContent=pct>999?'999%+':Math.round(pct)+'%';
       $(cfg.shapeEl).textContent=c.m>0?'바로 선 상':'거꾸로 선 상';
       $(cfg.shapeEl).style.color=c.m>0?'#1d4ed8':'#dc2626';
     }
-    const msg=$(cfg.msgEl);
-    msg.className='game-msg';
-    if(c.focus)msg.innerHTML='✨ <b>상이 사라지는 신비한 지점!</b> 이 비밀의 정체는 <b>✏️ 빛의 경로</b> 탭과 <b>🌙 교과서 밖</b> 탭에서 밝혀집니다.';
-    else if(Math.abs(c.m)>3.2)msg.innerHTML='🔍 상이 너무 커서 한 부분만 뭉개져 보여요 — <b>특별한 지점 근처</b>라는 신호! 조금만 더 움직여 보자.';
+    const msg=$(cfg.msgEl);msg.className='game-msg';
+    if(S.sel==='obj')msg.innerHTML=OBJ_EXPLAIN;
+    else if(S.sel==='img')msg.innerHTML='🔎 <b>상을 클릭했어요</b> — '+imgExplain(dev,c);
+    else if(c.focus)msg.innerHTML='✨ <b>상이 사라지는 신비한 지점!</b> 이 비밀의 정체는 <b>✏️ 빛의 경로</b> 탭과 <b>🌙 교과서 밖</b> 탭에서 밝혀집니다.';
+    else if(Math.abs(c.m)>3.2)msg.innerHTML='🔍 상이 너무 커서 화면을 벗어나요 — <b>특별한 지점(초점) 근처</b>라는 신호! 조금만 더 움직여 보자.';
     else msg.innerHTML=cfg.hint(md(),S.d,c);
   }
-  $(cfg.dEl).addEventListener('input',e=>{S.d=+e.target.value;$(cfg.dVal).textContent=S.d.toFixed(1)+'칸';draw();});
+  function hitTest(p){
+    const w=cv.clientWidth,h=cv.clientHeight,g=geom(w,h),c=calc();
+    const ox = cfg.layout==='lens' ? g.devX+S.d*g.cell : g.devX-S.d*g.cell;
+    const ow=(OBJ.img?g.h0*OBJ.aspect:26)*0.5+12;
+    if(Math.abs(p.x-ox)<ow && p.y<g.axis+14 && p.y>g.axis-g.h0-14)return 'obj';
+    if(!c.focus){
+      const ix=g.devX-c.di*g.cell, ih=g.h0*Math.abs(c.m);
+      if(ix>w*0.03&&ix<w*0.99&&Math.abs(c.m)<=3.4){
+        const iw=(OBJ.img?ih*OBJ.aspect:26)*0.5+12;
+        const top=c.m>0?g.axis-ih:g.axis, bot=c.m>0?g.axis:g.axis+ih;
+        if(Math.abs(p.x-ix)<iw && p.y>top-14 && p.y<bot+14)return 'img';
+      }
+    }
+    return null;
+  }
+  $(cfg.dEl).addEventListener('input',e=>{S.d=+e.target.value;S.sel=null;$(cfg.dVal).textContent=S.d.toFixed(1)+'칸';draw();});
   document.querySelectorAll(cfg.btnSel).forEach(b=>b.addEventListener('click',()=>{
-    S.mode=+b.dataset.m;
+    S.mode=+b.dataset.m;S.sel=null;
     document.querySelectorAll(cfg.btnSel).forEach(x=>x.classList.toggle('active',x===b));
     draw();sndClick();
   }));
   (function(){
-    function move(p){
-      const w=cv.clientWidth,g=geom(w,cv.clientHeight);
-      S.d=clamp((g.devX-p.x)/g.cell,1.2,10);
+    function moveTo(p){
+      const w=cv.clientWidth,h=cv.clientHeight,g=geom(w,h);
+      S.d = cfg.layout==='lens' ? clamp((p.x-g.devX)/g.cell,1.2,10) : clamp((g.devX-p.x)/g.cell,1.2,10);
       $(cfg.dEl).value=S.d;$(cfg.dVal).textContent=S.d.toFixed(1)+'칸';
-      draw();
     }
     cv.addEventListener('pointerdown',e=>{
       const p=ptr(cv,e);
-      if(p.y>cv.clientHeight*0.5)return;
-      S.drag=true;cv.setPointerCapture(e.pointerId);move(p);
+      if(p.y>cv.clientHeight*0.50)return;
+      S.drag=true;S.moved=false;S.sx=p.x;S.sy=p.y;cv.setPointerCapture(e.pointerId);
     });
-    cv.addEventListener('pointermove',e=>{if(S.drag)move(ptr(cv,e));});
+    cv.addEventListener('pointermove',e=>{
+      if(!S.drag)return;
+      const p=ptr(cv,e);
+      if(!S.moved && Math.hypot(p.x-S.sx,p.y-S.sy)<6)return;
+      S.moved=true;S.sel=null;moveTo(p);draw();
+    });
+    cv.addEventListener('pointerup',e=>{
+      if(S.drag && !S.moved){
+        const hit=hitTest(ptr(cv,e));
+        S.sel = (hit===null)?null:(S.sel===hit?null:hit);
+        draw();sndClick();
+      }
+      S.drag=false;
+    });
     const up=()=>S.drag=false;
-    cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+    cv.addEventListener('pointercancel',up);
   })();
   $(cfg.recBtn).addEventListener('click',()=>{
-    const c=calc();
-    const pct=Math.abs(c.m)*100;
+    const c=calc();const pct=Math.abs(c.m)*100;
     S.log.push({n:md().name,d:S.d.toFixed(1),
       s:c.focus?'✨':(pct>999?'999%+':Math.round(pct)+'%'),
       k:c.focus?'상 없음':(c.m>0?'바로':'거꾸로')});
@@ -1536,9 +1869,8 @@ function makeObs(cfg){
   }
   return {draw,S};
 }
-
 const MIRLAB=makeObs({
-  cv:'mirCanvas',
+  cv:'mirCanvas', layout:'mirror',
   modes:[{id:'cvx',name:'볼록 거울',f:-3.2},{id:'ccv',name:'오목 거울',f:3.2}],
   drawDevice:drawMirrorDev,
   devColor:'#71717a',
@@ -1553,7 +1885,7 @@ const MIRLAB=makeObs({
   }
 });
 const LENLAB=makeObs({
-  cv:'lenCanvas',
+  cv:'lenCanvas', layout:'lens',
   modes:[{id:'cvx',name:'볼록 렌즈',f:3.2},{id:'ccv',name:'오목 렌즈',f:-3.2}],
   drawDevice:drawLensDev,
   devColor:'#1d4ed8',
@@ -3257,14 +3589,17 @@ $('rfrA').addEventListener('input',()=>{ RFRLAB.draw(); });
 const PENC={step:1, t:1, raf:null};
 function makePENC(){
   const cv=$('pencCanvas'); if(!cv) return {draw:()=>{}};
-  function refractUpToEye(S, surfY){
-    // 물속 점→S(수면)에서 물→공기 굴절. 입사각=연필빛이 법선과 이루는 각
-    return S;
+  function intersect(a,b){
+    const x1=a.P.x,y1=a.P.y,x2=a.P.x+a.d.x,y2=a.P.y+a.d.y;
+    const x3=b.P.x,y3=b.P.y,x4=b.P.x+b.d.x,y4=b.P.y+b.d.y;
+    const den=(x1-x2)*(y3-y4)-(y1-y2)*(x3-x4); if(Math.abs(den)<1e-6)return null;
+    return {x:((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4))/den,
+            y:((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4))/den};
   }
   function draw(){
     if(!cv.clientWidth)return;
     const {ctx,w,h}=fitCanvas(cv,0.6);
-    const surf=h*0.42;
+    const surf=h*0.40;
     ctx.fillStyle='#ffffff';ctx.fillRect(0,0,w,surf);
     waterFill(ctx,0,surf,w,h-surf);
     glowSeg(ctx,0,surf,w,surf,'#7fb0e6',2.5,0);
@@ -3273,68 +3608,59 @@ function makePENC(){
     txt(ctx,'물',w*0.05,surf+h*0.42,{color:'#7fa8d8',size:11,weight:'800',align:'left'});
 
     const step=PENC.step, T=PENC.t;
-    // 연필: 공기 윗부분 + 물속 부분 (직선, 비스듬)
-    const top={x:w*0.30, y:h*0.10};               // 연필 윗끝(공기)
-    const Pierce={x:w*0.46, y:surf};              // 수면 통과점
-    const tipDepth=h*0.32;
-    const Tip={x:w*0.56, y:surf+tipDepth};        // 실제 연필 끝(물속)
-    const E={x:w*0.84, y:h*0.16};                 // 눈
+    // 곧은 연필: 공기 윗끝 top → 수면통과 Pierce → 실제 끝 Tip (모두 일직선, 깊이 박힘)
+    const top={x:w*0.24, y:h*0.08};
+    const Pierce={x:w*0.44, y:surf};
+    let u0={x:Pierce.x-top.x, y:Pierce.y-top.y}; const L0=Math.hypot(u0.x,u0.y); u0={x:u0.x/L0,y:u0.y/L0};
+    const realDepth=h*0.44;
+    const Tip={x:Pierce.x+u0.x*(realDepth/u0.y), y:surf+realDepth};   // 실제 끝(깊음)
+    const E={x:w*0.86, y:h*0.13}, eyeR=h*0.05;
+    const E1={x:E.x-eyeR,y:E.y+eyeR*0.4}, E2={x:E.x+eyeR,y:E.y-eyeR*0.4};
 
-    // 물속 끝 Tip에서 두 광선 → 수면 → 굴절 → 눈. 허상 Tip' = 두 굴절광선 역연장 교차
-    // 수면점 두 개 선택
-    const S1={x:w*0.60, y:surf}, S2={x:w*0.68, y:surf};
-    function refr(S){
-      // 입사(물): Tip→S, 법선=수직. 입사각 thW
-      const dx=S.x-Tip.x, dy=S.y-Tip.y, len=Math.hypot(dx,dy);
-      const thW=Math.atan2(Math.abs(dx),Math.abs(dy));     // 법선(수직)과의 각
-      const thA=snell(thW,N_WATER,N_AIR);                   // 공기쪽 굴절각(>thW)
-      if(thA===null) return null;
-      const sign=Math.sign(dx)||1;
-      const dir={x:Math.sin(thA)*sign, y:-Math.cos(thA)};   // 위로(공기) 진행
-      return {S, dir, thW, thA};
+    // 물속 실제끝 Tip → 눈점 Et 로 가는 굴절광선의 수면점 S 찾기 (물→공기 스넬)
+    function findS(Et){
+      let lo=Pierce.x+1, hi=w*0.99, best=null;
+      for(let it=0; it<46; it++){
+        const sx=(lo+hi)/2, S={x:sx,y:surf};
+        const dx=S.x-Tip.x, dy=S.y-Tip.y;                 // dy<0 (아래→위)
+        const thW=Math.atan2(Math.abs(dx),Math.abs(dy));  // 법선(수직)과 입사각
+        const thA=snell(thW,N_WATER,N_AIR);               // 공기쪽 굴절각(>thW)
+        if(thA===null){ hi=sx; continue; }
+        const sign=Math.sign(dx)||1;
+        const d={x:Math.sin(thA)*sign, y:-Math.cos(thA)}; // 공기 위로
+        const xat=S.x + d.x*((Et.y-S.y)/d.y);             // Et 높이에서 광선 x
+        if(xat>Et.x) hi=sx; else lo=sx;
+        best={S,d};
+      }
+      return best;
     }
-    const r1=refr(S1), r2=refr(S2);
-    // 허상 끝: 두 굴절광선 역연장(아래로) 교차
-    function backLine(r){ return {P:r.S, d:{x:-r.dir.x,y:-r.dir.y}}; }
-    function intersect(a,b){
-      const x1=a.P.x,y1=a.P.y,x2=a.P.x+a.d.x,y2=a.P.y+a.d.y;
-      const x3=b.P.x,y3=b.P.y,x4=b.P.x+b.d.x,y4=b.P.y+b.d.y;
-      const den=(x1-x2)*(y3-y4)-(y1-y2)*(x3-x4); if(Math.abs(den)<1e-6)return null;
-      const px=((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4))/den;
-      const py=((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4))/den;
-      return {x:px,y:py};
-    }
-    const Tv = (r1&&r2)? intersect(backLine(r1),backLine(r2)) : Tip;
+    const r1=findS(E1), r2=findS(E2);
+    const Tv = (r1&&r2) ? intersect({P:r1.S,d:{x:-r1.d.x,y:-r1.d.y}},{P:r2.S,d:{x:-r2.d.x,y:-r2.d.y}}) : null;
 
-    // 실제 연필 (윗부분 공기: 진하게, 물속 부분: 진하게)
-    glowSeg(ctx,top.x,top.y,Pierce.x,Pierce.y,'#8a5a2b',5,0);
-    glowSeg(ctx,Pierce.x,Pierce.y,Tip.x,Tip.y,'#b07a3a',5,0);
-    txt(ctx,'연필',top.x-6,top.y-4,{color:'#7c5a2b',size:12,weight:'800',align:'right'});
-    // 실제 끝 표시
-    ctx.save();ctx.fillStyle='#a1a1aa';ctx.beginPath();ctx.arc(Tip.x,Tip.y,3.5,0,7);ctx.fill();ctx.restore();
-    txt(ctx,'실제 위치',Tip.x+6,Tip.y+12,{color:'#71717a',size:10.5,weight:'700',align:'left'});
+    // 실제 연필 — 곧은 직선(갈색). 공기 부분 + 물속 부분이 한 직선.
+    glowSeg(ctx,top.x,top.y,Pierce.x,Pierce.y,'#8a5a2b',5.5,0);
+    glowSeg(ctx,Pierce.x,Pierce.y,Tip.x,Tip.y,'#9c6630',5.5,0);
+    txt(ctx,'연필',top.x-4,top.y-2,{color:'#7c5a2b',size:12,weight:'800',align:'right'});
+    ctx.save();ctx.fillStyle='#8a5a2b';ctx.beginPath();ctx.arc(Tip.x,Tip.y,4.5,0,7);ctx.fill();ctx.restore();
+    txt(ctx,'실제 위치 (곧은 연필)',Tip.x+8,Tip.y+8,{color:'#7c5a2b',size:10.5,weight:'800',align:'left'});
 
-    // 광선
-    [r1,r2].forEach(r=>{ if(!r)return;
-      // 입사(물): Tip→S
-      growLine(ctx,Tip.x,Tip.y,r.S.x,r.S.y,T,(x1,y1,x2,y2)=>glowSeg(ctx,x1,y1,x2,y2,'#52525b',2,4));
+    // 광선: Tip(물속)→S(수면) 회색, S→눈 파랑, 연장선 하늘색
+    [[r1,E1],[r2,E2]].forEach(([r,Et])=>{ if(!r)return;
+      growLine(ctx,Tip.x,Tip.y,r.S.x,r.S.y,T,(a,b,c,d)=>glowSeg(ctx,a,b,c,d,'#52525b',2,4));
       if(T>=1) arrowHead(ctx,lerp(Tip.x,r.S.x,.5),lerp(Tip.y,r.S.y,.5),Math.atan2(r.S.y-Tip.y,r.S.x-Tip.x),8,'#52525b');
-      // 굴절(공기): S→눈 방향
-      const end={x:r.S.x+r.dir.x*h*0.6, y:r.S.y+r.dir.y*h*0.6};
-      growLine(ctx,r.S.x,r.S.y,end.x,end.y,T,(x1,y1,x2,y2)=>glowSeg(ctx,x1,y1,x2,y2,'#2563eb',2.2,6));
-      if(T>=1) arrowHead(ctx,lerp(r.S.x,end.x,.5),lerp(r.S.y,end.y,.5),Math.atan2(r.dir.y,r.dir.x),8,'#2563eb');
-      // 연장선(아래로) → 허상끝
+      growLine(ctx,r.S.x,r.S.y,Et.x,Et.y,T,(a,b,c,d)=>glowSeg(ctx,a,b,c,d,'#2563eb',2.2,6));
+      if(T>=1) arrowHead(ctx,lerp(r.S.x,Et.x,.55),lerp(r.S.y,Et.y,.55),Math.atan2(Et.y-r.S.y,Et.x-r.S.x),8,'#2563eb');
       if(step>=2 && T>=1 && Tv) dashSeg(ctx,r.S.x,r.S.y,Tv.x,Tv.y,'#93b4e8',1.6,[6,5]);
     });
 
     drawEye(ctx,E.x,E.y,'#1d4ed8'); txt(ctx,'👁 눈',E.x,E.y-20,{color:'#1d4ed8',size:11.5,weight:'800'});
 
-    // 보이는 연필 (떠오른 끝 Tv까지, 점선) — step>=3
+    // 보이는 연필 — 떠오른·꺾인 (Pierce → Tv). 이게 '눈에 보이는' 물속 부분.
     if(step>=3 && T>=1 && Tv){
-      dashSeg(ctx,Pierce.x,Pierce.y,Tv.x,Tv.y,'#16a34a',3,[5,4]);
+      glowSeg(ctx,Pierce.x,Pierce.y,Tv.x,Tv.y,'#16a34a',4.5,2);
       ctx.save();ctx.fillStyle='#16a34a';ctx.shadowColor='#16a34a';ctx.shadowBlur=8;
-      ctx.beginPath();ctx.arc(Tv.x,Tv.y,4,0,7);ctx.fill();ctx.restore();
-      txt(ctx,'보이는 위치 (떠오름·꺾임)',Tv.x+4,Tv.y+14,{color:'#15803d',size:11,weight:'800',align:'left'});
+      ctx.beginPath();ctx.arc(Tv.x,Tv.y,4.5,0,7);ctx.fill();ctx.restore();
+      txt(ctx,'보이는 위치 (떠올라 꺾여 보임)',Tv.x+8,Tv.y-4,{color:'#15803d',size:11,weight:'800',align:'left'});
     }
     pencVerdict();
   }
@@ -3343,9 +3669,9 @@ function makePENC(){
 function pencVerdict(){
   const v=$('pencVerdict'); if(!v)return;
   const m={
-    1:'① 물속 연필 끝에서 <b>반사된 빛</b>(회색)이 수면에서 <b>물 → 공기로 나오며 굴절</b>되어(파란 광선) 눈으로 들어옵니다. 물에서 공기로 나올 때는 빛이 법선에서 <b>멀어지는 쪽</b>으로 꺾입니다.',
+    1:'① 물속 연필 <b>실제 끝</b>(깊이 박힌 곧은 연필)에서 <b>반사된 빛</b>(회색)이 수면에서 <b>물→공기로 나오며 굴절</b>되어(파란 광선) 눈으로 들어옵니다.',
     2:'② 눈은 빛이 굴절된 줄 모르고 <b>직진해 왔다</b>고 여깁니다. 그래서 굴절광선을 물속으로 <b>연장</b>합니다(하늘색 점선).',
-    3:'③ 두 연장선이 만나는 곳에 연필 끝이 있다고 느낍니다 — 실제보다 <b>떠오른 위치</b>! 그래서 물속 연필이 수면에서 <b>꺾여</b> 보입니다.'
+    3:'③ 두 연장선이 만나는 곳이 <b>보이는 위치</b> — 실제보다 <b>떠오른 곳</b>! 연필 자체는 곧지만, 물속 부분이 떠올라 보여 수면에서 <b>꺾인 것처럼</b> 보입니다.'
   };
   v.className='why-verdict'+(PENC.step>=3?' ok':'');
   v.innerHTML=m[PENC.step];
@@ -3360,82 +3686,111 @@ function pencGoto(s){
 const PENCLAB=makePENC();
 document.querySelectorAll('#pencSteps .step-btn').forEach(b=>b.addEventListener('click',()=>pencGoto(+b.dataset.s)));
 
-/* ---------- 장면 4: 컵 속 동전 ---------- */
-const COIN={water:0, t:1, raf:null};
+/* ---------- 장면 4: 컵 속 동전 (물 차오름 애니메이션) ---------- */
+const COIN={water:0, level:0, raf:null};
 function makeCOIN(){
   const cv=$('coinCanvas'); if(!cv) return {draw:()=>{}};
+  function intersect(a,b){
+    const x1=a.P.x,y1=a.P.y,x2=a.P.x+a.d.x,y2=a.P.y+a.d.y;
+    const x3=b.P.x,y3=b.P.y,x4=b.P.x+b.d.x,y4=b.P.y+b.d.y;
+    const den=(x1-x2)*(y3-y4)-(y1-y2)*(x3-x4); if(Math.abs(den)<1e-6)return null;
+    return {x:((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4))/den,
+            y:((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4))/den};
+  }
   function draw(){
     if(!cv.clientWidth)return;
-    const {ctx,w,h}=fitCanvas(cv,0.62);
+    const {ctx,w,h}=fitCanvas(cv,0.66);
     ctx.fillStyle='#ffffff';ctx.fillRect(0,0,w,h);
-    // 컵 (사다리꼴)
-    const cupBot=h*0.86, cupTop=h*0.20;
-    const blx=w*0.30, brx=w*0.62, tlx=w*0.26, trx=w*0.66;
-    ctx.save();ctx.strokeStyle='#9aa0aa';ctx.lineWidth=4;ctx.lineJoin='round';
-    ctx.beginPath();ctx.moveTo(tlx,cupTop);ctx.lineTo(blx,cupBot);ctx.lineTo(brx,cupBot);ctx.lineTo(trx,cupTop);ctx.stroke();
-    ctx.restore();
-    // 동전
-    const coin={x:(blx+brx)/2, y:cupBot-5};
-    function drawCoin(x,y,col){ ctx.save();ctx.fillStyle=col;ctx.strokeStyle='#b8860b';ctx.lineWidth=1.5;
-      ctx.beginPath();ctx.ellipse(x,y,14,5,0,0,7);ctx.fill();ctx.stroke();ctx.restore(); }
+    const xL=w*0.34, xR=w*0.86, yB=h*0.93, yT=h*0.30, wall=4;
+    const coin={x:w*0.64, y:yB-5};
+    const yWfull=yT+(yB-yT)*0.09;
+    const lvl=COIN.level;
+    const surf=yB-lvl*(yB-yWfull);
+    const hasWater = lvl>0.06;
+    const full = lvl>0.985;
 
-    const E={x:w*0.90, y:h*0.18};                 // 눈(오른쪽 위, 컵 밖)
-    const rim={x:trx, y:cupTop};                  // 가까운 가장자리(눈쪽)
-    const water=COIN.water;
+    function drawCoin(x,y,fill,stroke){ ctx.save();ctx.fillStyle=fill;ctx.strokeStyle=stroke;ctx.lineWidth=2;
+      ctx.beginPath();ctx.ellipse(x,y,15,5.5,0,0,7);ctx.fill();ctx.stroke();
+      ctx.fillStyle=stroke;ctx.beginPath();ctx.arc(x,y,2.6,0,7);ctx.fill();ctx.restore(); }
+
+    // 물(애니메이션)
+    if(hasWater){
+      ctx.save();
+      const g=ctx.createLinearGradient(0,surf,0,yB);
+      g.addColorStop(0,'rgba(176,212,240,0.74)'); g.addColorStop(1,'rgba(148,196,233,0.92)');
+      ctx.fillStyle=g; ctx.fillRect(xL,surf,xR-xL,yB-surf);
+      ctx.strokeStyle='#8fbce8';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(xL,surf);ctx.lineTo(xR,surf);ctx.stroke();
+      ctx.strokeStyle='rgba(255,255,255,0.55)';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(xL+3,surf-1.5);ctx.lineTo(xR-3,surf-1.5);ctx.stroke();
+      ctx.restore();
+    }
+    // 컵 벽
+    ctx.save();ctx.strokeStyle='#9aa0aa';ctx.lineWidth=wall;ctx.lineJoin='round';ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(xL,yT);ctx.lineTo(xL,yB);ctx.lineTo(xR,yB);ctx.lineTo(xR,yT);ctx.stroke();ctx.restore();
+    // 실제 동전
+    drawCoin(coin.x,coin.y,'#ead24a','#b8860b');
+
+    if(!hasWater){
+      // 물 없음: 동전→눈 직진이 왼쪽 벽에 막힘
+      const Eemp={x:w*0.13,y:h*0.14};
+      txt(ctx,'동전',coin.x,coin.y+17,{color:'#7c5a2b',size:11.5,weight:'800'});
+      const tt=(xL-coin.x)/(Eemp.x-coin.x), by=coin.y+tt*(Eemp.y-coin.y);
+      glowSeg(ctx,coin.x,coin.y,xL,by,'#dc2626',2.4,3);
+      ctx.save();ctx.strokeStyle='#dc2626';ctx.lineWidth=2.8;
+      ctx.beginPath();ctx.moveTo(xL-8,by-8);ctx.lineTo(xL+8,by+8);ctx.moveTo(xL+8,by-8);ctx.lineTo(xL-8,by+8);ctx.stroke();ctx.restore();
+      drawEye(ctx,Eemp.x,Eemp.y,'#1d4ed8'); txt(ctx,'👁 눈',Eemp.x,Eemp.y-20,{color:'#1d4ed8',size:11.5,weight:'800'});
+      txt(ctx,'빛이 가장자리에 막혀 눈에 닿지 않음 → 동전 안 보임',w*0.5,h*0.06,{color:'#b91c1c',size:11.5,weight:'800'});
+      coinVerdict(); return;
+    }
+
+    if(!full){
+      // 물 차오르는 중: 물만 상승, 광선은 가득 찬 뒤 표시
+      txt(ctx,'실제 동전',coin.x,coin.y+17,{color:'#7c5a2b',size:11,weight:'800'});
+      txt(ctx,'물을 붓는 중…',w*0.5,h*0.06,{color:'#1d4ed8',size:11.5,weight:'800'});
+      coinVerdict(); return;
+    }
+
+    // 물 가득: 분리된 두 수면점에서 굴절(물→공기) — 안정적 떠오른 동전
+    const S1={x:w*0.34,y:surf}, S2={x:w*0.43,y:surf};
+    function refr(S){
+      const dx=S.x-coin.x, dy=S.y-coin.y;            // dx<0(왼쪽), dy<0(위)
+      const thW=Math.atan2(Math.abs(dx),Math.abs(dy));
+      const thA=snell(thW,N_WATER,N_AIR);
+      if(thA===null) return null;
+      const sign=Math.sign(dx)||-1;
+      return {S, d:{x:Math.sin(thA)*sign, y:-Math.cos(thA)}};
+    }
+    const r1=refr(S1), r2=refr(S2);
+    const App=(r1&&r2)?intersect({P:S1,d:{x:-r1.d.x,y:-r1.d.y}},{P:S2,d:{x:-r2.d.x,y:-r2.d.y}}):null;
+    const eyeX=w*0.18;
+    function toEyeX(r){ const s=(eyeX-r.S.x)/r.d.x; return {x:eyeX, y:r.S.y+r.d.y*s}; }
+    const P1e=r1?toEyeX(r1):{x:eyeX,y:0}, P2e=r2?toEyeX(r2):{x:eyeX,y:0};
+    const E={x:eyeX, y:(P1e.y+P2e.y)/2};
+
+    // 시야(노란 부채꼴): 눈 → S1 → 동전 → S2
+    ctx.save();ctx.fillStyle='rgba(245,221,80,0.30)';
+    ctx.beginPath();ctx.moveTo(E.x,E.y);ctx.lineTo(S1.x,S1.y);ctx.lineTo(coin.x,coin.y);ctx.lineTo(S2.x,S2.y);ctx.closePath();ctx.fill();ctx.restore();
+    txt(ctx,'시야',(E.x+S1.x)/2-6,(E.y+S1.y)/2+6,{color:'#c79a16',size:12,weight:'800',align:'right'});
+
+    // 광선: 동전→S(물), S→눈(공기) 빨강 + 연장선(초록) → 떠오른 동전
+    [[r1,P1e],[r2,P2e]].forEach(([r,Pe])=>{ if(!r)return;
+      glowSeg(ctx,coin.x,coin.y,r.S.x,r.S.y,'#e23b3b',2.4,3);
+      glowSeg(ctx,r.S.x,r.S.y,Pe.x,Pe.y,'#e23b3b',2.4,3);
+      arrowHead(ctx,lerp(r.S.x,Pe.x,.6),lerp(r.S.y,Pe.y,.6),Math.atan2(Pe.y-r.S.y,Pe.x-r.S.x),8,'#e23b3b');
+      if(App) dashSeg(ctx,r.S.x,r.S.y,App.x,App.y,'#1aa179',1.7,[7,5]);
+    });
 
     drawEye(ctx,E.x,E.y,'#1d4ed8'); txt(ctx,'👁 눈',E.x,E.y-20,{color:'#1d4ed8',size:11.5,weight:'800'});
 
-    if(!water){
-      // 물 없음: 동전→눈 직선이 가장자리 벽에 막힘
-      drawCoin(coin.x,coin.y,'#e9c44a');
-      txt(ctx,'동전',coin.x,coin.y+16,{color:'#7c5a2b',size:11.5,weight:'800'});
-      // 동전에서 눈으로 가려는 직진 광선 → 가장자리(rim)에서 막힘
-      // rim까지 직선 그리고 거기서 ✗
-      const dir={x:E.x-coin.x,y:E.y-coin.y};const L=Math.hypot(dir.x,dir.y);
-      // 가장자리 평면(trx,cupTop) 위쪽 벽: 광선이 컵 오른쪽 벽(brx~trx 선)과 만나는지 단순화 — rim에서 차단 표시
-      const block={x:lerp(coin.x,E.x,0.62), y:lerp(coin.y,E.y,0.62)};
-      glowSeg(ctx,coin.x,coin.y,block.x,block.y,'#52525b',2.2,4);
-      arrowHead(ctx,lerp(coin.x,block.x,.6),lerp(coin.y,block.y,.6),Math.atan2(dir.y,dir.x),8,'#52525b');
-      // 차단 표시 X
-      ctx.save();ctx.strokeStyle='#dc2626';ctx.lineWidth=2.6;
-      ctx.beginPath();ctx.moveTo(block.x-7,block.y-7);ctx.lineTo(block.x+7,block.y+7);
-      ctx.moveTo(block.x+7,block.y-7);ctx.lineTo(block.x-7,block.y+7);ctx.stroke();ctx.restore();
-      txt(ctx,'빛이 가장자리에 막혀 눈에 닿지 않음 → 동전 안 보임',w*0.5,h*0.07,{color:'#b91c1c',size:11.5,weight:'800'});
-    } else {
-      // 물 채움: 수면, 동전빛이 수면에서 굴절되어 가장자리 넘어 눈으로
-      const surf=cupTop+ (cupBot-cupTop)*0.18;     // 수면(가장자리 약간 아래)
-      // 수면 폭(사다리꼴 보간)
-      const fy=(surf-cupTop)/(cupBot-cupTop);
-      const sLx=lerp(tlx,blx,fy), sRx=lerp(trx,brx,fy);
-      waterFill(ctx,sLx,surf,sRx-sLx,cupBot-surf);
-      glowSeg(ctx,sLx,surf,sRx,surf,'#7fb0e6',2.2,0);
-      txt(ctx,'수면',sRx+4,surf-2,{color:'#52525b',size:10,weight:'700',align:'left'});
-      // 동전→수면점 S(눈쪽)에서 물→공기 굴절 → 눈
-      const S={x:lerp(coin.x,sRx,0.72), y:surf};
-      const dx=S.x-coin.x, dy=S.y-coin.y;
-      const thW=Math.atan2(Math.abs(dx),Math.abs(dy));
-      const thA=snell(thW,N_WATER,N_AIR);
-      const sign=Math.sign(dx)||1;
-      const dir = thA!==null ? {x:Math.sin(thA)*sign,y:-Math.cos(thA)} : {x:Math.sin(thW)*sign,y:-Math.cos(thW)};
-      // 입사(물): 동전→S
-      glowSeg(ctx,coin.x,coin.y,S.x,S.y,'#52525b',2.2,4);
-      arrowHead(ctx,lerp(coin.x,S.x,.55),lerp(coin.y,S.y,.55),Math.atan2(dy,dx),8,'#52525b');
-      // 굴절(공기): S→눈 방향(가장자리 넘어)
-      const end={x:S.x+dir.x*h*0.9, y:S.y+dir.y*h*0.9};
-      glowSeg(ctx,S.x,S.y,end.x,end.y,'#2563eb',2.4,6);
-      arrowHead(ctx,lerp(S.x,end.x,.5),lerp(S.y,end.y,.5),Math.atan2(dir.y,dir.x),8,'#2563eb');
-      // 연장선(아래로) → 보이는 동전(떠오름)
-      const tt=(coin.y-S.y)/(-dir.y);            // y가 coin.y 될 때까지 역방향
-      const Cv={x:S.x - dir.x*tt, y:coin.y};
-      dashSeg(ctx,S.x,S.y,Cv.x,Cv.y,'#93b4e8',1.6,[6,5]);
-      // 실제 동전(바닥) + 보이는 동전(떠오름)
-      drawCoin(coin.x,coin.y,'#e9c44a'); txt(ctx,'실제 동전',coin.x,coin.y+16,{color:'#7c5a2b',size:11,weight:'800'});
-      const Cvy=lerp(coin.y,surf,0.45);          // 떠오른 위치(겉보기 깊이 약 0.75 → 위로)
-      drawCoin(Cv.x,Cvy,'#bfe3c5'); 
-      ctx.save();ctx.fillStyle='#16a34a';ctx.beginPath();ctx.arc(Cv.x,Cvy,3,0,7);ctx.fill();ctx.restore();
-      txt(ctx,'보이는 동전 (떠오름)',Cv.x,Cvy-12,{color:'#15803d',size:11,weight:'800'});
-      txt(ctx,'물을 채우니 빛이 굴절되어 눈에 들어옴 → 동전이 떠올라 보임',w*0.5,h*0.07,{color:'#15803d',size:11.5,weight:'800'});
+    // 실제/보이는 동전
+    txt(ctx,'실제 동전',coin.x,coin.y+17,{color:'#7c5a2b',size:11,weight:'800'});
+    if(App){
+      // 떠오른 높이 점선
+      ctx.save();ctx.strokeStyle='#16a34a';ctx.lineWidth=1.3;ctx.setLineDash([3,3]);
+      ctx.beginPath();ctx.moveTo(App.x,App.y+6);ctx.lineTo(App.x,coin.y-6);ctx.stroke();ctx.restore();
+      drawCoin(App.x,App.y,'#7fc9b0','#1aa179');
+      txt(ctx,'보이는 동전 (떠올라 보임)',App.x,App.y-13,{color:'#15803d',size:11,weight:'800'});
     }
+    txt(ctx,'물을 채우니 빛이 굴절되어 눈에 들어옴 → 동전이 떠올라 보임',w*0.5,h*0.06,{color:'#15803d',size:11.5,weight:'800'});
     coinVerdict();
   }
   return {draw};
@@ -3444,28 +3799,262 @@ function coinVerdict(){
   const v=$('coinVerdict'); if(!v)return;
   if(!COIN.water){
     v.className='why-verdict';
-    v.innerHTML='<b>물 없음</b> — 동전에서 반사된 빛이 직진하다가 <b>컵 가장자리에 막혀</b> 눈에 닿지 않습니다. 그래서 동전이 <b>보이지 않습니다.</b> 이제 \'물 채움\'을 눌러 보세요.';
+    v.innerHTML='<b>물 없음</b> — 동전에서 반사된 빛이 직진하다가 <b>컵 가장자리(벽)에 막혀</b> 눈에 닿지 않습니다. 그래서 동전이 <b>보이지 않습니다.</b> 이제 \'물 채움\'을 눌러 보세요.';
   }else{
     v.className='why-verdict ok';
-    v.innerHTML='<b>물 채움</b> — 동전 빛이 수면에서 <b>굴절(물→공기)</b>되어 가장자리를 넘어 눈에 들어옵니다. 눈은 빛이 <b>직진해 온 줄</b> 알아 연장선이 만나는 곳(실제보다 <b>위</b>)에 동전이 있다고 느낍니다 → <b>동전이 떠올라 보임!</b>';
+    v.innerHTML='<b>물 채움</b> — 동전 빛이 수면에서 <b>굴절(물→공기)</b>되어 가장자리를 넘어 눈에 들어옵니다(빨간 광선). 눈은 빛이 <b>직진해 온 줄</b> 알아, 굴절광선의 <b>연장선이 만나는 점</b>(실제보다 <b>위</b>)에 동전이 있다고 느낍니다 → <b>동전이 떠올라 보임!</b>';
   }
 }
 function coinSet(wv){
   COIN.water=wv;
   document.querySelectorAll('#coinToggle .step-btn').forEach(b=>b.classList.toggle('active',+b.dataset.w===wv));
-  sndClick(); COINLAB.draw();
+  sndClick();
+  if(COIN.raf)cancelAnimationFrame(COIN.raf);
+  const from=COIN.level, to=wv?1:0, t0=performance.now(), dur=1200;
+  (function an(now){
+    const k=clamp((now-t0)/dur,0,1);
+    const e=k<0.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    COIN.level=from+(to-from)*e;
+    COINLAB.draw();
+    if(k<1) COIN.raf=requestAnimationFrame(an);
+  })(t0);
 }
 const COINLAB=makeCOIN();
 document.querySelectorAll('#coinToggle .step-btn').forEach(b=>b.addEventListener('click',()=>coinSet(+b.dataset.w)));
+
+
+/* ====== 🔍 렌즈 두 번 굴절 JS ====== */
+/* ============================================================
+   🔍 렌즈 = 굴절 장치 (두 번 굴절 + 볼록/오목, 나란한 빛)
+   두꺼운 렌즈 2면에서 스넬 굴절을 실제 계산. 공기 1.0, 유리 1.5.
+   ============================================================ */
+const TR={type:'cvx'};
+const N_GLASS=1.5;
+function vrefract(d, nrm, eta){ // d 단위입사, nrm 표면법선, eta=n_in/n_out
+  let n=[nrm[0],nrm[1]];
+  let cosi=-(d[0]*n[0]+d[1]*n[1]);
+  if(cosi<0){ n=[-n[0],-n[1]]; cosi=-(d[0]*n[0]+d[1]*n[1]); }
+  const k=1-eta*eta*(1-cosi*cosi);
+  if(k<0) return null;
+  const c2=Math.sqrt(k);
+  const o=[eta*d[0]+(eta*cosi-c2)*n[0], eta*d[1]+(eta*cosi-c2)*n[1]];
+  const L=Math.hypot(o[0],o[1]); return [o[0]/L,o[1]/L];
+}
+function rayCircle(O,d,C,R){ // 교차 s 두 근
+  const ox=O[0]-C[0], oy=O[1]-C[1];
+  const b=2*(d[0]*ox+d[1]*oy), c=ox*ox+oy*oy-R*R;
+  const disc=b*b-4*c; if(disc<0) return null;
+  const sq=Math.sqrt(disc); return [(-b-sq)/2, (-b+sq)/2];
+}
+function makeTR(){
+  const cv=$('trCanvas'); if(!cv) return {draw:()=>{}};
+  function draw(){
+    if(!cv.clientWidth)return;
+    const {ctx,w,h}=fitCanvas(cv,0.58);
+    const axis=h*0.5, Lx=w*0.42;
+    ctx.fillStyle='#ffffff';ctx.fillRect(0,0,w,h);
+    dashSeg(ctx,0,axis,w,axis,'#d4d4d8',1.2,[7,6]);
+    txt(ctx,'광축',w-24,axis-10,{color:'#a1a1aa',size:10});
+
+    const cvx = TR.type==='cvx';
+    const R=w*0.55, yMax=w*0.135;
+    // 표면 정의 (Y: 위 +, 캔버스 y=axis-Y)
+    let Cf,Cb,xfV,xbV;
+    if(cvx){ const tc=w*0.11; xfV=Lx-tc/2; xbV=Lx+tc/2; Cf=[xfV+R,0]; Cb=[xbV-R,0]; }
+    else   { const tc=w*0.03; xfV=Lx-tc/2; xbV=Lx+tc/2; Cf=[xfV-R,0]; Cb=[xbV+R,0]; }
+    function frontX(Y){ return cvx ? xfV+R-Math.sqrt(R*R-Y*Y) : xfV-(R-Math.sqrt(R*R-Y*Y)); }
+    function backX(Y){  return cvx ? xbV-R+Math.sqrt(R*R-Y*Y) : xbV+(R-Math.sqrt(R*R-Y*Y)); }
+
+    // 렌즈 그리기
+    function lensPath(){
+      ctx.beginPath();
+      for(let i=0;i<=40;i++){ const Y=-yMax+2*yMax*i/40; const x=frontX(Y); i?ctx.lineTo(x,axis-Y):ctx.moveTo(x,axis-Y); }
+      for(let i=40;i>=0;i--){ const Y=-yMax+2*yMax*i/40; const x=backX(Y); ctx.lineTo(x,axis-Y); }
+      ctx.closePath();
+    }
+    ctx.save(); lensPath(); ctx.fillStyle='rgba(150,190,235,0.18)'; ctx.fill();
+    ctx.strokeStyle='#7fb0e6'; ctx.lineWidth=2.5; ctx.stroke(); ctx.restore();
+    txt(ctx, cvx?'볼록 렌즈 (유리)':'오목 렌즈 (유리)', Lx, axis-yMax-14, {color:'#52525b',size:12,weight:'800'});
+
+    // 광선 추적
+    const xStart=w*0.02, n_a=1.0, ng=N_GLASS;
+    const Ys=[-1,-0.66,-0.33,0.33,0.66,1].map(k=>k*yMax*0.92);
+    let focusXs=[];
+    Ys.forEach(Y0=>{
+      const P0=[xStart, axis-Y0];
+      const P1=[frontX(Y0), axis-Y0];
+      // 입사
+      glowSeg(ctx,P0[0],P0[1],P1[0],P1[1],'#52525b',2,4);
+      // 앞면 법선
+      let nF=[(P1[0]-Cf[0]), (axis-Y0)-(axis-Cf[1])]; let Ln=Math.hypot(nF[0],nF[1]); nF=[nF[0]/Ln,nF[1]/Ln];
+      const d1=vrefract([1,0],nF, n_a/ng); if(!d1) return;
+      // 앞면→뒷면 교차 (뒷면 원)
+      const rc=rayCircle(P1,d1,[Cb[0],axis-Cb[1]],R); if(!rc) return;
+      // 적절한 근: 양수이며 x가 렌즈 오른쪽
+      let s=null; rc.forEach(v=>{ if(v>1e-3){ const px=P1[0]+d1[0]*v; if(s===null||px>P1[0]+d1[0]*s) s=v; }});
+      if(s===null) return;
+      const P2=[P1[0]+d1[0]*s, P1[1]+d1[1]*s];
+      glowSeg(ctx,P1[0],P1[1],P2[0],P2[1],'#2563eb',2,5); // 유리 속
+      // 뒷면 법선
+      let nB=[(P2[0]-Cb[0]), P2[1]-(axis-Cb[1])]; let Lb=Math.hypot(nB[0],nB[1]); nB=[nB[0]/Lb,nB[1]/Lb];
+      const d2=vrefract(d1,nB, ng/n_a); if(!d2) return;
+      // 출사
+      const end=[P2[0]+d2[0]*w, P2[1]+d2[1]*w];
+      glowSeg(ctx,P2[0],P2[1],end[0],end[1],'#2563eb',2.2,6);
+      arrowHead(ctx,lerp(P2[0],end[0],.28),lerp(P2[1],end[1],.28),Math.atan2(d2[1],d2[0]),8,'#2563eb');
+      // 굴절점 표시(작은 점)
+      ctx.save();ctx.fillStyle='#1d4ed8';ctx.beginPath();ctx.arc(P1[0],P1[1],2.4,0,7);ctx.arc(P2[0],P2[1],2.4,0,7);ctx.fill();ctx.restore();
+      // 축과 만나는 x (볼록=실초점, 오목=역연장 허초점)
+      if(Math.abs(d2[1])>1e-4){
+        const xc=P2[0]+(axis-P2[1])/d2[1]*d2[0];
+        focusXs.push(xc);
+        if(!cvx){ // 오목: 출사광선 역연장(왼쪽 점선)
+          dashSeg(ctx,P2[0],P2[1], xc, axis, '#93b4e8',1.3,[5,4]);
+        }
+      }
+    });
+    // 초점 표시
+    if(focusXs.length){
+      const fx=focusXs.reduce((a,b)=>a+b,0)/focusXs.length;
+      if(fx>0 && fx<w*1.2){
+        ctx.save();ctx.fillStyle='#dc2626';ctx.shadowColor='#dc2626';ctx.shadowBlur=8;
+        ctx.beginPath();ctx.arc(Math.min(fx,w-14),axis,4.5,0,7);ctx.fill();ctx.restore();
+        txt(ctx, cvx?'초점 F (빛이 모임)':'허초점 (퍼져 나온 듯)', Math.min(fx,w-14), axis+16, {color:'#b91c1c',size:11,weight:'800'});
+      }
+    }
+    // ①②굴절 안내
+    txt(ctx,'① 들어갈 때 굴절',xfV-yMax*0.2,axis-yMax-2,{color:'#1d4ed8',size:10.5,weight:'800',align:'right'});
+    txt(ctx,'② 나갈 때 굴절',xbV+yMax*0.2,axis+yMax+12,{color:'#1d4ed8',size:10.5,weight:'800',align:'left'});
+
+    trUpdate();
+  }
+  return {draw};
+}
+function trUpdate(){
+  const fate=$('trFate'), use=$('trUse'), v=$('trVerdict');
+  if(TR.type==='cvx'){
+    fate.textContent='안쪽으로 꺾여 한 점에 모임'; fate.style.color='#15803d';
+    use.textContent='현미경·망원경 (확대)'; use.style.color='#15803d';
+    v.innerHTML='<b>볼록 렌즈</b> — 나란한 빛이 앞면에서 한 번, 뒷면에서 또 한 번, <b>두 번 굴절</b>하며 <b>안쪽으로</b> 꺾여 <b>초점 한 점에 모입니다.</b> 물체를 크게 볼 수 있어 <b>현미경·망원경</b>에 쓰입니다.';
+  }else{
+    fate.textContent='바깥으로 꺾여 넓게 퍼짐'; fate.style.color='#1d4ed8';
+    use.textContent='자동차 안개등 (빛 퍼뜨림)'; use.style.color='#1d4ed8';
+    v.innerHTML='<b>오목 렌즈</b> — 나란한 빛이 <b>두 번 굴절</b>하며 <b>바깥으로</b> 꺾여 <b>넓게 퍼집니다.</b> 퍼진 빛의 역연장선은 렌즈 앞 <b>허초점</b>에서 나온 듯 보입니다. 빛을 멀리 퍼뜨리는 <b>안개등</b>에 쓰입니다.';
+  }
+  v.className='why-verdict ok';
+}
+function trSet(tp){
+  TR.type=tp;
+  document.querySelectorAll('#trType .step-btn').forEach(b=>b.classList.toggle('active',b.dataset.t===tp));
+  sndClick(); TRLAB.draw();
+}
+const TRLAB=makeTR();
+document.querySelectorAll('#trType .step-btn').forEach(b=>b.addEventListener('click',()=>trSet(b.dataset.t)));
+
+
+/* ====== ★ 수정체 두께 조절 JS ====== */
+/* ============================================================
+   ★ 수정체 두께 조절 (조절 작용) — 눈
+   먼 물체(평행광) → 수정체 얇음 → 망막에 초점.
+   가까운 물체(퍼지는 빛) → 수정체 두꺼움(굴절 강함) → 망막에 초점.
+   상점(망막 초점)으로 광선 결정: 모든 광선이 Rf로 수렴.
+   ============================================================ */
+const ACC={state:'far'};
+function makeACC(){
+  const cv=$('accCanvas'); if(!cv) return {draw:()=>{}};
+  function draw(){
+    if(!cv.clientWidth)return;
+    const {ctx,w,h}=fitCanvas(cv,0.56);
+    const axis=h*0.54;
+    ctx.fillStyle='#ffffff';ctx.fillRect(0,0,w,h);
+
+    const near = ACC.state==='near';
+    // 눈 본체(타원)
+    const eyeL=w*0.42, eyeR=w*0.93, eyeCx=(eyeL+eyeR)/2, eyeRx=(eyeR-eyeL)/2, eyeRy=h*0.40;
+    ctx.save();
+    ctx.beginPath();ctx.ellipse(eyeCx,axis,eyeRx,eyeRy,0,0,7);
+    ctx.fillStyle='#fbfdff';ctx.strokeStyle='#c7d2e0';ctx.lineWidth=2.5;ctx.fill();ctx.stroke();
+    ctx.restore();
+    // 망막(뒤쪽 호) + 초점
+    const Rf={x:eyeR-w*0.03, y:axis};
+    ctx.save();ctx.strokeStyle='#e8b4b4';ctx.lineWidth=5;
+    ctx.beginPath();ctx.ellipse(eyeCx,axis,eyeRx,eyeRy,0,-Math.PI*0.42,Math.PI*0.42);ctx.stroke();ctx.restore();
+    txt(ctx,'망막',eyeR-w*0.01,axis-h*0.16,{color:'#b06a6a',size:11,weight:'800',align:'left'});
+
+    // 수정체 (앞쪽 볼록렌즈) — 두께 가변
+    const lensX=eyeL+w*0.05, lensRy=h*0.24;
+    const th = near ? w*0.055 : w*0.028;          // 가까우면 두껍게
+    const Rc = (lensRy*lensRy + th*th)/(2*th);     // 곡률
+    function lensFront(Y){ return lensX - (Math.sqrt(Math.max(0,Rc*Rc-Y*Y)) - (Rc-th)); }
+    function lensBack(Y){  return lensX + (Math.sqrt(Math.max(0,Rc*Rc-Y*Y)) - (Rc-th)); }
+    ctx.save();ctx.beginPath();
+    for(let i=0;i<=30;i++){const Y=-lensRy+2*lensRy*i/30;const x=lensFront(Y);i?ctx.lineTo(x,axis-Y):ctx.moveTo(x,axis-Y);}
+    for(let i=30;i>=0;i--){const Y=-lensRy+2*lensRy*i/30;const x=lensBack(Y);ctx.lineTo(x,axis-Y);}
+    ctx.closePath();
+    ctx.fillStyle=near?'rgba(37,99,235,0.20)':'rgba(37,99,235,0.12)';
+    ctx.strokeStyle='#2563eb';ctx.lineWidth=2.4;ctx.fill();ctx.stroke();ctx.restore();
+    txt(ctx,'수정체',lensX,axis-lensRy-12,{color:'#1d4ed8',size:11.5,weight:'800'});
+
+    // 광선: 4개. 먼 물체=평행, 가까운 물체=가까운 점에서 퍼짐. 모두 Rf로 수렴.
+    const Ys=[-0.7,-0.3,0.3,0.7].map(k=>k*lensRy);
+    const objNear={x:w*0.10, y:axis};
+    Ys.forEach(Y=>{
+      const M={x:lensX, y:axis-Y};
+      // 입사
+      if(near){
+        glowSeg(ctx,objNear.x,objNear.y,M.x,M.y,'#52525b',2,4);
+        arrowHead(ctx,lerp(objNear.x,M.x,.5),lerp(objNear.y,M.y,.5),Math.atan2(M.y-objNear.y,M.x-objNear.x),7,'#52525b');
+      }else{
+        glowSeg(ctx,w*0.04,M.y,M.x,M.y,'#52525b',2,4);
+        arrowHead(ctx,lerp(w*0.04,M.x,.5),M.y,0,7,'#52525b');
+      }
+      // 굴절 후: M → Rf (망막 초점)
+      glowSeg(ctx,M.x,M.y,Rf.x,Rf.y,'#2563eb',2.2,6);
+    });
+    // 초점(망막) 표시
+    ctx.save();ctx.fillStyle='#16a34a';ctx.shadowColor='#16a34a';ctx.shadowBlur=9;
+    ctx.beginPath();ctx.arc(Rf.x,Rf.y,4.5,0,7);ctx.fill();ctx.restore();
+    txt(ctx,'초점 (망막에 정확히)',Rf.x,axis+h*0.15,{color:'#15803d',size:11,weight:'800'});
+
+    // 물체 라벨
+    if(near){
+      glowSeg(ctx,objNear.x,axis,objNear.x,axis-h*0.10,'#7c5a2b',3,0);
+      arrowHead(ctx,objNear.x,axis-h*0.10,-Math.PI/2,8,'#7c5a2b');
+      txt(ctx,'가까운 물체',objNear.x,axis+16,{color:'#7c5a2b',size:11,weight:'800'});
+    }else{
+      txt(ctx,'먼 물체 → 평행광',w*0.13,axis-h*0.30,{color:'#71717a',size:11,weight:'800',align:'left'});
+    }
+    accUpdate();
+  }
+  return {draw};
+}
+function accUpdate(){
+  const near=ACC.state==='near';
+  const th=$('accThick'),pw=$('accPower'),fc=$('accFocus'),v=$('accVerdict');
+  th.textContent= near?'두꺼워짐':'얇아짐'; th.style.color= near?'#15803d':'#1d4ed8';
+  pw.textContent= near?'강하게 굴절 (많이 모음)':'약하게 굴절'; pw.style.color= near?'#15803d':'#1d4ed8';
+  fc.textContent='망막에 정확히 (또렷)'; fc.style.color='#15803d';
+  v.className='why-verdict ok';
+  v.innerHTML= near
+    ? '<b>가까운 물체</b> — 물체에서 빛이 <b>퍼지며</b> 들어오므로, 더 많이 모아야 망막에 맺힌다. 그래서 수정체가 <b>두꺼워져</b> 빛을 <b>강하게 굴절</b>시킨다 → 초점이 <b>망막에 정확히</b> 맺혀 또렷!'
+    : '<b>먼 물체</b> — 멀리서 온 빛은 거의 <b>평행</b>하게 들어온다. 조금만 모아도 망막에 맺히므로 수정체가 <b>얇아진다</b> → 초점이 <b>망막에 정확히</b> 맺혀 또렷! 물체 거리가 바뀌어도 수정체 두께를 바꿔 늘 초점을 망막에 맞춘다.';
+}
+function accSet(st){
+  ACC.state=st;
+  document.querySelectorAll('#accState .step-btn').forEach(b=>b.classList.toggle('active',b.dataset.st===st));
+  sndClick(); ACCLAB.draw();
+}
+const ACCLAB=makeACC();
+document.querySelectorAll('#accState .step-btn').forEach(b=>b.addEventListener('click',()=>accSet(b.dataset.st)));
 
 function redrawTab(name){
   if(name==='mirror')MIRLAB.draw();
   else if(name==='lens')LENLAB.draw();
   else if(name==='ray')drawRC();
   else if(name==='game')drawGM();
-  else if(name==='rr'){if(typeof RFLLAB!=='undefined')RFLLAB.draw();if(typeof RFRLAB!=='undefined')RFRLAB.draw();if(typeof PENCLAB!=='undefined')PENCLAB.draw();if(typeof COINLAB!=='undefined')COINLAB.draw();}
+  else if(name==='rr'){if(typeof RFLLAB!=='undefined')RFLLAB.draw();if(typeof RFRLAB!=='undefined')RFRLAB.draw();if(typeof PENCLAB!=='undefined')PENCLAB.draw();if(typeof COINLAB!=='undefined')COINLAB.draw();if(typeof TRLAB!=='undefined')TRLAB.draw();}
   else if(name==='beyond'){drawFC();if(typeof BVLAB!=='undefined')BVLAB.draw();if(typeof CVLAB!=='undefined')CVLAB.draw();if(typeof MILAB!=='undefined')MILAB.draw();if(typeof LNLAB!=='undefined')LNLAB.draw();}
-  else if(name==='eye')EYELAB.draw();
+  else if(name==='eye'){EYELAB.draw();if(typeof ACCLAB!=='undefined')ACCLAB.draw();}
 }
 function redrawActive(){
   const cur=document.querySelector('.tab-panel.active');
@@ -3508,6 +4097,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(typeof RFRLAB!=='undefined')RFRLAB.draw();
   if(typeof PENCLAB!=='undefined')PENCLAB.draw();
   if(typeof COINLAB!=='undefined')COINLAB.draw();
+  if(typeof TRLAB!=='undefined')TRLAB.draw();
+  if(typeof ACCLAB!=='undefined')ACCLAB.draw();
   if(typeof eyeSyncGlassUI==='function')eyeSyncGlassUI();
   if(typeof rcStageBtnState==='function')rcStageBtnState();
 });
