@@ -410,6 +410,87 @@ footer .fdot{color:var(--gold)}
 .maze-msg b{color:#fff}
 .mbtn{font-family:var(--font-body);font-weight:700;font-size:.86rem;cursor:pointer;border:1px solid var(--line2);background:rgba(255,255,255,.04);color:var(--text);border-radius:11px;padding:11px 16px;transition:.18s}
 .mbtn:hover{border-color:var(--gold);background:rgba(255,206,77,.07)}
+
+/* ===== 교사용 안내 모달 (teacher guide) — 기존 디자인 토큰 재사용 ===== */
+.tgm-veil{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,8,16,.74);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .38s ease}
+.tgm-veil.show{opacity:1;pointer-events:auto}
+.tgm-card{position:relative;width:min(660px,96vw);max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;background:linear-gradient(165deg,var(--surface),var(--bg2));border:1px solid var(--line2);border-radius:20px;padding:26px clamp(18px,3.5vw,32px) 22px;box-shadow:var(--shadow),0 0 40px -16px var(--gold);transform:translateY(14px) scale(.985);transition:transform .38s cubic-bezier(.2,.8,.3,1);color:var(--text)}
+.tgm-veil.show .tgm-card{transform:none}
+.tgm-card::-webkit-scrollbar{width:9px}.tgm-card::-webkit-scrollbar-thumb{background:var(--line2);border-radius:8px}
+.tgm-eyebrow{font-family:var(--font-body);font-size:.82rem;font-weight:700;letter-spacing:.03em;color:var(--cyan);display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.tgm-eyebrow::before{content:"";width:22px;height:2px;background:linear-gradient(90deg,var(--cyan),transparent)}
+.tgm-title{font-family:var(--font-display);font-size:clamp(1.4rem,4.2vw,2rem);line-height:1.22;margin:0 0 12px;color:var(--text);font-weight:400}
+.tgm-title .hl{color:var(--gold)}
+.tgm-lead{font-size:.95rem;line-height:1.7;color:var(--muted);margin:0 0 4px}
+.tgm-lead b{color:var(--cyan-soft);font-weight:700}
+.tgm-sec{margin-top:16px}
+.tgm-h{font-family:var(--font-body);font-weight:800;font-size:.96rem;color:var(--gold-soft);margin-bottom:9px;display:flex;align-items:center;gap:7px}
+.tgm-flow{display:flex;flex-wrap:wrap;gap:6px 3px;align-items:center}
+.tgm-step{font-size:.8rem;font-weight:700;color:var(--text);background:var(--surface2);border:1px solid var(--line);border-radius:9px;padding:6px 10px;white-space:nowrap}
+.tgm-arr{color:var(--faint);font-weight:800;font-size:.8rem;padding:0 1px}
+.tgm-tips{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.tgm-tip{display:flex;gap:11px;background:rgba(21,32,58,.5);border:1px solid var(--line);border-radius:13px;padding:11px 13px}
+.tgm-tip .n{flex:0 0 auto;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-weight:800;font-size:.82rem;background:linear-gradient(135deg,var(--cyan),var(--cyan-deep));color:#04212b}
+.tgm-tip .b{font-size:.86rem;line-height:1.55;color:var(--text)}
+.tgm-tip .b strong{color:var(--gold-soft);font-weight:800}
+.tgm-note{margin-top:16px;font-size:.83rem;line-height:1.65;color:var(--faint);background:rgba(12,18,32,.6);border:1px dashed var(--line2);border-radius:12px;padding:11px 13px}
+.tgm-note b{color:var(--muted)}
+.tgm-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.tgm-btn{font-family:var(--font-body);font-weight:800;font-size:.92rem;cursor:pointer;border:0;border-radius:13px;padding:13px 18px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .06s,box-shadow .18s,border-color .18s;text-decoration:none}
+.tgm-btn:active{transform:translateY(2px)}
+.tgm-btn.primary{flex:1 1 200px;background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#2a1c02;box-shadow:0 8px 22px -10px var(--gold)}
+.tgm-btn.ghost{flex:1 1 170px;background:var(--surface2);color:var(--text);border:1px solid var(--line2)}
+.tgm-btn.ghost:hover{border-color:var(--cyan)}
+.tgm-foot{display:flex;align-items:center;gap:9px;margin-top:14px;flex-wrap:wrap}
+.tgm-check{display:inline-flex;align-items:center;gap:8px;font-size:.83rem;color:var(--muted);cursor:pointer;user-select:none}
+.tgm-check input{width:17px;height:17px;accent-color:var(--gold)}
+.tgm-x{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:var(--surface2);color:var(--muted);font-size:1.1rem;cursor:pointer;display:grid;place-items:center;transition:.16s;line-height:1}
+.tgm-x:hover{color:var(--text);border-color:var(--line2)}
+.tgm-fab{position:fixed;right:16px;bottom:16px;z-index:480;font-family:var(--font-body);font-weight:800;font-size:.86rem;cursor:pointer;border:1px solid var(--gold-deep);border-radius:30px;padding:11px 16px;display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,rgba(26,34,56,.96),rgba(14,22,38,.96));color:var(--gold-soft);box-shadow:0 12px 30px -12px rgba(0,0,0,.8),0 0 18px -8px var(--gold)}
+.tgm-fab:hover{color:var(--gold)}.tgm-fab:active{transform:translateY(2px)}
+@media (max-width:560px){.tgm-fab{font-size:.8rem;padding:10px 13px;right:12px;bottom:12px}}
+@media print{.tgm-veil,.tgm-fab{display:none !important}}
+
+.fcredit{display:block;margin-top:8px;font-size:.72rem;color:var(--faint);opacity:.85;line-height:1.55}
+.tgm-credit{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:.74rem;color:var(--faint);text-align:center;line-height:1.55}
+
+/* ===== 수업 매뉴얼 탭(.man-*) + 모달 그룹 ===== */
+#tab-manual .man-wrap{max-width:840px;margin:0 auto}
+.man-eyebrow{font-family:var(--font-body);font-size:.82rem;font-weight:700;color:var(--cyan);letter-spacing:.03em;margin-bottom:6px}
+.man-title{font-family:var(--font-display);font-size:clamp(1.5rem,4.5vw,2.2rem);color:var(--text);margin:0 0 4px;font-weight:400}
+.man-sub{font-size:.78rem;color:var(--faint);margin:0 0 18px}
+.man-callout{background:rgba(255,206,77,.08);border:1px solid var(--gold-deep);border-radius:14px;padding:13px 16px;font-size:.92rem;line-height:1.65;color:var(--gold-soft);margin-bottom:22px}
+.man-callout b{color:var(--gold)}
+.man-h2{font-family:var(--font-body);font-weight:800;font-size:1.05rem;color:var(--gold-soft);margin:26px 0 12px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+.man-p{font-size:.92rem;line-height:1.7;color:var(--muted);margin:0 0 10px}
+.man-p b{color:var(--cyan-soft)}
+.man-list{margin:0 0 10px;padding-left:20px;font-size:.9rem;line-height:1.7;color:var(--muted)}
+.man-list li{margin-bottom:5px}.man-list b{color:var(--cyan-soft)}
+.man-group{font-family:var(--font-body);font-weight:800;font-size:.86rem;color:var(--cyan);margin:20px 0 9px;display:flex;align-items:center;gap:8px}
+.man-group::before{content:"";width:14px;height:2px;background:var(--cyan)}
+.man-card{background:var(--surface2);border:1px solid var(--line);border-radius:13px;padding:13px 15px;margin-bottom:10px}
+.man-card-h{font-weight:800;font-size:.98rem;color:var(--text);margin-bottom:7px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.man-tag{font-size:.72rem;font-weight:700;color:var(--violet);background:rgba(157,140,255,.12);border:1px solid rgba(157,140,255,.4);border-radius:20px;padding:2px 10px}
+.man-card-b{font-size:.88rem;line-height:1.68;color:var(--muted)}
+.man-card-b b{color:var(--cyan-soft)}
+.man-card-b .li{display:block;margin-top:3px}
+.man-card-b .li b{color:var(--gold-soft)}
+.man-note{font-size:.85rem;color:var(--faint);background:rgba(12,18,32,.6);border:1px dashed var(--line2);border-radius:11px;padding:10px 13px;margin-bottom:12px}
+.man-note b{color:var(--muted)}
+.man-flowbox{display:flex;flex-direction:column;gap:6px}
+.man-flow-title{font-weight:800;font-size:.85rem;color:var(--gold-soft);margin-top:8px}
+.man-flow{font-size:.84rem;line-height:1.7;color:var(--text);background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+.man-tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:12px;border:1px solid var(--line);border-radius:11px}
+.man-table{border-collapse:collapse;width:100%;min-width:460px;font-size:.85rem}
+.man-table th,.man-table td{border-bottom:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;line-height:1.6}
+.man-table th{background:var(--surface2);color:var(--gold-soft);font-weight:800;white-space:nowrap}
+.man-table td{color:var(--muted)}.man-table tr:last-child td{border-bottom:0}
+.man-credit{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);font-size:.76rem;color:var(--faint);text-align:center}
+.tgm-groups{display:flex;flex-direction:column;gap:7px}
+.tgm-grp{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.tgm-gl{font-size:.72rem;font-weight:800;color:var(--cyan);min-width:62px}
+.tgm-grpnote{font-size:.8rem;color:var(--faint);line-height:1.6;margin-top:10px}
+.tgm-grpnote b{color:var(--gold-soft)}
 </style>
 </head>
 <body>
@@ -431,6 +512,7 @@ footer .fdot{color:var(--gold)}
       <button class="tab-btn" data-tab="pool"><span class="ico">💡</span>Light 포켓볼</button>
       <button class="tab-btn" data-tab="whyrefr"><span class="ico">🌊</span>굴절은 왜?</button>
       <button class="tab-btn" data-tab="why"><span class="ico">🤔</span>왜 같을까?</button>
+      <button class="tab-btn" data-tab="manual"><span class="ico">📒</span>수업 매뉴얼</button>
     </nav>
   </div>
 </header>
@@ -482,7 +564,7 @@ footer .fdot{color:var(--gold)}
       <h3>물속과 물 밖,<br>누가 굴절에 속고 누가 이기나</h3>
       <p class="hook-body">물–공기 경계면에서 빛은 굴절한다. <b>인간</b>은 물 밖에서 물속 물고기를 보며 굴절에 속아 작살이 빗나가고, <b>물총고기</b>는 물속에서 물 밖 곤충을 보며 굴절을 보정해 물줄기를 명중시킨다.</p>
       <div class="classroom">교실 연결 · 비스듬히 볼수록 조준이 어려워지는 건 <b>"입사각이 커질수록 굴절각도 커진다"</b>와 맞물린다.</div>
-      <button class="cta" data-goto="game">물총고기 사냥 게임 하러 가기 →</button>
+      <button class="cta" data-goto="game">물총고기와 빛의 굴절 보러 가기 →</button>
     </article>
   </div>
   <div class="holo-card reveal r6">
@@ -749,11 +831,11 @@ footer .fdot{color:var(--gold)}
           <div class="angle-slider-wrap"><div class="asl-head"><label>🎚 입사각 θᵢ</label><span id="fThetaIVal">–</span></div><input type="range" class="rng" id="fThetaISlider" min="0" max="70" step="0.5" value="24"></div>
           <div class="angle-slider-wrap"><div class="asl-head"><label>🎚 반사각 θᵣ</label><span id="fThetaRVal">–</span></div><input type="range" class="rng" id="fThetaRSlider" min="0" max="70" step="0.5" value="61"></div>
         </div>
-        <canvas id="whyFermatGraph"></canvas>
         <div class="why-controls">
-          <button class="next-btn" id="fermatMinBtn">💡 최소 경로 찾기</button>
-          <span class="why-hint">두 각을 슬라이더로 맞추거나 점 P를 드래그하세요. 버튼은 거울에 비친 상 <b>B′</b>로 가는 직선이 최단 경로임을 보여줍니다.</span>
+          <button class="next-btn" id="fermatMinBtn">🪞 x축 대칭으로 최단경로 확인</button>
+          <span class="why-hint">점 <b>P</b>를 드래그(또는 슬라이더)해 <b>θᵢ = θᵣ</b>를 맞춰 보세요. <b>🪞 버튼</b>을 누르면 <b>B를 거울(x축)에 대칭</b>시킨 <b>B′</b>로 가는 <b>직선</b>이 곧 최단 경로임을 보여 줍니다.</span>
         </div>
+        <canvas id="whyFermatGraph"></canvas>
         <div class="why-verdict" id="fVerdict">θᵢ와 θᵣ를 같게 만들어 보세요.</div>
         <div class="why-proof">
           <div class="wp-title">📐 수학적 증명 — 왜 θᵢ = θᵣ에서 시간이 최소일까</div>
@@ -934,8 +1016,127 @@ footer .fdot{color:var(--gold)}
     <div class="medal-grid" id="medalGrid"></div>
   </div>
 </section>
+<section class="tab-panel" id="tab-manual">
+  <div class="man-wrap">
+    <div class="man-eyebrow">선생님을 위한 · 중2 과학 · 빛과 파동(반사·굴절)</div>
+    <h2 class="man-title">수업 매뉴얼</h2>
+    <!-- ▼ 제작자·업데이트일은 페이지 맨 아래 푸터(appCredit)에서 한 번에 관리됩니다 -->
+    <p class="man-sub">제작 : 조승재(science_is_jo) · 해누리중학교 과학교사 · 최종 업데이트 : 2026-06-21</p>
+
+    <div class="man-callout">🧰 이 앱의 탭은 <b>독립적인 모듈</b>입니다. <b>전부, 순서대로 쓸 필요 없이</b> 수업 목표에 맞는 탭만 골라 쓰세요. 아래 추천 흐름도 <b>하나의 예시</b>일 뿐, 자유롭게 빼거나 순서를 바꿔도 됩니다.</div>
+
+    <h3 class="man-h2">1. 앱 개요 · 준비물 · 접속</h3>
+    <p class="man-p">빛의 <b>반사·굴절</b>과 "본다"는 과정을 학생이 직접 조작·게임하며 익히는 단일 웹페이지입니다. 설치 없이 <b>링크만으로</b> 작동하며 전자칠판·태블릿·학생 기기 어디서나 열립니다. 교사 <b>시연용</b>으로도 <b>학생 활동용</b>으로도 쓸 수 있어요.</p>
+    <ul class="man-list">
+      <li>인터넷이 되는 기기 + 배포 링크(학생 기기엔 QR로 안내하면 빠릅니다).</li>
+      <li>일부 탭에 효과음이 있으니 교실 상황에 맞게 볼륨을 조절하세요.</li>
+      <li>게임 진행 상황·업적은 기기에 자동 저장(localStorage)됩니다.</li>
+    </ul>
+
+    <h3 class="man-h2">2. 탭별 설명 — 무엇을 / 어떤 활동 / 언제 쓰면 좋은지</h3>
+    <p class="man-note">탭은 독립 모듈이라 <b>골라 쓰는 도구 상자</b>처럼 쓰면 됩니다. 비슷한 성격끼리 묶어 정리했어요.</p>
+
+    <div class="man-group">도입</div>
+    <div class="man-card">
+      <div class="man-card-h">🔦 도입 <span class="man-tag">도입·동기유발 · 시연</span></div>
+      <div class="man-card-b"><span class="li"><b>무엇을</b> — "빛이 있어야 보인다", 본다는 것은 빛→물체→눈의 여정임을 다룹니다.</span><span class="li"><b>활동</b> — 흥미 유발 카드(눈에서 빛이 나간다는 옛 오해 등)를 넘기며 예상 모으기.</span><span class="li"><b>언제</b> — 단원 문 여는 도입·동기유발에. 전자칠판 시연이 잘 어울립니다.</span></div>
+    </div>
+
+    <div class="man-group">탐구 · 실험</div>
+    <div class="man-card">
+      <div class="man-card-h">🔬 반사·굴절 실험 <span class="man-tag">핵심 탐구 · 시연+학생</span></div>
+      <div class="man-card-b"><span class="li"><b>무엇을</b> — 반사 법칙(입사각 = 반사각)과 굴절을 관찰합니다.</span><span class="li"><b>활동</b> — 입사각 슬라이더로 반사각·굴절각 변화 관찰, 법선·각도 표시 토글, (심화) 전반사.</span><span class="li"><b>언제</b> — 이 단원의 <b>핵심 탐구</b>. 교사가 시연한 뒤 학생 기기로 직접 조작하게 하세요.</span></div>
+    </div>
+    <div class="man-card">
+      <div class="man-card-h">🎯 물총고기 <span class="man-tag">개념 시각화(굴절) · 학생+시연</span></div>
+      <div class="man-card-b"><span class="li"><b>무엇을</b> — 굴절 때문에 <b>보이는 위치(상)와 실제 위치가 다름</b>을 보여 줍니다.</span><span class="li"><b>활동</b> — 실제·보이는 위치와 빛의 경로(입사각/굴절각)가 다 표시되고, 곤충을 잡으며 체득.</span><span class="li"><b>언제</b> — 굴절 개념을 눈으로 잡을 때. 학생 활동·시연 모두 좋습니다.</span></div>
+    </div>
+
+    <div class="man-group">정리</div>
+    <div class="man-card">
+      <div class="man-card-h">📖 개념 정리 <span class="man-tag">개념 정리</span></div>
+      <div class="man-card-b"><span class="li"><b>무엇을</b> — 반사·굴절 법칙과 용어(입사각·반사각·굴절각·법선)를 정리합니다.</span><span class="li"><b>활동</b> — 관찰한 규칙을 말로 정리한 뒤 용어를 확정.</span><span class="li"><b>언제</b> — 탐구 직후 개념을 굳힐 때.</span></div>
+    </div>
+
+    <div class="man-group">놀이 · 적용 · 정리</div>
+    <div class="man-card">
+      <div class="man-card-h">⚡ 레이저 미로 <span class="man-tag">놀이·적용(반사) · 모둠</span></div>
+      <div class="man-card-b"><span class="li"><b>무엇을</b> — 거울 <b>반사</b>로 빛을 목표까지 보냅니다.</span><span class="li"><b>활동</b> — 거울 배치 퍼즐을 풀며 반사 법칙 적용.</span><span class="li"><b>언제</b> — 반사 정리·적용, 모둠 활동에.</span></div>
+    </div>
+    <div class="man-card">
+      <div class="man-card-h">⚽ Light Soccer <span class="man-tag">놀이·정리(종합) · 모둠</span></div>
+      <div class="man-card-b"><span class="li"><b>무엇을</b> — 반사·굴절을 종합해 골을 넣는 게임.</span><span class="li"><b>활동</b> — 짧은 모둠 대결로 두 법칙을 적용.</span><span class="li"><b>언제</b> — 종합 적용·정리, 분위기 환기에.</span></div>
+    </div>
+    <div class="man-card">
+      <div class="man-card-h">💡 Light 포켓볼 <span class="man-tag">놀이·적용(반사) · 모둠</span></div>
+      <div class="man-card-b"><span class="li"><b>무엇을</b> — 당구처럼 <b>반사각</b>을 이용해 공을 맞춥니다.</span><span class="li"><b>활동</b> — 겨냥 지점을 정해 반사 법칙 적용.</span><span class="li"><b>언제</b> — 반사 법칙 정착, 모둠 활동에.</span></div>
+    </div>
+    <div class="man-card">
+      <div class="man-card-h">🎖️ 업적 <span class="man-tag">동기 · 정리</span></div>
+      <div class="man-card-b"><span class="li"><b>무엇을</b> — 활동을 완료하면 캐릭터 메달이 열립니다.</span><span class="li"><b>활동</b> — 메달 컬렉션으로 성취 확인.</span><span class="li"><b>언제</b> — 동기 부여·마무리 복습("이 메달은 무엇을 배워 받았지?").</span></div>
+    </div>
+
+    <div class="man-group">심화 · 원리</div>
+    <div class="man-card">
+      <div class="man-card-h">🌊 굴절은 왜? <span class="man-tag">심화·원리(굴절) · 시연</span></div>
+      <div class="man-card-b"><span class="li"><b>무엇을</b> — 굴절의 원인 = 매질에서 <b>속력이 달라짐</b>.</span><span class="li"><b>활동</b> — <b>수레 비유</b>를 직접 움직이며 "왜 꺾이는가"를 설명.</span><span class="li"><b>언제</b> — 원리를 깊이 다루고 싶을 때(교사 시연).</span></div>
+    </div>
+    <div class="man-card">
+      <div class="man-card-h">🤔 왜 같을까? <span class="man-tag">심화·원리(반사) · 시연</span></div>
+      <div class="man-card-b"><span class="li"><b>무엇을</b> — 입사각 = 반사각인 <b>까닭</b>을 '최단 경로'로 다룹니다.</span><span class="li"><b>활동</b> — 광원(또는 눈)을 거울에 <b>x축 대칭</b>시킨 점 B′로 가는 <b>직선</b>이 최단임을 '🪞 x축 대칭으로 확인' 버튼으로 보여 줍니다.</span><span class="li"><b>언제</b> — 원리 심화(교사 시연). <b>호이겐스·수식 증명까지는 들어가지 말고</b> '거울 대칭 → 최단 경로' 수준으로 짚고 넘어가면 충분합니다.</span></div>
+    </div>
+
+    <h3 class="man-h2">3. 추천 수업 흐름 (예시 · 선택)</h3>
+    <p class="man-note">아래는 <b>하나의 예시</b>일 뿐이에요. 탭은 <b>자유롭게 빼거나 순서를 바꿔도</b> 됩니다. (→는 강요가 아니라 제안입니다.)</p>
+    <div class="man-flowbox">
+      <div class="man-flow-title">① 도입 중심 1차시</div>
+      <div class="man-flow">도입 → 반사·굴절 실험 → 개념 정리</div>
+      <div class="man-flow-title">② 탐구·체험 중심 1차시</div>
+      <div class="man-flow">반사·굴절 실험 → 물총고기 → (정리로) 레이저 미로</div>
+      <div class="man-flow-title">③ 단원을 길게 엮는 코스 (여러 차시)</div>
+      <div class="man-flow">도입 → 반사·굴절 실험 → 개념 정리 → 물총고기 → 굴절은 왜? / 왜 같을까? → 게임 탭(미로·사커·포켓볼)으로 정리 → 업적</div>
+    </div>
+
+    <h3 class="man-h2">4. 핵심 발문 예시</h3>
+    <ul class="man-list">
+      <li>우리가 물체를 본다는 것은 무슨 일이 일어나는 걸까? "눈에서 빛이 나간다"는 생각은 무엇이 틀렸을까?</li>
+      <li>입사각을 키우면 반사각은 어떻게 변할까? (직접 조작 후 답하기) 두 각은 무엇을 기준으로 잰 각일까?</li>
+      <li>빛이 공기에서 물로 들어가면 더 꺾일까, 덜 꺾일까? 어느 쪽으로?</li>
+      <li>물속 물고기에게 곤충은 왜 실제와 다른 위치로 보일까? 물총고기는 왜 보이는 곳이 아니라 실제 위치로 쏠까?</li>
+      <li>굴절은 결국 무엇이 달라져서 생길까? (속력)</li>
+      <li>광원을 거울 너머로 '뒤집어' 보면 빛은 어떤 길로 가야 가장 짧을까? 그때 입사각과 반사각은 왜 같아질까?</li>
+    </ul>
+
+    <h3 class="man-h2">5. 자주 나오는 오개념과 교정 포인트</h3>
+    <div class="man-tablewrap"><table class="man-table">
+      <tr><th>오개념</th><th>실제</th><th>교정 포인트</th></tr>
+      <tr><td>눈에서 빛이 나가 물체를 본다(방출설)</td><td>빛이 광원에서 나와 물체에 반사돼 <b>눈으로 들어온다</b></td><td>'도입' 카드로 "옛 천재들도 했던 생각"이라며 부담 없이 교정</td></tr>
+      <tr><td>물속 물체는 보이는 그 자리에 있다</td><td>굴절로 <b>보이는 위치(상)와 실제 위치가 다르다</b></td><td>'물총고기'에서 상·실제 위치를 동시에 보여 주고 직접 잡게 함</td></tr>
+      <tr><td>굴절각은 항상 입사각보다 작다</td><td>매질 방향에 따라 다름(물→공기에선 더 커짐)</td><td>'반사·굴절 실험'에서 조건을 바꿔 비교</td></tr>
+      <tr><td>빛이 휘는 건 거울·유리가 "밀어서"이다</td><td>매질에서 <b>속력이 달라지기 때문</b></td><td>'굴절은 왜?'의 수레 비유로 설명</td></tr>
+      <tr><td>법선을 경계면 위에 잡는다</td><td>법선은 경계면에 <b>수직</b>, 각은 법선 기준</td><td>각도·법선 표시 토글을 켜고 반복 확인</td></tr>
+    </table></div>
+
+    <h3 class="man-h2">6. 평가 · 정리 아이디어</h3>
+    <ul class="man-list">
+      <li><b>예측–확인</b>: '반사·굴절 실험'에서 임의의 입사각을 주고 반사각·굴절각을 예측한 뒤 슬라이더로 확인.</li>
+      <li><b>짝 활동</b>: '물총고기'에서 한 명이 곤충을 놓으면 다른 한 명이 "실제 위치"를 손으로 가리킨 뒤 확인.</li>
+      <li><b>산출물</b>: 빨대·물컵 등 생활 속 굴절 사례를 "빛 경로 그림 + 한 줄 설명"으로 제출.</li>
+      <li><b>정리</b>: 빈칸 채우기 — "반사는 ____, 굴절은 ____ 때문에 ____ 한다."</li>
+    </ul>
+    <div class="man-tablewrap"><table class="man-table">
+      <tr><th>수준</th><th>반사</th><th>굴절</th></tr>
+      <tr><td>상</td><td>입사각=반사각을 법선 기준으로 정확히 설명하고 사례에 적용</td><td>굴절 방향과 까닭(속력 변화)을 설명, 상·실제 위치 구분</td></tr>
+      <tr><td>중</td><td>입사각=반사각을 알고 간단히 설명</td><td>굴절로 휘는 현상을 알고 사례를 든다</td></tr>
+      <tr><td>하</td><td>반사 개념을 부분적으로 이해</td><td>굴절 용어를 부분적으로 이해</td></tr>
+    </table></div>
+
+    <p class="man-credit">제작 : 조승재(science_is_jo) · 해누리중학교 과학교사 · 최종 업데이트 : 2026-06-21</p>
+  </div>
+</section>
+
 </main>
-<footer>중2 과학 · 빛과 파동 <span class="fdot">●</span> 물체를 보는 과정 <span class="fdot">●</span> 반사 · 굴절 · 물총고기</footer>
+<footer>중2 과학 · 빛과 파동 <span class="fdot">●</span> 물체를 보는 과정 <span class="fdot">●</span> 반사 · 굴절 · 물총고기<span class="fcredit" id="appCredit"><!-- ▼▼ 제작자·업데이트일: 이 한 줄만 수정하세요 (모달 하단에도 자동 반영됨) ▼▼ -->제작 : 조승재(science_is_jo) · 해누리중학교 과학교사 · 최종 업데이트 : 2026-06-21</span></footer>
 <div class="medal-toast" id="medalToast"></div>
 
 <script>
@@ -1469,7 +1670,7 @@ function stopGameLoop(){ gameLoopOn=false; if(G.loop)cancelAnimationFrame(G.loop
 const why={ fermat:{px:300, showTrick:false, anim:null}, huy:{theta:52,t:0}, em:{theta:44,t:0} };
 let whyInit=false, whyLoopOn=false, whyRAF=null;
 // ----- Fermat geometry (virtual 1000x560) -----
-const FV={W:1000,H:560, Ax:180,Ay:110, Bx:820,By:160, my:430, lo:180, hi:820};
+const FV={W:1000,H:770, Ax:180,Ay:110, Bx:820,By:160, my:430, lo:180, hi:820};
 function fermatLen(px){ return Math.hypot(px-FV.Ax,FV.my-FV.Ay)+Math.hypot(px-FV.Bx,FV.my-FV.By); }
 function fermatOpt(){ const t=(FV.my-FV.Ay)/((2*FV.my-FV.By)-FV.Ay); return FV.Ax+t*(FV.Bx-FV.Ax); }
 function drawFermat(){
@@ -1485,11 +1686,16 @@ function drawFermat(){
   // trick overlay: B' image + straight A->B'
   if(why.fermat.showTrick){
     const Bpx=Bx, Bpy=Y(2*FV.my-FV.By);
-    ctx.save(); ctx.setLineDash([5,6]); ctx.strokeStyle="rgba(157,140,255,.7)"; ctx.lineWidth=1.6;
-    ctx.beginPath(); ctx.moveTo(Ax,Ay); ctx.lineTo(Bpx,Bpy); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(Bx,By); ctx.lineTo(Bpx,Bpy); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle="rgba(157,140,255,.9)"; ctx.beginPath(); ctx.arc(Bpx,Bpy,5,0,7); ctx.fill();
-    txt(ctx,"B′ (거울에 비친 상)",Bpx,Bpy+16,"#b9aaff","700 11px Noto Sans KR","center"); ctx.restore();
+    ctx.save();
+    ctx.setLineDash([4,4]); ctx.strokeStyle="rgba(157,140,255,.5)"; ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.moveTo(Bx,By); ctx.lineTo(Bpx,Bpy); ctx.stroke();
+    ctx.setLineDash([8,5]); ctx.strokeStyle="rgba(167,150,255,.95)"; ctx.lineWidth=2.6;
+    ctx.beginPath(); ctx.moveTo(Ax,Ay); ctx.lineTo(Bpx,Bpy); ctx.stroke(); ctx.setLineDash([]);
+    const tick=(x1,y1,x2,y2)=>{ const mx=(x1+x2)/2,myy=(y1+y2)/2, a=Math.atan2(y2-y1,x2-x1)+Math.PI/2; ctx.beginPath(); ctx.moveTo(mx+Math.cos(a)*5,myy+Math.sin(a)*5); ctx.lineTo(mx-Math.cos(a)*5,myy-Math.sin(a)*5); ctx.stroke(); };
+    ctx.strokeStyle="rgba(185,170,255,.95)"; ctx.lineWidth=2; tick(px,my,Bx,By); tick(px,my,Bpx,Bpy);
+    ctx.fillStyle="rgba(167,150,255,.95)"; ctx.beginPath(); ctx.arc(Bpx,Bpy,5.5,0,7); ctx.fill();
+    txt(ctx,"B′ (B를 거울에 대칭)",Bpx,Bpy+16,"#b9aaff","700 11px Noto Sans KR","center");
+    ctx.restore();
   }
   // normal at P
   ctx.save(); ctx.setLineDash([4,5]); ctx.strokeStyle="rgba(255,255,255,.4)"; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(px,my); ctx.lineTo(px,my-Y(150)); ctx.stroke(); ctx.setLineDash([]); ctx.restore();
@@ -1538,12 +1744,14 @@ function updateFermatReadout(){
   const px=why.fermat.px;
   const ti=rad(Math.atan2(Math.abs(px-FV.Ax),FV.my-FV.Ay)), tr=rad(Math.atan2(Math.abs(FV.Bx-px),FV.my-FV.By));
   const L=fermatLen(px), Lmin=fermatLen(fermatOpt()), pct=((L/Lmin-1)*100);
+  const equal=Math.abs(ti-tr)<1.2;
   const set=(id,v)=>{const e=document.getElementById(id); if(e)e.textContent=v;};
   set("fThetaI",Math.round(ti)+"°"); set("fThetaR",Math.round(tr)+"°");
-  set("fDist", pct<0.6 ? "최소!" : "+"+pct.toFixed(0)+"%");
+  set("fDist", equal ? "최소!" : "+"+pct.toFixed(1)+"%");
   const vb=document.getElementById("fVerdict");
-  if(vb){ if(Math.abs(ti-tr)<1.3){ vb.className="why-verdict ok"; vb.innerHTML="✅ <b>입사각 = 반사각</b> → 빛의 이동 시간이 <b>가장 짧아요!</b> 자연은 이 경로를 택합니다."; }
-    else { vb.className="why-verdict"; vb.innerHTML="두 각이 다르면 길이 더 멀어 시간이 더 걸려요. θᵢ와 θᵣ를 <b>같게</b> 맞춰 보세요."; } }
+  if(vb){ if(why.fermat.showTrick && equal){ vb.className="why-verdict ok"; vb.innerHTML="🪞 <b>B를 거울(x축)에 대칭</b>시킨 점 <b>B′</b> — <b>A → B′ 직선</b>이 곧 최단 경로! 이 직선이 거울과 만나는 점이 <b>P</b>이고, <b>PB = PB′</b>·맞꼭지각이라 <b>θᵢ = θᵣ</b>가 자동으로 성립합니다."; }
+    else if(equal){ vb.className="why-verdict ok"; vb.innerHTML="✅ <b>입사각 = 반사각</b> → 빛의 이동 시간이 <b>가장 짧아요!</b> ‘🪞 x축 대칭으로 확인’ 버튼으로 왜 최단인지 확인해 보세요."; }
+    else { vb.className="why-verdict"; vb.innerHTML="두 각이 다르면 경로가 더 길어 시간이 더 걸려요. θᵢ와 θᵣ를 <b>같게</b> 맞춰 보세요."; } }
   fermatSyncControls();
 }
 function fermatSyncControls(){
@@ -1666,10 +1874,10 @@ function stopWhyLoop(){ whyLoopOn=false; if(whyRAF)cancelAnimationFrame(whyRAF);
 let gameInit=false;
 /* ===== MEDALS (업적 훈장) ===== */
 const MEDALS=[
-  {id:'kizaru', name:'키자루', cond:'레이저 미로 숙련 모드 클리어', img:'medal-kizaru.jpg', color:'var(--gold)'},
-  {id:'raio',   name:'라이오 그란츠', cond:'물총고기 누적 5회 명중', img:'medal-raio.jpg', color:'var(--cyan)'},
-  {id:'aoyama', name:'아오야마 유가', cond:'시뮬레이터에서 빛을 처음 쏘면', img:'medal-aoyama.jpg', color:'var(--violet)'},
-  {id:'killua', name:'키르아 자격증', cond:'Light 포켓볼 완주 또는 Light Soccer 첫 골!', img:'medal-killua.jpg', color:'#ff7a93'}
+  {id:'kizaru', name:'키자루', cond:'레이저 미로 숙련 모드 클리어', img:'medal-kizaru.png', color:'var(--gold)'},
+  {id:'raio',   name:'라이오 그란츠', cond:'물총고기 누적 5회 명중', img:'medal-raio.png', color:'var(--cyan)'},
+  {id:'aoyama', name:'아오야마 유가', cond:'시뮬레이터에서 빛을 처음 쏘면', img:'medal-aoyama.png', color:'var(--violet)'},
+  {id:'killua', name:'키르아 자격증', cond:'Light 포켓볼 완주 또는 Light Soccer 첫 골!', img:'medal-killua.png', color:'#ff7a93'}
 ];
 const medalState={};
 function renderMedals(){
@@ -5301,7 +5509,6 @@ requestAnimationFrame(loop);
   .stage{position:relative;border-radius:16px;overflow:hidden;box-shadow:0 12px 34px rgba(13,34,54,.16);background:#7ec6ee;}
   canvas{display:block;width:100%;height:auto;touch-action:manipulation;cursor:pointer;}
 
-  /* caption bar */
   .cap{
     background:var(--card);border:1px solid var(--line);border-radius:13px;padding:11px 14px;
     font-size:clamp(13px,2.8vw,15px);line-height:1.6;box-shadow:0 4px 14px rgba(13,34,54,.06);
@@ -5375,9 +5582,8 @@ requestAnimationFrame(loop);
 <script>
 (function(){
   "use strict";
-  // ---- 논리 좌표(고정) ----
-  var W=1000, H=640, Hs=258;            // 수면 y=Hs (위=공기, 아래=물)
-  var NW=1.33;                          // 물의 굴절률
+  var W=1000, H=640, Hs=258;
+  var NW=1.33;
   var fish={x:250,y:500};
   var bug={x:700,y:120};
   var S={x:600,y:Hs}, app={x:0,y:0}, th1=0, th2=0;
@@ -5385,7 +5591,7 @@ requestAnimationFrame(loop);
   var showLabels=true;
   var jet={on:false,t:0,from:{x:0,y:0}};
   var knock={on:false,t:0,x:0,y:0};
-  var lightT=0;                          // 빛 펄스 진행(0..1)
+  var lightT=0;
   var lastTs=0;
 
   var cv=document.getElementById('cv'), ctx=cv.getContext('2d');
@@ -5393,24 +5599,21 @@ requestAnimationFrame(loop);
   var dpr=1, vs=1;
 
   function clamp(v,a,b){return v<a?a:(v>b?b:v);}
-  function rad(d){return d*Math.PI/180;}
 
-  // ---- 굴절: 수면 통과점 S를 스넬 법칙으로 탐색 ----
   function solveS(){
     var lo=Math.min(fish.x,bug.x)+2, hi=Math.max(fish.x,bug.x)-2;
-    var dyA=Hs-bug.y, dyW=fish.y-Hs;     // 둘 다 >0
+    var dyA=Hs-bug.y, dyW=fish.y-Hs;
     function resid(xs){
-      var t1=Math.atan2(Math.abs(bug.x-xs), dyA);     // 입사각(공기)
-      var t2=Math.atan2(Math.abs(fish.x-xs), dyW);    // 굴절각(물)
-      return Math.sin(t1) - NW*Math.sin(t2);          // =0 이면 스넬 만족
+      var t1=Math.atan2(Math.abs(bug.x-xs), dyA);
+      var t2=Math.atan2(Math.abs(fish.x-xs), dyW);
+      return Math.sin(t1) - NW*Math.sin(t2);
     }
     for(var i=0;i<48;i++){ var mid=(lo+hi)/2; if(resid(mid)>0) lo=mid; else hi=mid; }
     var xs=(lo+hi)/2;
     S={x:xs,y:Hs};
     th1=Math.atan2(Math.abs(bug.x-xs), dyA);
     th2=Math.atan2(Math.abs(fish.x-xs), dyW);
-    // 보이는 위치(상): 물속 광선 F→S 를 직선으로 공기 중 곤충 높이까지 연장
-    var t=(bug.y-fish.y)/(Hs-fish.y);     // >1
+    var t=(bug.y-fish.y)/(Hs-fish.y);
     app={x:fish.x + t*(S.x-fish.x), y:bug.y};
   }
 
@@ -5431,7 +5634,6 @@ requestAnimationFrame(loop);
   }
   function recompute(){ solveS(); setCaption(); }
 
-  // ---- 입력 ----
   function toLogical(e){
     var r=cv.getBoundingClientRect();
     return { x:(e.clientX-r.left)/r.width*W, y:(e.clientY-r.top)/r.height*H };
@@ -5469,7 +5671,6 @@ requestAnimationFrame(loop);
     setTimeout(function(){ knock.on=false; newBug(); }, 820);
   }
 
-  // ---- 그리기 ----
   function fit(){
     dpr=Math.min(window.devicePixelRatio||1,2.5);
     var cssW=cv.clientWidth||cv.parentNode.clientWidth||900;
@@ -5485,18 +5686,13 @@ requestAnimationFrame(loop);
 
   function drawFish(x,y){
     ctx.save(); ctx.translate(x,y);
-    // body
     ctx.fillStyle='#caa46a'; ctx.strokeStyle='#7c5a2e'; ctx.lineWidth=2;
     ctx.beginPath(); ctx.ellipse(0,0,38,21,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
-    // tail
     ctx.fillStyle='#b88c52'; ctx.beginPath(); ctx.moveTo(-30,0); ctx.lineTo(-52,-15); ctx.lineTo(-52,15); ctx.closePath(); ctx.fill(); ctx.stroke();
-    // stripes (archerfish)
     ctx.fillStyle='rgba(60,40,16,.55)';
     ctx.fillRect(-6,-19,5,30); ctx.fillRect(8,-17,5,26); ctx.fillRect(-20,-15,5,22);
-    // eye (looking up at bug)
     ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(20,-5,8,0,Math.PI*2); ctx.fill();
     ctx.fillStyle='#10283c'; ctx.beginPath(); ctx.arc(22,-7,4.2,0,Math.PI*2); ctx.fill();
-    // mouth
     ctx.strokeStyle='#7c5a2e'; ctx.lineWidth=2.2; ctx.beginPath(); ctx.moveTo(34,2); ctx.lineTo(40,-2); ctx.stroke();
     ctx.restore();
   }
@@ -5507,7 +5703,6 @@ requestAnimationFrame(loop);
     ctx.strokeStyle=ghost?'#1192c4':'#2c1c0c'; ctx.lineWidth=ghost?2:1.5;
     ctx.beginPath(); ctx.ellipse(0,0,13,8,0,0,Math.PI*2); ctx.fill(); if(ghost)ctx.stroke();
     ctx.beginPath(); ctx.arc(11,0,5.5,0,Math.PI*2); ctx.fill(); if(ghost)ctx.stroke();
-    // wings
     ctx.globalAlpha=alpha*0.7; ctx.fillStyle=ghost?'rgba(73,208,255,.3)':'rgba(120,90,50,.85)';
     ctx.beginPath(); ctx.ellipse(-2,-9,9,5,-0.5,0,Math.PI*2); ctx.fill();
     ctx.beginPath(); ctx.ellipse(-2,9,9,5,0.5,0,Math.PI*2); ctx.fill();
@@ -5539,49 +5734,37 @@ requestAnimationFrame(loop);
     if(realPulse>0) realPulse=Math.max(0,realPulse-dt*1.4);
     ctx.clearRect(0,0,W,H);
 
-    // 공기(하늘)
     var sky=ctx.createLinearGradient(0,0,0,Hs); sky.addColorStop(0,'#bfe9ff'); sky.addColorStop(1,'#e9f7ff');
     ctx.fillStyle=sky; ctx.fillRect(0,0,W,Hs);
-    // 해
     ctx.fillStyle='rgba(255,221,120,.85)'; ctx.beginPath(); ctx.arc(W-80,52,30,0,Math.PI*2); ctx.fill();
-    // 물
     var wat=ctx.createLinearGradient(0,Hs,0,H); wat.addColorStop(0,'#5bb6e6'); wat.addColorStop(1,'#1f6ea8');
     ctx.fillStyle=wat; ctx.fillRect(0,Hs,W,H-Hs);
-    // 수면 라인 + 잔물결
     ctx.strokeStyle='rgba(255,255,255,.7)'; ctx.lineWidth=3;
     ctx.beginPath(); for(var xx=0;xx<=W;xx+=8){ var yy=Hs+Math.sin(xx*0.05+ts*0.002)*2; if(xx===0)ctx.moveTo(xx,yy); else ctx.lineTo(xx,yy);} ctx.stroke();
     if(showLabels){ ctx.font='700 13px Pretendard'; ctx.fillStyle='rgba(20,60,90,.6)'; ctx.textAlign='left'; ctx.fillText('공기', 14, 24); ctx.fillStyle='rgba(255,255,255,.85)'; ctx.fillText('물', 14, Hs+24); }
 
-    // 작은 잎(곤충 받침)
     ctx.strokeStyle='#3f7a2c'; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(bug.x+18,bug.y+10); ctx.lineTo(bug.x+40,bug.y+22); ctx.stroke();
     ctx.fillStyle='#4e9b34'; ctx.beginPath(); ctx.ellipse(bug.x+44,bug.y+22,14,6,0.5,0,Math.PI*2); ctx.fill();
 
-    // ===== 보이는 위치(상) + 보는 방향(직선 점선) =====
     ctx.save(); ctx.strokeStyle='rgba(73,208,255,.9)'; ctx.lineWidth=2.4; ctx.setLineDash([9,7]);
     ctx.beginPath(); ctx.moveTo(fish.x,fish.y); ctx.lineTo(app.x,app.y); ctx.stroke(); ctx.restore();
     drawBug(app.x,app.y,1.05,0.95,true);
     if(showLabels){ tag(app.x, app.y-30, '보이는 위치 (상)', 'rgba(73,208,255,.95)', '#062a3a'); }
 
-    // ===== 실제 빛의 경로 (곤충→S→물고기, 굴절) =====
-    // 법선(수직 점선)
     ctx.save(); ctx.strokeStyle='rgba(40,70,95,.6)'; ctx.lineWidth=1.5; ctx.setLineDash([5,5]);
     ctx.beginPath(); ctx.moveTo(S.x,Hs-66); ctx.lineTo(S.x,Hs+66); ctx.stroke(); ctx.restore();
-    // 광선(글로우)
     ctx.save(); ctx.lineCap='round';
-    ctx.shadowColor='rgba(255,210,63,.7)'; ctx.shadowBlur=10; ctx.strokeStyle='var(--ray)';
+    ctx.shadowColor='rgba(255,210,63,.7)'; ctx.shadowBlur=10;
     ctx.strokeStyle='#ffd23f'; ctx.lineWidth=4.5;
     ctx.beginPath(); ctx.moveTo(bug.x,bug.y); ctx.lineTo(S.x,S.y); ctx.lineTo(fish.x,fish.y); ctx.stroke();
     ctx.shadowBlur=0; ctx.restore();
-    // 진행 방향 화살표(곤충→S, S→물고기)
     arrow(bug.x,bug.y,S.x,S.y,'#e0a800'); arrow(S.x,S.y,fish.x,fish.y,'#e0a800');
-    // 각도 호(입사각/굴절각)
     var aN_up=-Math.PI/2, aN_dn=Math.PI/2;
-    var aBug=Math.atan2(bug.y-S.y, bug.x-S.x);     // S→곤충 (위쪽)
-    var aFish=Math.atan2(fish.y-S.y, fish.x-S.x);  // S→물고기 (아래쪽)
+    var aBug=Math.atan2(bug.y-S.y, bug.x-S.x);
+    var aFish=Math.atan2(fish.y-S.y, fish.x-S.x);
     arcLabel(S.x,S.y, aN_up, aBug, '#d98a00', '입사각 '+Math.round(th1*180/Math.PI)+'°', 34);
     arcLabel(S.x,S.y, aN_dn, aFish, '#0e7d8a', '굴절각 '+Math.round(th2*180/Math.PI)+'°', 30);
 
-    // 빛 펄스(곤충→물고기로 진행)
     var seg1=Math.hypot(bug.x-S.x,bug.y-S.y), seg2=Math.hypot(fish.x-S.x,fish.y-S.y), tot=seg1+seg2;
     var d=lightT*tot, pp;
     if(d<seg1){ var k=d/seg1; pp={x:bug.x+(S.x-bug.x)*k, y:bug.y+(S.y-bug.y)*k}; }
@@ -5589,7 +5772,6 @@ requestAnimationFrame(loop);
     ctx.fillStyle='#fff6c2'; ctx.shadowColor='#ffd23f'; ctx.shadowBlur=14;
     ctx.beginPath(); ctx.arc(pp.x,pp.y,6,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0;
 
-    // ===== 물고기 / 실제 곤충 =====
     drawFish(fish.x,fish.y);
     if(showLabels){ tag(fish.x, fish.y+34, '물고기 눈', 'rgba(255,255,255,.92)', '#0d2236'); }
 
@@ -5598,7 +5780,6 @@ requestAnimationFrame(loop);
       if(showLabels){ tag(bug.x, bug.y-26, '실제 위치 🐛', 'rgba(255,93,115,.96)', '#fff'); }
     }
 
-    // ===== 물줄기 / 곤충 떨어짐 =====
     if(jet.on){
       jet.t+=dt/0.55;
       var M=jet.from, ctrl={x:(M.x+bug.x)/2, y:Math.min(M.y,bug.y)-90};
@@ -5620,7 +5801,6 @@ requestAnimationFrame(loop);
   var splashes=[];
   function splash(x,y){ for(var i=0;i<10;i++){ splashes.push({x:x,y:y,a:Math.random()*Math.PI*2,s:Math.random()*120+40,t:1}); } }
 
-  // ---- 부모(허브)로 높이 전달 ----
   function postHeight(){ try{ parent.postMessage({source:'sciapp',type:'h',id:'fish',h:Math.ceil(document.documentElement.scrollHeight)},'*'); }catch(_){} }
   window.addEventListener('load', function(){ postHeight(); setTimeout(postHeight,200); setTimeout(postHeight,600); });
 
@@ -5649,5 +5829,81 @@ requestAnimationFrame(loop);
   });
 })();
 </script>
+
+<!-- ===== 교사용 안내 모달 (teacher guide) ===== -->
+<div class="tgm-veil" id="tgmVeil" role="dialog" aria-modal="true" aria-labelledby="tgmTitle">
+  <div class="tgm-card">
+    <button class="tgm-x" id="tgmClose" type="button" aria-label="닫기">✕</button>
+    <div class="tgm-eyebrow">선생님을 위한 안내 · 중2 과학 · 빛과 파동(반사·굴절)</div>
+    <h2 class="tgm-title" id="tgmTitle">빛의 <span class="hl">반사와 굴절</span>,<br>직접 만지며 배우는 광학 실험실</h2>
+    <p class="tgm-lead">설치 없이 <b>링크만으로 바로 작동</b>하는 단일 웹페이지예요. <b>전자칠판·태블릿·학생 기기</b> 어디서나 열리며, <b>교사 시연용</b>으로도 <b>학생 활동용</b>으로도 쓸 수 있습니다.</p>
+
+    <div class="tgm-sec">
+      <div class="tgm-h">📚 구성 안내 — 골라 쓰는 도구 상자</div>
+      <div class="tgm-groups">
+        <div class="tgm-grp"><span class="tgm-gl">도입</span><span class="tgm-step">도입</span></div>
+        <div class="tgm-grp"><span class="tgm-gl">탐구·실험</span><span class="tgm-step">반사·굴절 실험</span><span class="tgm-step">물총고기</span></div>
+        <div class="tgm-grp"><span class="tgm-gl">정리</span><span class="tgm-step">개념 정리</span></div>
+        <div class="tgm-grp"><span class="tgm-gl">놀이·정리</span><span class="tgm-step">레이저 미로</span><span class="tgm-step">Light Soccer</span><span class="tgm-step">Light 포켓볼</span><span class="tgm-step">업적</span></div>
+        <div class="tgm-grp"><span class="tgm-gl">심화·원리</span><span class="tgm-step">굴절은 왜?</span><span class="tgm-step">왜 같을까?</span></div>
+      </div>
+      <div class="tgm-grpnote">탭은 독립 모듈이라 <b>전부, 순서대로 쓸 필요 없이</b> 목표에 맞게 골라 쓰면 됩니다. 추천 흐름(예시)은 <b>매뉴얼 탭</b>에 있어요.</div>
+    </div>
+
+    <div class="tgm-sec">
+      <div class="tgm-h">💡 수업 활용 팁</div>
+      <ul class="tgm-tips">
+        <li class="tgm-tip"><span class="n">1</span><span class="b"><strong>필요한 탭만 골라 쓰기</strong> — 탭은 독립 모듈이라 <b>전부·순서대로 쓰지 않아도</b> 됩니다. 수업 목표에 맞는 탭만 띄워 쓰세요.</span></li>
+        <li class="tgm-tip"><span class="n">2</span><span class="b"><strong>단계별 시연</strong> — &lsquo;반사·굴절 실험&rsquo; 슬라이더로 <b>입사각 = 반사각</b>, 굴절각의 변화를 학생과 함께 관찰하세요.</span></li>
+        <li class="tgm-tip"><span class="n">3</span><span class="b"><strong>개념 시각화 &amp; 원리</strong> — &lsquo;물총고기&rsquo;로 <b>상↔실제 위치</b>를, &lsquo;굴절은 왜?&rsquo;·&lsquo;왜 같을까?&rsquo;로 <b>굴절·반사의 까닭</b>을 직접 조작하며 설명하세요.</span></li>
+        <li class="tgm-tip"><span class="n">4</span><span class="b"><strong>게임으로 정리</strong> — &lsquo;레이저 미로·Light Soccer·Light 포켓볼&rsquo; 모둠 활동과 &lsquo;업적&rsquo;으로 적용·동기 부여.</span></li>
+      </ul>
+    </div>
+
+    <div class="tgm-note">각 탭의 <b>자세한 설명 · 핵심 발문 · 오개념 · 평가 아이디어</b>는 아래 <b>‘📒 수업 매뉴얼 보기’</b>(앱 안 매뉴얼 탭)에 있어요. 동료 선생님께도 공유해 함께 활용해 보세요. 🤝</div>
+
+    <div class="tgm-actions">
+      <button class="tgm-btn ghost" id="tgmManual" type="button">📒 수업 매뉴얼 보기</button>
+      <button class="tgm-btn primary" id="tgmStart" type="button">바로 시작하기 →</button>
+    </div>
+    <div class="tgm-foot">
+      <label class="tgm-check"><input type="checkbox" id="tgmDont"> 다음부터 이 창을 자동으로 띄우지 않기</label>
+    </div>
+    <div class="tgm-credit" id="tgmCredit"></div>
+  </div>
+</div>
+<button class="tgm-fab" id="tgmFab" type="button">🔖 수업 안내</button>
+
+<script>
+(function(){
+  function init(){
+    var KEY='opticsTeacherGuideHidden';
+    var veil=document.getElementById('tgmVeil');
+    if(!veil) return;
+    var fab=document.getElementById('tgmFab');
+    var btnClose=document.getElementById('tgmClose');
+    var btnStart=document.getElementById('tgmStart');
+    var btnManual=document.getElementById('tgmManual');
+    var dont=document.getElementById('tgmDont');
+    function stored(){ try{ return localStorage.getItem(KEY)==='1'; }catch(e){ return false; } }
+    function setStored(v){ try{ if(v) localStorage.setItem(KEY,'1'); else localStorage.removeItem(KEY); }catch(e){} }
+    function uiSnd(){ try{ if(typeof audioCtx==='function'){ var ac=audioCtx(); if(ac && typeof blip==='function') blip(640, ac.currentTime, 0.08, {type:'sine', to:900, glide:0.06, lp:3000, gain:0.05}); } }catch(e){} }
+    function openM(){ veil.classList.add('show'); }
+    function closeM(){ veil.classList.remove('show'); }
+    var _c=document.getElementById('appCredit'),_tc=document.getElementById('tgmCredit'); if(_c&&_tc) _tc.textContent=_c.textContent;
+    if(dont) dont.checked=stored();
+    if(!stored()) setTimeout(openM, 400);
+    if(fab) fab.addEventListener('click', function(){ uiSnd(); openM(); });
+    if(btnClose) btnClose.addEventListener('click', function(){ closeM(); });
+    if(btnStart) btnStart.addEventListener('click', function(){ uiSnd(); closeM(); });
+    veil.addEventListener('click', function(e){ if(e.target===veil) closeM(); });
+    document.addEventListener('keydown', function(e){ if((e.key==='Escape'||e.key==='Esc') && veil.classList.contains('show')) closeM(); });
+    if(dont) dont.addEventListener('change', function(){ setStored(dont.checked); });
+    if(btnManual) btnManual.addEventListener('click', function(){ uiSnd(); closeM(); if(typeof switchTab==='function') switchTab('manual'); });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+
 </body>
 </html>
