@@ -379,6 +379,8 @@ input[type=range].rPlain{background:#dfe4ef;}
 .man-table th{background:var(--line2);font-weight:800;color:var(--ink);white-space:nowrap;}
 .man-table tr:last-child td{border-bottom:none;}
 .man-cred{font-size:12.5px;color:var(--muted);background:var(--line2);border-radius:var(--r-md);padding:12px 16px;text-align:center;line-height:1.7;}
+.man-key{font-size:13.5px;font-weight:800;color:var(--blue-dd);background:var(--blue-soft);border-left:3px solid var(--blue);border-radius:var(--r-sm);padding:11px 14px;margin:0 0 14px;line-height:1.6;}
+.man-table tr.grp td{background:var(--blue-soft);color:var(--blue-d);font-weight:900;font-size:12.5px;letter-spacing:.02em;white-space:nowrap;}
 
 /* ---------- 색은 해석 (perception) ---------- */
 .thesis{background:linear-gradient(135deg,#10131c,#171b29);border:1px solid #2a3142;border-radius:var(--r-lg);padding:26px 28px;color:#e7edfb;margin-bottom:8px;}
@@ -470,6 +472,14 @@ input[type=range].rPlain{background:#dfe4ef;}
 #colorlab .cl-reset:hover { filter: brightness(1.04); }
 #colorlab .cl-reset:active { transform: scale(.96); }
 #colorlab .cl-reset .ico { font-size: 15px; line-height: 1; }
+#colorlab .cl-speed { position: absolute; left: 14px; bottom: 14px; z-index: 5; display: flex; align-items: center; gap: 8px; background: rgba(18,21,27,.74); border: 1px solid rgba(255,255,255,.12); border-radius: 999px; padding: 7px 13px; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+#colorlab .cl-speed-ico { font-size: 13px; line-height: 1; }
+#colorlab .cl-speed-lab { font-size: 12px; font-weight: 700; color: #cdd4dd; white-space: nowrap; }
+#colorlab .cl-speed input[type=range] { width: 84px; height: 6px; background: rgba(255,255,255,.18); }
+#colorlab .cl-speed input[type=range]::-webkit-slider-thumb { width: 15px; height: 15px; border-width: 2px; border-color: #ffd23f; }
+#colorlab .cl-speed input[type=range]::-moz-range-thumb { width: 15px; height: 15px; border-width: 2px; border-color: #ffd23f; }
+#colorlab .cl-speed-val { font-size: 11.5px; font-weight: 800; color: #ffd23f; font-variant-numeric: tabular-nums; width: 34px; text-align: right; }
+@media (max-width: 640px) { #colorlab .cl-speed-lab { display: none; } #colorlab .cl-speed input[type=range] { width: 60px; } }
 /* 물체 반사색 툴팁 */
 #colorlab .cl-tip { position: absolute; z-index: 8; display: none; transform: translate(-50%, -100%); pointer-events: none; background: #fff; border: 1px solid #e2e6ec; border-radius: 12px; padding: 9px 12px; gap: 10px; align-items: center; min-width: 150px; box-shadow: 0 6px 22px rgba(16,24,40,.20); }
 #colorlab .cl-tip::after { content: ''; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%); width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 7px solid #fff; filter: drop-shadow(0 2px 1px rgba(16,24,40,.10)); }
@@ -1201,6 +1211,12 @@ input[type=range].rPlain{background:#dfe4ef;}
           </div>
         </div>
         <button class="cl-reset" id="clReset"><span class="ico">⟲</span>초기화</button>
+        <div class="cl-speed">
+          <span class="cl-speed-ico">⚡</span>
+          <span class="cl-speed-lab">광자 속도</span>
+          <input type="range" id="clSpeed" min="10" max="100" value="100" aria-label="광자 속도">
+          <span class="cl-speed-val" id="clSpeedVal">100%</span>
+        </div>
       </div>
 
       <!-- 탭 1: 빛이 만드는 색 -->
@@ -1912,56 +1928,82 @@ input[type=range].rPlain{background:#dfe4ef;}
 <section class="panel" id="p-manual">
   <span class="eyebrow">🧭 수업 매뉴얼 · 교사용</span>
   <h1 class="h-title">수업 매뉴얼</h1>
-  <p class="lead">이 앱을 수업에서 어떻게 활용하는지 정리했습니다. 차시 배분·발문·평가는 학급 상황에 맞게 바꿔 쓰세요.</p>
+  <p class="lead">이 앱을 수업에서 어떻게 활용하면 좋은지 정리했습니다. 탭은 정해진 순서가 아니라 <b>필요에 따라 골라 쓰는 도구 상자</b>입니다. 차시·발문·평가는 학급 상황에 맞게 바꿔 쓰세요.</p>
   <div style="height:18px"></div>
   <div class="man-wrap">
     <!-- ▼ 제작자 크레딧 / 업데이트일 (한 곳에서 수정) ▼ -->
-    <p class="man-cred">제작 : 조승재(science_is_jo) · 해누리중학교 과학교사 · 최종 업데이트 : 2026-06-21</p>
+    <p class="man-cred">제작 : 조승재(science_is_jo) · 해누리중학교 과학교사 · 최종 업데이트 : 2026-06-22</p>
     <!-- ▲ -->
     <div style="height:22px"></div>
 
     <div class="man-sec">
       <h3>1. 앱 개요</h3>
-      <p>단일 HTML 파일로 만든 인터랙티브 디지털 교과서입니다(중학교 과학 III. 빛과 파동 「물체의 색과 빛의 합성」). 학생이 직접 빛과 물체를 조작하며 "물체의 색이란 무엇인가"를 탐구하도록 설계했습니다. 화면의 모든 색은 물리적으로 계산되어 실제 관찰과 일치합니다.</p>
+      <p>단일 HTML로 만든 인터랙티브 디지털 교과서입니다(중학교 과학 III. 빛과 파동 「물체의 색과 빛의 합성」). 학생이 직접 빛과 물체를 조작하며 "물체의 색이란 무엇인가"를 탐구하도록 설계했습니다. 화면의 모든 색은 물리적으로 계산되어 실제 관찰과 일치합니다.</p>
     </div>
 
     <div class="man-sec">
       <h3>2. 준비물 · 접속 방법</h3>
       <ul>
-        <li>three.js·웹폰트를 CDN에서 불러오므로 <b>인터넷 연결을 권장</b>합니다.</li>
+        <li>Three.js·웹폰트를 CDN에서 불러오므로 <b>인터넷 연결을 권장</b>합니다.</li>
         <li>전자칠판 <b>교사 시연</b>과 태블릿·학생 기기 <b>자기주도 학습</b> 모두 적합합니다(터치·마우스 지원).</li>
-        <li>3D 장면(가상실험실)은 WebGL이 필요하니 수업 전 해당 기기에서 표시되는지 확인하세요.</li>
+        <li>3D 장면(가상실험실·갯가재)은 WebGL이 필요하니 수업 전 해당 기기에서 표시되는지 확인하세요.</li>
         <li>첫 진입 시 교사용 안내 팝업이 자동으로 뜨며, 우하단 <b>🔖 수업 안내</b> 버튼으로 다시 열 수 있습니다.</li>
       </ul>
     </div>
 
     <div class="man-sec">
-      <h3>3. 탭별 활용 흐름</h3>
-      <div class="man-flow">🤥 거짓말 치지마! → 🥄 도입 → 🧪 탐구 안내서 → 🥽 가상실험실 → 🔬 실험실 → 🔦 빛 시뮬레이터 → 💡 조명과 색 → 📖 개념 정리 → 👁️ 눈과 뇌의 색 → 🌊 생활 속 빛 → ✏️ 원리 심화 → 🎮 색깔 놀이터 → 🌙 교과서 밖 → 📺 관련 영상</div>
-      <div style="height:12px"></div>
+      <h3>3. 탭별 설명 — 골라 쓰는 도구 상자</h3>
+      <p class="man-key">탭은 서로 독립적인 모듈입니다. <b>전부, 순서대로 쓸 필요가 없습니다.</b> 아래 표에서 수업 목표에 맞는 탭만 골라 쓰세요(성격별로 묶어 두었습니다).</p>
       <div class="man-table-wrap">
         <table class="man-table">
-          <thead><tr><th>탭</th><th>무엇을 / 어떻게</th></tr></thead>
+          <thead><tr><th>탭</th><th>다루는 내용 · 활동</th><th>쓰임새 (시연/학생 · 언제)</th></tr></thead>
           <tbody>
-            <tr><td>🤥 거짓말 치지마!</td><td>착시 영상·칸니자 삼각형으로 "뇌는 본 대로 보지 않고 해석한다"를 보여 주며 "그럼 물체의 색은 무엇?"으로 도입합니다.</td></tr>
-            <tr><td>🥄 도입</td><td>'사과는 빨갛다=거짓말' 훅과 동시대비 착시(같은 색·다른 배경)로 학습 동기를 만듭니다.</td></tr>
-            <tr><td>🧪 탐구 안내서</td><td>교과서 반사 실험(아랫면 뚫린 흰 상자에 손전등) 절차를 그림과 함께 안내합니다.</td></tr>
-            <tr><td>🥽 가상실험실</td><td>상자 아래 물체에 손전등을 비춰 안쪽 면에 반사된 색을 관찰합니다. 노란 피망→빨강, 초록 잎→어둡게를 시연하세요.</td></tr>
-            <tr><td>🔬 실험실</td><td>천장 조명 합성, RGB 0~255 슬라이더, 화소, LCD로 빛·디지털 색을 다룹니다.</td></tr>
-            <tr><td>🔦 빛 시뮬레이터</td><td>가법혼색·물체색·미션을 한 화면에서. 빛 입자가 조명→물체→눈으로 흐르는 애니메이션이 핵심입니다.</td></tr>
-            <tr><td>💡 조명과 색</td><td>조명에 따라 물체색이 어떻게 달라지는지 맞히게 합니다.</td></tr>
-            <tr><td>📖 개념 정리</td><td>핵심어 빈칸을 클릭해 가린 채 먼저 답하게 한 뒤 확인하는 형성평가로 씁니다.</td></tr>
-            <tr><td>👁️ 눈과 뇌의 색</td><td>원뿔세포·뇌의 해석·조건등색·감산혼합. "색은 빛·물체·눈·뇌의 상호작용"으로 마무리합니다.</td></tr>
-            <tr><td>🌊 생활 속 빛 · ✏️ 원리 심화</td><td>생활 사례와 'RGB는 왜 RGB인가', 흡수의 전자 에너지 준위 등 심화 내용입니다.</td></tr>
-            <tr><td>🎮 색깔 놀이터</td><td>색 추리 게임과 빛 그림판으로 배운 내용을 정리·창작으로 확장합니다.</td></tr>
-            <tr><td>🌙 교과서 밖 · 📺 관련 영상</td><td>강아지 시각(색상표·사진 업로드)과 관련 영상으로 흥미를 넓힙니다.</td></tr>
+            <tr class="grp"><td colspan="3">🎬 도입 · 동기유발</td></tr>
+            <tr><td>🤥 거짓말 치지마!</td><td>착시 영상·칸니자 삼각형(없는 삼각형이 보임)·'논란의 원피스'로 "본다는 것 = 뇌의 해석"을 보여 줌</td><td>단원 첫 도입. <b>교사 시연</b>으로 "그럼 물체의 색은 무엇?" 질문 던지기</td></tr>
+            <tr><td>🥄 도입</td><td>'사과는 빨갛다=거짓말' 훅 카드 + 동시대비 착시(같은 색이 배경에 따라 다르게 보임)</td><td>도입·동기유발. 핵심 질문을 세운 뒤 본 활동으로 연결</td></tr>
+
+            <tr class="grp"><td colspan="3">🧪 탐구 · 실험 · 체험</td></tr>
+            <tr><td>🧪 탐구 안내서</td><td>교과서 반사 실험(아랫면 뚫린 흰 상자 + 손전등) 절차를 그림과 함께 안내</td><td>실물 실험 전·중의 <b>절차 안내·참고</b>. 모둠 실험과 연계</td></tr>
+            <tr><td>🥽 가상실험실</td><td>3D 상자 아래 물체에 손전등을 비춰 안쪽 면에 반사된 색을 관찰(WebGL)</td><td>실물 실험 대체·보강. <b>학생 활동/시연</b>, 기록지 작성</td></tr>
+            <tr><td>🔬 실험실</td><td>천장 조명 합성·RGB 0~255 슬라이더·화소 확대·LCD 구조로 빛과 디지털 색을 다룸</td><td>빛의 합성·디지털 색 탐구. <b>시연·학생 활동</b> 모두</td></tr>
+            <tr><td>🔦 빛 시뮬레이터</td><td>빛 입자가 조명→물체→눈으로 흐르는 애니메이션 + 내부 3탭(빛이 만드는 색·물체가 고르는 색·색을 찾아라 미션)</td><td>반사·흡수·합성을 한 화면에서 체험하는 <b>핵심 활동</b>(자기주도)</td></tr>
+            <tr><td>💡 조명과 색</td><td>조명(빛)에 따라 물체의 색이 어떻게 달라지는지 예측·확인</td><td>탐구·심화. 빠른 형성 확인·모둠 퀴즈</td></tr>
+
+            <tr class="grp"><td colspan="3">📖 개념 정리</td></tr>
+            <tr><td>📖 개념 정리</td><td>핵심어 빈칸을 클릭하면 가려졌다 나타남(능동적 회상)</td><td>정리·<b>형성평가</b>. 먼저 답하게 한 뒤 확인</td></tr>
+            <tr><td>👁️ 눈과 뇌의 색</td><td>원뿔세포·뇌의 해석·조건등색·감산혼합을 정리</td><td>단원 <b>종합 정리</b>. "색 = 빛·물체·눈·뇌의 상호작용"으로 마무리</td></tr>
+
+            <tr class="grp"><td colspan="3">✏️ 심화 · 확장</td></tr>
+            <tr><td>🌊 생활 속 빛</td><td>신호등·무대조명 등 생활 속 색 현상 사례</td><td>심화·연결. 배운 원리를 실생활에 적용</td></tr>
+            <tr><td>✏️ 원리 심화</td><td>'RGB는 왜 RGB인가'·빛의 흡수와 전자 에너지 준위</td><td>심화(우수 학생·과학동아리). <b>선택 자료</b></td></tr>
+            <tr><td>🌙 교과서 밖</td><td>뉴턴 프리즘(과학사)·강아지 시각(사진 업로드 비교)·갯가재 12광수용체 시뮬(자외선·편광)</td><td>흥미 확장. 자투리 시간·과제·동기 부여</td></tr>
+
+            <tr class="grp"><td colspan="3">🎮 놀이 · 정리</td></tr>
+            <tr><td>🎮 색깔 놀이터</td><td>색 추리 게임(미션·점수) + 빛 그림판(색 손전등으로 칠하기)</td><td>정리·복습을 <b>게임·창작</b>으로. 보상·브레인 브레이크</td></tr>
+
+            <tr class="grp"><td colspan="3">📺 자료</td></tr>
+            <tr><td>📺 관련 영상</td><td>주제 관련 영상 모음</td><td>보충·과제·결시생 복습 자료</td></tr>
+            <tr><td>🧭 수업 매뉴얼</td><td>(지금 이 탭) 교사용 안내</td><td><b>교사 전용</b>. 학생 화면에서는 건너뛰기</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <div class="man-sec">
-      <h3>4. 핵심 발문 예시</h3>
+      <h3>4. 추천 수업 흐름 (예시 · 선택)</h3>
+      <p class="man-key">아래는 <b>하나의 예시일 뿐</b>입니다. 탭은 자유롭게 빼거나 순서를 바꿔도 되고, 학급 수준·차시 수에 맞게 일부만 골라 쓰면 됩니다.</p>
+      <p><b>예시 A — 한 차시로 흥미 잡기(도입 중심)</b></p>
+      <div class="man-flow">🤥 거짓말 치지마! → 🥄 도입 → 🔦 빛 시뮬레이터(맛보기) → 📖 개념 정리</div>
+      <div style="height:12px"></div>
+      <p><b>예시 B — 탐구·실험 중심 한 차시</b></p>
+      <div class="man-flow">🧪 탐구 안내서 → 🥽 가상실험실(또는 실물 실험) → 🔬 실험실 → 📖 개념 정리 → 🎮 색깔 놀이터(정리)</div>
+      <div style="height:12px"></div>
+      <p><b>예시 C — 단원 전체를 길게 엮는 코스(3~4차시)</b></p>
+      <div class="man-flow">도입(🤥·🥄) → 탐구·실험(🧪·🥽·🔬·🔦·💡) → 정리(📖·👁️) → 심화·확장(🌊·✏️·🌙) → 놀이(🎮) · 영상(📺)은 과제로</div>
+    </div>
+
+    <div class="man-sec">
+      <h3>5. 핵심 발문 예시</h3>
       <ul>
         <li>빨간 사과가 빨갛게 보이는 까닭은? (반사한 빛 vs 물체가 가진 색)</li>
         <li>같은 햇빛인데 딸기 열매는 빨갛고 꼭지는 초록인 이유는?</li>
@@ -1973,7 +2015,7 @@ input[type=range].rPlain{background:#dfe4ef;}
     </div>
 
     <div class="man-sec">
-      <h3>5. 자주 나오는 오개념과 교정 포인트</h3>
+      <h3>6. 자주 나오는 오개념과 교정 포인트</h3>
       <div class="man-table-wrap">
         <table class="man-table">
           <thead><tr><th>오개념</th><th>교정 포인트</th></tr></thead>
@@ -1990,7 +2032,7 @@ input[type=range].rPlain{background:#dfe4ef;}
     </div>
 
     <div class="man-sec">
-      <h3>6. 평가 · 정리 아이디어</h3>
+      <h3>7. 평가 · 정리 아이디어</h3>
       <p><b>형성평가</b> — 개념 정리 빈칸 채우기, 색 추리 게임 점수/연속 성공, 가상실험실 기록지(여섯 물체) 완성으로 즉시 확인합니다.</p>
       <p><b>수행평가 예시 "빛으로 색 만들기"</b> — ① RGB 슬라이더로 제시된 색(주황·청록)을 만들고 값 기록 ② 천장 조명 각도로 바닥 가운데에 노랑(빨강+초록) 만들기 ③ 빛 그림판에서 무채색 사진을 색 손전등으로 칠하고 두 색이 겹친 곳을 설명.</p>
       <div class="man-table-wrap">
@@ -2005,7 +2047,7 @@ input[type=range].rPlain{background:#dfe4ef;}
       </div>
     </div>
 
-    <p class="man-cred">제작 : 조승재(science_is_jo) · 해누리중학교 과학교사 · 최종 업데이트 : 2026-06-21<br>본 매뉴얼은 초안입니다. 동료 선생님과 자유롭게 공유·수정해 사용하세요.</p>
+    <p class="man-cred">제작 : 조승재(science_is_jo) · 해누리중학교 과학교사 · 최종 업데이트 : 2026-06-22<br>이 매뉴얼은 예시 안내입니다. 동료 선생님과 자유롭게 공유·수정해 사용하세요.</p>
   </div>
 </section>
 
@@ -2013,7 +2055,7 @@ input[type=range].rPlain{background:#dfe4ef;}
   <p><b>물체의 색과 빛의 합성</b> · 중학교 과학 III. 빛과 파동</p>
   <p style="margin-top:5px">JO-Textbook · 모든 색은 물리적으로 계산되어 실제 관찰과 일치합니다.</p>
   <!-- ▼ 제작자 크레딧 / 업데이트일 (모달과 동일하게 유지) ▼ -->
-  <p style="margin-top:7px;color:var(--faint);font-size:12px">제작 : 조승재(science_is_jo) · 해누리중학교 과학교사 · 최종 업데이트 : 2026-06-21</p>
+  <p style="margin-top:7px;color:var(--faint);font-size:12px">제작 : 조승재(science_is_jo) · 해누리중학교 과학교사 · 최종 업데이트 : 2026-06-22</p>
   <!-- ▲ -->
 </div>
 </main>
@@ -3369,18 +3411,18 @@ $$(".blank").forEach(b=>b.addEventListener("click",()=>b.classList.toggle("show"
     <div class="tmodal-bd">
       <h3>📱 이 앱은?</h3>
       <p>단일 HTML 파일로 만든 인터랙티브 디지털 교과서입니다(three.js·웹폰트 CDN 사용 → 인터넷 연결 권장). 전자칠판 시연과 태블릿·학생 기기 자기주도 학습에 모두 적합하며, 화면의 모든 색은 물리적으로 계산되어 실제 관찰과 일치합니다.</p>
-      <h3>📚 구성 안내</h3>
-      <div class="tmodal-flow">🤥 거짓말 치지마! → 🥄 도입 → 🧪 탐구 안내서 → 🥽 가상실험실 → 🔬 실험실 → 🔦 빛 시뮬레이터 → 💡 조명과 색 → 📖 개념 정리 → 👁️ 눈과 뇌의 색 → 🌊 생활 속 빛 → ✏️ 원리 심화 → 🎮 색깔 놀이터 → 🌙 교과서 밖 → 📺 관련 영상</div>
+      <h3>📚 구성 안내 · 필요한 탭만 골라 쓰는 도구 상자</h3>
+      <div class="tmodal-flow"><b>도입·동기</b> 🤥 거짓말 치지마! · 🥄 도입<br><b>탐구·실험</b> 🧪 탐구 안내서 · 🥽 가상실험실 · 🔬 실험실 · 🔦 빛 시뮬레이터 · 💡 조명과 색<br><b>개념 정리</b> 📖 개념 정리 · 👁️ 눈과 뇌의 색<br><b>심화·확장</b> 🌊 생활 속 빛 · ✏️ 원리 심화 · 🌙 교과서 밖<br><b>놀이·자료</b> 🎮 색깔 놀이터 · 📺 관련 영상</div>
       <h3>💡 수업 활용 팁</h3>
       <ul class="tmodal-tips">
-        <li><b>도입</b>: 같은 색이 배경에 따라 다르게 보이는 착시로 "색이란 무엇인가" 질문을 던지며 시작하세요.</li>
+        <li><b>필요한 탭만 골라 쓰면 됩니다</b>: 14개 탭은 독립 모듈이라 전부·순서대로 쓸 필요가 없습니다. 수업 목표에 맞게 선택하세요.</li>
         <li><b>실험실·가상실험실</b>: 손전등·천장 조명·RGB 슬라이더를 교사가 직접 조작하며 반사·흡수와 빛의 합성을 단계적으로 시연하세요.</li>
         <li><b>개념 정리</b>: 빈칸을 클릭해 핵심어를 가린 채 학생에게 먼저 답하게 한 뒤 확인하세요.</li>
-        <li><b>색깔 놀이터·교과서 밖</b>: 색 추리 게임과 강아지 시각 프로그램으로 배운 내용을 정리·확장하세요.</li>
+        <li><b>색깔 놀이터·교과서 밖</b>: 색 추리 게임과 강아지·갯가재 시각 프로그램으로 배운 내용을 정리·확장하세요.</li>
       </ul>
       <p class="tmodal-note">차시별 지도안·핵심 발문·오개념 교정·평가(루브릭)는 아래 <b>🧭 수업 매뉴얼</b> 탭에 정리되어 있습니다. 동료 선생님께도 공유해 주세요.</p>
       <!-- ▼▼ 제작자 크레딧 / 업데이트일: 여기 한 곳만 수정 ▼▼ -->
-      <p class="tmodal-cred">제작 : 조승재(science_is_jo) · 해누리중학교 과학교사<br>최종 업데이트 : 2026-06-21</p>
+      <p class="tmodal-cred">제작 : 조승재(science_is_jo) · 해누리중학교 과학교사<br>최종 업데이트 : 2026-06-22</p>
       <!-- ▲▲ -->
     </div>
     <label class="tmodal-chk"><input type="checkbox" id="tmDontShow"> 다음부터 자동으로 띄우지 않기</label>
@@ -3446,6 +3488,7 @@ $$(".blank").forEach(b=>b.addEventListener("click",()=>b.classList.toggle("show"
     mix: { r: 255, g: 255, b: 255 },
     photonMode: false,
     objPhotonMode: false,
+    photonSpeed: 1,
     objLight: { r: 255, g: 255, b: 255 },
     objKey: 'tomato',
     chLight: { r: 255, g: 255, b: 255 },
@@ -4203,6 +4246,10 @@ $$(".blank").forEach(b=>b.addEventListener("click",()=>b.classList.toggle("show"
     oswarm = []; ph = []; hideTip();
     sTick();
   });
+  el('clSpeed').addEventListener('input', function () {
+    S.photonSpeed = +this.value / 100;
+    el('clSpeedVal').textContent = this.value + '%';
+  });
   el('clReset').addEventListener('click', function () {
     if (S.tab === 'mix') { S.mix = { r: 255, g: 255, b: 255 }; S.photonMode = false; el('mixPhotonToggle').classList.remove('is-on'); el('mixPhotonToggle').setAttribute('aria-checked', 'false'); swarm = []; setSliders('mix', S.mix); updateMixUI(); }
     else if (S.tab === 'object') { S.objLight = { r: 255, g: 255, b: 255 }; S.objKey = 'tomato'; S.objPhotonMode = false; el('objPhotonToggle').classList.remove('is-on'); el('objPhotonToggle').setAttribute('aria-checked', 'false'); oswarm = []; setSliders('obj', S.objLight); updateObjUI(); }
@@ -4281,16 +4328,17 @@ $$(".blank").forEach(b=>b.addEventListener("click",()=>b.classList.toggle("show"
   var prev = 0;
   function loop(t) {
     var dt = prev ? (t - prev) / 1000 : 0; prev = t; if (dt > 0.05) dt = 0.05;
+    var sdt = dt * S.photonSpeed;
     fit();
     cx.setTransform(DPR, 0, 0, DPR, 0, 0);
     cx.clearRect(0, 0, CW, CH);
     if (S.tab === 'mix') {
       if (S.photonMode) {
-        drawMixPhotons(CW, CH, dt);
+        drawMixPhotons(CW, CH, sdt);
       } else {
         drawMix(CW, CH);
         geoMixNodes.forEach(function (n, i) {
-          if (n.v > 20) emit('m' + i, 5 + n.v / 255 * 14, dt, function () {
+          if (n.v > 20) emit('m' + i, 5 + n.v / 255 * 14, sdt, function () {
             spawn(n.fx, n.fy, n.x + (Math.random() - 0.5) * 8, n.y + (Math.random() - 0.5) * 8, n.col, 0.8 + Math.random() * 0.25);
           });
         });
@@ -4299,22 +4347,22 @@ $$(".blank").forEach(b=>b.addEventListener("click",()=>b.classList.toggle("show"
       var L = S.tab === 'object' ? S.objLight : S.chLight;
       var keys = S.tab === 'object' ? [S.objKey] : MISS[S.chIdx].objs;
       if (S.tab === 'object' && S.objPhotonMode) {
-        drawObjectPhotons(CW, CH, dt, L, S.objKey);
+        drawObjectPhotons(CW, CH, sdt, L, S.objKey);
       } else {
         drawScene(CW, CH, L, keys);
         var Gs = geoScene, lb = Math.max(L.r, L.g, L.b);
         Gs.objs.forEach(function (o, idx) {
           var ap = appar(OBJ[Gs.keys[idx]].refl, L), abr = Math.max(ap[0], ap[1], ap[2]);
-          if (lb > 20) emit('in' + idx, 5 + lb / 255 * 14, dt, function () {
+          if (lb > 20) emit('in' + idx, 5 + lb / 255 * 14, sdt, function () {
             spawn(Gs.lamp.x, Gs.lamp.y, o.x + (Math.random() - 0.5) * 10, o.y + (Math.random() - 0.5) * 10, [L.r, L.g, L.b], 0.7 + Math.random() * 0.25);
           });
-          if (abr >= 40) emit('out' + idx, 4 + abr / 255 * 12, dt, function () {
+          if (abr >= 40) emit('out' + idx, 4 + abr / 255 * 12, sdt, function () {
             spawn(o.x + (Math.random() - 0.5) * 8, o.y, Gs.eye.x, Gs.eye.y, ap, 0.7 + Math.random() * 0.25);
           });
         });
       }
     }
-    updPh(dt); drawPh();
+    updPh(sdt); drawPh();
     requestAnimationFrame(loop);
   }
 
