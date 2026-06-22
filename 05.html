@@ -364,6 +364,22 @@ input[type=range].rPlain{background:#dfe4ef;}
 @media (max-width:560px){ .tfab{padding:11px 15px;font-size:13px;right:12px;bottom:12px;} .tmodal-ft .btn{min-width:120px;} }
 @media print{ .tfab,.tmodal{display:none !important;} }
 
+/* ---------- 인앱 수업 매뉴얼 탭 ---------- */
+.man-wrap{max-width:840px;margin:0 auto;}
+.man-sec{margin:0 0 26px;}
+.man-sec h3{font-size:18px;font-weight:900;color:var(--ink);margin:0 0 10px;padding-bottom:7px;border-bottom:2px solid var(--line);}
+.man-sec p{font-size:14px;color:var(--ink);line-height:1.75;margin:0 0 10px;}
+.man-sec ul{margin:0 0 10px;padding-left:2px;list-style:none;}
+.man-sec li{font-size:13.5px;color:var(--ink);line-height:1.7;margin:0 0 7px;padding-left:22px;position:relative;}
+.man-sec li::before{content:"▸";position:absolute;left:4px;color:var(--blue);font-weight:900;}
+.man-flow{font-size:12.5px;font-weight:700;color:var(--blue-d);background:var(--blue-soft);border-radius:var(--r-md);padding:12px 14px;line-height:2;}
+.man-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 10px;border-radius:var(--r-md);border:1px solid var(--line);}
+.man-table{width:100%;border-collapse:collapse;min-width:520px;font-size:13px;}
+.man-table th,.man-table td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.6;}
+.man-table th{background:var(--line2);font-weight:800;color:var(--ink);white-space:nowrap;}
+.man-table tr:last-child td{border-bottom:none;}
+.man-cred{font-size:12.5px;color:var(--muted);background:var(--line2);border-radius:var(--r-md);padding:12px 16px;text-align:center;line-height:1.7;}
+
 /* ---------- 색은 해석 (perception) ---------- */
 .thesis{background:linear-gradient(135deg,#10131c,#171b29);border:1px solid #2a3142;border-radius:var(--r-lg);padding:26px 28px;color:#e7edfb;margin-bottom:8px;}
 .thesis .big-q{font-size:clamp(20px,2.6vw,26px);font-weight:900;margin:0 0 10px;line-height:1.35;}
@@ -430,6 +446,107 @@ input[type=range].rPlain{background:#dfe4ef;}
   .h-title{font-size:25px;}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+/* ===================== 빛 시뮬레이터 (임베드, #colorlab 스코프) ===================== */
+#colorlab, #colorlab * { box-sizing: border-box; }
+#colorlab {
+  height: 680px; min-height: 560px; width: 100%;
+  display: flex; justify-content: center; align-items: stretch;
+  padding: 0; overflow: auto;
+  font-family: 'Pretendard','Pretendard Variable','Noto Sans KR',system-ui,sans-serif;
+  color: #222831; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;
+}
+#colorlab .cl-shell { width: 100%; max-width: 1180px; display: flex; flex-direction: column; gap: 14px; }
+#colorlab .cl-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+#colorlab .cl-brand { display: flex; align-items: baseline; gap: 10px; }
+#colorlab .cl-brand h1 { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; color: #1b2129; margin: 0; }
+#colorlab .cl-brand p { font-size: 12.5px; color: #7a828c; font-weight: 600; margin: 0; }
+#colorlab .cl-tabs { display: inline-flex; background: #e1e4ea; border: 1px solid #d6dae1; border-radius: 13px; padding: 4px; gap: 2px; }
+#colorlab .cl-tab { border: none; background: transparent; font-family: inherit; font-size: 13.5px; font-weight: 700; color: #5f6772; padding: 8px 14px; border-radius: 9px; cursor: pointer; transition: color .18s ease, background .18s ease, box-shadow .18s ease; white-space: nowrap; }
+#colorlab .cl-tab:hover { color: #2b323b; }
+#colorlab .cl-tab.is-active { background: #fff; color: #1b2129; box-shadow: 0 1px 2px rgba(16,24,40,.08), 0 2px 6px rgba(16,24,40,.06); }
+#colorlab .cl-stage { position: relative; flex: 1 1 auto; min-height: 300px; border-radius: 20px; overflow: hidden; background: radial-gradient(120% 100% at 50% 0%, #1b1f28 0%, #14171d 58%, #0f1116 100%); box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), 0 10px 30px rgba(16,24,40,.10); }
+#colorlab .cl-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#colorlab .cl-reset { position: absolute; right: 14px; bottom: 14px; z-index: 5; display: inline-flex; align-items: center; gap: 7px; background: #ffd23f; color: #5a4300; border: 1px solid #eab20f; font-family: inherit; font-weight: 800; font-size: 13px; padding: 9px 15px 9px 13px; border-radius: 999px; cursor: pointer; box-shadow: 0 2px 6px rgba(120,90,0,.22); transition: transform .12s ease, filter .12s ease; }
+#colorlab .cl-reset:hover { filter: brightness(1.04); }
+#colorlab .cl-reset:active { transform: scale(.96); }
+#colorlab .cl-reset .ico { font-size: 15px; line-height: 1; }
+/* 물체 반사색 툴팁 */
+#colorlab .cl-tip { position: absolute; z-index: 8; display: none; transform: translate(-50%, -100%); pointer-events: none; background: #fff; border: 1px solid #e2e6ec; border-radius: 12px; padding: 9px 12px; gap: 10px; align-items: center; min-width: 150px; box-shadow: 0 6px 22px rgba(16,24,40,.20); }
+#colorlab .cl-tip::after { content: ''; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%); width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 7px solid #fff; filter: drop-shadow(0 2px 1px rgba(16,24,40,.10)); }
+#colorlab .cl-tip-sw { width: 34px; height: 34px; border-radius: 9px; border: 1px solid rgba(0,0,0,.12); flex: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
+#colorlab .cl-tip-name { font-size: 13px; font-weight: 800; color: #1b2129; }
+#colorlab .cl-tip-text { font-size: 12.5px; font-weight: 700; color: #3a414a; margin-top: 1px; }
+#colorlab .cl-tip-sub { font-size: 11px; font-weight: 600; color: #8b929c; margin-top: 1px; }
+#colorlab .cl-panel { background: #fff; border: 1px solid #e4e8ee; border-radius: 18px; padding: 16px 18px; box-shadow: 0 1px 2px rgba(16,24,40,.04), 0 8px 22px rgba(16,24,40,.05); }
+#colorlab .cl-panel[hidden] { display: none; }
+#colorlab .cl-prow { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+#colorlab .cl-sliders { flex: 1 1 320px; display: flex; flex-direction: column; gap: 13px; min-width: 250px; }
+#colorlab .cl-slider { display: flex; align-items: center; gap: 12px; }
+#colorlab .cl-slider .lab { width: 18px; font-weight: 800; font-size: 14px; text-align: center; flex: none; }
+#colorlab .cl-slider--r .lab { color: #e8453c; }
+#colorlab .cl-slider--g .lab { color: #2fa84f; }
+#colorlab .cl-slider--b .lab { color: #3b6fe0; }
+#colorlab .cl-slider .val { width: 36px; text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; font-size: 13.5px; color: #5f6772; flex: none; }
+#colorlab input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 12px; border-radius: 7px; outline: none; cursor: pointer; background: #dee2e8; }
+#colorlab .cl-slider--r input[type=range] { --c0: #4a1414; --c1: #ff5a52; }
+#colorlab .cl-slider--g input[type=range] { --c0: #103a18; --c1: #4fd06b; }
+#colorlab .cl-slider--b input[type=range] { --c0: #0f2050; --c1: #5a8bff; }
+#colorlab .cl-slider input[type=range] { background: repeating-linear-gradient(90deg, transparent 0 calc(25% - 2px), rgba(255,255,255,.5) calc(25% - 2px) 25%), linear-gradient(90deg, var(--c0, #3a3f47), var(--c1, #9aa1ab)); }
+#colorlab input[type=range]:focus-visible { box-shadow: 0 0 0 3px rgba(71,98,230,.35); }
+#colorlab input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 3px solid #cdd4dd; box-shadow: 0 1px 3px rgba(0,0,0,.25); cursor: pointer; }
+#colorlab .cl-slider--r input[type=range]::-webkit-slider-thumb { border-color: #e8453c; }
+#colorlab .cl-slider--g input[type=range]::-webkit-slider-thumb { border-color: #2fa84f; }
+#colorlab .cl-slider--b input[type=range]::-webkit-slider-thumb { border-color: #3b6fe0; }
+#colorlab input[type=range]::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 3px solid #cdd4dd; box-shadow: 0 1px 3px rgba(0,0,0,.25); cursor: pointer; }
+#colorlab .cl-slider--r input[type=range]::-moz-range-thumb { border-color: #e8453c; }
+#colorlab .cl-slider--g input[type=range]::-moz-range-thumb { border-color: #2fa84f; }
+#colorlab .cl-slider--b input[type=range]::-moz-range-thumb { border-color: #3b6fe0; }
+#colorlab .cl-side { display: flex; flex-direction: column; gap: 13px; flex: 0 0 auto; }
+#colorlab .cl-presets { display: flex; gap: 7px; flex-wrap: wrap; max-width: 232px; }
+#colorlab .cl-preset { width: 30px; height: 30px; border-radius: 9px; border: 1.5px solid rgba(0,0,0,.12); cursor: pointer; padding: 0; transition: transform .1s ease; }
+#colorlab .cl-preset:hover { transform: scale(1.1); }
+#colorlab .cl-preset:active { transform: scale(.94); }
+#colorlab .cl-readout { display: flex; align-items: center; gap: 11px; }
+#colorlab .cl-chip { width: 44px; height: 44px; border-radius: 12px; border: 1px solid rgba(0,0,0,.12); flex: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.15); }
+#colorlab .cl-rname { font-size: 16px; font-weight: 800; color: #1b2129; line-height: 1.15; }
+#colorlab .cl-rsub { font-size: 12.5px; font-weight: 600; color: #7a828c; margin-top: 2px; }
+/* 토글 스위치 (광자의 양으로 보기) */
+#colorlab .cl-switch { display: inline-flex; align-items: center; gap: 9px; background: none; border: none; cursor: pointer; font-family: inherit; padding: 2px 0; }
+#colorlab .cl-switch-track { width: 40px; height: 23px; border-radius: 999px; background: #cfd5dd; position: relative; transition: background .18s ease; flex: none; }
+#colorlab .cl-switch-thumb { position: absolute; top: 2.5px; left: 2.5px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: left .18s ease; }
+#colorlab .cl-switch.is-on .cl-switch-track { background: #4762e6; }
+#colorlab .cl-switch.is-on .cl-switch-thumb { left: 19.5px; }
+#colorlab .cl-switch-label { font-size: 13px; font-weight: 700; color: #5f6772; }
+#colorlab .cl-switch.is-on .cl-switch-label { color: #1b2129; }
+#colorlab .cl-objs { display: flex; gap: 8px; overflow-x: auto; padding: 4px 1px; margin-top: 14px; }
+#colorlab .cl-objcard { flex: 0 0 auto; width: 66px; height: 62px; border-radius: 13px; border: 2px solid #e4e8ee; background: #f7f9fb; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; transition: border-color .15s ease, background .15s ease, box-shadow .15s ease; }
+#colorlab .cl-objcard:hover { border-color: #cfd6df; }
+#colorlab .cl-objcard.is-sel { border-color: #4762e6; background: #eef1fe; box-shadow: 0 0 0 3px rgba(71,98,230,.12); }
+#colorlab .cl-objcard .emo { font-size: 24px; line-height: 1; }
+#colorlab .cl-objcard .nm { font-size: 11.5px; font-weight: 700; color: #5f6772; }
+#colorlab .cl-mcard { display: flex; flex-direction: column; gap: 6px; flex: 1 1 320px; min-width: 250px; }
+#colorlab .cl-mtop { display: flex; align-items: center; gap: 8px; }
+#colorlab .cl-mbadge { font-size: 11.5px; font-weight: 800; color: #4762e6; background: #eef1fe; border: 1px solid #dbe1fd; padding: 3px 9px; border-radius: 999px; }
+#colorlab .cl-mtext { font-size: 16px; font-weight: 800; color: #1b2129; letter-spacing: -.01em; }
+#colorlab .cl-mhint { font-size: 12.5px; color: #7a828c; font-weight: 600; }
+#colorlab .cl-mresult { font-size: 13.5px; font-weight: 800; min-height: 19px; }
+#colorlab .cl-mbtns { display: flex; gap: 8px; margin-top: 2px; }
+#colorlab .cl-btn { font-family: inherit; font-weight: 800; font-size: 13.5px; border-radius: 10px; padding: 9px 16px; cursor: pointer; border: 1px solid transparent; transition: filter .14s ease, transform .12s ease, opacity .14s ease; }
+#colorlab .cl-btn--check { background: #4762e6; color: #fff; border-color: #3a52cc; }
+#colorlab .cl-btn--check:hover { filter: brightness(1.05); }
+#colorlab .cl-btn--next { background: #fff; color: #4762e6; border-color: #c7d0f7; }
+#colorlab .cl-btn--next:disabled { opacity: .45; cursor: default; }
+#colorlab .cl-btn:active { transform: scale(.97); }
+@media (max-width: 640px) {
+  #colorlab .cl-prow { gap: 16px; }
+  #colorlab .cl-readout { width: 100%; }
+  #colorlab .cl-presets { max-width: none; }
+  #colorlab .cl-brand h1 { font-size: 16px; }
+  #colorlab .cl-tab { padding: 7px 11px; font-size: 12.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #colorlab .cl-tab, #colorlab .cl-btn, #colorlab .cl-preset, #colorlab .cl-reset { transition: none; }
+}
 </style>
 </head>
 <body>
@@ -445,6 +562,7 @@ input[type=range].rPlain{background:#dfe4ef;}
       <button class="tab-btn" data-tab="inquiry"><span class="em">🧪</span>탐구 안내서</button>
       <button class="tab-btn" data-tab="vlab"><span class="em">🥽</span>가상실험실</button>
       <button class="tab-btn" data-tab="lab"><span class="em">🔬</span>실험실</button>
+      <button class="tab-btn" data-tab="lightsim"><span class="em">🔦</span>빛 시뮬레이터</button>
       <button class="tab-btn" data-tab="litcolor"><span class="em">💡</span>조명과 색</button>
       <button class="tab-btn" data-tab="concept"><span class="em">📖</span>개념 정리</button>
       <button class="tab-btn" data-tab="perception"><span class="em">👁️</span>눈과 뇌의 색</button>
@@ -453,6 +571,7 @@ input[type=range].rPlain{background:#dfe4ef;}
       <button class="tab-btn" data-tab="game"><span class="em">🎮</span>색깔 놀이터</button>
       <button class="tab-btn" data-tab="beyond"><span class="em">🌙</span>교과서 밖</button>
       <button class="tab-btn" data-tab="videos"><span class="em">📺</span>관련 영상</button>
+      <button class="tab-btn" data-tab="manual"><span class="em">🧭</span>수업 매뉴얼</button>
     </nav>
   </div>
 </header>
@@ -1051,6 +1170,138 @@ input[type=range].rPlain{background:#dfe4ef;}
   </div>
 </section>
 <!-- ============================ 조명과 물체의 색 ============================ -->
+<!-- ============================ 빛 시뮬레이터 ============================ -->
+<section class="panel" id="p-lightsim">
+  <span class="eyebrow">🔦 빛 시뮬레이터 · 직접 조색하기</span>
+  <h1 class="h-title">색은 어떻게 만들어지는가</h1>
+  <p class="lead">빛의 삼원색을 더해 색을 만들고, 조명에 따라 물체의 색이 어떻게 달라지는지 관찰한 뒤, 미션으로 정리해 보세요.</p>
+  <div style="height:16px"></div>
+  <div id="colorlab">
+    <div class="cl-shell">
+      <div class="cl-top">
+        <div class="cl-brand">
+          <h1>색은 어떻게 만들어지는가</h1>
+          <p>빛의 합성과 물체의 색</p>
+        </div>
+        <div class="cl-tabs" role="tablist">
+          <button class="cl-tab is-active" data-tab="mix">빛이 만드는 색</button>
+          <button class="cl-tab" data-tab="object">물체가 고르는 색</button>
+          <button class="cl-tab" data-tab="challenge">색을 찾아라</button>
+        </div>
+      </div>
+
+      <div class="cl-stage" id="clStage">
+        <canvas id="clCanvas"></canvas>
+        <div class="cl-tip" id="clTip">
+          <span class="cl-tip-sw" id="clTipSw"></span>
+          <div>
+            <div class="cl-tip-name" id="clTipName"></div>
+            <div class="cl-tip-text" id="clTipText"></div>
+            <div class="cl-tip-sub" id="clTipSub"></div>
+          </div>
+        </div>
+        <button class="cl-reset" id="clReset"><span class="ico">⟲</span>초기화</button>
+      </div>
+
+      <!-- 탭 1: 빛이 만드는 색 -->
+      <div class="cl-panel" id="panelMix">
+        <div class="cl-prow">
+          <div class="cl-sliders">
+            <div class="cl-slider cl-slider--r"><span class="lab">R</span><input type="range" id="mixR" min="0" max="255" value="255" aria-label="빨강 빛 세기"><span class="val" id="mixRv">255</span></div>
+            <div class="cl-slider cl-slider--g"><span class="lab">G</span><input type="range" id="mixG" min="0" max="255" value="255" aria-label="초록 빛 세기"><span class="val" id="mixGv">255</span></div>
+            <div class="cl-slider cl-slider--b"><span class="lab">B</span><input type="range" id="mixB" min="0" max="255" value="255" aria-label="파랑 빛 세기"><span class="val" id="mixBv">255</span></div>
+          </div>
+          <div class="cl-side">
+            <button class="cl-switch" id="mixPhotonToggle" role="switch" aria-checked="false">
+              <span class="cl-switch-track"><span class="cl-switch-thumb"></span></span>
+              <span class="cl-switch-label">광자의 양으로 보기</span>
+            </button>
+            <div class="cl-presets" data-target="mix">
+              <button class="cl-preset" style="background:#ff0000" data-r="255" data-g="0" data-b="0" title="빨강"></button>
+              <button class="cl-preset" style="background:#00ff00" data-r="0" data-g="255" data-b="0" title="초록"></button>
+              <button class="cl-preset" style="background:#0000ff" data-r="0" data-g="0" data-b="255" title="파랑"></button>
+              <button class="cl-preset" style="background:#ffff00" data-r="255" data-g="255" data-b="0" title="노랑"></button>
+              <button class="cl-preset" style="background:#00ffff" data-r="0" data-g="255" data-b="255" title="청록"></button>
+              <button class="cl-preset" style="background:#ff00ff" data-r="255" data-g="0" data-b="255" title="자홍"></button>
+              <button class="cl-preset" style="background:#ffffff;border-color:rgba(0,0,0,.18)" data-r="255" data-g="255" data-b="255" title="흰색"></button>
+              <button class="cl-preset" style="background:#111418" data-r="0" data-g="0" data-b="0" title="끄기"></button>
+            </div>
+            <div class="cl-readout">
+              <span class="cl-chip" id="mixChip"></span>
+              <div><div class="cl-rname" id="mixTitle">흰색</div><div class="cl-rsub" id="mixDesc">R + G + B</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 탭 2: 물체가 고르는 색 -->
+      <div class="cl-panel" id="panelObject" hidden>
+        <div class="cl-prow">
+          <div class="cl-sliders">
+            <div class="cl-slider cl-slider--r"><span class="lab">R</span><input type="range" id="objR" min="0" max="255" value="255" aria-label="조명 빨강"><span class="val" id="objRv">255</span></div>
+            <div class="cl-slider cl-slider--g"><span class="lab">G</span><input type="range" id="objG" min="0" max="255" value="255" aria-label="조명 초록"><span class="val" id="objGv">255</span></div>
+            <div class="cl-slider cl-slider--b"><span class="lab">B</span><input type="range" id="objB" min="0" max="255" value="255" aria-label="조명 파랑"><span class="val" id="objBv">255</span></div>
+          </div>
+          <div class="cl-side">
+            <button class="cl-switch" id="objPhotonToggle" role="switch" aria-checked="false">
+              <span class="cl-switch-track"><span class="cl-switch-thumb"></span></span>
+              <span class="cl-switch-label">광자의 양으로 보기</span>
+            </button>
+            <div class="cl-presets" data-target="object">
+              <button class="cl-preset" style="background:#ffffff;border-color:rgba(0,0,0,.18)" data-r="255" data-g="255" data-b="255" title="백색광"></button>
+              <button class="cl-preset" style="background:#ff0000" data-r="255" data-g="0" data-b="0" title="빨간 빛"></button>
+              <button class="cl-preset" style="background:#00ff00" data-r="0" data-g="255" data-b="0" title="초록 빛"></button>
+              <button class="cl-preset" style="background:#0000ff" data-r="0" data-g="0" data-b="255" title="파란 빛"></button>
+              <button class="cl-preset" style="background:#ffff00" data-r="255" data-g="255" data-b="0" title="노란 빛"></button>
+              <button class="cl-preset" style="background:#00ffff" data-r="0" data-g="255" data-b="255" title="청록 빛"></button>
+              <button class="cl-preset" style="background:#ff00ff" data-r="255" data-g="0" data-b="255" title="자홍 빛"></button>
+              <button class="cl-preset" style="background:#111418" data-r="0" data-g="0" data-b="0" title="빛 없음"></button>
+            </div>
+            <div class="cl-readout">
+              <span class="cl-chip" id="objChip"></span>
+              <div><div class="cl-rname" id="objTitle">빨간색</div><div class="cl-rsub" id="objDesc">백색광 아래 사과</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="cl-objs" id="objCarousel"></div>
+      </div>
+
+      <!-- 탭 3: 색을 찾아라 -->
+      <div class="cl-panel" id="panelChallenge" hidden>
+        <div class="cl-prow">
+          <div class="cl-mcard">
+            <div class="cl-mtop"><span class="cl-mbadge" id="chProgress">미션 1 / 3</span></div>
+            <div class="cl-mtext" id="chText">미션</div>
+            <div class="cl-mhint" id="chHint">힌트</div>
+            <div class="cl-mresult" id="chResult"></div>
+            <div class="cl-mbtns">
+              <button class="cl-btn cl-btn--check" id="chCheck">확인</button>
+              <button class="cl-btn cl-btn--next" id="chNext" disabled>다음 미션 →</button>
+            </div>
+          </div>
+          <div class="cl-sliders">
+            <div class="cl-slider cl-slider--r"><span class="lab">R</span><input type="range" id="chR" min="0" max="255" value="255" aria-label="조명 빨강"><span class="val" id="chRv">255</span></div>
+            <div class="cl-slider cl-slider--g"><span class="lab">G</span><input type="range" id="chG" min="0" max="255" value="255" aria-label="조명 초록"><span class="val" id="chGv">255</span></div>
+            <div class="cl-slider cl-slider--b"><span class="lab">B</span><input type="range" id="chB" min="0" max="255" value="255" aria-label="조명 파랑"><span class="val" id="chBv">255</span></div>
+          </div>
+          <div class="cl-side">
+            <div class="cl-presets" data-target="challenge">
+              <button class="cl-preset" style="background:#ffffff;border-color:rgba(0,0,0,.18)" data-r="255" data-g="255" data-b="255" title="백색광"></button>
+              <button class="cl-preset" style="background:#ff0000" data-r="255" data-g="0" data-b="0" title="빨간 빛"></button>
+              <button class="cl-preset" style="background:#00ff00" data-r="0" data-g="255" data-b="0" title="초록 빛"></button>
+              <button class="cl-preset" style="background:#0000ff" data-r="0" data-g="0" data-b="255" title="파란 빛"></button>
+              <button class="cl-preset" style="background:#ffff00" data-r="255" data-g="255" data-b="0" title="노란 빛"></button>
+              <button class="cl-preset" style="background:#00ffff" data-r="0" data-g="255" data-b="255" title="청록 빛"></button>
+              <button class="cl-preset" style="background:#ff00ff" data-r="255" data-g="0" data-b="255" title="자홍 빛"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <section class="panel" id="p-litcolor">
   <span class="eyebrow">💡 조명과 물체의 색 · 색 맞히기</span>
   <h1 class="h-title">조명에 따른 물체의 색 맞히기</h1>
@@ -1654,6 +1905,107 @@ input[type=range].rPlain{background:#dfe4ef;}
       <div class="vid-frame"><iframe src="https://www.youtube.com/embed/6CHGayyS1Cw" title="드론쇼" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
       <p class="vdesc">수백 대의 드론이 저마다 색 빛을 내며 하늘에 그림을 그립니다. 화면의 <b>화소</b>처럼, 빛의 <b>색과 위치</b>를 조합해 거대한 그림을 만드는 빛의 합성 사례입니다.</p>
     </div>
+  </div>
+</section>
+
+<!-- ============================ 수업 매뉴얼 (앱 내장) ============================ -->
+<section class="panel" id="p-manual">
+  <span class="eyebrow">🧭 수업 매뉴얼 · 교사용</span>
+  <h1 class="h-title">수업 매뉴얼</h1>
+  <p class="lead">이 앱을 수업에서 어떻게 활용하는지 정리했습니다. 차시 배분·발문·평가는 학급 상황에 맞게 바꿔 쓰세요.</p>
+  <div style="height:18px"></div>
+  <div class="man-wrap">
+    <!-- ▼ 제작자 크레딧 / 업데이트일 (한 곳에서 수정) ▼ -->
+    <p class="man-cred">제작 : 조승재(science_is_jo) · 해누리중학교 과학교사 · 최종 업데이트 : 2026-06-21</p>
+    <!-- ▲ -->
+    <div style="height:22px"></div>
+
+    <div class="man-sec">
+      <h3>1. 앱 개요</h3>
+      <p>단일 HTML 파일로 만든 인터랙티브 디지털 교과서입니다(중학교 과학 III. 빛과 파동 「물체의 색과 빛의 합성」). 학생이 직접 빛과 물체를 조작하며 "물체의 색이란 무엇인가"를 탐구하도록 설계했습니다. 화면의 모든 색은 물리적으로 계산되어 실제 관찰과 일치합니다.</p>
+    </div>
+
+    <div class="man-sec">
+      <h3>2. 준비물 · 접속 방법</h3>
+      <ul>
+        <li>three.js·웹폰트를 CDN에서 불러오므로 <b>인터넷 연결을 권장</b>합니다.</li>
+        <li>전자칠판 <b>교사 시연</b>과 태블릿·학생 기기 <b>자기주도 학습</b> 모두 적합합니다(터치·마우스 지원).</li>
+        <li>3D 장면(가상실험실)은 WebGL이 필요하니 수업 전 해당 기기에서 표시되는지 확인하세요.</li>
+        <li>첫 진입 시 교사용 안내 팝업이 자동으로 뜨며, 우하단 <b>🔖 수업 안내</b> 버튼으로 다시 열 수 있습니다.</li>
+      </ul>
+    </div>
+
+    <div class="man-sec">
+      <h3>3. 탭별 활용 흐름</h3>
+      <div class="man-flow">🤥 거짓말 치지마! → 🥄 도입 → 🧪 탐구 안내서 → 🥽 가상실험실 → 🔬 실험실 → 🔦 빛 시뮬레이터 → 💡 조명과 색 → 📖 개념 정리 → 👁️ 눈과 뇌의 색 → 🌊 생활 속 빛 → ✏️ 원리 심화 → 🎮 색깔 놀이터 → 🌙 교과서 밖 → 📺 관련 영상</div>
+      <div style="height:12px"></div>
+      <div class="man-table-wrap">
+        <table class="man-table">
+          <thead><tr><th>탭</th><th>무엇을 / 어떻게</th></tr></thead>
+          <tbody>
+            <tr><td>🤥 거짓말 치지마!</td><td>착시 영상·칸니자 삼각형으로 "뇌는 본 대로 보지 않고 해석한다"를 보여 주며 "그럼 물체의 색은 무엇?"으로 도입합니다.</td></tr>
+            <tr><td>🥄 도입</td><td>'사과는 빨갛다=거짓말' 훅과 동시대비 착시(같은 색·다른 배경)로 학습 동기를 만듭니다.</td></tr>
+            <tr><td>🧪 탐구 안내서</td><td>교과서 반사 실험(아랫면 뚫린 흰 상자에 손전등) 절차를 그림과 함께 안내합니다.</td></tr>
+            <tr><td>🥽 가상실험실</td><td>상자 아래 물체에 손전등을 비춰 안쪽 면에 반사된 색을 관찰합니다. 노란 피망→빨강, 초록 잎→어둡게를 시연하세요.</td></tr>
+            <tr><td>🔬 실험실</td><td>천장 조명 합성, RGB 0~255 슬라이더, 화소, LCD로 빛·디지털 색을 다룹니다.</td></tr>
+            <tr><td>🔦 빛 시뮬레이터</td><td>가법혼색·물체색·미션을 한 화면에서. 빛 입자가 조명→물체→눈으로 흐르는 애니메이션이 핵심입니다.</td></tr>
+            <tr><td>💡 조명과 색</td><td>조명에 따라 물체색이 어떻게 달라지는지 맞히게 합니다.</td></tr>
+            <tr><td>📖 개념 정리</td><td>핵심어 빈칸을 클릭해 가린 채 먼저 답하게 한 뒤 확인하는 형성평가로 씁니다.</td></tr>
+            <tr><td>👁️ 눈과 뇌의 색</td><td>원뿔세포·뇌의 해석·조건등색·감산혼합. "색은 빛·물체·눈·뇌의 상호작용"으로 마무리합니다.</td></tr>
+            <tr><td>🌊 생활 속 빛 · ✏️ 원리 심화</td><td>생활 사례와 'RGB는 왜 RGB인가', 흡수의 전자 에너지 준위 등 심화 내용입니다.</td></tr>
+            <tr><td>🎮 색깔 놀이터</td><td>색 추리 게임과 빛 그림판으로 배운 내용을 정리·창작으로 확장합니다.</td></tr>
+            <tr><td>🌙 교과서 밖 · 📺 관련 영상</td><td>강아지 시각(색상표·사진 업로드)과 관련 영상으로 흥미를 넓힙니다.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="man-sec">
+      <h3>4. 핵심 발문 예시</h3>
+      <ul>
+        <li>빨간 사과가 빨갛게 보이는 까닭은? (반사한 빛 vs 물체가 가진 색)</li>
+        <li>같은 햇빛인데 딸기 열매는 빨갛고 꼭지는 초록인 이유는?</li>
+        <li>파란 조명 아래에서 빨간 물체는 왜 검게 보일까?</li>
+        <li>흰 화면을 확대하면 어떤 색의 점이 보일까? 흰색은 어떻게 만들어질까?</li>
+        <li>빨강 빛 + 초록 빛 = ? / 모든 빛을 합치면? / 모든 물감을 섞으면?</li>
+        <li>두 회색이 같은 색인데도 다르게 보였습니다 — '물체의 색'은 누가 정하나요?</li>
+      </ul>
+    </div>
+
+    <div class="man-sec">
+      <h3>5. 자주 나오는 오개념과 교정 포인트</h3>
+      <div class="man-table-wrap">
+        <table class="man-table">
+          <thead><tr><th>오개념</th><th>교정 포인트</th></tr></thead>
+          <tbody>
+            <tr><td>물체가 색을 '가지고' 있다</td><td>물체의 색 = 물체가 <b>반사한 빛</b>의 색. 빛이 없으면 색도 없다.</td></tr>
+            <tr><td>검은색은 '검은 빛'을 반사</td><td>검은색은 모든 빛을 <b>흡수</b>해 반사하는 빛이 없는 상태.</td></tr>
+            <tr><td>빛의 삼원색 = 색(물감)의 삼원색</td><td>빛=RGB(가산, 더할수록 밝아짐) / 물감=CMY(감산, 섞을수록 어두워짐).</td></tr>
+            <tr><td>빛을 섞으면 어두워진다</td><td>빛은 더할수록 <b>밝아진다</b>. 삼원색을 모두 합치면 흰색.</td></tr>
+            <tr><td>노란 물체는 항상 노랗다</td><td>비추는 빛에 노랑(빨강+초록) 성분이 없으면 노랗게 보이지 않는다(노란 피망+빨간 빛=빨강).</td></tr>
+            <tr><td>색은 100% 객관적 물리량</td><td>물리량이면서 <b>눈·뇌의 해석</b>이기도 하다(동시대비·조건등색·강아지 색각).</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="man-sec">
+      <h3>6. 평가 · 정리 아이디어</h3>
+      <p><b>형성평가</b> — 개념 정리 빈칸 채우기, 색 추리 게임 점수/연속 성공, 가상실험실 기록지(여섯 물체) 완성으로 즉시 확인합니다.</p>
+      <p><b>수행평가 예시 "빛으로 색 만들기"</b> — ① RGB 슬라이더로 제시된 색(주황·청록)을 만들고 값 기록 ② 천장 조명 각도로 바닥 가운데에 노랑(빨강+초록) 만들기 ③ 빛 그림판에서 무채색 사진을 색 손전등으로 칠하고 두 색이 겹친 곳을 설명.</p>
+      <div class="man-table-wrap">
+        <table class="man-table">
+          <thead><tr><th>평가 요소</th><th>상</th><th>중</th><th>하</th></tr></thead>
+          <tbody>
+            <tr><td>반사·흡수 이해</td><td>빛·물체에 따른 색 변화를 원리로 정확히 설명</td><td>결과는 맞지만 설명이 부분적</td><td>단순 색 이름만 나열</td></tr>
+            <tr><td>빛의 합성</td><td>가산혼합(겹친 곳이 밝아짐)을 근거로 설명</td><td>결과만 제시</td><td>감산과 혼동</td></tr>
+            <tr><td>색의 인식</td><td>같은 색이 다르게 보이는 까닭을 눈·뇌의 해석으로 연결</td><td>현상만 기술</td><td>언급 없음</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="man-cred">제작 : 조승재(science_is_jo) · 해누리중학교 과학교사 · 최종 업데이트 : 2026-06-21<br>본 매뉴얼은 초안입니다. 동료 선생님과 자유롭게 공유·수정해 사용하세요.</p>
   </div>
 </section>
 
@@ -3018,7 +3370,7 @@ $$(".blank").forEach(b=>b.addEventListener("click",()=>b.classList.toggle("show"
       <h3>📱 이 앱은?</h3>
       <p>단일 HTML 파일로 만든 인터랙티브 디지털 교과서입니다(three.js·웹폰트 CDN 사용 → 인터넷 연결 권장). 전자칠판 시연과 태블릿·학생 기기 자기주도 학습에 모두 적합하며, 화면의 모든 색은 물리적으로 계산되어 실제 관찰과 일치합니다.</p>
       <h3>📚 구성 안내</h3>
-      <div class="tmodal-flow">🤥 거짓말 치지마! → 🥄 도입 → 🧪 탐구 안내서 → 🥽 가상실험실 → 🔬 실험실 → 💡 조명과 색 → 📖 개념 정리 → 👁️ 눈과 뇌의 색 → 🌊 생활 속 빛 → ✏️ 원리 심화 → 🎮 색깔 놀이터 → 🌙 교과서 밖 → 📺 관련 영상</div>
+      <div class="tmodal-flow">🤥 거짓말 치지마! → 🥄 도입 → 🧪 탐구 안내서 → 🥽 가상실험실 → 🔬 실험실 → 🔦 빛 시뮬레이터 → 💡 조명과 색 → 📖 개념 정리 → 👁️ 눈과 뇌의 색 → 🌊 생활 속 빛 → ✏️ 원리 심화 → 🎮 색깔 놀이터 → 🌙 교과서 밖 → 📺 관련 영상</div>
       <h3>💡 수업 활용 팁</h3>
       <ul class="tmodal-tips">
         <li><b>도입</b>: 같은 색이 배경에 따라 다르게 보이는 착시로 "색이란 무엇인가" 질문을 던지며 시작하세요.</li>
@@ -3026,15 +3378,14 @@ $$(".blank").forEach(b=>b.addEventListener("click",()=>b.classList.toggle("show"
         <li><b>개념 정리</b>: 빈칸을 클릭해 핵심어를 가린 채 학생에게 먼저 답하게 한 뒤 확인하세요.</li>
         <li><b>색깔 놀이터·교과서 밖</b>: 색 추리 게임과 강아지 시각 프로그램으로 배운 내용을 정리·확장하세요.</li>
       </ul>
-      <p class="tmodal-note">차시별 지도안·핵심 발문·오개념 교정·평가(루브릭)는 <b>수업 매뉴얼</b>에 정리되어 있습니다. 동료 선생님께도 공유해 주세요.</p>
+      <p class="tmodal-note">차시별 지도안·핵심 발문·오개념 교정·평가(루브릭)는 아래 <b>🧭 수업 매뉴얼</b> 탭에 정리되어 있습니다. 동료 선생님께도 공유해 주세요.</p>
       <!-- ▼▼ 제작자 크레딧 / 업데이트일: 여기 한 곳만 수정 ▼▼ -->
       <p class="tmodal-cred">제작 : 조승재(science_is_jo) · 해누리중학교 과학교사<br>최종 업데이트 : 2026-06-21</p>
       <!-- ▲▲ -->
     </div>
     <label class="tmodal-chk"><input type="checkbox" id="tmDontShow"> 다음부터 자동으로 띄우지 않기</label>
     <div class="tmodal-ft">
-      <!-- 배포 시 아래 href의 MANUAL_URL_HERE 만 실제 매뉴얼 주소로 교체하세요 -->
-      <a class="btn btn-ghost" id="tmManual" href="MANUAL_URL_HERE" target="_blank" rel="noopener">📖 수업 매뉴얼로 이동하기 ↗</a>
+      <button class="btn btn-ghost" id="tmManual">🧭 수업 매뉴얼 보기</button>
       <button class="btn btn-primary" id="tmStart">바로 시작하기 →</button>
     </div>
   </div>
@@ -3058,9 +3409,918 @@ $$(".blank").forEach(b=>b.addEventListener("click",()=>b.classList.toggle("show"
     var chk=document.getElementById("tmDontShow"); chk.checked=hidePref();
     chk.addEventListener("change",function(){ try{ if(chk.checked) localStorage.setItem(KEY,"1"); else localStorage.removeItem(KEY); }catch(e){} });
     var man=document.getElementById("tmManual");
-    man.addEventListener("click",function(e){ if(man.getAttribute("href")==="MANUAL_URL_HERE"){ e.preventDefault(); alert("매뉴얼 주소를 설정해 주세요."); } });
+    man.addEventListener("click",function(){ closeM(); if(typeof switchTab==="function") switchTab("manual"); });
   }
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",tmInit); else tmInit();
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  function el(id) { return document.getElementById(id); }
+  function qsa(sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); }
+
+  /* ===== 효과음 (절제된 Web Audio) ===== */
+  var actx = null;
+  function audio() { if (!actx) { try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } return actx; }
+  function blip(freq, dur, type, gain) {
+    var a = audio(); if (!a) return; if (a.state === 'suspended') a.resume();
+    var o = a.createOscillator(), g = a.createGain();
+    o.type = type || 'sine'; o.frequency.value = freq;
+    var t = a.currentTime;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(gain || 0.05, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + (dur || 0.1));
+    o.connect(g); g.connect(a.destination);
+    o.start(t); o.stop(t + (dur || 0.1) + 0.03);
+  }
+  function sTab() { blip(540, 0.09, 'sine', 0.04); }
+  function sTick() { blip(660, 0.06, 'sine', 0.03); }
+  function sPick() { blip(440, 0.11, 'triangle', 0.045); setTimeout(function () { blip(660, 0.1, 'sine', 0.035); }, 70); }
+  function sWin() { [523, 659, 784, 1047].forEach(function (f, i) { setTimeout(function () { blip(f, 0.2, 'sine', 0.05); }, i * 95); }); }
+  function sNope() { blip(196, 0.16, 'sawtooth', 0.035); }
+
+  /* ===== 상태 ===== */
+  var S = {
+    tab: 'mix',
+    mix: { r: 255, g: 255, b: 255 },
+    photonMode: false,
+    objPhotonMode: false,
+    objLight: { r: 255, g: 255, b: 255 },
+    objKey: 'tomato',
+    chLight: { r: 255, g: 255, b: 255 },
+    chIdx: 0,
+    chSolved: false
+  };
+
+  /* ===== 물체 정의 (반사율 RGB) ===== */
+  var OBJ = {
+    tomato:     { name: '토마토',   emo: '🍅', refl: [225, 35, 30],  shape: 'tomato' },
+    strawberry: { name: '딸기',     emo: '🍓', refl: [220, 40, 45],  shape: 'strawberry' },
+    sunflower:  { name: '해바라기', emo: '🌻', refl: [245, 210, 30], shape: 'sunflower' },
+    lemon:      { name: '레몬',     emo: '🍋', refl: [240, 220, 30], shape: 'lemon' },
+    cucumber:   { name: '오이',     emo: '🥒', refl: [50, 150, 40],  shape: 'cucumber' },
+    frog:       { name: '개구리',   emo: '🐸', refl: [60, 165, 55],  shape: 'frog' },
+    whale:      { name: '고래',     emo: '🐳', refl: [40, 75, 210],  shape: 'whale' },
+    blueberry:  { name: '블루베리', emo: '🫐', refl: [40, 60, 200],  shape: 'blueberry' },
+    grape:      { name: '포도',     emo: '🍇', refl: [125, 48, 158], shape: 'grape' },
+    eggplant:   { name: '가지',     emo: '🍆', refl: [120, 45, 160], shape: 'eggplant' },
+    cloud:      { name: '구름',     emo: '☁️', refl: [242, 242, 240], shape: 'cloud' },
+    bowling:    { name: '볼링공',   emo: '🎳', refl: [25, 25, 25],   shape: 'bowling' }
+  };
+  var OBJ_ORDER = ['tomato', 'strawberry', 'sunflower', 'lemon', 'cucumber', 'frog', 'whale', 'blueberry', 'grape', 'eggplant', 'cloud', 'bowling'];
+
+  /* ===== 미션 ===== */
+  var MISS = [
+    { text: '🍅 토마토를 사라지게(검게) 보이게 만들어 보자', objs: ['tomato'], hint: '토마토는 빨간빛만 반사해요. 빨강(R)이 없는 빛을 비춰 보세요.',
+      test: function (a) { return Math.max(a[0][0], a[0][1], a[0][2]) < 45; } },
+    { text: '☁️ 구름을 노란색으로 보이게 만들어 보자', objs: ['cloud'], hint: '노란 빛 = 빨강(R) + 초록(G). 파랑(B)을 꺼 보세요.',
+      test: function (a) { var c = a[0]; return c[0] >= 150 && c[1] >= 150 && c[2] < 80; } },
+    { text: '🍅🥒 토마토와 오이를 동시에 검게 보이게 만들어 보자', objs: ['tomato', 'cucumber'], hint: '토마토는 빨강, 오이는 초록만 반사해요. 둘 다 없는 빛은? (파랑)',
+      test: function (a) { return a.every(function (c) { return Math.max(c[0], c[1], c[2]) < 45; }); } }
+  ];
+
+  /* ===== 색 계산 & 이름 ===== */
+  function appar(refl, L) { return [Math.round(refl[0] / 255 * L.r), Math.round(refl[1] / 255 * L.g), Math.round(refl[2] / 255 * L.b)]; }
+  function rgbCss(c) { return 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')'; }
+  function clamp(v) { return v < 0 ? 0 : v > 255 ? 255 : Math.round(v); }
+  function light2(ap, f) { return 'rgb(' + clamp(ap[0] * f) + ',' + clamp(ap[1] * f) + ',' + clamp(ap[2] * f) + ')'; }
+
+  function mixName(r, g, b) {
+    var ON = 45, HI = 170, on = function (v) { return v >= ON; }, hi = function (v) { return v >= HI; };
+    if (!on(r) && !on(g) && !on(b)) return ['꺼짐', '빛 없음'];
+    if (on(r) && on(g) && on(b)) return [(hi(r) && hi(g) && hi(b)) ? '흰색' : '밝은 회색', 'R + G + B'];
+    if (on(r) && on(g)) return ['노란색', 'R + G'];
+    if (on(g) && on(b)) return ['청록색', 'G + B'];
+    if (on(r) && on(b)) return ['자홍색', 'R + B'];
+    if (on(r)) return ['빨간색', 'R'];
+    if (on(g)) return ['초록색', 'G'];
+    return ['파란색', 'B'];
+  }
+  function lightName(r, g, b) {
+    var ON = 45, HI = 170, on = function (v) { return v >= ON; }, hi = function (v) { return v >= HI; };
+    if (!on(r) && !on(g) && !on(b)) return '빛 없음';
+    if (on(r) && on(g) && on(b)) return (hi(r) && hi(g) && hi(b)) ? '백색광' : '회색 빛';
+    if (on(r) && on(g)) return '노란 빛';
+    if (on(g) && on(b)) return '청록 빛';
+    if (on(r) && on(b)) return '자홍 빛';
+    if (on(r)) return '빨간 빛';
+    if (on(g)) return '초록 빛';
+    return '파란 빛';
+  }
+  function seeName(r, g, b) {
+    var max = Math.max(r, g, b);
+    if (max < 45) return '검정';
+    var hi = function (v) { return v >= 150; }, lo = function (v) { return v < 80; };
+    if (hi(r) && hi(g) && hi(b)) return '흰색';
+    if (hi(r) && hi(g) && lo(b)) return '노란색';
+    if (lo(r) && hi(g) && hi(b)) return '청록색';
+    if (hi(r) && lo(g) && hi(b)) return '자홍색';
+    if (hi(r) && lo(g) && lo(b)) return '빨간색';
+    if (lo(r) && hi(g) && lo(b)) return '초록색';
+    if (lo(r) && lo(g) && hi(b)) return '파란색';
+    if (r >= 100 && b >= 100 && g < 90) return '보라색';
+    if (r >= g && r >= b) return '붉은 계열';
+    if (g >= r && g >= b) return '초록 계열';
+    return '푸른 계열';
+  }
+
+  /* ===== 캔버스 (DPR 대응) ===== */
+  var cv = el('clCanvas'), cx = cv.getContext('2d');
+  var CW = 0, CH = 0, DPR = 1;
+  function fit() {
+    var rect = cv.getBoundingClientRect();
+    CW = Math.max(1, Math.round(rect.width));
+    CH = Math.max(1, Math.round(rect.height));
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var bw = Math.round(CW * DPR), bh = Math.round(CH * DPR);
+    if (cv.width !== bw) cv.width = bw;
+    if (cv.height !== bh) cv.height = bh;
+  }
+  function roundRectP(c, x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    c.beginPath();
+    c.moveTo(x + r, y);
+    c.arcTo(x + w, y, x + w, y + h, r);
+    c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r);
+    c.arcTo(x, y, x + w, y, r);
+    c.closePath();
+  }
+
+  /* ===== 광자 시스템 ===== */
+  var ph = [], acc = {};
+  var swarm = [];
+  var oswarm = [];
+  function emit(id, rate, dt, fn) { acc[id] = (acc[id] || 0) + rate * dt; while (acc[id] >= 1) { acc[id] -= 1; fn(); } }
+  function spawn(x, y, tx, ty, col, dur) { ph.push({ ox: x, oy: y, tx: tx, ty: ty, col: col, dur: dur, p: 0 }); }
+  function updPh(dt) { for (var i = ph.length - 1; i >= 0; i--) { ph[i].p += dt / ph[i].dur; if (ph[i].p >= 1) ph.splice(i, 1); } }
+  function drawPh() {
+    cx.save(); cx.globalCompositeOperation = 'lighter';
+    for (var i = 0; i < ph.length; i++) {
+      var q = ph[i];
+      var e = 1 - Math.pow(1 - q.p, 2);
+      var x = q.ox + (q.tx - q.ox) * e, y = q.oy + (q.ty - q.oy) * e;
+      var a = Math.sin(Math.min(1, q.p) * Math.PI);
+      var c = q.col;
+      cx.fillStyle = 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + (0.16 * a) + ')';
+      cx.beginPath(); cx.arc(x, y, 5.5, 0, 6.283); cx.fill();
+      cx.fillStyle = 'rgba(' + clamp(c[0] + 70) + ',' + clamp(c[1] + 70) + ',' + clamp(c[2] + 70) + ',' + (0.9 * a) + ')';
+      cx.beginPath(); cx.arc(x, y, 2.1, 0, 6.283); cx.fill();
+    }
+    cx.restore();
+  }
+
+  /* ===== 탭1: 빛의 합성 (가법) ===== */
+  var geoMixNodes = [];
+  function drawMix(w, h) {
+    var M = S.mix;
+    var cxp = w / 2, cyp = h * 0.5;
+    var R = Math.min(w * 0.78, h * 1.05) * 0.28;
+    var d = R * 0.62;
+    var nodes = [
+      { col: [255, 0, 0], v: M.r, x: cxp,             y: cyp - d,       fx: cxp,                 fy: cyp - d - R * 1.15 },
+      { col: [0, 255, 0], v: M.g, x: cxp - d * 0.866, y: cyp + d * 0.5, fx: cxp - d * 0.866 - R * 0.95, fy: cyp + d * 0.5 + R * 0.8 },
+      { col: [0, 0, 255], v: M.b, x: cxp + d * 0.866, y: cyp + d * 0.5, fx: cxp + d * 0.866 + R * 0.95, fy: cyp + d * 0.5 + R * 0.8 }
+    ];
+    geoMixNodes = nodes;
+    cx.save();
+    cx.globalCompositeOperation = 'lighter';
+    for (var i = 0; i < 3; i++) {
+      var n = nodes[i];
+      var r = Math.round(n.col[0] * n.v / 255), g = Math.round(n.col[1] * n.v / 255), b = Math.round(n.col[2] * n.v / 255);
+      var grd = cx.createRadialGradient(n.x, n.y, 0, n.x, n.y, R);
+      grd.addColorStop(0, 'rgba(' + r + ',' + g + ',' + b + ',1)');
+      grd.addColorStop(0.74, 'rgba(' + r + ',' + g + ',' + b + ',0.96)');
+      grd.addColorStop(1, 'rgba(' + r + ',' + g + ',' + b + ',0)');
+      cx.fillStyle = grd;
+      cx.beginPath(); cx.arc(n.x, n.y, R, 0, 6.283); cx.fill();
+    }
+    cx.restore();
+    for (var j = 0; j < 3; j++) drawSpot(nodes[j]);
+  }
+
+  /* ===== 탭1 (광자의 양으로 보기): 빨강·초록·파랑 광자를 따로따로 ===== */
+  var PH_COLORS = [[255, 60, 60], [60, 210, 95], [80, 125, 255]];
+  function photonCaption(M) {
+    var on = function (v) { return v >= 45; };
+    var r = on(M.r), g = on(M.g), b = on(M.b);
+    if (r && g && !b) return "‘노란색’ 광자는 없어요 — 빨강·초록 광자가 섞인 거예요";
+    if (g && b && !r) return "‘청록색’ 광자는 없어요 — 초록·파랑 광자가 섞인 거예요";
+    if (r && b && !g) return "‘자홍색’ 광자는 없어요 — 빨강·파랑 광자가 섞인 거예요";
+    if (r && g && b) return "흰빛 = 빨강·초록·파랑 광자가 모두 섞인 것";
+    if (!r && !g && !b) return "광자가 없으면 빛도 없어요 (어두움)";
+    return "빛은 빨강·초록·파랑 광자로 이루어져 있어요";
+  }
+  function drawMixPhotons(w, h, dt) {
+    var M = S.mix, vals = [M.r, M.g, M.b];
+
+    cx.fillStyle = 'rgba(255,255,255,0.5)'; cx.font = '700 12px Pretendard, system-ui, sans-serif';
+    cx.textAlign = 'center'; cx.textBaseline = 'alphabetic';
+    cx.fillText('광자(photon)의 양과 색', w / 2, 24);
+
+    var GD = [['R', M.r, PH_COLORS[0]], ['G', M.g, PH_COLORS[1]], ['B', M.b, PH_COLORS[2]]];
+    var gw = 66, unit = 134, startX = w / 2 - unit * 1.5, gy = 50;
+    cx.textBaseline = 'middle';
+    for (var gi = 0; gi < 3; gi++) {
+      var gx = startX + gi * unit;
+      cx.font = '800 13px Pretendard, system-ui, sans-serif'; cx.textAlign = 'left';
+      cx.fillStyle = 'rgb(' + GD[gi][2][0] + ',' + GD[gi][2][1] + ',' + GD[gi][2][2] + ')';
+      cx.fillText(GD[gi][0], gx, gy);
+      cx.fillStyle = 'rgba(255,255,255,0.12)'; roundRectP(cx, gx + 16, gy - 5, gw, 10, 5); cx.fill();
+      var fillW = gw * GD[gi][1] / 255;
+      if (fillW > 0) { cx.fillStyle = 'rgb(' + GD[gi][2][0] + ',' + GD[gi][2][1] + ',' + GD[gi][2][2] + ')'; roundRectP(cx, gx + 16, gy - 5, Math.max(fillW, 3), 10, 5); cx.fill(); }
+      cx.fillStyle = '#cfd4db'; cx.font = '700 12px Pretendard, system-ui, sans-serif';
+      cx.fillText(String(GD[gi][1]), gx + 16 + gw + 8, gy);
+    }
+
+    var bandY = h * 0.56, emitX = w * 0.15, eyeX = w * 0.85;
+    var spread = Math.min(h * 0.26, 150);
+
+    cx.save();
+    cx.fillStyle = '#262a31'; cx.beginPath(); cx.arc(emitX, bandY, 16, 0, 6.283); cx.fill();
+    cx.strokeStyle = '#3a3f49'; cx.lineWidth = 2; cx.beginPath(); cx.arc(emitX, bandY, 16, 0, 6.283); cx.stroke();
+    var onLamp = Math.max(M.r, M.g, M.b) > 20;
+    cx.fillStyle = onLamp ? ('rgb(' + M.r + ',' + M.g + ',' + M.b + ')') : '#23262d';
+    cx.beginPath(); cx.arc(emitX + 9, bandY, 7, 0, 6.283); cx.fill();
+    cx.restore();
+    cx.fillStyle = 'rgba(255,255,255,0.55)'; cx.font = '700 12px Pretendard, system-ui, sans-serif';
+    cx.textAlign = 'center'; cx.textBaseline = 'alphabetic';
+    cx.fillText('광원', emitX, bandY - 24);
+
+    var MAXRATE = 13;
+    [0, 1, 2].forEach(function (ch) {
+      if (vals[ch] < 4) return;
+      emit('pm' + ch, MAXRATE * vals[ch] / 255, dt, function () {
+        swarm.push({ ch: ch, ox: emitX + 10 + Math.random() * 10, oy: bandY + (Math.random() - 0.5) * spread, tx: eyeX - 22 + Math.random() * 8, ty: bandY + (Math.random() - 0.5) * spread * 0.5, p: 0, dur: 1.0 + Math.random() * 0.45 });
+      });
+    });
+    for (var k = swarm.length - 1; k >= 0; k--) {
+      var q = swarm[k]; q.p += dt / q.dur;
+      if (q.p >= 1) { swarm.splice(k, 1); continue; }
+      var e = 1 - Math.pow(1 - q.p, 1.5);
+      var x = q.ox + (q.tx - q.ox) * e, y = q.oy + (q.ty - q.oy) * e;
+      var a = Math.min(1, q.p * 9) * (q.p > 0.9 ? (1 - (q.p - 0.9) / 0.1) : 1);
+      var col = PH_COLORS[q.ch];
+      cx.fillStyle = 'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + (0.13 * a) + ')';
+      cx.beginPath(); cx.arc(x, y, 7, 0, 6.283); cx.fill();
+      cx.fillStyle = 'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + a + ')';
+      cx.beginPath(); cx.arc(x, y, 3.1, 0, 6.283); cx.fill();
+    }
+
+    var ex = eyeX, ey = bandY, dark = Math.max(M.r, M.g, M.b) < 45;
+    cx.save();
+    cx.fillStyle = '#f3f5f8';
+    cx.beginPath(); cx.moveTo(ex - 24, ey); cx.quadraticCurveTo(ex, ey - 17, ex + 24, ey); cx.quadraticCurveTo(ex, ey + 17, ex - 24, ey); cx.fill();
+    cx.fillStyle = dark ? '#3a3f49' : ('rgb(' + M.r + ',' + M.g + ',' + M.b + ')');
+    cx.beginPath(); cx.arc(ex, ey, 9.5, 0, 6.283); cx.fill();
+    cx.fillStyle = '#15181d'; cx.beginPath(); cx.arc(ex, ey, 4, 0, 6.283); cx.fill();
+    cx.fillStyle = 'rgba(255,255,255,0.85)'; cx.beginPath(); cx.arc(ex - 2.2, ey - 2.2, 1.6, 0, 6.283); cx.fill();
+    cx.strokeStyle = 'rgba(255,255,255,0.25)'; cx.lineWidth = 1.5;
+    cx.beginPath(); cx.moveTo(ex - 24, ey); cx.quadraticCurveTo(ex, ey - 17, ex + 24, ey); cx.quadraticCurveTo(ex, ey + 17, ex - 24, ey); cx.stroke();
+    cx.restore();
+    cx.fillStyle = 'rgba(255,255,255,0.55)'; cx.font = '700 12px Pretendard, system-ui, sans-serif';
+    cx.textAlign = 'center'; cx.textBaseline = 'alphabetic';
+    cx.fillText('눈에 보이는 색', ex, ey + 34);
+
+    cx.fillStyle = 'rgba(255,255,255,0.62)'; cx.font = '600 12px Pretendard, system-ui, sans-serif';
+    cx.textAlign = 'center'; cx.textBaseline = 'alphabetic';
+    cx.fillText(photonCaption(M), w / 2, h - 22);
+  }
+  function drawSpot(n) {
+    var on = n.v > 25;
+    var lr = Math.round(n.col[0] * Math.max(n.v, 90) / 255), lg = Math.round(n.col[1] * Math.max(n.v, 90) / 255), lb = Math.round(n.col[2] * Math.max(n.v, 90) / 255);
+    var dx = n.x - n.fx, dy = n.y - n.fy, dl = Math.sqrt(dx * dx + dy * dy) || 1, ux = dx / dl, uy = dy / dl;
+    cx.save();
+    cx.fillStyle = '#272b33';
+    cx.beginPath(); cx.arc(n.fx, n.fy, 15, 0, 6.283); cx.fill();
+    cx.lineWidth = 2; cx.strokeStyle = '#3a3f49';
+    cx.beginPath(); cx.arc(n.fx, n.fy, 15, 0, 6.283); cx.stroke();
+    cx.fillStyle = on ? ('rgb(' + lr + ',' + lg + ',' + lb + ')') : '#23262d';
+    cx.beginPath(); cx.arc(n.fx + ux * 6, n.fy + uy * 6, 7, 0, 6.283); cx.fill();
+    if (on) {
+      cx.globalCompositeOperation = 'lighter';
+      cx.fillStyle = 'rgba(' + n.col[0] + ',' + n.col[1] + ',' + n.col[2] + ',0.22)';
+      cx.beginPath(); cx.arc(n.fx + ux * 8, n.fy + uy * 8, 16, 0, 6.283); cx.fill();
+    }
+    cx.restore();
+    var ch = n.col[0] ? 'R' : n.col[1] ? 'G' : 'B';
+    var col = n.col[0] ? '#ff6f6f' : n.col[1] ? '#54cf69' : '#6f9bff';
+    cx.fillStyle = on ? col : '#565c65';
+    cx.font = '800 14px Pretendard, system-ui, sans-serif';
+    cx.textAlign = 'center'; cx.textBaseline = 'middle';
+    cx.fillText(ch, n.fx - ux * 22, n.fy - uy * 22);
+  }
+
+  /* ===== 탭2/3: 장면 (조명 + 물체 + 눈) ===== */
+  var geoScene = { lamp: { x: 0, y: 0 }, eye: { x: 0, y: 0 }, objs: [], keys: [], L: { r: 0, g: 0, b: 0 } };
+  function drawScene(w, h, L, keys) {
+    var floorY = h * 0.74;
+    cx.save();
+    var gg = cx.createLinearGradient(0, floorY, 0, h);
+    gg.addColorStop(0, 'rgba(255,255,255,0.03)'); gg.addColorStop(1, 'rgba(255,255,255,0)');
+    cx.fillStyle = gg; cx.fillRect(0, floorY, w, h - floorY);
+    cx.strokeStyle = 'rgba(255,255,255,0.06)'; cx.lineWidth = 1;
+    cx.beginPath(); cx.moveTo(0, floorY); cx.lineTo(w, floorY); cx.stroke();
+    cx.restore();
+
+    var n = keys.length;
+    var lamp = { x: w * 0.14, y: h * 0.24 };
+    var eye = { x: w * 0.86, y: h * 0.40 };
+    var size = Math.min(w * 0.15, h * 0.24);
+    var objs = [];
+    if (n === 1) objs.push({ x: w * 0.5, y: floorY - size * 0.45 });
+    else { objs.push({ x: w * 0.45, y: floorY - size * 0.45 }); objs.push({ x: w * 0.6, y: floorY - size * 0.45 }); }
+    geoScene = { lamp: lamp, eye: eye, objs: objs, keys: keys, L: L, size: size };
+
+    drawLamp(lamp, L, objs);
+    for (var i = 0; i < n; i++) {
+      var ap = appar(OBJ[keys[i]].refl, L);
+      drawObject(objs[i].x, objs[i].y, size, keys[i], ap, L);
+    }
+    drawEye(eye, appar(OBJ[keys[0]].refl, L));
+  }
+  function drawLamp(lamp, L, objs) {
+    var on = Math.max(L.r, L.g, L.b) > 25;
+    var tx = 0, ty = 0;
+    for (var i = 0; i < objs.length; i++) { tx += objs[i].x; ty += objs[i].y; }
+    tx /= objs.length; ty /= objs.length;
+    var ang = Math.atan2(ty - lamp.y, tx - lamp.x);
+    if (on) {
+      cx.save(); cx.globalCompositeOperation = 'lighter';
+      var spread = 0.30, len = Math.sqrt((tx - lamp.x) * (tx - lamp.x) + (ty - lamp.y) * (ty - lamp.y)) * 1.12;
+      var x1 = lamp.x + Math.cos(ang - spread) * len, y1 = lamp.y + Math.sin(ang - spread) * len;
+      var x2 = lamp.x + Math.cos(ang + spread) * len, y2 = lamp.y + Math.sin(ang + spread) * len;
+      var grd = cx.createRadialGradient(lamp.x, lamp.y, 4, lamp.x, lamp.y, len);
+      grd.addColorStop(0, 'rgba(' + L.r + ',' + L.g + ',' + L.b + ',0.22)');
+      grd.addColorStop(0.5, 'rgba(' + L.r + ',' + L.g + ',' + L.b + ',0.08)');
+      grd.addColorStop(1, 'rgba(' + L.r + ',' + L.g + ',' + L.b + ',0)');
+      cx.fillStyle = grd;
+      cx.beginPath(); cx.moveTo(lamp.x, lamp.y); cx.lineTo(x1, y1); cx.lineTo(x2, y2); cx.closePath(); cx.fill();
+      cx.restore();
+    }
+    cx.save();
+    cx.translate(lamp.x, lamp.y); cx.rotate(ang);
+    cx.fillStyle = '#2b2f37'; roundRectP(cx, -14, -13, 30, 26, 8); cx.fill();
+    cx.fillStyle = '#1d2026'; roundRectP(cx, -20, -9, 10, 18, 4); cx.fill();
+    cx.fillStyle = on ? rgbCss([L.r, L.g, L.b]) : '#23262d';
+    cx.beginPath(); cx.ellipse(15, 0, 6, 12, 0, 0, 6.283); cx.fill();
+    if (on) {
+      cx.globalCompositeOperation = 'lighter';
+      cx.fillStyle = 'rgba(' + L.r + ',' + L.g + ',' + L.b + ',0.3)';
+      cx.beginPath(); cx.ellipse(20, 0, 14, 14, 0, 0, 6.283); cx.fill();
+    }
+    cx.restore();
+    cx.fillStyle = 'rgba(255,255,255,0.5)';
+    cx.font = '700 12px Pretendard, system-ui, sans-serif';
+    cx.textAlign = 'center'; cx.textBaseline = 'alphabetic';
+    cx.fillText('조명', lamp.x, lamp.y - 20);
+  }
+  function drawObject(x, y, size, key, ap, L) {
+    cx.save();
+    cx.fillStyle = 'rgba(0,0,0,0.28)';
+    cx.beginPath(); cx.ellipse(x, y + size * 0.5 + 4, size * 0.42, size * 0.1, 0, 0, 6.283); cx.fill();
+    cx.restore();
+    cx.save(); cx.translate(x, y); shapes[OBJ[key].shape](cx, size, ap, L); cx.restore();
+    var nm = seeName(ap[0], ap[1], ap[2]);
+    var txt = '보이는 색: ' + nm;
+    cx.font = '700 12px Pretendard, system-ui, sans-serif';
+    cx.textAlign = 'left'; cx.textBaseline = 'middle';
+    var tw = cx.measureText(txt).width, pad = 9, sw = 14, gap = 7;
+    var bw = pad + sw + gap + tw + pad, bh = 24;
+    var bx = x - bw / 2, by = y + size * 0.5 + 14;
+    cx.fillStyle = 'rgba(255,255,255,0.10)'; roundRectP(cx, bx, by, bw, bh, 12); cx.fill();
+    cx.fillStyle = (Math.max(ap[0], ap[1], ap[2]) < 45) ? '#555b64' : rgbCss(ap);
+    roundRectP(cx, bx + pad, by + bh / 2 - sw / 2, sw, sw, 4); cx.fill();
+    cx.fillStyle = 'rgba(255,255,255,0.85)';
+    cx.fillText(txt, bx + pad + sw + gap, by + bh / 2 + 0.5);
+  }
+  function drawEye(p, ap) {
+    var ex = p.x, ey = p.y, dark = Math.max(ap[0], ap[1], ap[2]) < 45;
+    cx.save();
+    cx.fillStyle = '#f3f5f8';
+    cx.beginPath(); cx.moveTo(ex - 26, ey); cx.quadraticCurveTo(ex, ey - 18, ex + 26, ey); cx.quadraticCurveTo(ex, ey + 18, ex - 26, ey); cx.fill();
+    cx.fillStyle = dark ? '#3a3f49' : rgbCss(ap);
+    cx.beginPath(); cx.arc(ex, ey, 10, 0, 6.283); cx.fill();
+    cx.fillStyle = '#15181d'; cx.beginPath(); cx.arc(ex, ey, 4.5, 0, 6.283); cx.fill();
+    cx.fillStyle = 'rgba(255,255,255,0.85)'; cx.beginPath(); cx.arc(ex - 2.5, ey - 2.5, 1.8, 0, 6.283); cx.fill();
+    cx.strokeStyle = 'rgba(255,255,255,0.25)'; cx.lineWidth = 1.5;
+    cx.beginPath(); cx.moveTo(ex - 26, ey); cx.quadraticCurveTo(ex, ey - 18, ex + 26, ey); cx.quadraticCurveTo(ex, ey + 18, ex - 26, ey); cx.stroke();
+    cx.restore();
+    cx.fillStyle = 'rgba(255,255,255,0.55)';
+    cx.font = '700 12px Pretendard, system-ui, sans-serif';
+    cx.textAlign = 'center'; cx.textBaseline = 'alphabetic';
+    cx.fillText('관찰자', ex, ey - 26);
+    cx.font = '800 13px Pretendard, system-ui, sans-serif'; cx.textBaseline = 'middle';
+    cx.fillStyle = dark ? '#aeb4bd' : rgbCss(ap);
+    cx.fillText('"' + seeName(ap[0], ap[1], ap[2]) + '"', ex, ey + 30);
+  }
+
+  /* ===== 탭2 (광자의 양으로 보기): 입사 → 흡수/반사 → 눈 ===== */
+  function objectPhotonCaption(key, L) {
+    var refl = OBJ[key].refl, nm = ['빨강', '초록', '파랑'], lv = [L.r, L.g, L.b];
+    var rOut = [], abs = [];
+    for (var ch = 0; ch < 3; ch++) { if (lv[ch] >= 45) { if (refl[ch] >= 100) rOut.push(nm[ch]); else abs.push(nm[ch]); } }
+    if (rOut.length === 0 && abs.length === 0) return '빛이 없어 광자가 없어요 — 검게 보임';
+    if (rOut.length === 0) return '들어온 ' + abs.join('·') + ' 광자가 모두 흡수돼요 → 검게 보임';
+    var s = rOut.join('·') + ' 광자는 반사돼 눈에 들어와요';
+    if (abs.length) s += ' · ' + abs.join('·') + ' 광자는 흡수돼요';
+    return s;
+  }
+  function drawGaugeRow(label, vals, cy, w) {
+    var chs = [['R', vals[0], PH_COLORS[0]], ['G', vals[1], PH_COLORS[1]], ['B', vals[2], PH_COLORS[2]]];
+    var bw = 34, unit = 80, groupW = unit * 3, gx0 = w / 2 - groupW / 2 + 18;
+    cx.font = '700 12px Pretendard, system-ui, sans-serif'; cx.textAlign = 'right'; cx.textBaseline = 'middle';
+    cx.fillStyle = 'rgba(255,255,255,0.6)'; cx.fillText(label, gx0 - 12, cy);
+    cx.textAlign = 'left';
+    for (var i = 0; i < 3; i++) {
+      var gx = gx0 + i * unit, col = chs[i][2];
+      cx.font = '800 12px Pretendard, system-ui, sans-serif'; cx.fillStyle = 'rgb(' + col[0] + ',' + col[1] + ',' + col[2] + ')';
+      cx.fillText(chs[i][0], gx, cy);
+      cx.fillStyle = 'rgba(255,255,255,0.12)'; roundRectP(cx, gx + 13, cy - 4, bw, 8, 4); cx.fill();
+      var fw = bw * chs[i][1] / 255;
+      if (fw > 0) { cx.fillStyle = 'rgb(' + col[0] + ',' + col[1] + ',' + col[2] + ')'; roundRectP(cx, gx + 13, cy - 4, Math.max(fw, 2), 8, 4); cx.fill(); }
+      cx.fillStyle = '#cfd4db'; cx.font = '700 11px Pretendard, system-ui, sans-serif';
+      cx.fillText(String(chs[i][1]), gx + 13 + bw + 5, cy);
+    }
+  }
+  function drawObjectPhotons(w, h, dt, light, key) {
+    var refl = OBJ[key].refl, ap = appar(refl, light);
+
+    cx.fillStyle = 'rgba(255,255,255,0.5)'; cx.font = '700 12px Pretendard, system-ui, sans-serif';
+    cx.textAlign = 'center'; cx.textBaseline = 'alphabetic';
+    cx.fillText('광자의 양으로 보기 — 흡수와 반사', w / 2, 22);
+
+    drawGaugeRow('입사광', [light.r, light.g, light.b], 46, w);
+    drawGaugeRow('반사광', [ap[0], ap[1], ap[2]], 70, w);
+
+    var bandY = Math.max(h * 0.58, 150), lampX = w * 0.15, objX = w * 0.5, eyeX = w * 0.85;
+    var objSize = Math.min(w * 0.15, h * 0.2), objR = objSize * 0.5;
+
+    cx.save();
+    cx.fillStyle = '#262a31'; cx.beginPath(); cx.arc(lampX, bandY, 15, 0, 6.283); cx.fill();
+    cx.strokeStyle = '#3a3f49'; cx.lineWidth = 2; cx.beginPath(); cx.arc(lampX, bandY, 15, 0, 6.283); cx.stroke();
+    var onLamp = Math.max(light.r, light.g, light.b) > 20;
+    cx.fillStyle = onLamp ? ('rgb(' + light.r + ',' + light.g + ',' + light.b + ')') : '#23262d';
+    cx.beginPath(); cx.arc(lampX + 9, bandY, 6.5, 0, 6.283); cx.fill();
+    cx.restore();
+    cx.fillStyle = 'rgba(255,255,255,0.55)'; cx.font = '700 12px Pretendard, system-ui, sans-serif';
+    cx.textAlign = 'center'; cx.textBaseline = 'alphabetic'; cx.fillText('광원', lampX, bandY - 22);
+
+    cx.save(); cx.fillStyle = 'rgba(0,0,0,0.28)';
+    cx.beginPath(); cx.ellipse(objX, bandY + objR + 4, objR * 0.85, objR * 0.2, 0, 0, 6.283); cx.fill(); cx.restore();
+    cx.save(); cx.translate(objX, bandY); if (shapes[OBJ[key].shape]) shapes[OBJ[key].shape](cx, objSize, ap, light); cx.restore();
+    cx.fillStyle = 'rgba(255,255,255,0.55)'; cx.font = '700 12px Pretendard, system-ui, sans-serif';
+    cx.textAlign = 'center'; cx.fillText(OBJ[key].name, objX, bandY + objR + 22);
+
+    var ex = eyeX, ey = bandY, dark = Math.max(ap[0], ap[1], ap[2]) < 45;
+    cx.save();
+    cx.fillStyle = '#f3f5f8';
+    cx.beginPath(); cx.moveTo(ex - 24, ey); cx.quadraticCurveTo(ex, ey - 17, ex + 24, ey); cx.quadraticCurveTo(ex, ey + 17, ex - 24, ey); cx.fill();
+    cx.fillStyle = dark ? '#3a3f49' : rgbCss(ap);
+    cx.beginPath(); cx.arc(ex, ey, 9.5, 0, 6.283); cx.fill();
+    cx.fillStyle = '#15181d'; cx.beginPath(); cx.arc(ex, ey, 4, 0, 6.283); cx.fill();
+    cx.fillStyle = 'rgba(255,255,255,0.85)'; cx.beginPath(); cx.arc(ex - 2.2, ey - 2.2, 1.6, 0, 6.283); cx.fill();
+    cx.strokeStyle = 'rgba(255,255,255,0.25)'; cx.lineWidth = 1.5;
+    cx.beginPath(); cx.moveTo(ex - 24, ey); cx.quadraticCurveTo(ex, ey - 17, ex + 24, ey); cx.quadraticCurveTo(ex, ey + 17, ex - 24, ey); cx.stroke();
+    cx.restore();
+    cx.fillStyle = 'rgba(255,255,255,0.55)'; cx.font = '700 12px Pretendard, system-ui, sans-serif';
+    cx.textAlign = 'center'; cx.textBaseline = 'alphabetic'; cx.fillText('눈', ex, ey - 22);
+
+    geoScene = { lamp: { x: lampX, y: bandY }, eye: { x: ex, y: ey }, objs: [{ x: objX, y: bandY }], keys: [key], L: light, size: objSize };
+
+    var lv = [light.r, light.g, light.b], MAXRATE = 14;
+    [0, 1, 2].forEach(function (ch) {
+      if (lv[ch] < 4) return;
+      emit('op' + ch, MAXRATE * lv[ch] / 255, dt, function () {
+        oswarm.push({ ch: ch, ox: lampX + 10, oy: bandY + (Math.random() - 0.5) * objR * 1.1, tx: objX + (Math.random() - 0.5) * objR * 0.8, ty: bandY + (Math.random() - 0.5) * objR * 0.8, p: 0, dur: 0.8 + Math.random() * 0.3, phase: 'in' });
+      });
+    });
+    for (var k = oswarm.length - 1; k >= 0; k--) {
+      var q = oswarm[k]; q.p += dt / q.dur;
+      if (q.p >= 1) {
+        if (q.phase === 'in') {
+          if (Math.random() < refl[q.ch] / 255) { q.phase = 'out'; q.ox = q.tx; q.oy = q.ty; q.tx = ex - 20 + Math.random() * 8; q.ty = ey + (Math.random() - 0.5) * objR; q.p = 0; q.dur = 0.65 + Math.random() * 0.3; }
+          else { oswarm.splice(k, 1); continue; }
+        } else { oswarm.splice(k, 1); continue; }
+      }
+      var e = 1 - Math.pow(1 - q.p, 1.5);
+      var x = q.ox + (q.tx - q.ox) * e, y = q.oy + (q.ty - q.oy) * e;
+      var a = q.phase === 'in' ? Math.min(1, q.p * 8) : Math.min(1, q.p * 8) * (q.p > 0.9 ? (1 - (q.p - 0.9) / 0.1) : 1);
+      var col = PH_COLORS[q.ch];
+      cx.fillStyle = 'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + (0.13 * a) + ')';
+      cx.beginPath(); cx.arc(x, y, 6.5, 0, 6.283); cx.fill();
+      cx.fillStyle = 'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + a + ')';
+      cx.beginPath(); cx.arc(x, y, 3, 0, 6.283); cx.fill();
+    }
+
+    cx.fillStyle = 'rgba(255,255,255,0.62)'; cx.font = '600 12px Pretendard, system-ui, sans-serif';
+    cx.textAlign = 'center'; cx.textBaseline = 'alphabetic';
+    cx.fillText(objectPhotonCaption(key, light), w / 2, h - 22);
+  }
+
+  /* ===== 물체 모양 ===== */
+  var shapes = {
+    strawberry: function (c, s, ap, L) {
+      var r = s * 0.4;
+      var g = c.createRadialGradient(-r * 0.25, -r * 0.2, r * 0.1, 0, 0, r);
+      g.addColorStop(0, light2(ap, 1.3)); g.addColorStop(1, light2(ap, 0.72));
+      c.fillStyle = g; c.beginPath();
+      c.moveTo(0, r * 1.08);
+      c.bezierCurveTo(-r * 1.05, r * 0.2, -r * 0.95, -r * 0.7, 0, -r * 0.6);
+      c.bezierCurveTo(r * 0.95, -r * 0.7, r * 1.05, r * 0.2, 0, r * 1.08);
+      c.fill();
+      c.fillStyle = light2(ap, 1.7);
+      var seeds = [[-0.35, -0.15], [0, -0.2], [0.35, -0.15], [-0.5, 0.2], [-0.18, 0.25], [0.18, 0.25], [0.5, 0.2], [-0.28, 0.55], [0.28, 0.55], [0, 0.72]];
+      for (var i = 0; i < seeds.length; i++) { c.save(); c.translate(seeds[i][0] * r, seeds[i][1] * r); c.rotate(0.4); c.beginPath(); c.ellipse(0, 0, r * 0.05, r * 0.09, 0, 0, 6.283); c.fill(); c.restore(); }
+      var cal = appar([55, 150, 55], L); c.fillStyle = rgbCss(cal);
+      for (var k = 0; k < 5; k++) { c.save(); c.translate(0, -r * 0.6); c.rotate((k - 2) * 0.5); c.beginPath(); c.moveTo(0, 0); c.quadraticCurveTo(-r * 0.12, -r * 0.28, 0, -r * 0.42); c.quadraticCurveTo(r * 0.12, -r * 0.28, 0, 0); c.fill(); c.restore(); }
+    },
+    lemon: function (c, s, ap, L) {
+      var rx = s * 0.46, ry = s * 0.34; c.save(); c.rotate(-0.35);
+      var g = c.createRadialGradient(-rx * 0.3, -ry * 0.35, ry * 0.1, 0, 0, rx);
+      g.addColorStop(0, light2(ap, 1.22)); g.addColorStop(1, light2(ap, 0.82));
+      c.fillStyle = g; c.beginPath(); c.ellipse(0, 0, rx, ry, 0, 0, 6.283); c.fill();
+      c.fillStyle = light2(ap, 0.7);
+      c.beginPath(); c.ellipse(rx, 0, rx * 0.12, ry * 0.16, 0, 0, 6.283); c.fill();
+      c.beginPath(); c.ellipse(-rx, 0, rx * 0.12, ry * 0.16, 0, 0, 6.283); c.fill();
+      c.fillStyle = 'rgba(255,255,255,0.22)';
+      c.beginPath(); c.ellipse(-rx * 0.35, -ry * 0.4, rx * 0.22, ry * 0.18, -0.3, 0, 6.283); c.fill();
+      c.restore();
+    },
+    frog: function (c, s, ap, L) {
+      var r = s * 0.42;
+      c.fillStyle = light2(ap, 0.8);
+      c.beginPath(); c.ellipse(-r * 0.55, r * 0.55, r * 0.22, r * 0.12, 0.3, 0, 6.283); c.fill();
+      c.beginPath(); c.ellipse(r * 0.55, r * 0.55, r * 0.22, r * 0.12, -0.3, 0, 6.283); c.fill();
+      var g = c.createRadialGradient(-r * 0.3, -r * 0.2, r * 0.1, 0, 0, r * 1.05);
+      g.addColorStop(0, light2(ap, 1.3)); g.addColorStop(1, light2(ap, 0.66));
+      c.fillStyle = g; c.beginPath(); c.ellipse(0, r * 0.1, r * 0.85, r * 0.7, 0, 0, 6.283); c.fill();
+      c.fillStyle = light2(ap, 1.15);
+      c.beginPath(); c.arc(-r * 0.4, -r * 0.45, r * 0.28, 0, 6.283); c.fill();
+      c.beginPath(); c.arc(r * 0.4, -r * 0.45, r * 0.28, 0, 6.283); c.fill();
+      c.fillStyle = '#f3f5f8';
+      c.beginPath(); c.arc(-r * 0.4, -r * 0.48, r * 0.17, 0, 6.283); c.fill();
+      c.beginPath(); c.arc(r * 0.4, -r * 0.48, r * 0.17, 0, 6.283); c.fill();
+      c.fillStyle = '#15181d';
+      c.beginPath(); c.arc(-r * 0.4, -r * 0.45, r * 0.08, 0, 6.283); c.fill();
+      c.beginPath(); c.arc(r * 0.4, -r * 0.45, r * 0.08, 0, 6.283); c.fill();
+      c.strokeStyle = light2(ap, 0.5); c.lineWidth = Math.max(1.5, s * 0.022); c.lineCap = 'round';
+      c.beginPath(); c.arc(0, r * 0.1, r * 0.42, 0.15 * Math.PI, 0.85 * Math.PI); c.stroke();
+    },
+    blueberry: function (c, s, ap, L) {
+      var r = s * 0.4;
+      var g = c.createRadialGradient(-r * 0.35, -r * 0.4, r * 0.1, 0, 0, r);
+      g.addColorStop(0, light2(ap, 1.5)); g.addColorStop(1, light2(ap, 0.5));
+      c.fillStyle = g; c.beginPath(); c.arc(0, 0, r, 0, 6.283); c.fill();
+      c.fillStyle = light2(ap, 0.45);
+      c.beginPath();
+      for (var k = 0; k < 5; k++) {
+        var a1 = k * (Math.PI * 2 / 5) - Math.PI / 2, a2 = a1 + Math.PI / 5, R1 = r * 0.34, R2 = r * 0.14;
+        var x1 = Math.cos(a1) * R1, y1 = Math.sin(a1) * R1 - r * 0.55, x2 = Math.cos(a2) * R2, y2 = Math.sin(a2) * R2 - r * 0.55;
+        if (k === 0) c.moveTo(x1, y1); else c.lineTo(x1, y1); c.lineTo(x2, y2);
+      }
+      c.closePath(); c.fill();
+      c.fillStyle = 'rgba(255,255,255,0.28)';
+      c.beginPath(); c.ellipse(-r * 0.35, -r * 0.35, r * 0.14, r * 0.1, -0.5, 0, 6.283); c.fill();
+    },
+    eggplant: function (c, s, ap, L) {
+      var rx = s * 0.3, ry = s * 0.46; c.save(); c.rotate(0.15);
+      var g = c.createRadialGradient(-rx * 0.3, -ry * 0.3, rx * 0.1, 0, ry * 0.1, ry * 1.1);
+      g.addColorStop(0, light2(ap, 1.35)); g.addColorStop(1, light2(ap, 0.6));
+      c.fillStyle = g; c.beginPath();
+      c.moveTo(0, ry);
+      c.bezierCurveTo(rx * 1.15, ry * 0.7, rx * 1.05, -ry * 0.5, rx * 0.2, -ry * 0.85);
+      c.bezierCurveTo(-rx * 0.5, -ry * 1.1, -rx * 1.05, -ry * 0.2, -rx * 0.7, ry * 0.5);
+      c.bezierCurveTo(-rx * 0.5, ry * 0.85, -rx * 0.2, ry, 0, ry);
+      c.fill();
+      c.fillStyle = 'rgba(255,255,255,0.16)';
+      c.beginPath(); c.ellipse(-rx * 0.3, 0, rx * 0.16, ry * 0.4, -0.1, 0, 6.283); c.fill();
+      var cap = appar([60, 140, 55], L); c.fillStyle = rgbCss(cap);
+      for (var k = 0; k < 5; k++) { c.save(); c.translate(rx * 0.2, -ry * 0.82); c.rotate((k - 2) * 0.45 - 0.2); c.beginPath(); c.moveTo(0, 0); c.quadraticCurveTo(-rx * 0.18, -ry * 0.2, 0, -ry * 0.32); c.quadraticCurveTo(rx * 0.18, -ry * 0.2, 0, 0); c.fill(); c.restore(); }
+      c.restore();
+    },
+    tomato: function (c, s, ap, L) {
+      var r = s * 0.43;
+      var g = c.createRadialGradient(-r * 0.3, -r * 0.3, r * 0.1, 0, r * 0.05, r * 1.05);
+      g.addColorStop(0, light2(ap, 1.3)); g.addColorStop(1, light2(ap, 0.72));
+      c.fillStyle = g; c.beginPath(); c.ellipse(0, r * 0.06, r, r * 0.92, 0, 0, 6.283); c.fill();
+      c.fillStyle = 'rgba(255,255,255,0.16)';
+      c.beginPath(); c.ellipse(-r * 0.34, -r * 0.28, r * 0.22, r * 0.16, -0.4, 0, 6.283); c.fill();
+      var cal = appar([55, 150, 50], L);
+      c.fillStyle = rgbCss(cal);
+      for (var k = 0; k < 6; k++) {
+        c.save(); c.translate(0, -r * 0.72); c.rotate(k * Math.PI / 3);
+        c.beginPath(); c.moveTo(0, 0); c.quadraticCurveTo(-r * 0.1, -r * 0.18, 0, -r * 0.34); c.quadraticCurveTo(r * 0.1, -r * 0.18, 0, 0); c.fill(); c.restore();
+      }
+      c.fillStyle = rgbCss(cal);
+      c.beginPath(); c.arc(0, -r * 0.72, r * 0.09, 0, 6.283); c.fill();
+    },
+    sunflower: function (c, s, ap, L) {
+      var R = s * 0.46, pr = R * 0.55;
+      c.fillStyle = rgbCss(ap);
+      for (var k = 0; k < 12; k++) {
+        c.save(); c.rotate(k * Math.PI / 6);
+        c.beginPath(); c.ellipse(0, -R * 0.66, R * 0.16, R * 0.34, 0, 0, 6.283); c.fill(); c.restore();
+      }
+      var ctr = appar([95, 60, 30], L);
+      var g = c.createRadialGradient(-pr * 0.3, -pr * 0.3, pr * 0.1, 0, 0, pr);
+      g.addColorStop(0, light2(ctr, 1.4)); g.addColorStop(1, light2(ctr, 0.7));
+      c.fillStyle = g; c.beginPath(); c.arc(0, 0, pr, 0, 6.283); c.fill();
+      c.fillStyle = light2(ctr, 1.7);
+      for (var i = 0; i < 5; i++) for (var j = 0; j < 5; j++) {
+        var x = (i - 2) * pr * 0.32, y = (j - 2) * pr * 0.32;
+        if (x * x + y * y < pr * pr * 0.7) { c.beginPath(); c.arc(x, y, pr * 0.06, 0, 6.283); c.fill(); }
+      }
+    },
+    cucumber: function (c, s, ap, L) {
+      c.save(); c.rotate(-0.5);
+      var w = s * 0.26, h = s * 0.92;
+      var g = c.createLinearGradient(-w, 0, w, 0);
+      g.addColorStop(0, light2(ap, 0.62)); g.addColorStop(0.4, light2(ap, 1.15)); g.addColorStop(1, light2(ap, 0.7));
+      c.fillStyle = g;
+      roundRectP(c, -w, -h / 2, w * 2, h, w);
+      c.fill();
+      c.fillStyle = light2(ap, 0.55);
+      c.beginPath(); c.ellipse(0, -h / 2 + w * 0.4, w * 0.5, w * 0.35, 0, 0, 6.283); c.fill();
+      c.fillStyle = light2(ap, 1.4);
+      for (var i = 0; i < 7; i++) {
+        var yy = -h * 0.38 + i * h * 0.12;
+        c.beginPath(); c.arc((i % 2 ? 1 : -1) * w * 0.35, yy, w * 0.1, 0, 6.283); c.fill();
+      }
+      c.restore();
+    },
+    grape: function (c, s, ap, L) {
+      var pts = [[0, -0.55], [-0.28, -0.32], [0.28, -0.32], [-0.5, -0.05], [0, -0.05], [0.5, -0.05], [-0.28, 0.22], [0.28, 0.22], [0, 0.5]];
+      var pr = s * 0.16;
+      var stem = appar([90, 110, 40], L);
+      c.strokeStyle = rgbCss(stem); c.lineWidth = Math.max(2, s * 0.035);
+      c.beginPath(); c.moveTo(0, -s * 0.5); c.lineTo(0, -s * 0.62); c.stroke();
+      for (var i = 0; i < pts.length; i++) {
+        var px = pts[i][0] * s, py = pts[i][1] * s;
+        var g = c.createRadialGradient(px - pr * 0.3, py - pr * 0.3, pr * 0.1, px, py, pr);
+        g.addColorStop(0, light2(ap, 1.3)); g.addColorStop(1, light2(ap, 0.7));
+        c.fillStyle = g; c.beginPath(); c.arc(px, py, pr, 0, 6.283); c.fill();
+      }
+    },
+    whale: function (c, s, ap, L) {
+      var r = s * 0.42;
+      c.fillStyle = light2(ap, 0.78);
+      c.beginPath();
+      c.moveTo(r * 0.7, 0);
+      c.lineTo(r * 1.15, -r * 0.42); c.lineTo(r * 0.95, 0); c.lineTo(r * 1.15, r * 0.42);
+      c.closePath(); c.fill();
+      var g = c.createRadialGradient(-r * 0.3, -r * 0.35, r * 0.1, 0, 0, r * 1.1);
+      g.addColorStop(0, light2(ap, 1.35)); g.addColorStop(1, light2(ap, 0.62));
+      c.fillStyle = g;
+      c.beginPath(); c.ellipse(0, 0, r, r * 0.72, 0, 0, 6.283); c.fill();
+      c.fillStyle = light2(ap, 1.45);
+      c.beginPath(); c.ellipse(-r * 0.1, r * 0.32, r * 0.6, r * 0.3, 0, 0, 6.283); c.fill();
+      c.fillStyle = light2(ap, 0.7);
+      c.beginPath(); c.ellipse(-r * 0.1, r * 0.2, r * 0.28, r * 0.14, 0.6, 0, 6.283); c.fill();
+      c.strokeStyle = 'rgba(180,220,255,0.5)'; c.lineWidth = Math.max(2, s * 0.03); c.lineCap = 'round';
+      c.beginPath(); c.moveTo(-r * 0.5, -r * 0.6); c.quadraticCurveTo(-r * 0.62, -r * 1.0, -r * 0.4, -r * 1.1); c.stroke();
+      c.beginPath(); c.moveTo(-r * 0.5, -r * 0.6); c.quadraticCurveTo(-r * 0.38, -r * 1.0, -r * 0.6, -r * 1.05); c.stroke();
+      c.fillStyle = '#1a1d22';
+      c.beginPath(); c.arc(-r * 0.45, -r * 0.05, r * 0.07, 0, 6.283); c.fill();
+      c.fillStyle = 'rgba(255,255,255,0.85)';
+      c.beginPath(); c.arc(-r * 0.47, -r * 0.08, r * 0.025, 0, 6.283); c.fill();
+    },
+    cloud: function (c, s, ap, L) {
+      var puffs = [[-0.34, 0.05, 0.32], [0.0, -0.16, 0.4], [0.34, 0.02, 0.34], [0.12, 0.16, 0.3], [-0.12, 0.18, 0.28]];
+      for (var i = 0; i < puffs.length; i++) {
+        var px = puffs[i][0] * s, py = puffs[i][1] * s, pr = puffs[i][2] * s;
+        var g = c.createRadialGradient(px - pr * 0.25, py - pr * 0.3, pr * 0.1, px, py, pr);
+        g.addColorStop(0, light2(ap, 1.08)); g.addColorStop(1, light2(ap, 0.82));
+        c.fillStyle = g; c.beginPath(); c.arc(px, py, pr, 0, 6.283); c.fill();
+      }
+      c.fillStyle = light2(ap, 0.92);
+      roundRectP(c, -s * 0.42, s * 0.18, s * 0.84, s * 0.16, s * 0.08); c.fill();
+    },
+    bowling: function (c, s, ap, L) {
+      var r = s * 0.45;
+      var g = c.createRadialGradient(-r * 0.35, -r * 0.4, r * 0.1, 0, 0, r);
+      g.addColorStop(0, light2(ap, 2.6)); g.addColorStop(0.5, light2(ap, 1.1)); g.addColorStop(1, light2(ap, 0.4));
+      c.fillStyle = g; c.beginPath(); c.arc(0, 0, r, 0, 6.283); c.fill();
+      c.fillStyle = light2(ap, 0.25);
+      var holes = [[-0.16, -0.28], [0.12, -0.3], [0.0, -0.08]];
+      for (var i = 0; i < holes.length; i++) { c.beginPath(); c.arc(holes[i][0] * r, holes[i][1] * r, r * 0.09, 0, 6.283); c.fill(); }
+      c.fillStyle = 'rgba(255,255,255,0.22)';
+      c.beginPath(); c.ellipse(-r * 0.4, -r * 0.45, r * 0.16, r * 0.1, -0.5, 0, 6.283); c.fill();
+    }
+  };
+
+  /* ===== UI 갱신 ===== */
+  function setSliders(pfx, L) { el(pfx + 'R').value = L.r; el(pfx + 'G').value = L.g; el(pfx + 'B').value = L.b; }
+  function updateMixUI() {
+    var M = S.mix;
+    el('mixRv').textContent = M.r; el('mixGv').textContent = M.g; el('mixBv').textContent = M.b;
+    var nm = mixName(M.r, M.g, M.b);
+    el('mixTitle').textContent = nm[0]; el('mixDesc').textContent = nm[1];
+    el('mixChip').style.background = 'rgb(' + M.r + ',' + M.g + ',' + M.b + ')';
+  }
+  function updateObjUI() {
+    var L = S.objLight;
+    el('objRv').textContent = L.r; el('objGv').textContent = L.g; el('objBv').textContent = L.b;
+    var ap = appar(OBJ[S.objKey].refl, L);
+    el('objChip').style.background = (Math.max(ap[0], ap[1], ap[2]) < 45) ? '#1b1f26' : rgbCss(ap);
+    el('objTitle').textContent = seeName(ap[0], ap[1], ap[2]);
+    el('objDesc').textContent = lightName(L.r, L.g, L.b) + ' 아래 ' + OBJ[S.objKey].name;
+    qsa('.cl-objcard').forEach(function (c) { c.classList.toggle('is-sel', c.getAttribute('data-obj') === S.objKey); });
+  }
+  function updateChUI() {
+    var L = S.chLight, m = MISS[S.chIdx];
+    el('chRv').textContent = L.r; el('chGv').textContent = L.g; el('chBv').textContent = L.b;
+    el('chText').textContent = m.text;
+    el('chHint').textContent = '힌트: ' + m.hint;
+    el('chProgress').textContent = '미션 ' + (S.chIdx + 1) + ' / ' + MISS.length;
+    el('chNext').disabled = !S.chSolved;
+    if (!S.chSolved) el('chResult').textContent = '';
+  }
+  function checkMission() {
+    var m = MISS[S.chIdx], L = S.chLight;
+    var aps = m.objs.map(function (k) { return appar(OBJ[k].refl, L); });
+    var res = el('chResult');
+    if (m.test(aps)) {
+      S.chSolved = true;
+      res.textContent = '✅ 성공! 잘했어요.'; res.style.color = '#1f9d55';
+      el('chNext').disabled = false; sWin();
+    } else {
+      res.textContent = '❌ 아직이에요. 힌트를 참고해 다시 해 보세요.'; res.style.color = '#d4453a';
+      sNope();
+    }
+  }
+  function nextMission() {
+    S.chIdx = (S.chIdx + 1) % MISS.length;
+    S.chSolved = false; S.chLight = { r: 255, g: 255, b: 255 };
+    ph = []; setSliders('ch', S.chLight); updateChUI();
+  }
+
+  /* ===== 이벤트 ===== */
+  qsa('.cl-tab').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var t = b.getAttribute('data-tab');
+      if (t === S.tab) return;
+      S.tab = t; ph = []; swarm = []; oswarm = [];
+      qsa('.cl-tab').forEach(function (x) { x.classList.toggle('is-active', x === b); });
+      el('panelMix').hidden = (t !== 'mix');
+      el('panelObject').hidden = (t !== 'object');
+      el('panelChallenge').hidden = (t !== 'challenge');
+      hideTip();
+      sTab();
+    });
+  });
+  ['R', 'G', 'B'].forEach(function (ch) {
+    el('mix' + ch).addEventListener('input', function () { S.mix[ch.toLowerCase()] = +this.value; updateMixUI(); });
+    el('obj' + ch).addEventListener('input', function () { S.objLight[ch.toLowerCase()] = +this.value; updateObjUI(); });
+    el('ch' + ch).addEventListener('input', function () { S.chLight[ch.toLowerCase()] = +this.value; updateChUI(); });
+  });
+  qsa('.cl-presets').forEach(function (box) {
+    var tgt = box.getAttribute('data-target');
+    box.querySelectorAll('.cl-preset').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var c = { r: +btn.getAttribute('data-r'), g: +btn.getAttribute('data-g'), b: +btn.getAttribute('data-b') };
+        if (tgt === 'mix') { S.mix = c; setSliders('mix', c); updateMixUI(); }
+        else if (tgt === 'object') { S.objLight = c; setSliders('obj', c); updateObjUI(); }
+        else { S.chLight = c; setSliders('ch', c); updateChUI(); }
+        sTick();
+      });
+    });
+  });
+  el('chCheck').addEventListener('click', checkMission);
+  el('chNext').addEventListener('click', nextMission);
+  el('mixPhotonToggle').addEventListener('click', function () {
+    S.photonMode = !S.photonMode;
+    this.classList.toggle('is-on', S.photonMode);
+    this.setAttribute('aria-checked', S.photonMode ? 'true' : 'false');
+    swarm = []; ph = [];
+    sTick();
+  });
+  el('objPhotonToggle').addEventListener('click', function () {
+    S.objPhotonMode = !S.objPhotonMode;
+    this.classList.toggle('is-on', S.objPhotonMode);
+    this.setAttribute('aria-checked', S.objPhotonMode ? 'true' : 'false');
+    oswarm = []; ph = []; hideTip();
+    sTick();
+  });
+  el('clReset').addEventListener('click', function () {
+    if (S.tab === 'mix') { S.mix = { r: 255, g: 255, b: 255 }; S.photonMode = false; el('mixPhotonToggle').classList.remove('is-on'); el('mixPhotonToggle').setAttribute('aria-checked', 'false'); swarm = []; setSliders('mix', S.mix); updateMixUI(); }
+    else if (S.tab === 'object') { S.objLight = { r: 255, g: 255, b: 255 }; S.objKey = 'tomato'; S.objPhotonMode = false; el('objPhotonToggle').classList.remove('is-on'); el('objPhotonToggle').setAttribute('aria-checked', 'false'); oswarm = []; setSliders('obj', S.objLight); updateObjUI(); }
+    else { S.chLight = { r: 255, g: 255, b: 255 }; S.chSolved = false; setSliders('ch', S.chLight); updateChUI(); }
+    ph = []; hideTip(); sTick();
+  });
+
+  /* ===== 물체 캐러셀 생성 ===== */
+  var car = el('objCarousel');
+  OBJ_ORDER.forEach(function (k) {
+    var d = document.createElement('button');
+    d.className = 'cl-objcard'; d.setAttribute('data-obj', k);
+    d.title = OBJ[k].name + ' — ' + reflectInfo(k).label;
+    d.innerHTML = '<span class="emo">' + OBJ[k].emo + '</span><span class="nm">' + OBJ[k].name + '</span>';
+    d.addEventListener('click', function () { S.objKey = k; ph = []; updateObjUI(); sPick(); });
+    car.appendChild(d);
+  });
+
+  /* ===== 물체 반사색 툴팁 ===== */
+  function reflectInfo(key) {
+    var refl = OBJ[key].refl, T = 100, ch = '';
+    if (refl[0] >= T) ch += 'R';
+    if (refl[1] >= T) ch += 'G';
+    if (refl[2] >= T) ch += 'B';
+    var M = {
+      '':    { label: '반사하는 빛이 거의 없음', sub: '모든 빛 흡수 → 검정', sw: [45, 45, 48] },
+      'R':   { label: '빨간 빛을 반사', sub: 'R', sw: [230, 45, 40] },
+      'G':   { label: '초록 빛을 반사', sub: 'G', sw: [40, 185, 65] },
+      'B':   { label: '파란 빛을 반사', sub: 'B', sw: [55, 95, 230] },
+      'RG':  { label: '빨강·초록 빛을 반사', sub: 'R + G → 노랑', sw: [235, 205, 40] },
+      'GB':  { label: '초록·파랑 빛을 반사', sub: 'G + B → 청록', sw: [40, 200, 200] },
+      'RB':  { label: '빨강·파랑 빛을 반사', sub: 'R + B → 자홍', sw: [220, 65, 200] },
+      'RGB': { label: '모든 색의 빛을 반사', sub: 'R + G + B → 흰색', sw: [235, 235, 235] }
+    };
+    return M[ch];
+  }
+  var clTip = el('clTip'), clStage = el('clStage'), tipTimer = null;
+  function showTip(key, x, y, size) {
+    var info = reflectInfo(key);
+    el('clTipName').textContent = OBJ[key].name;
+    el('clTipText').textContent = '반사하는 빛: ' + info.label;
+    el('clTipSub').textContent = info.sub;
+    el('clTipSw').style.background = 'rgb(' + info.sw[0] + ',' + info.sw[1] + ',' + info.sw[2] + ')';
+    clTip.style.left = x + 'px';
+    clTip.style.top = (y - size * 0.58) + 'px';
+    clTip.style.display = 'flex';
+  }
+  function hideTip() { clTip.style.display = 'none'; }
+  function pickObjectAt(clientX, clientY) {
+    if (S.tab !== 'object' && S.tab !== 'challenge') return null;
+    var g = geoScene; if (!g.objs || !g.objs.length) return null;
+    var rect = clStage.getBoundingClientRect();
+    var mx = clientX - rect.left, my = clientY - rect.top, hr = (g.size || 60) * 0.62;
+    for (var i = 0; i < g.objs.length; i++) {
+      var o = g.objs[i], dx = mx - o.x, dy = my - o.y;
+      if (dx * dx + dy * dy <= hr * hr) return { key: g.keys[i], x: o.x, y: o.y, size: g.size || 60 };
+    }
+    return null;
+  }
+  clStage.addEventListener('pointermove', function (e) {
+    if (e.pointerType === 'touch') return;
+    var hit = pickObjectAt(e.clientX, e.clientY);
+    if (hit) { showTip(hit.key, hit.x, hit.y, hit.size); clStage.style.cursor = 'help'; }
+    else { hideTip(); clStage.style.cursor = 'default'; }
+  });
+  clStage.addEventListener('pointerleave', function (e) {
+    if (e.pointerType !== 'touch') { hideTip(); clStage.style.cursor = 'default'; }
+  });
+  clStage.addEventListener('pointerdown', function (e) {
+    var hit = pickObjectAt(e.clientX, e.clientY);
+    if (hit) { showTip(hit.key, hit.x, hit.y, hit.size); if (e.pointerType === 'touch') { clearTimeout(tipTimer); tipTimer = setTimeout(hideTip, 2600); } }
+    else { hideTip(); }
+  });
+
+  /* ===== 메인 루프 ===== */
+  var prev = 0;
+  function loop(t) {
+    var dt = prev ? (t - prev) / 1000 : 0; prev = t; if (dt > 0.05) dt = 0.05;
+    fit();
+    cx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    cx.clearRect(0, 0, CW, CH);
+    if (S.tab === 'mix') {
+      if (S.photonMode) {
+        drawMixPhotons(CW, CH, dt);
+      } else {
+        drawMix(CW, CH);
+        geoMixNodes.forEach(function (n, i) {
+          if (n.v > 20) emit('m' + i, 5 + n.v / 255 * 14, dt, function () {
+            spawn(n.fx, n.fy, n.x + (Math.random() - 0.5) * 8, n.y + (Math.random() - 0.5) * 8, n.col, 0.8 + Math.random() * 0.25);
+          });
+        });
+      }
+    } else {
+      var L = S.tab === 'object' ? S.objLight : S.chLight;
+      var keys = S.tab === 'object' ? [S.objKey] : MISS[S.chIdx].objs;
+      if (S.tab === 'object' && S.objPhotonMode) {
+        drawObjectPhotons(CW, CH, dt, L, S.objKey);
+      } else {
+        drawScene(CW, CH, L, keys);
+        var Gs = geoScene, lb = Math.max(L.r, L.g, L.b);
+        Gs.objs.forEach(function (o, idx) {
+          var ap = appar(OBJ[Gs.keys[idx]].refl, L), abr = Math.max(ap[0], ap[1], ap[2]);
+          if (lb > 20) emit('in' + idx, 5 + lb / 255 * 14, dt, function () {
+            spawn(Gs.lamp.x, Gs.lamp.y, o.x + (Math.random() - 0.5) * 10, o.y + (Math.random() - 0.5) * 10, [L.r, L.g, L.b], 0.7 + Math.random() * 0.25);
+          });
+          if (abr >= 40) emit('out' + idx, 4 + abr / 255 * 12, dt, function () {
+            spawn(o.x + (Math.random() - 0.5) * 8, o.y, Gs.eye.x, Gs.eye.y, ap, 0.7 + Math.random() * 0.25);
+          });
+        });
+      }
+    }
+    updPh(dt); drawPh();
+    requestAnimationFrame(loop);
+  }
+
+  /* ===== 초기화 ===== */
+  updateMixUI(); updateObjUI(); updateChUI();
+  requestAnimationFrame(loop);
 })();
 </script>
 </body>
