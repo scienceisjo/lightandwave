@@ -1,1 +1,2377 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a1020">
+<title>당신은 '물건'이 아니라 '물결'이다 · 퍼져 나가는 파동</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+/* ===================================================================
+   퍼져 나가는 파동 · 파동 관측소  —  디자인 토큰
+   딥 워터 / 오실로스코프 테마: 빛나는 파동이 잔잔한 매질을 통과한다
+=================================================================== */
+:root{
+  /* 배경 깊이 */
+  --abyss:#0a1020;      /* 가장 깊은 곳 */
+  --deep:#0f1a30;       /* 패널 */
+  --surface:#16233f;    /* 카드 */
+  --surface2:#1d2d4f;   /* 띄운 카드 */
+  --line:#2a3b5e;       /* 외곽선 */
+  --line-soft:#223255;
 
+  /* 글자 */
+  --ink:#eaf1ff;        /* 본문 (부드러운 흰-청) */
+  --ink-dim:#a6b8da;    /* 보조 */
+  --ink-mute:#7186ab;   /* 3차 */
+
+  /* 파동 + 의미색 (개념마다 색) */
+  --wave:#2dd4d4;       /* 파동 그 자체 (빛나는 청록) */
+  --wave-glow:#67e8e0;
+  --crest:#ffb84d;      /* 마루 (높고 따뜻) */
+  --trough:#8b93ff;     /* 골 (낮고 차갑) */
+  --amp:#ff6b9d;        /* 진폭 */
+  --wlen:#9ae66e;       /* 파장 */
+  --energy:#ff7849;     /* 에너지 전달 */
+  --info:#38bdf8;       /* 정보 전달 */
+  --medium:#9aabce;     /* 매질 */
+
+  --gold:#ffd166;       /* 보상 / 강조 */
+  --ok:#4ade80;
+  --danger:#ff5d6c;
+
+  /* 폰트 */
+  --disp:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+  --jua:"Jua","Pretendard",sans-serif;
+
+  --header-h:60px;
+  --r:16px;
+  --r-sm:11px;
+  --shadow:0 18px 50px -22px rgba(0,0,0,.75);
+  --glow:0 0 22px -2px var(--wave);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--body);
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 600px at 78% -8%, rgba(45,212,212,.10), transparent 60%),
+    radial-gradient(900px 500px at 12% 8%, rgba(139,147,255,.10), transparent 55%),
+    radial-gradient(700px 700px at 50% 120%, rgba(255,184,77,.06), transparent 60%),
+    var(--abyss);
+  background-attachment:fixed;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+::selection{background:rgba(45,212,212,.32);color:#fff}
+
+/* ===================== 바닷가 배경 레이어 ===================== */
+#bgLayer{position:fixed;inset:0;z-index:-2;background-size:cover;background-position:center;background-repeat:no-repeat;transition:opacity .45s ease;will-change:opacity}
+#bgScrim{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    linear-gradient(180deg, rgba(8,13,26,.70), rgba(8,13,26,.86) 58%, rgba(8,13,26,.94)),
+    radial-gradient(120% 80% at 50% -8%, rgba(24,46,66,.28), transparent 60%);
+}
+
+/* ===================== 헤더 / 탭 내비 ===================== */
+header.top{
+  position:sticky;top:0;z-index:50;
+  background:linear-gradient(180deg, rgba(10,16,32,.96), rgba(10,16,32,.80) 70%, rgba(10,16,32,0));
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line-soft);
+}
+.top-bar{
+  max-width:1180px;margin:0 auto;height:var(--header-h);
+  display:flex;align-items:center;gap:12px;padding:0 16px;
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand .logo{
+  width:34px;height:34px;border-radius:10px;flex:none;position:relative;
+  background:radial-gradient(circle at 30% 30%, #21384f, #0c1830);
+  border:1px solid var(--line);overflow:hidden;
+}
+.brand .logo canvas{position:absolute;inset:0;width:100%;height:100%}
+.brand b{font-family:var(--disp);font-weight:800;font-size:18px;letter-spacing:-.2px;color:var(--ink);white-space:nowrap}
+.brand b span{color:var(--wave)}
+.brand .sub{font-size:11px;color:var(--ink-mute);white-space:nowrap}
+@media(max-width:560px){.brand .sub{display:none}}
+
+.progress-mini{margin-left:auto;display:flex;align-items:center;gap:9px}
+.progress-mini .bar{width:96px;height:7px;border-radius:99px;background:#16233f;overflow:hidden;border:1px solid var(--line)}
+.progress-mini .bar > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--wave),var(--wave-glow));transition:width .5s cubic-bezier(.22,1,.36,1);box-shadow:0 0 12px var(--wave)}
+.progress-mini .pct{font-family:var(--mono);font-size:12px;color:var(--wave-glow);min-width:34px;text-align:right}
+@media(max-width:420px){.progress-mini .bar{width:60px}}
+
+nav.tabs{
+  max-width:1180px;margin:0 auto;padding:0 8px 8px;
+  display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;
+}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{
+  flex:none;display:flex;align-items:center;gap:7px;
+  font-family:var(--body);font-size:14px;font-weight:700;
+  color:var(--ink-dim);background:transparent;border:1px solid transparent;
+  padding:8px 13px;border-radius:999px;cursor:pointer;white-space:nowrap;
+  transition:.2s;position:relative;
+}
+nav.tabs button .em{font-size:15px;filter:saturate(1.1)}
+nav.tabs button .lk{font-size:12px;opacity:.6}
+nav.tabs button:hover{color:var(--ink);background:rgba(255,255,255,.04)}
+nav.tabs button.active{color:#06121f;background:linear-gradient(180deg,var(--wave-glow),var(--wave));box-shadow:0 6px 18px -6px var(--wave)}
+nav.tabs button.locked{opacity:.45;cursor:not-allowed}
+nav.tabs button.locked:hover{background:transparent;color:var(--ink-dim)}
+nav.tabs button .moon{font-size:14px}
+
+/* ===================== 레이아웃 ===================== */
+main{max-width:1180px;margin:0 auto;padding:20px 16px 90px}
+.panel{display:none;animation:fade .45s cubic-bezier(.22,1,.36,1)}
+.panel.show{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);
+  font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--wave-glow);
+  margin-bottom:12px;
+}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--wave)}
+h1.big{font-family:var(--disp);font-weight:800;font-size:clamp(31px,7.2vw,64px);line-height:1.05;letter-spacing:-.6px;margin:0;text-shadow:0 2px 24px rgba(0,0,0,.6)}
+h2.sec{font-family:var(--disp);font-weight:800;font-size:clamp(23px,4.2vw,36px);letter-spacing:-.3px;line-height:1.14;margin:0 0 6px;text-shadow:0 2px 16px rgba(0,0,0,.5)}
+h3.card-t{font-family:var(--jua);font-size:20px;letter-spacing:.2px;color:var(--ink)}
+.lead{font-size:clamp(15px,2.4vw,18px);color:var(--ink-dim);max-width:64ch;text-shadow:0 1px 12px rgba(0,0,0,.4)}
+.muted{color:var(--ink-mute)}
+
+/* 카드 */
+.card{
+  background:linear-gradient(180deg, var(--surface), var(--deep));
+  border:1px solid var(--line);border-radius:var(--r);
+  padding:22px;box-shadow:var(--shadow);
+}
+.card + .card{margin-top:18px}
+.grid{display:grid;gap:18px}
+@media(min-width:760px){.grid.c2{grid-template-columns:1fr 1fr}.grid.c3{grid-template-columns:repeat(3,1fr)}}
+
+/* 배지 */
+.badge{
+  display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;
+  padding:5px 11px;border-radius:999px;border:1px solid var(--line);
+  background:rgba(255,255,255,.03);color:var(--ink-dim);
+}
+.badge.beyond{background:linear-gradient(180deg,#241b3a,#1a1430);border-color:#4a3a78;color:#cdbcff}
+.badge.beyond .moon{filter:drop-shadow(0 0 6px #b6a4ff)}
+.badge.energy{color:var(--energy);border-color:#5a3320;background:rgba(255,120,73,.08)}
+.badge.info{color:var(--info);border-color:#1f4a66;background:rgba(56,189,248,.08)}
+
+/* 교실 연결 / 오개념 메모 */
+.note{
+  display:flex;gap:12px;align-items:flex-start;
+  border-left:3px solid var(--wave);background:rgba(45,212,212,.06);
+  padding:13px 15px;border-radius:0 12px 12px 0;margin-top:14px;font-size:14.5px;color:var(--ink-dim);
+}
+.note .ic{flex:none;font-size:17px;line-height:1.4}
+.note.class{border-color:var(--gold);background:rgba(255,209,102,.07)}
+.note.class b{color:var(--gold)}
+.note.myth{border-color:var(--danger);background:rgba(255,93,108,.07)}
+.note.myth b{color:#ff97a1}
+
+/* 색 칩 + 의미색 텍스트 */
+.chip{display:inline-block;width:13px;height:13px;border-radius:4px;vertical-align:-1px;margin-right:6px}
+.t-wave{color:var(--wave-glow)}.t-crest{color:var(--crest)}.t-trough{color:var(--trough)}
+.t-amp{color:var(--amp)}.t-wlen{color:var(--wlen)}.t-energy{color:var(--energy)}
+.t-info{color:var(--info)}.t-medium{color:var(--medium)}
+b.k{color:var(--ink);font-weight:800}
+
+/* ===================== 버튼 ===================== */
+.btn{
+  font-family:var(--body);font-weight:800;font-size:15px;cursor:pointer;
+  padding:12px 20px;border-radius:12px;border:1px solid transparent;
+  display:inline-flex;align-items:center;gap:9px;transition:.18s;user-select:none;
+}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn.primary{background:linear-gradient(180deg,var(--wave-glow),var(--wave));color:#06141f;box-shadow:0 10px 24px -10px var(--wave)}
+.btn.primary:hover{filter:brightness(1.06)}
+.btn.ghost{background:rgba(255,255,255,.04);border-color:var(--line);color:var(--ink)}
+.btn.ghost:hover{background:rgba(255,255,255,.08);border-color:var(--wave)}
+.btn.warm{background:linear-gradient(180deg,#ffb24d,#ff7849);color:#2a1206;box-shadow:0 10px 24px -10px var(--energy)}
+.btn.sm{padding:8px 14px;font-size:13.5px;border-radius:10px}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;filter:none}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;align-items:center}
+
+/* 선택지 버튼 (POE / 퀴즈) */
+.choices{display:grid;gap:10px;margin-top:14px}
+.choice{
+  text-align:left;font-family:var(--body);font-size:15.5px;color:var(--ink);
+  background:var(--surface2);border:1.5px solid var(--line);border-radius:13px;
+  padding:14px 16px;cursor:pointer;transition:.16s;display:flex;gap:12px;align-items:center;line-height:1.4;
+}
+.choice .key{
+  flex:none;width:27px;height:27px;border-radius:8px;display:grid;place-items:center;
+  font-family:var(--mono);font-weight:700;font-size:14px;background:#0e1a30;border:1px solid var(--line);color:var(--ink-dim);
+}
+.choice:hover:not(.done){border-color:var(--wave);background:#22324f;transform:translateX(3px)}
+.choice.sel{border-color:var(--wave);box-shadow:0 0 0 3px rgba(45,212,212,.18)}
+.choice.correct{border-color:var(--ok);background:rgba(74,222,128,.13)}
+.choice.correct .key{background:var(--ok);color:#06210f}
+.choice.wrong{border-color:var(--danger);background:rgba(255,93,108,.12)}
+.choice.wrong .key{background:var(--danger);color:#2a060b}
+.choice.dim{opacity:.5}
+.choice.done{cursor:default}
+
+/* 정답 해설 박스 */
+.explain{
+  margin-top:14px;border-radius:13px;padding:15px 17px;font-size:14.5px;line-height:1.6;
+  border:1px solid var(--line);background:rgba(45,212,212,.06);color:var(--ink-dim);
+  display:none;animation:fade .35s ease;
+}
+.explain.show{display:block}
+.explain.ok{border-color:#2e6e44;background:rgba(74,222,128,.09)}
+.explain.no{border-color:#7a2f38;background:rgba(255,93,108,.09)}
+.explain b{color:var(--ink)}
+.explain .why{display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:13px;color:var(--wave-glow);margin-bottom:5px}
+.explain.ok .why{color:var(--ok)}.explain.no .why{color:#ff97a1}
+
+/* ===================== 실험실 레이아웃 ===================== */
+.lab{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:900px){
+  .lab{grid-template-columns:minmax(0,1fr) 296px;align-items:start}
+  .lab .controls{position:sticky;top:calc(var(--header-h) + 56px)}
+}
+.stage{
+  background:radial-gradient(120% 100% at 50% 0%, #11203a, #0a1426);
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden;position:relative;
+}
+.stage .cv-wrap{position:relative;width:100%}
+.stage canvas{display:block;width:100%;height:auto;touch-action:none}
+.stage .hud{position:absolute;top:10px;left:12px;right:12px;display:flex;justify-content:space-between;gap:10px;pointer-events:none;flex-wrap:wrap}
+.stage .tag{font-family:var(--mono);font-size:11.5px;letter-spacing:.5px;background:rgba(8,16,30,.7);border:1px solid var(--line);padding:4px 9px;border-radius:8px;color:var(--ink-dim);backdrop-filter:blur(4px)}
+.stage .hint{position:absolute;left:0;right:0;bottom:0;padding:10px 14px;font-size:13px;color:var(--ink-dim);background:linear-gradient(0deg,rgba(8,14,28,.92),transparent);text-align:center}
+
+.controls{
+  background:linear-gradient(180deg,var(--surface),var(--deep));
+  border:1px solid var(--line);border-radius:var(--r);padding:17px;
+}
+.controls h4{font-family:var(--jua);font-size:15px;color:var(--ink);margin-bottom:3px}
+.controls .ctl{margin-top:15px}
+.controls .ctl:first-of-type{margin-top:12px}
+.ctl label{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--ink-dim);font-weight:600;margin-bottom:7px}
+.ctl label .val{font-family:var(--mono);font-size:13px;color:var(--wave-glow)}
+
+/* 슬라이더 */
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;background:linear-gradient(90deg,var(--wave) 0%,var(--wave) var(--p,40%),#1b2b49 var(--p,40%));outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#eafcff;border:3px solid var(--wave);box-shadow:0 2px 8px rgba(0,0,0,.5),0 0 10px var(--wave);cursor:grab}
+input[type=range]::-webkit-slider-thumb:active{cursor:grabbing;transform:scale(1.12)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#eafcff;border:3px solid var(--wave);cursor:grab}
+input[type=range]::-moz-range-track{height:6px;border-radius:99px;background:#1b2b49}
+
+/* 토글 스위치 */
+.switch{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;font-size:13.5px;color:var(--ink-dim);font-weight:600;padding:7px 0}
+.switch .track{flex:none;width:46px;height:26px;border-radius:99px;background:#1b2b49;border:1px solid var(--line);position:relative;transition:.2s}
+.switch .track::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:var(--ink-mute);transition:.2s}
+.switch.on .track{background:linear-gradient(90deg,var(--wave),var(--wave-glow));border-color:var(--wave)}
+.switch.on .track::after{left:22px;background:#06141f}
+
+/* 세그먼트 토글 (용수철/물결파 등) */
+.seg{display:flex;background:#0e1a30;border:1px solid var(--line);border-radius:11px;padding:3px;gap:3px}
+.seg button{flex:1;font-family:var(--body);font-weight:700;font-size:13.5px;color:var(--ink-dim);background:transparent;border:0;padding:9px 6px;border-radius:8px;cursor:pointer;transition:.15s}
+.seg button.on{background:var(--wave);color:#06141f}
+
+/* 작은 버튼 줄 */
+.btn-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.btn-row .btn{flex:1;justify-content:center;min-width:120px}
+
+/* ===================== 용어 카드 그리드 ===================== */
+.terms{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+@media(min-width:720px){.terms{grid-template-columns:repeat(4,1fr)}}
+.term{background:var(--surface2);border:1px solid var(--line);border-radius:13px;padding:14px;border-top:3px solid var(--c,var(--wave))}
+.term .nm{font-family:var(--jua);font-size:17px;color:var(--ink);margin-bottom:3px}
+.term .de{font-size:13px;color:var(--ink-mute);line-height:1.5}
+
+/* ===================== 게임 HUD ===================== */
+.game-hud{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.lives{display:flex;gap:5px}
+.lives .h{font-size:22px;filter:saturate(1.2);transition:.3s}
+.lives .h.gone{filter:grayscale(1) brightness(.5);transform:scale(.85)}
+.score-box{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-weight:700;background:#0e1a30;border:1px solid var(--line);padding:7px 13px;border-radius:11px}
+.score-box .lab2{font-size:11px;color:var(--ink-mute);font-weight:400;font-family:var(--body)}
+.score-box .num{font-size:18px;color:var(--gold)}
+.streak{color:var(--energy);font-family:var(--mono);font-weight:700;font-size:14px;display:flex;align-items:center;gap:5px}
+
+/* 분류 게임 통(bin) */
+.bins{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+.bin{border:2px dashed var(--line);border-radius:14px;padding:14px;min-height:120px;transition:.18s;background:rgba(255,255,255,.015)}
+.bin.energy{border-color:#5a3320}.bin.info{border-color:#1f4a66}
+.bin.over{border-style:solid;background:rgba(255,255,255,.05);transform:scale(1.01)}
+.bin .bin-t{font-family:var(--jua);font-size:16px;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.bin.energy .bin-t{color:var(--energy)}.bin.info .bin-t{color:var(--info)}
+.bin .slot{display:flex;flex-wrap:wrap;gap:8px}
+.tokens{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}
+.token{
+  font-size:14px;font-weight:700;padding:10px 14px;border-radius:11px;cursor:grab;user-select:none;
+  background:var(--surface2);border:1px solid var(--line);color:var(--ink);transition:.15s;touch-action:none;
+}
+.token:active{cursor:grabbing}
+.token.placed{cursor:default;opacity:.92}
+.token.ok{border-color:var(--ok);background:rgba(74,222,128,.14)}
+.token.bad{border-color:var(--danger);background:rgba(255,93,108,.14);animation:shake .4s}
+.token.drag{opacity:.4}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* 박사 캐릭터 말풍선 */
+.doc{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}
+.doc .face{
+  flex:none;width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-size:34px;
+  background:radial-gradient(circle at 35% 30%,#1f3550,#0c1830);border:1px solid var(--line);box-shadow:var(--glow);
+  transition:transform .25s;
+}
+.doc.bounce .face{animation:bob .5s}
+@keyframes bob{0%,100%{transform:translateY(0)}40%{transform:translateY(-9px) rotate(-4deg)}}
+.bubble{
+  position:relative;background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:14px 17px;
+  font-size:16px;line-height:1.5;color:var(--ink);flex:1;min-width:0;
+}
+.bubble::before{content:"";position:absolute;left:-8px;top:22px;width:14px;height:14px;background:var(--surface2);border-left:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
+.bubble .qn{font-family:var(--mono);font-size:11px;color:var(--ink-mute);letter-spacing:1px}
+
+/* 배지 획득 */
+.earned{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.medal{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;padding:8px 13px;border-radius:11px;background:linear-gradient(180deg,#2a2410,#1c1808);border:1px solid #5a4a1e;color:var(--gold);opacity:.3;filter:grayscale(.6);transition:.4s}
+.medal.got{opacity:1;filter:none;box-shadow:0 0 16px -4px var(--gold)}
+.medal .e{font-size:18px}
+
+/* ===================== 토스트 ===================== */
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);z-index:200;
+  background:rgba(14,24,44,.96);border:1px solid var(--wave);color:var(--ink);padding:12px 20px;border-radius:13px;
+  font-weight:700;font-size:14.5px;box-shadow:0 16px 40px -12px rgba(0,0,0,.8);opacity:0;pointer-events:none;transition:.3s;
+  display:flex;align-items:center;gap:9px;max-width:90vw}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.good{border-color:var(--ok)}#toast.bad{border-color:var(--danger)}
+
+/* 진공 / 주파수 데이터 readout */
+.readout{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px}
+.readout .r{flex:1;min-width:120px;background:#0e1a30;border:1px solid var(--line);border-radius:12px;padding:11px 14px}
+.readout .r .lab2{font-size:11px;color:var(--ink-mute);letter-spacing:.5px}
+.readout .r .v{font-family:var(--mono);font-size:21px;font-weight:700;color:var(--wave-glow);line-height:1.2}
+.readout .r .v small{font-size:12px;color:var(--ink-mute)}
+
+/* SVG 사례 카드 */
+.use-grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:680px){.use-grid{grid-template-columns:1fr 1fr}}
+.use{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.use svg{width:100%;height:auto;border-radius:10px;background:#0b1426;border:1px solid var(--line)}
+.use .u-t{font-family:var(--jua);font-size:17px;display:flex;align-items:center;gap:8px}
+.use .u-d{font-size:13.5px;color:var(--ink-dim);line-height:1.55}
+
+/* 모스 */
+.morse-lamp{width:84px;height:84px;border-radius:50%;margin:0 auto;background:radial-gradient(circle at 40% 35%,#3a3010,#160f02);border:2px solid #2a2410;transition:.05s;box-shadow:inset 0 0 20px #000}
+.morse-lamp.on{background:radial-gradient(circle at 40% 35%,#fff6d8,#ffce4a);border-color:#ffe08a;box-shadow:0 0 50px 8px rgba(255,206,74,.7),inset 0 0 10px #fff3c4}
+.morse-out{font-family:var(--mono);font-size:22px;letter-spacing:3px;text-align:center;min-height:34px;color:var(--gold);margin-top:12px}
+.morse-decoded{font-family:var(--jua);font-size:20px;text-align:center;color:var(--ink);min-height:28px}
+
+/* 단계 잠금 안내 */
+.locknote{display:flex;align-items:center;gap:10px;justify-content:center;padding:40px 16px;color:var(--ink-mute);font-size:15px;text-align:center;flex-direction:column}
+.locknote .em{font-size:40px;opacity:.6}
+
+/* 푸터/크레딧 */
+.credit{margin-top:34px;padding:20px 16px 8px;border-top:1px solid var(--line-soft);text-align:center;color:var(--ink-mute);font-size:12.5px;line-height:1.8}
+.credit b{color:var(--ink-dim)}
+.credit a{color:var(--wave-glow);text-decoration:none}
+
+/* 폰트 로드 실패 폴백 안내 */
+.fallback-warn{display:none}
+
+/* ===================== 빈칸 클릭 공개 (cloze) ===================== */
+.cloze-line{font-size:15.5px;line-height:2.05;color:var(--ink-dim)}
+.cloze-line + .cloze-line{margin-top:6px}
+.cloze{display:inline-block;min-width:48px;text-align:center;padding:2px 11px;margin:0 2px;border-radius:8px;
+  background:#0e1a30;border:1.5px dashed var(--line);color:transparent;cursor:pointer;font-weight:800;
+  transition:.16s;user-select:none;line-height:1.3}
+.cloze::after{content:"❓";font-size:12px}
+.cloze:hover{border-color:var(--wave);background:#13243f}
+.cloze.revealed{border-style:solid;cursor:default;animation:clozePop .42s}
+.cloze.revealed::after{content:none}
+@keyframes clozePop{0%{transform:scale(1);box-shadow:0 0 0 0 rgba(45,212,212,.55)}45%{transform:scale(1.16)}100%{transform:scale(1);box-shadow:0 0 0 9px rgba(45,212,212,0)}}
+.cloze-set{position:relative}
+.cloze-done{display:none;align-items:center;gap:6px;margin-top:12px;font-size:13px;font-weight:700;color:var(--ok)}
+.cloze-set.complete .cloze-done{display:inline-flex;animation:fade .4s}
+.cloze-hint{font-size:12.5px;color:var(--ink-mute);margin-top:10px}
+
+/* ===================== 개념 확인 미니 퀴즈 ===================== */
+.miniquiz{background:linear-gradient(180deg,#13233f,#0d1a30);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:16px}
+.miniquiz .mq-head{display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.miniquiz .mq-badge{font-size:12px;font-weight:800;color:#06141f;background:linear-gradient(180deg,var(--wave-glow),var(--wave));padding:4px 10px;border-radius:99px}
+.miniquiz .mq-prog{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--ink-mute)}
+.mq-q{margin-top:14px}
+.mq-q .mq-text{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:9px}
+.mq-q .mq-text .qn{font-family:var(--mono);font-size:11px;color:var(--ink-mute);margin-right:6px}
+.mq-choices{display:grid;gap:8px}
+.mq-opt{text-align:left;font-family:var(--body);font-size:14.5px;color:var(--ink);background:var(--surface2);border:1.5px solid var(--line);border-radius:11px;padding:11px 14px;cursor:pointer;transition:.15s;display:flex;gap:10px;align-items:center}
+.mq-opt .k{flex:none;width:23px;height:23px;border-radius:7px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:12px;background:#0e1a30;border:1px solid var(--line);color:var(--ink-dim)}
+.mq-opt:hover:not(.locked){border-color:var(--wave);background:#22324f}
+.mq-opt.correct{border-color:var(--ok);background:rgba(74,222,128,.13)}
+.mq-opt.correct .k{background:var(--ok);color:#06210f}
+.mq-opt.wrong{border-color:var(--danger);background:rgba(255,93,108,.12)}
+.mq-opt.wrong .k{background:var(--danger);color:#2a060b}
+.mq-opt.locked{cursor:default}
+.mq-fb{margin-top:9px;font-size:13.5px;line-height:1.55;border-radius:10px;padding:11px 13px;display:none}
+.mq-fb.show{display:block;animation:fade .3s}
+.mq-fb.ok{background:rgba(74,222,128,.09);border:1px solid #2e6e44;color:var(--ink-dim)}
+.mq-fb.no{background:rgba(255,93,108,.09);border:1px solid #7a2f38;color:var(--ink-dim)}
+.mq-fb b{color:var(--ink)}
+.mq-done{display:none;align-items:center;gap:8px;margin-top:14px;padding:11px 14px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid #5a4a1e;color:var(--gold);font-weight:700;font-size:14px}
+.miniquiz.alldone .mq-done{display:flex;animation:fade .4s}
+
+/* ===================== 허브 / 차시 연결 ===================== */
+.hub-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.hub-links a{text-decoration:none}
+
+/* 오실로스코프 라벨용 (freqCv 내부는 캔버스로 그림) */
+
+/* 정직한 단순화 주석 */
+.honest{font-size:12px;color:var(--ink-mute);font-style:normal;margin-top:8px;display:flex;gap:6px;align-items:flex-start}
+.honest .ic{opacity:.7}
+
+/* 접근성 */
+:focus-visible{outline:3px solid var(--wave);outline-offset:2px;border-radius:6px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.08s!important;scroll-behavior:auto}}
+
+/* 작은 도움 텍스트 */
+.help{font-size:13px;color:var(--ink-mute);margin-top:8px;line-height:1.55}
+.kbd{font-family:var(--mono);font-size:12px;background:#0e1a30;border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--ink-dim)}
+.divider{height:1px;background:var(--line-soft);margin:20px 0}
+.pill-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pill{font-size:13px;padding:6px 12px;border-radius:99px;background:#0e1a30;border:1px solid var(--line);color:var(--ink-dim)}
+.pill b{color:var(--ink)}
+</style>
+</head>
+<body>
+<!-- 바닷가 배경 (탭마다 사진 교체 가능 · 스크립트 상단 TAB_IMAGES 참고) -->
+<div id="bgLayer"></div>
+<div id="bgScrim"></div>
+<!-- ============================ 헤더 ============================ -->
+<header class="top">
+  <div class="top-bar">
+    <div class="brand">
+      <div class="logo"><canvas id="logoWave"></canvas></div>
+      <div>
+        <b>물건이 아니라 <span>물결</span></b>
+        <div class="sub">퍼져 나가는 파동 · 중학교 과학</div>
+      </div>
+    </div>
+    <div class="progress-mini" title="탐험 진행도">
+      <div class="bar"><i id="progBar"></i></div>
+      <div class="pct" id="progPct">0%</div>
+    </div>
+  </div>
+  <nav class="tabs" id="tabNav">
+    <button data-tab="intro" class="active"><span class="em">🌊</span>시작</button>
+    <button data-tab="shake"><span class="em">🔬</span>파동 만들어 보기</button>
+    <button data-tab="shape"><span class="em">📏</span>파동의 모양</button>
+    <button data-tab="use"><span class="em">📡</span>파동의 쓸모</button>
+    <button data-tab="game"><span class="em">🎮</span>파동 마스터</button>
+    <button data-tab="beyond"><span class="moon">🌙</span>교과서 밖</button>
+  </nav>
+</header>
+
+<main>
+<!-- ====================================================================
+     TAB 1 · 시작 — 도입 훅
+==================================================================== -->
+<section class="panel show" id="panel-intro">
+  <div class="eyebrow">단원 2. 파동 · 소단원 01</div>
+  <h1 class="big">당신은 ‘물건’이 아니라<br>‘물결’이다</h1>
+  <p class="lead" style="margin-top:16px">이상한 말 같죠? 하지만 파동을 끝까지 따라가 보면, 이 한 문장이 이해됩니다. 연못에 돌을 던지면 물결이 사방으로 퍼지고, 지진은 수백 km 밖 도시까지 흔들고, 소리는 방을 가로질러 귀에 닿아요. 이 모든 건 <b class="k t-wave">파동</b>이죠. 그런데 정말로 ‘물’이, ‘땅’이, ‘공기’가 그 먼 곳까지 따라간 걸까요? <b class="k">이 수업이 끝날 때, 맨 마지막 탭에서 저 제목의 의미를 다시 만나게 됩니다.</b></p>
+
+  <div class="card" style="margin-top:24px;padding:0;overflow:hidden">
+    <div class="stage" style="border:0;border-radius:0">
+      <div class="cv-wrap"><canvas id="heroCv" height="240"></canvas></div>
+      <div class="hint">물결의 마루(밝은 점)를 눈으로 따라가 보자 — 정말 점이 오른쪽으로 흘러갈까?</div>
+    </div>
+  </div>
+
+  <div class="grid c2" style="margin-top:22px">
+    <!-- 지진 수수께끼 -->
+    <div class="card">
+      <h2 class="sec">🌍 지진의 수수께끼</h2>
+      <p class="lead" style="font-size:16px">지진이 발생하면, 진원에서 멀리 떨어진 곳에서도 한참 뒤에 흔들림이 느껴진다. <b class="k">땅이 통째로 밀려온 것</b>도 아닌데, 어떻게 흔들림만 그 먼 곳까지 전해질까?</p>
+      <div class="stage" style="margin-top:14px;background:radial-gradient(120% 120% at 30% 100%,#1a2236,#0a1426)">
+        <div class="cv-wrap"><canvas id="quakeCv" height="200"></canvas></div>
+        <div class="hud"><span class="tag" id="quakeTag">진원에서 흔들림 출발 대기</span><span></span></div>
+      </div>
+      <div class="cta-row">
+        <button class="btn warm" id="quakeBtn">진원에서 흔들림 보내기</button>
+      </div>
+      <div class="note class"><span class="ic">💬</span><div><b>교실 연결</b> — "흔들림은 도착했는데, 진원의 땅덩어리가 우리 동네까지 온 걸까요?" 학생들의 직관(매질 이동)을 먼저 끌어내고 다음 탭에서 깨뜨립니다.</div></div>
+    </div>
+
+    <!-- 두번째 블록: 울음소리 -->
+    <div class="card">
+      <h2 class="sec">🦁 또 하나의 물음</h2>
+      <p class="lead" style="font-size:16px">사자와 호랑이의 울음소리는 분명 다르게 들린다. 두 소리를 <b class="k">과학적으로 비교</b>하려면, 소리의 어떤 점을 봐야 할까? 소리도 사실은 공기를 타고 퍼지는 <b class="k t-wave">파동</b>이다.</p>
+      <div class="stage" style="margin-top:14px;background:radial-gradient(120% 120% at 70% 0%,#1a2236,#0a1426);padding:8px 0">
+        <div class="cv-wrap"><canvas id="roarCv" height="170"></canvas></div>
+        <div class="hud"><span class="tag" id="roarTag">🦁 사자</span><span></span></div>
+      </div>
+      <div class="seg" style="margin-top:14px">
+        <button class="on" data-roar="lion">🦁 사자 (낮고 굵게)</button>
+        <button data-roar="tiger">🐯 호랑이 (날카롭게)</button>
+      </div>
+      <p class="help">소리의 모양(파형)이 다르다는 걸 미리 느껴 두면, '파동의 요소'를 배울 때 왜 그 요소들이 필요한지 이해됩니다.</p>
+    </div>
+  </div>
+
+  <!-- 학습목표 -->
+  <div class="card" style="margin-top:22px">
+    <div class="eyebrow" style="margin-bottom:8px">오늘의 목표</div>
+    <h3 class="card-t" style="margin-bottom:14px">이번 시간이 끝나면 이걸 말할 수 있다</h3>
+    <div class="grid c2">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="flex:none;width:30px;height:30px;border-radius:9px;background:var(--wave);color:#06141f;display:grid;place-items:center;font-family:var(--mono);font-weight:700">1</div>
+        <div><b class="k">파동의 발생과 전달</b>을 설명할 수 있다.<br><span class="muted" style="font-size:14px">진동이 어떻게 생기고, 매질을 통해 어떻게 퍼지는지.</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="flex:none;width:30px;height:30px;border-radius:9px;background:var(--info);color:#06141f;display:grid;place-items:center;font-family:var(--mono);font-weight:700">2</div>
+        <div><b class="k">파동이 에너지와 정보를 전달</b>하는 사례를 안다.<br><span class="muted" style="font-size:14px">전자레인지, 초음파 진단처럼 생활 속 파동.</span></div>
+      </div>
+    </div>
+    <div class="pill-list">
+      <span class="pill">핵심어 · <b>파동</b></span>
+      <span class="pill"><b>매질</b></span>
+      <span class="pill"><b>파원</b></span>
+      <span class="pill"><b>마루·골</b></span>
+      <span class="pill"><b>파장·진폭</b></span>
+    </div>
+  </div>
+
+  <div class="cta-row">
+    <button class="btn primary" data-go="shake">먼저 직접 파동을 만들어 보자 →</button>
+    <span class="muted" style="font-size:14px">탭은 위에서 자유롭게 오갈 수 있어요.</span>
+  </div>
+</section>
+<!-- ====================================================================
+     TAB 2 · 파동 만들어 보기 — 탐구 1 (파동의 발생과 전달)
+==================================================================== -->
+<section class="panel" id="panel-shake">
+  <div class="eyebrow">탐구 1 · 예측 → 관찰 → 설명</div>
+  <h2 class="sec">파동은 어떻게 전달될까?</h2>
+  <p class="lead">긴 용수철 한가운데에 리본을 묶고, 한쪽 끝을 흔들어 파동을 보낸다. 직접 조작하기 전에 — 먼저 예측부터 해 보자.</p>
+
+  <!-- POE: 예측 -->
+  <div class="card" style="margin-top:20px">
+    <div class="badge" style="margin-bottom:12px">🔮 1단계 · 예측 (Predict)</div>
+    <h3 class="card-t">파동이 지나갈 때, 가운데 묶인 <span class="t-amp">리본</span>은 어떻게 움직일까?</h3>
+    <div class="choices" id="poeChoices">
+      <button class="choice" data-poe="a"><span class="key">가</span> 파동을 타고 오른쪽 끝까지 함께 이동한다</button>
+      <button class="choice" data-poe="b"><span class="key">나</span> 한자리에서 위아래(좌우)로 진동만 하고 이동하지 않는다</button>
+      <button class="choice" data-poe="c"><span class="key">다</span> 처음엔 흔들리다가 곧 멈춰 버린다</button>
+    </div>
+    <p class="help">정답은 없어요 — 일단 마음속으로 정하고 버튼을 누르면, 아래 실험으로 직접 확인합니다.</p>
+    <div class="explain" id="poeLock"></div>
+  </div>
+
+  <!-- 시뮬레이터 -->
+  <div class="card" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:6px;color:var(--wave-glow);border-color:#1f5a5a">🔬 2단계 · 관찰 (Observe)</div>
+    <div class="lab">
+      <div class="stage">
+        <div class="cv-wrap"><canvas id="springCv" height="320"></canvas></div>
+        <div class="hud">
+          <span class="tag" id="springMode">🌀 용수철 파동</span>
+          <span class="tag" id="springInfo">정지</span>
+        </div>
+        <div class="hint" id="springHint">‘파동 만들기’를 누르고, <b>빨간 리본 점</b>만 집중해서 보세요.</div>
+      </div>
+      <div class="controls">
+        <h4>실험 조작대</h4>
+        <p class="muted" style="font-size:12.5px;margin-bottom:4px">매질을 골라 파동을 만들어 보세요.</p>
+        <div class="seg" id="mediumSeg" style="margin-top:6px">
+          <button class="on" data-medium="spring">🌀 용수철</button>
+          <button data-medium="water">💧 물결</button>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn primary" id="shakeToggle">파동 만들기</button>
+          <button class="btn ghost" id="pulseBtn">펄스 1번</button>
+        </div>
+
+        <div class="ctl">
+          <label>진폭 (흔드는 크기) <span class="val" id="ampVal">40</span></label>
+          <input type="range" id="ampRange" min="10" max="60" value="40">
+        </div>
+        <div class="ctl">
+          <label>파장 (물결 간격) <span class="val" id="wlenVal">160</span></label>
+          <input type="range" id="wlenRange" min="80" max="280" value="160">
+        </div>
+        <div class="ctl">
+          <label>전달 속도 <span class="val" id="spdVal">1.0×</span></label>
+          <input type="range" id="spdRange" min="3" max="20" value="10">
+        </div>
+
+        <div class="divider"></div>
+        <div class="switch on" id="swTrace"><span>리본의 자취 남기기</span><span class="track"></span></div>
+        <div class="switch on" id="swArrows"><span>진동·진행 방향 화살표</span><span class="track"></span></div>
+        <div class="switch" id="swGuide"><span>리본 위치 기준선</span><span class="track"></span></div>
+        <p class="honest"><span class="ic">※</span><span>화면에 잘 보이도록 파동의 속도와 크기를 실제보다 조정했어요. 핵심(매질은 제자리)은 그대로예요.</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- POE: 설명 -->
+  <div class="card" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:12px;color:var(--gold);border-color:#5a4a1e">💡 3단계 · 설명 (Explain)</div>
+    <h3 class="card-t">관찰을 끝냈다면, 눌러서 확인하자</h3>
+    <div class="cta-row" style="margin-top:8px">
+      <button class="btn ghost" id="revealBtn">관찰 결과 확인하기</button>
+    </div>
+    <div class="explain" id="revealBox">
+      <div class="why">🎯 파동의 가장 중요한 비밀</div>
+      <b>매질은 제자리에서 진동만 할 뿐, 파동을 따라 이동하지 않는다.</b><br>
+      빨간 리본은 같은 자리에서 위아래로만 흔들렸을 뿐, 오른쪽으로 한 발짝도 가지 않았어요. 이동한 것은 <b class="t-wave">진동(파동)</b>이라는 ‘모양’이지, 매질 자체가 아닙니다.
+      그래서 <b>정답은 (나)</b> — 멀리 전해진 건 흔들림이지 물·땅·용수철이 아니에요.
+    </div>
+  </div>
+
+  <!-- 개념 굳히기 -->
+  <div class="grid c2" style="margin-top:18px">
+    <div class="card">
+      <h3 class="card-t" style="margin-bottom:12px">방금 본 것을 정리하면</h3>
+      <div class="terms" style="grid-template-columns:1fr">
+        <div class="term" style="--c:var(--wave)"><div class="nm">파동</div><div class="de">한곳에서 생긴 <b style="color:var(--ink)">진동</b>이 주위로 퍼져 나가는 현상.</div></div>
+        <div class="term" style="--c:var(--medium)"><div class="nm">매질 <span style="font-size:13px;color:var(--medium)">medium</span></div><div class="de">파동을 전달하는 물질. <b style="color:var(--ink)">제자리에서 진동만</b> 한다. (용수철·물·공기·땅)</div></div>
+        <div class="term" style="--c:var(--crest)"><div class="nm">파원</div><div class="de">진동이 처음 시작된 곳. 지진에서는 <b style="color:var(--ink)">진원</b>.</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 class="card-t" style="margin-bottom:12px">파동마다 매질이 다르다</h3>
+      <div class="pill-list" style="gap:10px">
+        <span class="pill">💧 물결파 → 매질 <b>물</b></span>
+        <span class="pill">🔊 소리 → 매질 <b>공기</b></span>
+        <span class="pill">🌍 지진파 → 매질 <b>땅</b></span>
+        <span class="pill">🎸 줄의 파동 → 매질 <b>줄</b></span>
+      </div>
+      <div class="divider"></div>
+      <h3 class="card-t" style="margin-bottom:8px;font-size:17px">펄스와 파동</h3>
+      <p class="lead" style="font-size:14.5px">한 번만 ‘툭’ 흔들면 <b class="k">펄스</b> 하나가 지나간다. 계속해서 흔들면 진동이 연속으로 이어지는 <b class="k t-wave">파동</b>이 된다. 위 실험에서 <span class="kbd">펄스 1번</span>과 <span class="kbd">파동 만들기</span>를 비교해 보세요.</p>
+    </div>
+  </div>
+
+  <div class="note class"><span class="ic">💬</span><div><b>교실 연결</b> — "그럼 바다 위 부표는 파도가 칠 때 해변으로 떠밀려 가나요?" 같은 질문으로 일상 오개념을 짚으면, '매질은 제자리'라는 결론이 더 단단해집니다.</div></div>
+
+  <div class="card cloze-set">
+    <div class="badge" style="margin-bottom:10px;color:var(--gold);border-color:#5a4a1e">🧠 빈칸 떠올리기</div>
+    <h3 class="card-t" style="margin-bottom:12px">머릿속으로 먼저 답하고 — 빈칸을 클릭해 확인</h3>
+    <p class="cloze-line">파동이 전달될 때 매질은 <span class="cloze" data-ans="제자리" data-c="medium">__</span>에서 <span class="cloze" data-ans="진동" data-c="amp">__</span>만 할 뿐, 파동을 따라 이동하지 않는다.</p>
+    <p class="cloze-line">물결파의 매질은 <span class="cloze" data-ans="물" data-c="wave">__</span>, 소리의 매질은 <span class="cloze" data-ans="공기" data-c="info">__</span>, 지진파의 매질은 <span class="cloze" data-ans="땅" data-c="crest">__</span>이다.</p>
+    <p class="cloze-line">진동이 처음 시작되는 곳을 <span class="cloze" data-ans="파원" data-c="crest">__</span>(지진은 진원)이라 한다.</p>
+    <div class="cloze-done">✓ 빈칸을 모두 채웠어요!</div>
+    <p class="cloze-hint">💡 클릭하기 전에 한 번 떠올리는 게 핵심이에요.</p>
+  </div>
+  <div class="miniquiz" data-quiz="shake"></div>
+
+  <div class="cta-row"><button class="btn primary" data-go="shape">파동의 모양을 자세히 보러 가기 →</button></div>
+</section>
+<!-- ====================================================================
+     TAB 3 · 파동의 모양 — 탐구 2 + 개념 정리
+==================================================================== -->
+<section class="panel" id="panel-shape">
+  <div class="eyebrow">탐구 2 · 파동을 자로 재 보기</div>
+  <h2 class="sec">파동의 모양에는 이름이 있다</h2>
+  <p class="lead">파동을 옆에서 보면 출렁이는 곡선이다. 이 곡선의 높은 곳, 낮은 곳, 간격, 크기에는 각각 이름이 있다. 슬라이더로 직접 바꿔 보며 어떤 게 무엇인지 찾아보자.</p>
+
+  <div class="card" style="margin-top:20px">
+    <div class="lab">
+      <div class="stage">
+        <div class="cv-wrap"><canvas id="anatomyCv" height="330"></canvas></div>
+        <div class="hud"><span class="tag">옆에서 본 파동</span><span class="tag" id="anaReadout">진폭 40 · 파장 200</span></div>
+        <div class="hint">라벨을 켜고 슬라이더를 움직이면, 어떤 값이 무엇을 바꾸는지 보입니다.</div>
+      </div>
+      <div class="controls">
+        <h4>파동 모양 조작대</h4>
+        <div class="ctl" style="margin-top:12px">
+          <label><span class="t-amp">■</span> 진폭 (Amplitude) <span class="val" id="aAmpVal">40</span></label>
+          <input type="range" id="aAmpRange" min="14" max="78" value="40">
+        </div>
+        <div class="ctl">
+          <label><span class="t-wlen">■</span> 파장 (Wavelength) <span class="val" id="aWlenVal">200</span></label>
+          <input type="range" id="aWlenRange" min="110" max="340" value="200">
+        </div>
+        <div class="divider"></div>
+        <p class="muted" style="font-size:12.5px;margin-bottom:8px">라벨 켜기 / 끄기</p>
+        <div class="switch on" id="laCrest"><span><span class="chip" style="background:var(--crest)"></span>마루 · 골</span><span class="track"></span></div>
+        <div class="switch on" id="laWlen"><span><span class="chip" style="background:var(--wlen)"></span>파장</span><span class="track"></span></div>
+        <div class="switch on" id="laAmp"><span><span class="chip" style="background:var(--amp)"></span>진폭 · 진동중심</span><span class="track"></span></div>
+        <div class="switch" id="laMove"><span>파동 흐르게 하기</span><span class="track"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 측정 미션 -->
+  <div class="card" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:10px;color:var(--gold);border-color:#5a4a1e">🎯 측정 미션</div>
+    <h3 class="card-t" id="measTitle">미션 1 · 파장을 측정하라</h3>
+    <p class="lead" style="font-size:15px" id="measDesc">파동 위에서 한 <span class="t-crest">마루</span>에서 <b class="k">이웃한 마루</b>까지 거리를 드래그해서 재 보세요. 그게 바로 파장입니다.</p>
+    <div class="stage" style="margin-top:12px">
+      <div class="cv-wrap"><canvas id="measCv" height="220"></canvas></div>
+      <div class="hud"><span class="tag" id="measHud">드래그하여 측정 →</span><span class="tag" id="measResult">—</span></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn ghost sm" id="measReset">다시 재기</button>
+      <button class="btn primary sm" id="measCheck" disabled>측정값 제출</button>
+      <button class="btn ghost sm" id="measNext" style="display:none">다음 미션 →</button>
+    </div>
+    <div class="explain" id="measExplain"></div>
+  </div>
+
+  <!-- 용어 카드 -->
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t" style="margin-bottom:14px">파동의 요소 — 한눈에 정리</h3>
+    <div class="terms">
+      <div class="term" style="--c:var(--crest)"><div class="nm">마루</div><div class="de">파동에서 가장 <b style="color:var(--ink)">높은 곳</b>.</div></div>
+      <div class="term" style="--c:var(--trough)"><div class="nm">골</div><div class="de">파동에서 가장 <b style="color:var(--ink)">낮은 곳</b>.</div></div>
+      <div class="term" style="--c:var(--wlen)"><div class="nm">파장 (λ)</div><div class="de">마루↔이웃 마루 (또는 골↔골) <b style="color:var(--ink)">사이 거리</b>.</div></div>
+      <div class="term" style="--c:var(--amp)"><div class="nm">진폭</div><div class="de">진동 중심에서 마루(또는 골)까지의 <b style="color:var(--ink)">거리</b>. 흔드는 세기.</div></div>
+      <div class="term" style="--c:var(--medium)"><div class="nm">진동 중심</div><div class="de">매질이 진동하지 않을 때의 <b style="color:var(--ink)">제자리 높이</b>(기준선).</div></div>
+      <div class="term" style="--c:var(--wave)"><div class="nm">파동</div><div class="de">진동이 퍼져 나가는 <b style="color:var(--ink)">현상</b> 전체.</div></div>
+      <div class="term" style="--c:var(--medium)"><div class="nm">매질</div><div class="de">파동을 전달하는 <b style="color:var(--ink)">물질</b>.</div></div>
+      <div class="term" style="--c:var(--crest)"><div class="nm">파원</div><div class="de">진동이 <b style="color:var(--ink)">시작된 곳</b>.</div></div>
+    </div>
+  </div>
+
+  <div class="note class"><span class="ic">💬</span><div><b>교실 연결</b> — "진폭이 큰 파도와 작은 파도, 어느 쪽이 더 위험할까?"로 진폭=에너지의 세기와 연결하면, 다음 탭(에너지 전달)으로 자연스럽게 이어집니다.</div></div>
+
+  <div class="card cloze-set">
+    <div class="badge" style="margin-bottom:10px;color:var(--gold);border-color:#5a4a1e">🧠 빈칸 떠올리기</div>
+    <h3 class="card-t" style="margin-bottom:12px">파동의 요소, 빈칸으로 확인</h3>
+    <p class="cloze-line">파동에서 가장 높은 곳은 <span class="cloze" data-ans="마루" data-c="crest">__</span>, 가장 낮은 곳은 <span class="cloze" data-ans="골" data-c="trough">__</span>이다.</p>
+    <p class="cloze-line">한 마루에서 이웃한 마루까지의 거리는 <span class="cloze" data-ans="파장" data-c="wlen">__</span>(λ)이다.</p>
+    <p class="cloze-line">진동 중심에서 마루까지의 거리는 <span class="cloze" data-ans="진폭" data-c="amp">__</span>이며, 이는 흔드는 <span class="cloze" data-ans="세기" data-c="wave">__</span>를 나타낸다.</p>
+    <div class="cloze-done">✓ 빈칸을 모두 채웠어요!</div>
+    <p class="cloze-hint">💡 위 시뮬레이터에서 본 모양을 떠올려 보세요.</p>
+  </div>
+  <div class="miniquiz" data-quiz="shape"></div>
+
+  <div class="cta-row"><button class="btn primary" data-go="use">파동이 무엇을 전달하는지 보러 가기 →</button></div>
+</section>
+<!-- ====================================================================
+     TAB 4 · 파동의 쓸모 — 에너지와 정보 전달
+==================================================================== -->
+<section class="panel" id="panel-use">
+  <div class="eyebrow">파동은 무엇을 나르는가</div>
+  <h2 class="sec">파동은 <span class="t-energy">에너지</span>와 <span class="t-info">정보</span>를 전달한다</h2>
+  <p class="lead">매질은 제자리에 있는데, 멀리까지 전해지는 건 무엇일까? 바로 <b class="k t-energy">에너지</b>와 <b class="k t-info">정보</b>다. 그런데 매질이 아예 없으면 어떻게 될까?</p>
+
+  <!-- 진공 실험 -->
+  <div class="card" style="margin-top:20px">
+    <div class="badge" style="margin-bottom:6px">🔇 매질이 사라지면? · 진공 실험</div>
+    <div class="lab">
+      <div class="stage" style="background:radial-gradient(120% 120% at 50% 30%,#161f33,#0a1426)">
+        <div class="cv-wrap"><canvas id="vacuumCv" height="300"></canvas></div>
+        <div class="hud"><span class="tag" id="vacTag">공기 가득 — 소리 잘 들림</span><span class="tag" id="vacAir">공기 100%</span></div>
+        <div class="hint">유리병 속 스피커는 계속 울리고 있어요. 공기를 빼면 무슨 일이 생길까요?</div>
+      </div>
+      <div class="controls">
+        <h4>진공 펌프</h4>
+        <div class="btn-row">
+          <button class="btn primary" id="vacSound">🔊 소리 켜기</button>
+        </div>
+        <div class="ctl" style="margin-top:14px">
+          <label>유리병 속 공기 양 <span class="val" id="vacVal">100%</span></label>
+          <input type="range" id="vacRange" min="0" max="100" value="100">
+        </div>
+        <p class="help" id="vacMsg">슬라이더를 0%까지 내려 공기를 모두 빼 보세요. (실제로 소리가 작아집니다 — 볼륨 주의)</p>
+        <div class="explain" id="vacExplain">
+          <div class="why">🎯 발견</div>
+          <b>매질(공기)이 없으면 소리는 전달되지 않는다.</b> 진공에서는 진동을 전해 줄 물질이 없으니, 스피커가 떨려도 소리가 우리 귀에 닿지 못해요. 그래서 <b>우주(거의 진공)에서는 소리가 들리지 않습니다.</b>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 에너지 vs 정보 사례 -->
+  <div class="grid c2" style="margin-top:18px">
+    <div class="card">
+      <div class="badge energy" style="margin-bottom:12px">⚡ 에너지를 전달</div>
+      <div class="use-grid" style="grid-template-columns:1fr">
+        <div class="use">
+          <svg viewBox="0 0 320 120" id="svgMicro"></svg>
+          <div class="u-t">🍞 전자레인지</div>
+          <div class="u-d"><b style="color:var(--ink)">마이크로파(전자기파)</b>가 음식 속 물 분자를 진동시켜 데운다. 파동의 <b class="t-energy">에너지</b>가 음식으로 전달되는 것.</div>
+        </div>
+        <div class="use" style="margin-top:0">
+          <div class="u-t" style="font-size:15px">🪨 초음파 쇄석술</div>
+          <div class="u-d">강한 <b style="color:var(--ink)">초음파의 에너지</b>로 몸속 결석을 잘게 부순다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="badge info" style="margin-bottom:12px">📡 정보를 전달</div>
+      <div class="use-grid" style="grid-template-columns:1fr">
+        <div class="use">
+          <svg viewBox="0 0 320 120" id="svgUltra"></svg>
+          <div class="u-t">🤰 초음파 진단</div>
+          <div class="u-d"><b style="color:var(--ink)">초음파</b>를 몸속에 보내고 되돌아오는 신호로 안을 들여다본다. 파동이 <b class="t-info">정보</b>를 실어 나르는 것.</div>
+        </div>
+        <div class="use" style="margin-top:0">
+          <div class="u-t" style="font-size:15px">🐟 어군 탐지기 · 📱 무선 통신</div>
+          <div class="u-d">초음파·전파를 보내고 받아 <b style="color:var(--ink)">물고기 떼의 위치</b>나 <b style="color:var(--ink)">목소리·데이터</b>를 알아낸다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 분류 게임 -->
+  <div class="card" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:8px;color:var(--gold);border-color:#5a4a1e">🎮 분류 챌린지</div>
+    <h3 class="card-t">에너지 전달일까, 정보 전달일까?</h3>
+    <p class="lead" style="font-size:14.5px">아래 사례를 알맞은 통으로 끌어다 놓으세요. (탭/클릭해도 선택됩니다.)</p>
+    <div class="tokens" id="useTokens"></div>
+    <div class="bins">
+      <div class="bin energy" data-bin="energy"><div class="bin-t">⚡ 에너지 전달</div><div class="slot" id="binEnergy"></div></div>
+      <div class="bin info" data-bin="info"><div class="bin-t">📡 정보 전달</div><div class="slot" id="binInfo"></div></div>
+    </div>
+    <div class="btn-row"><button class="btn ghost sm" id="useReset">처음부터</button></div>
+    <div class="explain" id="useExplain"></div>
+  </div>
+
+  <!-- 더 해보기: 모스부호 -->
+  <div class="card" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:8px">🔦 더 해보기 · 파동으로 신호 보내기</div>
+    <h3 class="card-t">빛과 소리로 ‘정보’를 전달해 보자</h3>
+    <p class="lead" style="font-size:14.5px">짧게 누르면 <b class="k">·(점)</b>, 길게 누르면 <b class="k">–(선)</b>. 직접 두드려 신호를 만들거나, 숨은 메시지를 받아 보세요. (파동이 정보를 나른다는 걸 몸으로 체험!)</p>
+    <div class="grid c2" style="margin-top:14px">
+      <div style="text-align:center">
+        <div class="morse-lamp" id="morseLamp"></div>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn warm" id="morseTap">🔘 눌러서 신호 (꾹 = 선)</button>
+        </div>
+        <div class="morse-out" id="morseOut"></div>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn ghost sm" id="morseClear">지우기</button>
+        </div>
+      </div>
+      <div>
+        <p class="muted" style="font-size:13px;margin-bottom:8px">받은 메시지 해독</p>
+        <div class="btn-row" style="margin-top:0">
+          <button class="btn primary sm" data-msg="SOS">📨 신호 받기 · SOS</button>
+          <button class="btn primary sm" data-msg="HI">📨 신호 받기 · HI</button>
+        </div>
+        <div class="morse-out" id="rxOut" style="margin-top:18px"></div>
+        <div class="morse-decoded" id="rxDecoded"></div>
+        <p class="help">모스부호는 빛·소리·전파 같은 파동에 정보를 실어 보내는 가장 단순한 방법입니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note class"><span class="ic">💬</span><div><b>교실 연결</b> — "우리도 손전등으로 SOS를 보낼 수 있을까?" 모스 활동을 실제 협동 미션으로 확장하면, '정보 전달'이 추상이 아니라 경험이 됩니다.</div></div>
+
+  <div class="card cloze-set">
+    <div class="badge" style="margin-bottom:10px;color:var(--gold);border-color:#5a4a1e">🧠 빈칸 떠올리기</div>
+    <h3 class="card-t" style="margin-bottom:12px">파동의 쓸모, 빈칸으로 확인</h3>
+    <p class="cloze-line">매질은 제자리에 있어도, 파동은 멀리까지 <span class="cloze" data-ans="에너지" data-c="energy">__</span>와 <span class="cloze" data-ans="정보" data-c="info">__</span>를 전달한다.</p>
+    <p class="cloze-line">전자레인지는 파동의 <span class="cloze" data-ans="에너지" data-c="energy">__</span>로 음식을 데우고, 초음파 진단은 몸속 <span class="cloze" data-ans="정보" data-c="info">__</span>를 얻는 예다.</p>
+    <p class="cloze-line">매질이 없는 <span class="cloze" data-ans="진공" data-c="medium">__</span>에서는 소리가 전달되지 <span class="cloze" data-ans="않는다" data-c="danger">__</span>.</p>
+    <div class="cloze-done">✓ 빈칸을 모두 채웠어요!</div>
+    <p class="cloze-hint">💡 진공 실험에서 본 결과를 떠올려 보세요.</p>
+  </div>
+  <div class="miniquiz" data-quiz="use"></div>
+
+  <div class="cta-row"><button class="btn primary" data-go="game">파동 마스터에 도전 →</button></div>
+</section>
+<!-- ====================================================================
+     TAB 5 · 파동 마스터 — 종합 게임
+==================================================================== -->
+<section class="panel" id="panel-game">
+  <div class="eyebrow">파동 박사의 도전</div>
+  <h2 class="sec">🎮 파동 마스터 챌린지</h2>
+  <p class="lead">지금까지 배운 모든 걸 시험할 시간. 매질·파동의 요소·에너지/정보·오개념까지 — 생명 3개로 끝까지 살아남아 보자.</p>
+
+  <div class="card" style="margin-top:20px">
+    <div class="game-hud">
+      <div class="lives" id="lives"><span class="h">❤️</span><span class="h">❤️</span><span class="h">❤️</span></div>
+      <div class="score-box"><span class="lab2">점수</span><span class="num" id="gScore">0</span></div>
+      <div class="streak" id="gStreak">🔥 연속 0</div>
+      <div class="score-box" style="margin-left:auto"><span class="lab2">최고</span><span class="num" id="gBest" style="color:var(--wave-glow)">0</span></div>
+    </div>
+
+    <!-- 시작 화면 -->
+    <div id="gameStart">
+      <div class="doc"><div class="face">🧑‍🔬</div><div class="bubble"><div class="qn">파동 박사</div>준비됐나, 탐험가? 문제를 차례로 낼 테니, 직접 발견했던 걸 떠올려 답해 보게. 자신 있으면 시작 버튼을 누르게!</div></div>
+      <div class="cta-row"><button class="btn primary" id="gameStartBtn">도전 시작 🚀</button></div>
+    </div>
+
+    <!-- 게임 진행 화면 -->
+    <div id="gamePlay" style="display:none">
+      <div class="doc" id="docWrap"><div class="face" id="docFace">🧑‍🔬</div><div class="bubble"><div class="qn" id="qNum">문제 1</div><span id="qText">…</span></div></div>
+      <div id="qVisual"></div>
+      <div class="choices" id="gChoices"></div>
+      <div class="explain" id="gExplain"></div>
+      <div class="cta-row" id="gNextRow" style="display:none"><button class="btn primary" id="gNextBtn">다음 문제 →</button></div>
+    </div>
+
+    <!-- 결과 화면 -->
+    <div id="gameEnd" style="display:none">
+      <div class="doc bounce"><div class="face" id="endFace">🏆</div><div class="bubble"><div class="qn">결과</div><span id="endMsg"></span></div></div>
+      <div class="earned" id="medals">
+        <div class="medal" data-medal="medium"><span class="e">💧</span> 매질 박사</div>
+        <div class="medal" data-medal="shape"><span class="e">📏</span> 파동 측량사</div>
+        <div class="medal" data-medal="use"><span class="e">📡</span> 에너지·정보 분석가</div>
+        <div class="medal" data-medal="master"><span class="e">🌊</span> 파동 마스터</div>
+      </div>
+      <div class="cta-row"><button class="btn primary" id="gameRetry">다시 도전</button><button class="btn ghost" data-go="beyond">교과서 밖 이야기 보기 🌙</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================
+     TAB 6 · 교과서 밖 이야기 — 심화
+==================================================================== -->
+<section class="panel" id="panel-beyond">
+  <div class="badge beyond" style="margin-bottom:14px"><span class="moon">🌙</span> 📚 교육과정 밖 심화</div>
+  <h2 class="sec">교과서가 멈춘 곳에서<br>한 걸음 더</h2>
+  <p class="lead">여기서부터는 중학교 교과서 범위를 넘는 이야기예요. 시험에는 안 나오지만, 알면 파동이 훨씬 더 또렷하게 보입니다.</p>
+
+  <!-- 종파 vs 횡파 -->
+  <div class="card" style="margin-top:20px">
+    <div class="badge beyond" style="margin-bottom:6px"><span class="moon">🌙</span> 심화 1</div>
+    <h3 class="card-t">파동에는 두 가지 ‘떨림 방향’이 있다 — 횡파와 종파</h3>
+    <p class="lead" style="font-size:15px">교과서는 둘을 구분하지 않지만, 매질이 진동하는 <b class="k">방향</b>에 따라 파동을 둘로 나눌 수 있어요. 아래 입자들이 어떻게 움직이는지 보세요.</p>
+    <div class="lab" style="margin-top:14px">
+      <div class="stage" style="background:radial-gradient(120% 120% at 50% 50%,#161f33,#0a1426)">
+        <div class="cv-wrap"><canvas id="waveTypeCv" height="320"></canvas></div>
+        <div class="hud"><span class="tag" id="wtTag">횡파 — 진행방향과 수직으로 진동</span><span></span></div>
+        <div class="hint">파란 화살표 = 파동 진행방향, 매질 입자(점)의 움직임에 주목!</div>
+      </div>
+      <div class="controls">
+        <h4>파동 종류</h4>
+        <div class="seg" id="wtSeg" style="margin-top:10px">
+          <button class="on" data-wt="trans">횡파</button>
+          <button data-wt="long">종파</button>
+        </div>
+        <div class="ctl" style="margin-top:14px"><label>속도 <span class="val" id="wtSpd">1.0×</span></label><input type="range" id="wtSpdRange" min="3" max="18" value="9"></div>
+        <div class="divider"></div>
+        <div id="wtDesc" style="font-size:13.5px;color:var(--ink-dim);line-height:1.6">
+          <b class="t-wave">횡파</b><br>진동 방향이 진행 방향과 <b style="color:var(--ink)">수직</b>.<br>예: 빛(전자기파), 지진파 S파, 줄의 파동
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 역학적 파동 vs 전자기파 -->
+  <div class="card" style="margin-top:18px">
+    <div class="badge beyond" style="margin-bottom:10px"><span class="moon">🌙</span> 심화 2</div>
+    <h3 class="card-t">매질이 꼭 필요할까? — 역학적 파동 vs 전자기파</h3>
+    <div class="grid c2" style="margin-top:12px">
+      <div class="use" style="background:rgba(154,171,206,.06)">
+        <div class="u-t" style="color:var(--medium)">🌊 역학적 파동</div>
+        <div class="u-d"><b style="color:var(--ink)">매질이 있어야</b> 전달된다. 진공에서는 못 간다.<br><span class="pill" style="margin-top:8px;display:inline-block">소리 · 물결파 · 지진파 · 초음파</span></div>
+      </div>
+      <div class="use" style="background:rgba(56,189,248,.06)">
+        <div class="u-t" style="color:var(--info)">✨ 전자기파</div>
+        <div class="u-d"><b style="color:var(--ink)">매질 없이도</b> 진공을 가로질러 전달된다. 그래서 태양 빛이 우주를 건너 지구에 닿는다.<br><span class="pill" style="margin-top:8px;display:inline-block">빛 · 적외선 · 마이크로파 · X선 · 전파</span></div>
+      </div>
+    </div>
+    <div class="note myth"><span class="ic">🎬</span><div><b>영화 속 오개념</b> — 우주 전투에서 ‘쾅!’ 하는 폭발음은 사실 들릴 수 없어요(소리=역학적 파동, 진공엔 매질 없음). 하지만 폭발의 <b>빛</b>은 보입니다(빛=전자기파).</div></div>
+  </div>
+
+  <!-- 초음파 & 가청 범위 -->
+  <div class="card" style="margin-top:18px">
+    <div class="badge beyond" style="margin-bottom:6px"><span class="moon">🌙</span> 심화 3</div>
+    <h3 class="card-t">사람이 못 듣는 소리 — 초음파와 가청 범위</h3>
+    <p class="lead" style="font-size:15px">소리의 높낮이는 1초당 진동 횟수(진동수, Hz)로 정해져요. 사람은 보통 <b class="k">20Hz ~ 20,000Hz</b>만 들을 수 있고, 그보다 높은 소리가 <b class="k">초음파</b>입니다. 슬라이더를 올려 한계를 직접 느껴 보세요.</p>
+    <div class="lab" style="margin-top:14px">
+      <div class="stage" style="background:radial-gradient(120% 120% at 50% 60%,#161f33,#0a1426)">
+        <div class="cv-wrap"><canvas id="freqCv" height="220"></canvas></div>
+        <div class="hud"><span class="tag" id="freqZone">가청 영역</span><span class="tag" id="freqHz">440 Hz</span></div>
+      </div>
+      <div class="controls">
+        <h4>진동수 조절</h4>
+        <div class="btn-row"><button class="btn primary" id="freqPlay">🔊 들어보기</button></div>
+        <div class="ctl" style="margin-top:14px"><label>진동수 <span class="val" id="freqVal">440 Hz</span></label><input type="range" id="freqRange" min="20" max="22000" value="440"></div>
+        <p class="help" id="freqMsg">사람은 약 20,000Hz까지만 들려요. 그 위로 올리면 화면엔 보여도 소리는 안 들립니다 — 그게 초음파!</p>
+        <p class="honest"><span class="ic">※</span><span>윗 파형은 실제 재생되는 소리를 분석해 그린 거예요. 높은 음은 귀가 아플 수 있어 소리는 작게 재생됩니다.</span></p>
+      </div>
+    </div>
+    <div class="pill-list">
+      <span class="pill">🐕 개 ~ 45,000Hz</span>
+      <span class="pill">🦇 박쥐 ~ 110,000Hz</span>
+      <span class="pill">🐬 돌고래 ~ 150,000Hz</span>
+    </div>
+  </div>
+
+  <!-- 심화 4 · 패턴과 정체성 (허브 제목의 회수) -->
+  <div class="card" style="margin-top:18px;background:linear-gradient(180deg,#201838,#0f1a30);border-color:#46376f">
+    <div class="badge beyond" style="margin-bottom:8px"><span class="moon">🌙</span> 심화 4 · 그리고 너 자신</div>
+    <h3 class="card-t" style="font-size:22px">그래서 — 당신은 ‘물건’이 아니라 ‘물결’이다</h3>
+    <p class="lead" style="font-size:15px;margin-top:6px">맨 처음 화면의 그 제목, 기억나나요? 이제 그 의미를 만날 차례예요.</p>
+
+    <svg viewBox="0 0 360 118" style="width:100%;height:auto;border-radius:12px;background:#0b1426;border:1px solid #2a3b5e;margin:14px 0">
+      <line x1="0" y1="64" x2="360" y2="64" stroke="rgba(154,171,206,.25)" stroke-dasharray="4 6"/>
+      <polyline points="10,79 20,64 30,49 40,38 50,34 60,38 70,49 80,64 90,79 100,90 110,94 120,90 130,79 140,64 150,49 160,38 170,34 180,38 190,49 200,64 210,79 220,90 230,94 240,90 250,79 260,64 270,49 280,38 290,34 300,38 310,49 320,64 330,79 340,90 350,94" fill="none" stroke="#2dd4d4" stroke-width="2.6"/>
+      <g fill="#9aabce">
+        <circle cx="20" cy="64" r="3.2"/><circle cx="80" cy="64" r="3.2"/><circle cx="140" cy="64" r="3.2"/><circle cx="200" cy="64" r="3.2"/><circle cx="260" cy="64" r="3.2"/><circle cx="320" cy="64" r="3.2"/>
+      </g>
+      <line x1="170" y1="64" x2="170" y2="34" stroke="#ff6b9d" stroke-width="2"/>
+      <polygon points="170,34 166,42 174,42" fill="#ff6b9d"/><polygon points="170,64 166,56 174,56" fill="#ff6b9d"/>
+      <circle cx="170" cy="34" r="5" fill="#ff6b9d"/>
+      <text x="184" y="50" fill="#ff6b9d" font-family="Pretendard" font-weight="700" font-size="11">물질: 제자리 ↕</text>
+      <line x1="140" y1="14" x2="210" y2="14" stroke="#67e8e0" stroke-width="2.4"/>
+      <polygon points="210,14 202,10 202,18" fill="#67e8e0"/>
+      <text x="105" y="18" fill="#67e8e0" font-family="Pretendard" font-weight="700" font-size="11" text-anchor="end">패턴: 멀리 이동</text>
+    </svg>
+
+    <p class="lead" style="font-size:15px">파도는 바다를 가로질러 가지만, 물 알갱이는 제자리에서 까딱일 뿐이에요. 움직이는 건 물이 아니라 <b class="k">‘모양’</b>이죠. 파동은 사물이 아니라, <b class="k t-wave">사물을 통과해 지나가는 패턴</b>이에요.</p>
+    <p class="lead" style="font-size:15px;margin-top:10px">그런데 — 당신 몸의 원자도 끊임없이 교체돼요. 시간이 지나면 거의 다른 원자로 바뀌죠. 그래도 ‘당신’은 그대로예요. 남는 건 물질이 아니라 <b class="k" style="color:#cdbcff">패턴</b>이니까요.</p>
+    <p class="lead" style="font-size:15px;margin-top:10px">촛불의 불꽃, 강물의 소용돌이, 바다의 파도처럼 — 당신은 고정된 덩어리가 아니라, <b class="k" style="color:#cdbcff">흐르는 물질 위에 유지되는 하나의 모양</b>이에요.</p>
+
+    <div class="pill-list" style="margin-top:14px">
+      <span class="pill">🔥 촛불</span><span class="pill">🌀 소용돌이</span><span class="pill">🌊 파도</span><span class="pill" style="border-color:#46376f;color:#cdbcff"><b style="color:#e7deff">🧬 당신</b></span>
+      <span class="pill" style="background:transparent;border:0;color:var(--ink-mute)">— 모두 ‘흐름 위의 패턴’</span>
+    </div>
+    <div class="note" style="border-color:#8b7ad6;background:rgba(139,122,214,.08)"><span class="ic">✨</span><div>파동을 이해한다는 건, 어쩌면 <b style="color:#cdbcff">‘나’란 무엇인가</b>를 이해하는 일이기도 해요. 시험엔 안 나오지만, 평생 곱씹어 볼 만한 질문이죠.</div></div>
+  </div>
+
+  <div class="card" style="margin-top:18px;text-align:center;background:linear-gradient(180deg,#1a1430,#0f1a30);border-color:#3a2d5e">
+    <div style="font-size:34px">🌊</div>
+    <h3 class="card-t" style="margin:8px 0">여기까지 온 너에게</h3>
+    <p class="lead" style="margin:0 auto;font-size:15px">파동 하나로 우리는 지진을 느끼고, 음악을 듣고, 우주를 건너온 별빛을 본다. 한 번의 떨림이 만든 거대한 세계 — 이제 너는 그 비밀을 안다.</p>
+    <div class="cta-row" style="justify-content:center"><button class="btn ghost" data-go="intro">처음으로 돌아가기 ↑</button></div>
+  </div>
+
+  <!-- ════════ 단원 허브 연결 ════════
+       아래 href="..." 주소만 바꾸면 다른 차시·허브로 연결됩니다.
+       (모르면 그대로 둬도 됩니다 — 추정 주소가 들어가 있어요) -->
+  <div class="card" id="hubCard" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:10px">🏠 빛과 파동 단원 허브</div>
+    <h3 class="card-t" style="margin-bottom:6px">다른 차시도 이어서</h3>
+    <p class="lead" style="font-size:14.5px">이 수업은 ‘빛과 파동’ 단원의 한 차시예요. 허브에서 다른 앱들도 만나 보세요.</p>
+    <div class="hub-links">
+      <a id="hubLink" class="btn primary sm" href="https://scienceisjo.github.io/lightandwave/">단원 허브로 →</a>
+      <a id="lessonPrev" class="btn ghost sm" href="https://scienceisjo.github.io/lightandwave/">← 이전 차시</a>
+      <a id="lessonNext" class="btn ghost sm" href="https://scienceisjo.github.io/lightandwave/">다음 차시 →</a>
+    </div>
+    <p class="cloze-hint" style="margin-top:10px">🔧 링크를 바꾸려면 코드에서 <span class="kbd">id="hubLink"</span> 등의 <span class="kbd">href</span>만 수정하세요.</p>
+  </div>
+</section>
+
+<div class="credit">
+  <b>당신은 ‘물건’이 아니라 ‘물결’이다 · 퍼져 나가는 파동</b><br>
+  제작 : 조승재(과학이조선생) · <a href="mailto:chuseonjae@outlook.kr">chuseonjae@outlook.kr</a> · 인스타 <a href="https://instagram.com/science_is_jo">@science_is_jo</a><br>
+  2022 개정 교육과정 중학교 과학 · 단원 2 파동
+</div>
+</main>
+
+<div id="toast"></div>
+<script>
+"use strict";
+/* ★★★★★ 배경 사진 넣는 곳 ★★★★★ ───────────────────────────────
+   탭마다 다른 바닷가 사진을 깔 수 있어요.
+   ① 레포에 soundwave 폴더를 만들고 사진을 넣으세요  (예: soundwave/intro.jpg)
+   ② 아래 따옴표 '' 안에 경로를 적으세요.  인터넷 주소(https://...)도 OK
+   ③ 비워 두면 바다색 그라데이션이 자동으로 들어갑니다.
+   추천 비율: 가로로 긴 사진(16:9). 사진은 자동으로 살짝 어둡게 깔립니다. */
+const TAB_IMAGES = {
+  intro : '',   // 🌊 시작
+  shake : '',   // 🔬 파동 만들어 보기
+  shape : '',   // 📏 파동의 모양
+  use   : '',   // 📡 파동의 쓸모
+  game  : '',   // 🎮 파동 마스터
+  beyond: ''    // 🌙 교과서 밖
+};
+const TAB_FALLBACK = {
+  intro :'radial-gradient(110% 80% at 50% 0%, #284a6e, #0a1426 64%)',
+  shake :'radial-gradient(100% 80% at 50% 25%, #14424e, #0a1426 70%)',
+  shape :'linear-gradient(180deg, #163a4e, #0a1426 72%)',
+  use   :'radial-gradient(90% 80% at 68% 18%, #3a2f52, #0a1426 70%)',
+  game  :'radial-gradient(100% 85% at 30% 18%, #134a5e, #0a1426 70%)',
+  beyond:'radial-gradient(110% 85% at 50% 0%, #241c44, #0a1426 64%)'
+};
+function setBg(tab){
+  const L=document.getElementById('bgLayer'); if(!L) return;
+  const img=TAB_IMAGES[tab];
+  L.style.opacity='0';
+  setTimeout(()=>{ L.style.backgroundImage = img ? `url("${img}")` : (TAB_FALLBACK[tab]||TAB_FALLBACK.intro); L.style.opacity='1'; }, 150);
+}
+
+/* =====================================================================
+   퍼져 나가는 파동 · 파동 관측소  —  핵심 엔진
+===================================================================== */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const TAU=Math.PI*2;
+
+const C={
+  wave:'#2dd4d4', waveGlow:'#67e8e0',
+  crest:'#ffb84d', trough:'#8b93ff', amp:'#ff6b9d', wlen:'#9ae66e',
+  energy:'#ff7849', info:'#38bdf8', medium:'#9aabce',
+  ink:'#eaf1ff', dim:'#a6b8da', mute:'#7186ab',
+  line:'#2a3b5e', surface:'#16233f', deep:'#0f1a30', gold:'#ffd166',
+  ok:'#4ade80', danger:'#ff5d6c'
+};
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- 캔버스 DPR 핏 ---------- */
+function fit(cv){
+  const dpr=Math.min(window.devicePixelRatio||1,2.5);
+  const w=cv.clientWidth||cv.parentElement.clientWidth||320;
+  const h=parseInt(cv.getAttribute('height'))||240;
+  cv.style.height=h+'px';
+  cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr);
+  const ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,w,h};
+}
+/* ---------- 드로잉 헬퍼 ---------- */
+function arrow(ctx,x1,y1,x2,y2,color,wd=2.5,head=9){
+  const a=Math.atan2(y2-y1,x2-x1);
+  ctx.save();ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=wd;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-head*Math.cos(a-0.4),y2-head*Math.sin(a-0.4));
+  ctx.lineTo(x2-head*Math.cos(a+0.4),y2-head*Math.sin(a+0.4));
+  ctx.closePath();ctx.fill();ctx.restore();
+}
+function dline(ctx,x1,y1,x2,y2,color,dash=[5,6],wd=1.5){
+  ctx.save();ctx.setLineDash(dash);ctx.strokeStyle=color;ctx.lineWidth=wd;
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore();
+}
+function dot(ctx,x,y,r,color,glow=0){
+  ctx.save();
+  if(glow){ctx.shadowColor=color;ctx.shadowBlur=glow;}
+  ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill();ctx.restore();
+}
+function label(ctx,x,y,text,color,size=13,align='center'){
+  ctx.save();ctx.font=`700 ${size}px Pretendard, sans-serif`;ctx.textAlign=align;ctx.textBaseline='middle';
+  ctx.fillStyle=color;ctx.fillText(text,x,y);ctx.restore();
+}
+function tag(ctx,x,y,text,color){
+  ctx.save();ctx.font='600 12px "JetBrains Mono", monospace';ctx.textBaseline='middle';
+  const w=ctx.measureText(text).width+16;
+  ctx.fillStyle='rgba(8,16,30,.78)';ctx.strokeStyle=color;ctx.lineWidth=1;
+  rr(ctx,x,y-11,w,22,7);ctx.fill();ctx.stroke();
+  ctx.fillStyle=color;ctx.textAlign='left';ctx.fillText(text,x+8,y+1);ctx.restore();
+  return w;
+}
+function rr(ctx,x,y,w,h,r){
+  r=Math.min(r,w/2,h/2);
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
+}
+
+/* ---------- 오디오 엔진 ---------- */
+const A={
+  ctx:null,
+  ensure(){ if(!this.ctx){try{this.ctx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+    if(this.ctx&&!this.master){
+      this.master=this.ctx.createGain();this.master.gain.value=1;
+      this.analyser=this.ctx.createAnalyser();this.analyser.fftSize=2048;this.analyser.smoothingTimeConstant=.55;
+      this.master.connect(this.analyser);this.analyser.connect(this.ctx.destination);
+    }
+    if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume(); return this.ctx; },
+  out(){ return this.master||this.ctx.destination; },
+  blip(f=600,d=.08,type='sine',vol=.16){
+    const c=this.ensure();if(!c)return;
+    const o=c.createOscillator(),g=c.createGain();
+    o.type=type;o.frequency.value=f;o.connect(g);g.connect(this.out());
+    const t=c.currentTime;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,t+d);o.start(t);o.stop(t+d+.03);
+  },
+  correct(){this.blip(660,.11,'sine',.15);setTimeout(()=>this.blip(880,.13,'sine',.15),85);setTimeout(()=>this.blip(1170,.18,'sine',.13),190);},
+  wrong(){this.blip(200,.2,'sawtooth',.1);setTimeout(()=>this.blip(150,.24,'sawtooth',.08),130);},
+  pop(){this.blip(440,.05,'triangle',.13);},
+  tick(){this.blip(900,.03,'square',.06);},
+  win(){[523,659,784,1046].forEach((f,i)=>setTimeout(()=>this.blip(f,.22,'sine',.15),i*110));}
+};
+/* 지속음(진공/주파수용) */
+class SusTone{
+  constructor(){this.osc=null;this.gain=null;}
+  start(freq,vol){const c=A.ensure();if(!c)return;this.stop();
+    this.osc=c.createOscillator();this.gain=c.createGain();
+    this.osc.type='sine';this.osc.frequency.value=freq;this.gain.gain.value=vol;
+    this.osc.connect(this.gain);this.gain.connect(A.out());this.osc.start();}
+  setFreq(f){if(this.osc&&A.ctx)this.osc.frequency.setTargetAtTime(f,A.ctx.currentTime,.02);}
+  setVol(v){if(this.gain&&A.ctx)this.gain.gain.setTargetAtTime(Math.max(.0001,v),A.ctx.currentTime,.04);}
+  stop(){if(this.osc){try{this.osc.stop();}catch(e){}this.osc=null;this.gain=null;}}
+  get on(){return !!this.osc;}
+}
+
+/* ---------- 상태 / localStorage ---------- */
+const SAVE='padong_obs_v1';
+let S=loadState()||{tab:'intro',visited:{},poe:null,coreRevealed:false,measureDone:0,useGame:false,bestScore:0,medals:{}};
+S.cloze=S.cloze||{}; S.mini=S.mini||{};
+let CLOZE_TOTAL=0;
+function saveState(){try{localStorage.setItem(SAVE,JSON.stringify(S));}catch(e){}}
+function loadState(){try{return JSON.parse(localStorage.getItem(SAVE));}catch(e){return null;}}
+
+/* ---------- 진행도 ---------- */
+function updateProgress(){
+  const checks=[
+    !!S.visited.intro,
+    !!S.poe,
+    !!S.coreRevealed,
+    S.measureDone>=2,
+    !!S.useGame,
+    S.bestScore>0,
+    !!S.visited.beyond,
+    CLOZE_TOTAL>0 && Object.keys(S.cloze).length>=CLOZE_TOTAL,
+    ['shake','shape','use'].every(k=>S.mini&&S.mini[k])
+  ];
+  const done=checks.filter(Boolean).length;
+  const pct=Math.round(done/checks.length*100);
+  $('#progBar').style.width=pct+'%';
+  $('#progPct').textContent=pct+'%';
+}
+
+/* ---------- 토스트 ---------- */
+let toastT;
+function toast(msg,kind=''){
+  const el=$('#toast');el.textContent=msg;el.className='show '+kind;
+  clearTimeout(toastT);toastT=setTimeout(()=>el.className=el.className.replace('show','').trim(),2200);
+}
+
+/* ---------- 탭 시스템 + 시뮬 생명주기 ---------- */
+const tabSims={intro:[],shake:[],shape:[],use:[],game:[],beyond:[]};
+function stopAllSims(){for(const k in tabSims)tabSims[k].forEach(s=>s.stop&&s.stop());}
+function activate(id){
+  (tabSims[id]||[]).forEach(s=>{s.resize&&s.resize();s.start&&s.start();});
+}
+function showTab(id){
+  $$('.panel').forEach(p=>p.classList.remove('show'));
+  $('#panel-'+id).classList.add('show');
+  $$('#tabNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+  setBg(id);
+  S.tab=id;S.visited[id]=true;saveState();updateProgress();
+  stopAllSims();
+  requestAnimationFrame(()=>activate(id));
+  window.scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'});
+}
+$('#tabNav').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;showTab(b.dataset.tab);});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(!b)return;A.ensure();showTab(b.dataset.go);});
+
+/* 리사이즈 디바운스 */
+let rzT;
+window.addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{
+  const id=S.tab;(tabSims[id]||[]).forEach(s=>{s.resize&&s.resize();});
+},180);});
+
+/* 첫 사용자 입력에 오디오 깨우기 */
+['pointerdown','keydown'].forEach(ev=>window.addEventListener(ev,()=>A.ensure(),{once:true}));
+
+/* =====================================================================
+   로고 미니 파동
+===================================================================== */
+(function logoWave(){
+  const cv=$('#logoWave');if(!cv)return;
+  const dpr=Math.min(window.devicePixelRatio||1,2.5);
+  function size(){cv.width=34*dpr;cv.height=34*dpr;}
+  size();
+  const ctx=cv.getContext('2d');let t=0;
+  function frame(){
+    ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,34,34);
+    ctx.strokeStyle=C.wave;ctx.lineWidth=2;ctx.lineCap='round';ctx.shadowColor=C.wave;ctx.shadowBlur=6;
+    ctx.beginPath();
+    for(let x=2;x<=32;x++){const y=17+Math.sin((x*0.45)-t)*7;x===2?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.stroke();ctx.shadowBlur=0;
+    t+=reduceMotion?0:0.07;requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* =====================================================================
+   TAB1 · 히어로 파동
+===================================================================== */
+(function(){
+  const cv=$('#heroCv');if(!cv)return;let ctx,w,h,t=0,running=false;
+  function resize(){const r=fit(cv);ctx=r.ctx;w=r.w;h=r.h;}
+  function frame(){
+    if(!running)return;
+    ctx.clearRect(0,0,w,h);
+    const mid=h*0.5, amp=Math.min(h*0.26,46), k=0.018, spd=t;
+    // 여러 겹 파동(깊이감)
+    for(let layer=0;layer<3;layer++){
+      const op=[0.18,0.4,1][layer], a=amp*[0.6,0.8,1][layer], yo=mid+layer*4;
+      ctx.beginPath();
+      for(let x=0;x<=w;x+=3){const y=yo+Math.sin(x*k-spd)*a;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+      ctx.strokeStyle=C.wave;ctx.globalAlpha=op*0.85;ctx.lineWidth=layer===2?3:2;
+      if(layer===2){ctx.shadowColor=C.wave;ctx.shadowBlur=16;}
+      ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=1;
+    }
+    // 마루 강조 점들
+    for(let x=0;x<=w;x+=6){
+      const ph=x*k-spd;
+      if(Math.cos(ph)>0.985){const y=mid+Math.sin(ph)*amp;dot(ctx,x,y,3.5,C.crest,12);}
+    }
+    // 제자리에서 진동만 하는 매질 입자(티저)
+    const px=w*0.5, py=mid+Math.sin(px*k-spd)*amp;
+    dline(ctx,px,mid-amp-10,px,mid+amp+10,'rgba(255,107,157,.35)',[4,5]);
+    dot(ctx,px,py,6,C.amp,16);
+    label(ctx,px,mid+amp+24,'이 점은 제자리에서 위아래로만!',C.amp,12);
+    t+=reduceMotion?0.003:0.025;requestAnimationFrame(frame);
+  }
+  tabSims.intro.push({resize,start(){if(!ctx)resize();running=true;frame();},stop(){running=false;}});
+})();
+
+/* =====================================================================
+   TAB1 · 지진 수수께끼
+===================================================================== */
+(function(){
+  const cv=$('#quakeCv');if(!cv)return;let ctx,w,h,running=false;
+  let rings=[],shake=0,t=0;
+  function resize(){const r=fit(cv);ctx=r.ctx;w=r.w;h=r.h;}
+  function send(){rings.push({r:0});$('#quakeTag').textContent='흔들림이 퍼지는 중…';A.blip(120,.4,'sine',.12);}
+  function frame(){
+    if(!running)return;
+    ctx.clearRect(0,0,w,h);
+    const gy=h-34, ex=w*0.16, ey=gy;
+    // 땅
+    ctx.fillStyle='rgba(154,171,206,.08)';ctx.fillRect(0,gy,w,h-gy);
+    ctx.strokeStyle='rgba(154,171,206,.3)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(w,gy);ctx.stroke();
+    // 진원
+    dot(ctx,ex,ey,7,C.energy,14);label(ctx,ex,ey+22,'진원',C.energy,12);
+    // 집
+    const hx=w-58;let sh=0;
+    rings.forEach(rg=>{ if(Math.abs(rg.r-(hx-ex))<28) sh=Math.max(sh,(1-Math.abs(rg.r-(hx-ex))/28)); });
+    const off=sh*6*Math.sin(t*40);
+    ctx.save();ctx.translate(off,0);
+    ctx.fillStyle=sh>0.05?'#3a4d70':'#26344f';ctx.strokeStyle=sh>0.05?C.crest:'rgba(154,171,206,.4)';ctx.lineWidth=1.5;
+    rr(ctx,hx-20,gy-30,40,30,3);ctx.fill();ctx.stroke();
+    ctx.beginPath();ctx.moveTo(hx-26,gy-30);ctx.lineTo(hx,gy-48);ctx.lineTo(hx+26,gy-30);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.restore();
+    if(sh>0.05){label(ctx,hx,gy-58,'흔들림 도착! 🏚️',C.crest,12);}
+    // 링
+    rings.forEach(rg=>{
+      rg.r+=reduceMotion?0.6:2.2;
+      const op=clamp(1-rg.r/(w*0.95),0,1);
+      ctx.strokeStyle=`rgba(255,184,77,${op*0.7})`;ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(ex,ey,rg.r,Math.PI,TAU);ctx.stroke();
+    });
+    rings=rings.filter(rg=>rg.r<w*1.05);
+    if(rings.length===0&&$('#quakeTag').textContent!=='진원에서 흔들림 출발 대기')
+      $('#quakeTag').textContent='흔들림 전달 완료 — 매질(땅)은 제자리!';
+    t+=0.016;requestAnimationFrame(frame);
+  }
+  $('#quakeBtn').addEventListener('click',()=>{A.ensure();send();});
+  tabSims.intro.push({resize,start(){if(!ctx)resize();running=true;frame();},stop(){running=false;}});
+})();
+
+/* =====================================================================
+   TAB1 · 울음소리 파형
+===================================================================== */
+(function(){
+  const cv=$('#roarCv');if(!cv)return;let ctx,w,h,running=false,t=0,mode='lion';
+  function resize(){const r=fit(cv);ctx=r.ctx;w=r.w;h=r.h;}
+  function frame(){
+    if(!running)return;
+    ctx.clearRect(0,0,w,h);
+    const mid=h/2;
+    ctx.strokeStyle='rgba(154,171,206,.15)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,mid);ctx.lineTo(w,mid);ctx.stroke();
+    const cfg=mode==='lion'?{f:0.03,a:h*0.3,c:C.crest,n:0.18}:{f:0.085,a:h*0.22,c:C.info,n:0.5};
+    ctx.beginPath();
+    for(let x=0;x<=w;x+=2){
+      let y=mid;
+      y+=Math.sin(x*cfg.f-t)*cfg.a;
+      y+=Math.sin(x*cfg.f*2.7-t*1.3)*cfg.a*cfg.n;
+      x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle=cfg.c;ctx.lineWidth=2.5;ctx.shadowColor=cfg.c;ctx.shadowBlur=10;ctx.stroke();ctx.shadowBlur=0;
+    t+=reduceMotion?0.02:0.12;requestAnimationFrame(frame);
+  }
+  $$('[data-roar]').forEach(b=>b.addEventListener('click',()=>{
+    A.ensure();mode=b.dataset.roar;
+    $$('[data-roar]').forEach(x=>x.classList.toggle('on',x===b));
+    $('#roarTag').textContent=mode==='lion'?'🦁 사자':'🐯 호랑이';
+    if(mode==='lion'){A.blip(90,.3,'sawtooth',.12);}else{A.blip(520,.18,'square',.1);setTimeout(()=>A.blip(680,.14,'square',.08),100);}
+  }));
+  tabSims.intro.push({resize,start(){if(!ctx)resize();running=true;frame();},stop(){running=false;}});
+})();
+/* =====================================================================
+   공통 · range 슬라이더 채움
+===================================================================== */
+function bindRange(input,onInput){
+  const fill=()=>{const p=(input.value-input.min)/(input.max-input.min)*100;input.style.setProperty('--p',p+'%');};
+  fill();
+  input.addEventListener('input',()=>{fill();onInput&&onInput(+input.value);});
+  return input;
+}
+function bindSwitch(el,init,onToggle){
+  let on=init;el.classList.toggle('on',on);
+  el.addEventListener('click',()=>{on=!on;el.classList.toggle('on',on);A.ensure();onToggle&&onToggle(on);});
+  return {get on(){return on;},set(v){on=v;el.classList.toggle('on',on);}};
+}
+
+/* =====================================================================
+   TAB2 · POE 예측
+===================================================================== */
+(function(){
+  const wrap=$('#poeChoices');if(!wrap)return;
+  function mark(){
+    if(S.poe){$$('#poeChoices .choice').forEach(c=>c.classList.toggle('sel',c.dataset.poe===S.poe));}
+  }
+  wrap.addEventListener('click',e=>{
+    const c=e.target.closest('.choice');if(!c)return;A.ensure();A.pop();
+    S.poe=c.dataset.poe;saveState();updateProgress();
+    $$('#poeChoices .choice').forEach(x=>x.classList.toggle('sel',x===c));
+    $('#poeLock').className='explain show';
+    $('#poeLock').innerHTML='<div class="why">📝 예측 저장됨</div>좋아요! 이제 아래 실험에서 <b>빨간 리본</b>이 실제로 어떻게 움직이는지 직접 확인해 보세요.';
+  });
+  mark();
+})();
+
+/* =====================================================================
+   TAB2 · 용수철 / 물결파 시뮬레이터  ★핵심★
+===================================================================== */
+(function(){
+  const cv=$('#springCv');if(!cv)return;
+  let ctx,w,h,running=false,lastT=0;
+  let mode='spring';
+  let amp=40, lambda=160, spdF=1.0;
+  let shaking=false, waveActive=false, ph=0, xf=0;
+  let pulses=[];
+  let trace=[], traceTick=0;
+  const opt={trace:true,arrows:true,guide:false};
+
+  function resize(){const r=fit(cv);ctx=r.ctx;w=r.w;h=r.h;}
+  function srcX(){return 26;}
+  function ribbonX(){return Math.round(w*0.54);}
+  function k(){return TAU/lambda;}
+
+  function disp(x,now){
+    let y=0;
+    const xr=x-srcX();
+    if(waveActive && xr>=0 && xr<=xf){ y+=amp*Math.sin(k()*xr-ph); }
+    for(const p of pulses){const d=x-p.pos; y+=p.amp*Math.exp(-(d*d)/(2*p.sig*p.sig));}
+    return y;
+  }
+
+  function frame(ts){
+    if(!running)return;
+    const now=ts||performance.now();
+    let dt=(now-lastT)/1000;if(dt>0.05)dt=0.05;lastT=now;
+    const v=spdF*170, om=k()*v;
+    if(shaking){ph+=om*dt; xf=Math.min(xf+v*dt, w+40);}
+    pulses.forEach(p=>p.pos+=v*dt);
+    pulses=pulses.filter(p=>p.pos<w+60);
+
+    // 리본 자취 기록
+    traceTick+=dt;
+    if(traceTick>0.03){traceTick=0;trace.push(disp(ribbonX(),now));if(trace.length>46)trace.shift();}
+
+    render(now);
+    requestAnimationFrame(frame);
+  }
+
+  function render(now){
+    ctx.clearRect(0,0,w,h);
+    const mid=h*0.52;
+    const rx=ribbonX(), ry=mid - disp(rx,now);
+
+    if(mode==='water'){
+      // 물 채우기
+      ctx.beginPath();ctx.moveTo(0,h);
+      for(let x=0;x<=w;x+=3){ctx.lineTo(x, mid - disp(x,now));}
+      ctx.lineTo(w,h);ctx.closePath();
+      const g=ctx.createLinearGradient(0,mid-amp,0,h);
+      g.addColorStop(0,'rgba(45,212,212,.28)');g.addColorStop(1,'rgba(20,120,140,.10)');
+      ctx.fillStyle=g;ctx.fill();
+      // 표면선
+      ctx.beginPath();
+      for(let x=0;x<=w;x+=3){const y=mid-disp(x,now);x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+      ctx.strokeStyle=C.wave;ctx.lineWidth=2.5;ctx.shadowColor=C.wave;ctx.shadowBlur=8;ctx.stroke();ctx.shadowBlur=0;
+    } else {
+      // 진동중심선
+      dline(ctx,0,mid,w,mid,'rgba(154,171,206,.18)',[3,6],1);
+      // 용수철(코일 느낌): 본선 + 수직 틱
+      ctx.beginPath();
+      for(let x=0;x<=w;x+=3){const y=mid-disp(x,now);x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+      ctx.strokeStyle=C.wave;ctx.lineWidth=3;ctx.shadowColor=C.wave;ctx.shadowBlur=9;ctx.stroke();ctx.shadowBlur=0;
+      ctx.strokeStyle='rgba(103,232,224,.35)';ctx.lineWidth=1;
+      for(let x=8;x<=w;x+=12){const y=mid-disp(x,now);ctx.beginPath();ctx.moveTo(x,y-4);ctx.lineTo(x,y+4);ctx.stroke();}
+    }
+
+    // 파원(손) 표시
+    const sy=mid-disp(srcX(),now);
+    dot(ctx,srcX(),sy,7,C.crest,12);
+    label(ctx,srcX(),mid+Math.min(amp,52)+24,'파원',C.crest,12);
+
+    // 리본 위치 기준선
+    if(opt.guide){
+      dline(ctx,rx,18,rx,h-18,'rgba(255,107,157,.4)',[5,6],1.5);
+      label(ctx,rx,h-12,'리본의 x는 고정!',C.amp,12);
+    }
+    // 리본 자취(같은 x에 수직으로 쌓임)
+    if(opt.trace){
+      trace.forEach((ty,i)=>{const a=i/trace.length;dot(ctx,rx,mid-ty,2.6,'rgba(255,107,157,'+(a*0.5)+')');});
+    }
+    // 진동/진행 화살표
+    if(opt.arrows){
+      arrow(ctx,w-92,30,w-30,30,C.wave,3,9);label(ctx,w-60,18,'파동 진행',C.wave,11);
+      const vy=(disp(rx,now)-disp(rx,now-0.016));
+      if(Math.abs(vy)>0.4){const dir=vy>0?-1:1;arrow(ctx,rx+16,ry,rx+16,ry+dir*26,C.amp,2.5,8);}
+      label(ctx,rx+16,ry+ (disp(rx,now)>=0?-34:34),'진동',C.amp,11);
+    }
+
+    // 리본 / 스타이로폼 구
+    if(mode==='water'){
+      dot(ctx,rx,ry,9,'#fff',0);
+      ctx.fillStyle=C.amp;ctx.beginPath();ctx.arc(rx,ry,9,0,TAU);ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,.5)';ctx.beginPath();ctx.arc(rx-3,ry-3,2.5,0,TAU);ctx.fill();
+      label(ctx,rx,ry-20,'스타이로폼',C.amp,11);
+    } else {
+      dot(ctx,rx,ry,8,C.amp,16);
+      label(ctx,rx,ry-20,'리본',C.amp,11);
+    }
+  }
+
+  // 컨트롤
+  $('#mediumSeg').addEventListener('click',e=>{
+    const b=e.target.closest('button');if(!b)return;A.ensure();
+    mode=b.dataset.medium;
+    $$('#mediumSeg button').forEach(x=>x.classList.toggle('on',x===b));
+    $('#springMode').textContent=mode==='spring'?'🌀 용수철 파동':'💧 물결파';
+    $('#springHint').innerHTML=mode==='spring'
+      ?'‘파동 만들기’를 누르고, <b>빨간 리본 점</b>만 집중해서 보세요.'
+      :'물 위의 <b>스타이로폼 구</b>가 어디로 가는지 보세요. 떠내려갈까요?';
+    trace=[];
+  });
+  const shakeBtn=$('#shakeToggle');
+  shakeBtn.addEventListener('click',()=>{
+    A.ensure();shaking=!shaking;
+    if(shaking){waveActive=true;}
+    shakeBtn.textContent=shaking?'멈추기':'파동 만들기';
+    shakeBtn.classList.toggle('warm',shaking);shakeBtn.classList.toggle('primary',!shaking);
+    $('#springInfo').textContent=shaking?'진동 중':'정지';
+    if(shaking)A.blip(180,.12,'sine',.08);
+  });
+  $('#pulseBtn').addEventListener('click',()=>{
+    A.ensure();pulses.push({pos:srcX(),amp:amp*0.95,sig:Math.max(18,lambda*0.14)});
+    A.blip(240,.1,'triangle',.1);
+    $('#springInfo').textContent='펄스 이동 중';
+  });
+  bindRange($('#ampRange'),v=>{amp=v;$('#ampVal').textContent=v;});
+  bindRange($('#wlenRange'),v=>{lambda=v;$('#wlenVal').textContent=v;});
+  bindRange($('#spdRange'),v=>{spdF=v/10;$('#spdVal').textContent=spdF.toFixed(1)+'×';});
+  bindSwitch($('#swTrace'),true,on=>opt.trace=on);
+  bindSwitch($('#swArrows'),true,on=>opt.arrows=on);
+  bindSwitch($('#swGuide'),false,on=>opt.guide=on);
+
+  // 관찰 결과 확인
+  $('#revealBtn').addEventListener('click',()=>{
+    A.ensure();
+    $('#revealBox').classList.add('show');
+    $('#poeChoices') && $$('#poeChoices .choice').forEach(c=>{
+      if(c.dataset.poe==='b'){c.classList.add('correct','done');}
+      else{c.classList.add('dim','done');if(c.classList.contains('sel'))c.classList.add('wrong');}
+    });
+    if(!S.coreRevealed){S.coreRevealed=true;saveState();updateProgress();
+      A.correct();
+      toast(S.poe==='b'?'정확해요! 매질은 제자리 진동만 🎉':'발견 완료 — 매질은 제자리에서 진동만!','good');
+    }
+  });
+
+  tabSims.shake.push({resize,start(){if(!ctx)resize();lastT=performance.now();running=true;requestAnimationFrame(frame);},stop(){running=false;}});
+})();
+
+/* =====================================================================
+   TAB3 · 파동의 요소 시뮬레이터
+===================================================================== */
+(function(){
+  const cv=$('#anatomyCv');if(!cv)return;
+  let ctx,w,h,running=false,t=0;
+  let amp=40, lambda=200, move=false;
+  const show={crest:true,wlen:true,amp:true};
+
+  function resize(){const r=fit(cv);ctx=r.ctx;w=r.w;h=r.h;}
+  function dim(x1,y1,x2,y2,color,text){
+    arrow(ctx,x1,y1,x2,y2,color,2,7);arrow(ctx,x2,y2,x1,y1,color,2,7);
+    const mx=(x1+x2)/2,my=(y1+y2)/2;
+    ctx.save();ctx.font='700 13px Pretendard';ctx.textAlign='center';ctx.textBaseline='middle';
+    const tw=ctx.measureText(text).width+12;ctx.fillStyle='rgba(8,16,30,.85)';rr(ctx,mx-tw/2,my-11,tw,22,6);ctx.fill();
+    ctx.fillStyle=color;ctx.fillText(text,mx,my+1);ctx.restore();
+  }
+  function frame(){
+    if(!running)return;
+    ctx.clearRect(0,0,w,h);
+    const mid=h*0.5, k=TAU/lambda, off=move?t:0;
+    // 진동중심
+    dline(ctx,0,mid,w,mid,'rgba(154,171,206,.3)',[4,7],1.2);
+    if(show.amp)label(ctx,42,mid-10,'진동 중심',C.medium,11,'left');
+    // 파동
+    ctx.beginPath();
+    for(let x=0;x<=w;x+=2){const y=mid-amp*Math.sin(k*x-off);x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.strokeStyle=C.wave;ctx.lineWidth=3;ctx.shadowColor=C.wave;ctx.shadowBlur=10;ctx.stroke();ctx.shadowBlur=0;
+
+    // 마루/골 찾기
+    const crests=[],troughs=[];
+    for(let x=0;x<=w;x++){const ph=k*x-off; const s=Math.sin(ph);
+      if(Math.cos(ph)>0&&Math.cos(ph-k)<=0){} }
+    // 계산적으로 마루 위치: sin=1 → k*x-off = π/2 + 2πn
+    for(let n=-1;n<60;n++){
+      let xc=( (Math.PI/2 + TAU*n)+off )/k; if(xc>=0&&xc<=w)crests.push(xc);
+      let xt=( (-Math.PI/2 + TAU*n)+off )/k; if(xt>=0&&xt<=w)troughs.push(xt);
+    }
+    if(show.crest){
+      crests.forEach(xc=>{dot(ctx,xc,mid-amp,4.5,C.crest,10);});
+      troughs.forEach(xt=>{dot(ctx,xt,mid+amp,4.5,C.trough,10);});
+      if(crests[0]!==undefined)label(ctx,crests[0],mid-amp-16,'마루',C.crest,13);
+      if(troughs[0]!==undefined)label(ctx,troughs[0],mid+amp+16,'골',C.trough,13);
+    }
+    // 파장
+    if(show.wlen&&crests.length>=2){
+      const y=mid+amp+34;
+      dim(crests[0],y,crests[1],y,C.wlen,'파장 λ');
+      dline(ctx,crests[0],mid-amp,crests[0],y,'rgba(154,230,110,.4)',[3,4],1);
+      dline(ctx,crests[1],mid-amp,crests[1],y,'rgba(154,230,110,.4)',[3,4],1);
+    }
+    // 진폭
+    if(show.amp&&crests.length>=1){
+      const x=crests[crests.length>1?1:0];
+      dim(x-0,mid,x-0,mid-amp,C.amp,'진폭');
+    }
+    $('#anaReadout').textContent=`진폭 ${amp} · 파장 ${lambda}`;
+    t+=reduceMotion?0.01:0.04;requestAnimationFrame(frame);
+  }
+  bindRange($('#aAmpRange'),v=>{amp=v;$('#aAmpVal').textContent=v;});
+  bindRange($('#aWlenRange'),v=>{lambda=v;$('#aWlenVal').textContent=v;});
+  bindSwitch($('#laCrest'),true,on=>show.crest=on);
+  bindSwitch($('#laWlen'),true,on=>show.wlen=on);
+  bindSwitch($('#laAmp'),true,on=>show.amp=on);
+  bindSwitch($('#laMove'),false,on=>move=on);
+  tabSims.shape.push({resize,start(){if(!ctx)resize();running=true;frame();},stop(){running=false;}});
+})();
+
+/* =====================================================================
+   TAB3 · 측정 미션 (파장 / 진폭)
+===================================================================== */
+(function(){
+  const cv=$('#measCv');if(!cv)return;
+  let ctx,w,h,running=false;
+  let mission=1; // 1=파장, 2=진폭
+  const ampPx=46, lamPx=180;
+  let drag=null, seg=null, submitted=false;
+
+  function resize(){const r=fit(cv);ctx=r.ctx;w=r.w;h=r.h;draw();}
+  function mid(){return h*0.52;}
+  function waveY(x){return mid()-ampPx*Math.sin(TAU/lamPx*(x-30));}
+  // 마루 위치: TAU/lamPx*(x-30)=π/2 → x = 30 + lamPx/4
+  function crestXs(){const arr=[];for(let n=0;n<8;n++){const x=30+lamPx/4+n*lamPx;if(x<=w-10)arr.push(x);}return arr;}
+
+  function draw(){
+    if(!ctx)return;
+    ctx.clearRect(0,0,w,h);
+    dline(ctx,0,mid(),w,mid(),'rgba(154,171,206,.25)',[4,7],1.2);
+    ctx.beginPath();for(let x=0;x<=w;x+=2){const y=waveY(x);x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.strokeStyle=C.wave;ctx.lineWidth=2.5;ctx.shadowColor=C.wave;ctx.shadowBlur=7;ctx.stroke();ctx.shadowBlur=0;
+    // 마루/중심 힌트 점
+    crestXs().forEach(x=>dot(ctx,x,mid()-ampPx,4,C.crest,8));
+    if(mission===2){const cx=crestXs()[1]||crestXs()[0];dline(ctx,cx,mid(),cx,mid()-ampPx,'rgba(255,107,157,.25)',[3,5],1);}
+
+    // 사용자 측정 세그먼트
+    if(seg){
+      const col=submitted?(seg.ok?C.ok:C.danger):C.gold;
+      if(mission===1){
+        const y=mid()+ampPx+26;
+        arrow(ctx,seg.x1,y,seg.x2,y,col,2.5,8);arrow(ctx,seg.x2,y,seg.x1,y,col,2.5,8);
+        dline(ctx,seg.x1,mid()-ampPx,seg.x1,y,'rgba(255,209,102,.4)',[3,4],1);
+        dline(ctx,seg.x2,mid()-ampPx,seg.x2,y,'rgba(255,209,102,.4)',[3,4],1);
+        label(ctx,(seg.x1+seg.x2)/2,y+18,Math.abs(seg.x2-seg.x1).toFixed(0)+' px',col,12);
+      } else {
+        arrow(ctx,seg.x1,seg.y1,seg.x1,seg.y2,col,2.5,8);arrow(ctx,seg.x1,seg.y2,seg.x1,seg.y1,col,2.5,8);
+        label(ctx,seg.x1+24,(seg.y1+seg.y2)/2,Math.abs(seg.y2-seg.y1).toFixed(0)+' px',col,12,'left');
+      }
+    }
+  }
+  function pos(e){const r=cv.getBoundingClientRect();return {x:(e.clientX-r.left),y:(e.clientY-r.top)};}
+  cv.addEventListener('pointerdown',e=>{
+    if(submitted)return;cv.setPointerCapture(e.pointerId);A.ensure();
+    const p=pos(e);drag=p;seg={x1:p.x,y1:p.y,x2:p.x,y2:p.y};draw();
+  });
+  cv.addEventListener('pointermove',e=>{
+    if(!drag)return;const p=pos(e);seg.x2=p.x;seg.y2=p.y;
+    $('#measResult').textContent=mission===1?Math.abs(seg.x2-seg.x1).toFixed(0)+' px':Math.abs(seg.y2-seg.y1).toFixed(0)+' px';
+    $('#measCheck').disabled=false;draw();
+  });
+  cv.addEventListener('pointerup',()=>{drag=null;});
+  cv.addEventListener('pointercancel',()=>{drag=null;});
+
+  function reset(){seg=null;submitted=false;$('#measResult').textContent='—';$('#measHud').textContent='드래그하여 측정 →';$('#measCheck').disabled=true;$('#measExplain').classList.remove('show');$('#measNext').style.display='none';draw();}
+  function setMission(m){
+    mission=m;reset();
+    if(m===1){$('#measTitle').textContent='미션 1 · 파장을 측정하라';
+      $('#measDesc').innerHTML='파동 위에서 한 <span class="t-crest">마루</span>에서 <b class="k">이웃한 마루</b>까지 거리를 드래그해서 재 보세요. 그게 바로 파장입니다.';}
+    else{$('#measTitle').textContent='미션 2 · 진폭을 측정하라';
+      $('#measDesc').innerHTML='<span class="t-medium">진동 중심</span>에서 <span class="t-crest">마루</span>까지의 거리를 <b class="k">수직으로</b> 드래그해 재 보세요. 그게 진폭이에요.';}
+  }
+  $('#measReset').addEventListener('click',()=>{A.ensure();reset();});
+  $('#measCheck').addEventListener('click',()=>{
+    if(!seg)return;A.ensure();submitted=true;
+    let ok,truth,got,explain;
+    if(mission===1){got=Math.abs(seg.x2-seg.x1);truth=lamPx;ok=Math.abs(got-truth)<=16;
+      explain=ok?`정확해요! 마루에서 이웃 마루까지 = <b>파장(약 ${truth}px)</b>. 잘 쟀어요.`
+        :`측정값 ${got.toFixed(0)}px. 파장은 <b>마루↔이웃 마루</b> 거리(약 ${truth}px)예요. 두 마루 점을 정확히 이어 보세요.`;
+    }else{got=Math.abs(seg.y2-seg.y1);truth=ampPx;ok=Math.abs(got-truth)<=12 && Math.abs(seg.x2-seg.x1)<24;
+      explain=ok?`맞아요! 진동 중심에서 마루까지 = <b>진폭(약 ${truth}px)</b>. 흔드는 세기를 나타내죠.`
+        :`측정값 ${got.toFixed(0)}px. 진폭은 <b>중심선에서 마루까지</b> 수직 거리(약 ${truth}px)예요. 위아래로 곧게 드래그!`;
+    }
+    seg.ok=ok;
+    $('#measHud').textContent=ok?'정답! ✓':'다시 해볼까요';
+    $('#measExplain').className='explain show '+(ok?'ok':'no');
+    $('#measExplain').innerHTML=`<div class="why">${ok?'✓ 정확':'다시'}</div>${explain}`;
+    if(ok){A.correct();
+      if(mission===1){$('#measNext').style.display='';if(S.measureDone<1){S.measureDone=1;saveState();updateProgress();}}
+      else{if(S.measureDone<2){S.measureDone=2;saveState();updateProgress();toast('측정 미션 완료! 파동 측량사 ✓','good');}}
+    }else{A.wrong();}
+    draw();
+  });
+  $('#measNext').addEventListener('click',()=>{A.ensure();setMission(2);});
+
+  setMission(1);
+  tabSims.shape.push({resize,start(){if(!ctx){resize();}},stop(){}});
+})();
+/* =====================================================================
+   TAB4 · 진공 실험
+===================================================================== */
+(function(){
+  const cv=$('#vacuumCv');if(!cv)return;
+  let ctx,w,h,running=false,t=0;
+  let air=100; const tone=new SusTone(); let soundOn=false;
+  function resize(){const r=fit(cv);ctx=r.ctx;w=r.w;h=r.h;}
+  function frame(){
+    if(!running)return;
+    ctx.clearRect(0,0,w,h);
+    const cx=w*0.42, baseY=h-40, domeTop=46, domeW=Math.min(w*0.5,230), domeH=baseY-domeTop;
+    // 받침
+    ctx.fillStyle='#1a2740';rr(ctx,cx-domeW/2-14,baseY,domeW+28,22,5);ctx.fill();
+    // 펌프 튜브
+    ctx.strokeStyle='#3a4d70';ctx.lineWidth=8;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(cx-domeW/2-10,baseY+8);ctx.lineTo(w-26,baseY+8);ctx.stroke();
+    // 스피커
+    const sx=cx, sy=baseY-46;
+    ctx.fillStyle='#26344f';rr(ctx,sx-30,sy-22,30,44,5);ctx.fill();
+    ctx.fillStyle=soundOn?C.crest:'#3a4d70';ctx.beginPath();
+    ctx.moveTo(sx,sy-16);ctx.lineTo(sx+22,sy-26);ctx.lineTo(sx+22,sy+26);ctx.lineTo(sx,sy+16);ctx.closePath();ctx.fill();
+    // 소리 파동(공기량 비례)
+    if(soundOn){
+      const reach=domeW*0.5*(air/100);
+      for(let i=0;i<5;i++){
+        const rad=((t*60+i*26)%120);
+        if(rad>reach+6)continue;
+        const op=clamp((air/100)*(1-rad/130),0,1)*0.8;
+        ctx.strokeStyle=`rgba(255,184,77,${op})`;ctx.lineWidth=2;
+        ctx.beginPath();ctx.arc(sx+22,sy,rad,-1.0,1.0);ctx.stroke();
+      }
+    }
+    // 공기 입자(점)
+    const n=Math.round(air/100*44);
+    ctx.fillStyle='rgba(154,171,206,.5)';
+    for(let i=0;i<n;i++){
+      const a=(i*2.39+t*0.6), rr2=(i%7+1)/8*domeW*0.42;
+      const px=sx+Math.cos(a)*rr2, py=sy-domeH*0.3+Math.sin(a*1.3)*domeH*0.32;
+      if(py<baseY-4&&py>domeTop+8){ctx.beginPath();ctx.arc(px,py,1.6,0,TAU);ctx.fill();}
+    }
+    // 유리 돔
+    ctx.strokeStyle='rgba(140,180,220,.5)';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(cx-domeW/2,baseY);
+    ctx.bezierCurveTo(cx-domeW/2,domeTop,cx+domeW/2,domeTop,cx+domeW/2,baseY);ctx.stroke();
+    ctx.fillStyle='rgba(120,180,220,.05)';
+    ctx.beginPath();ctx.moveTo(cx-domeW/2,baseY);ctx.bezierCurveTo(cx-domeW/2,domeTop,cx+domeW/2,domeTop,cx+domeW/2,baseY);ctx.closePath();ctx.fill();
+    // 귀(바깥)
+    const ex=Math.min(w-40,cx+domeW/2+44);
+    ctx.font='30px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=air>15&&soundOn?'#fff':'rgba(255,255,255,.4)';
+    ctx.fillText('👂',ex,sy);
+    if(soundOn&&air>15){ctx.strokeStyle=`rgba(103,232,224,${(air/100)*0.6})`;ctx.lineWidth=2;
+      for(let i=0;i<3;i++){const rad=10+i*7+((t*40)%14);ctx.beginPath();ctx.arc(ex-18,sy,rad,2.3,4.0);ctx.stroke();}}
+    label(ctx,sx,baseY+30,'유리병 속 스피커',C.dim,11);
+    t+=reduceMotion?0.01:0.05;requestAnimationFrame(frame);
+  }
+  function setAir(v){
+    air=v;$('#vacVal').textContent=v+'%';$('#vacAir').textContent='공기 '+v+'%';
+    if(soundOn)tone.setVol(0.0001+ (v/100)*0.07);
+    if(v<=8){$('#vacTag').textContent='거의 진공 — 소리 안 들림!';$('#vacExplain').classList.add('show');
+      if(!S._vacDone){S._vacDone=true;}}
+    else if(v<40){$('#vacTag').textContent='공기 희박 — 소리 작아짐';}
+    else{$('#vacTag').textContent='공기 가득 — 소리 잘 들림';}
+  }
+  $('#vacSound').addEventListener('click',()=>{
+    A.ensure();soundOn=!soundOn;
+    const b=$('#vacSound');
+    if(soundOn){tone.start(330,0.0001+(air/100)*0.07);b.textContent='🔇 소리 끄기';}
+    else{tone.stop();b.textContent='🔊 소리 켜기';}
+  });
+  bindRange($('#vacRange'),setAir);
+  tabSims.use.push({resize,start(){if(!ctx)resize();running=true;t=0;frame();},stop(){running=false;tone.stop();soundOn=false;const b=$('#vacSound');if(b)b.textContent='🔊 소리 켜기';}});
+})();
+
+/* =====================================================================
+   TAB4 · 사례 SVG 일러스트
+===================================================================== */
+(function(){
+  const micro=$('#svgMicro');
+  if(micro)micro.innerHTML=`
+    <rect x="14" y="18" width="210" height="84" rx="8" fill="#1a2740" stroke="#3a4d70"/>
+    <rect x="24" y="28" width="150" height="64" rx="5" fill="#0b1426" stroke="#2a3b5e"/>
+    <rect x="184" y="28" width="30" height="64" rx="4" fill="#101d33" stroke="#2a3b5e"/>
+    <circle cx="199" cy="44" r="6" fill="#26344f" stroke="#3a4d70"/>
+    <ellipse cx="92" cy="74" rx="26" ry="12" fill="#5a3a1e" stroke="#ffb84d"/>
+    <ellipse cx="92" cy="70" rx="20" ry="8" fill="#7a5024"/>
+    <g stroke="#ff7849" stroke-width="2.5" fill="none" stroke-linecap="round">
+      <path d="M236,40 q10,8 0,16 q-10,8 0,16"><animate attributeName="opacity" values="0.3;1;0.3" dur="1.2s" repeatCount="indefinite"/></path>
+      <path d="M252,34 q12,12 0,24 q-12,12 0,24"><animate attributeName="opacity" values="1;0.3;1" dur="1.2s" repeatCount="indefinite"/></path>
+    </g>
+    <text x="278" y="58" fill="#ff7849" font-family="Pretendard" font-weight="700" font-size="13">에너지</text>`;
+  const ultra=$('#svgUltra');
+  if(ultra)ultra.innerHTML=`
+    <rect x="14" y="20" width="50" height="80" rx="8" fill="#1a2740" stroke="#3a4d70"/>
+    <rect x="22" y="28" width="34" height="34" rx="3" fill="#0b1426" stroke="#38bdf8"/>
+    <circle cx="39" cy="45" r="9" fill="none" stroke="#38bdf8" stroke-width="1.5"/>
+    <path d="M70,60 q60,-34 120,0 q-60,34 -120,0" fill="rgba(56,189,248,.06)" stroke="#2a3b5e"/>
+    <circle cx="150" cy="60" r="14" fill="rgba(255,107,157,.18)" stroke="#ff6b9d" stroke-width="1.5"/>
+    <text x="150" y="64" fill="#ff6b9d" font-size="14" text-anchor="middle">👶</text>
+    <g stroke="#38bdf8" stroke-width="2" fill="none">
+      <path d="M64,50 q14,10 0,20"><animate attributeName="opacity" values="1;0.2;1" dur="1.3s" repeatCount="indefinite"/></path>
+      <path d="M76,46 q18,14 0,28"><animate attributeName="opacity" values="0.5;1;0.5" dur="1.3s" repeatCount="indefinite"/></path>
+    </g>
+    <g stroke="#ff6b9d" stroke-width="2" fill="none">
+      <path d="M236,46 q-18,14 0,28"><animate attributeName="opacity" values="0.2;1;0.2" dur="1.3s" repeatCount="indefinite" begin="0.6s"/></path>
+    </g>
+    <text x="288" y="56" fill="#38bdf8" font-family="Pretendard" font-weight="700" font-size="12" text-anchor="end">정보</text>
+    <text x="288" y="72" fill="#7186ab" font-size="10" text-anchor="end">↩ 반사</text>`;
+})();
+
+/* =====================================================================
+   TAB4 · 에너지/정보 분류 게임 (드래그 + 탭)
+===================================================================== */
+(function(){
+  const data=[
+    {id:'micro',label:'🍞 전자레인지',type:'energy'},
+    {id:'stone',label:'🪨 초음파 쇄석술',type:'energy'},
+    {id:'heat',label:'🔥 적외선 난로',type:'energy'},
+    {id:'sono',label:'🤰 초음파 진단',type:'info'},
+    {id:'fish',label:'🐟 어군 탐지기',type:'info'},
+    {id:'radio',label:'📱 무선 통신',type:'info'}
+  ];
+  const why={
+    micro:'마이크로파의 <b>에너지</b>로 음식을 데움.',stone:'초음파 <b>에너지</b>로 결석을 부숨.',
+    heat:'적외선의 <b>에너지</b>로 열을 전달.',sono:'반사 신호로 몸속 <b>정보</b>를 얻음.',
+    fish:'반사파로 물고기 위치 <b>정보</b>를 얻음.',radio:'전파에 목소리·데이터 <b>정보</b>를 실음.'
+  };
+  const tokensEl=$('#useTokens');if(!tokensEl)return;
+  let placed={}, selected=null;
+  function build(){
+    tokensEl.innerHTML='';$('#binEnergy').innerHTML='';$('#binInfo').innerHTML='';
+    placed={};selected=null;$('#useExplain').classList.remove('show');
+    data.slice().sort(()=>Math.random()-0.5).forEach(d=>{
+      const t=document.createElement('div');t.className='token';t.textContent=d.label;t.dataset.id=d.id;
+      tokensEl.appendChild(t);attachToken(t,d);
+    });
+  }
+  function attachToken(el,d){
+    let startX,startY,dragging=false,ghost=null,pid=null;
+    el.addEventListener('pointerdown',e=>{
+      if(placed[d.id])return;A.ensure();pid=e.pointerId;startX=e.clientX;startY=e.clientY;dragging=false;
+      el.setPointerCapture(pid);
+    });
+    el.addEventListener('pointermove',e=>{
+      if(pid===null||placed[d.id])return;
+      const dx=e.clientX-startX,dy=e.clientY-startY;
+      if(!dragging&&Math.hypot(dx,dy)>7){dragging=true;el.classList.add('drag');
+        ghost=el.cloneNode(true);ghost.classList.remove('drag');ghost.style.cssText='position:fixed;z-index:300;pointer-events:none;opacity:.95;box-shadow:0 12px 30px rgba(0,0,0,.6)';
+        document.body.appendChild(ghost);}
+      if(dragging&&ghost){ghost.style.left=(e.clientX-ghost.offsetWidth/2)+'px';ghost.style.top=(e.clientY-22)+'px';
+        const bin=binUnder(e.clientX,e.clientY);
+        $$('.bin').forEach(b=>b.classList.toggle('over',b===bin));}
+    });
+    el.addEventListener('pointerup',e=>{
+      if(pid===null)return;
+      try{el.releasePointerCapture(pid);}catch(_){}
+      if(dragging){
+        const bin=binUnder(e.clientX,e.clientY);
+        $$('.bin').forEach(b=>b.classList.remove('over'));
+        if(ghost){ghost.remove();ghost=null;}
+        el.classList.remove('drag');
+        if(bin)place(d,bin.dataset.bin,el);
+      } else {
+        // 탭 = 선택
+        if(selected===d.id){selected=null;el.classList.remove('sel');}
+        else{selected=d.id;$$('.token').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');A.pop();}
+      }
+      dragging=false;pid=null;
+    });
+    el.addEventListener('pointercancel',()=>{if(ghost){ghost.remove();ghost=null;}el.classList.remove('drag');$$('.bin').forEach(b=>b.classList.remove('over'));dragging=false;pid=null;});
+  }
+  function binUnder(x,y){const el=document.elementFromPoint(x,y);return el?el.closest('.bin'):null;}
+  function place(d,binType,el){
+    const correct=d.type===binType;
+    if(correct){
+      placed[d.id]=true;el.classList.add('placed','ok');el.classList.remove('sel');el.style.cursor='default';
+      $(binType==='energy'?'#binEnergy':'#binInfo').appendChild(el);A.blip(700,.08,'sine',.12);
+      selected=null;check();
+    } else {
+      el.classList.add('bad');A.wrong();setTimeout(()=>el.classList.remove('bad'),420);
+      toast('다시 생각해 볼까요? '+ (d.type==='energy'?'무엇을 데우거나 부수나요?':'무엇을 알아내나요?'),'bad');
+    }
+  }
+  function check(){
+    if(Object.keys(placed).length===data.length){
+      $('#useExplain').className='explain show ok';
+      $('#useExplain').innerHTML='<div class="why">✓ 완벽해요!</div>'+data.map(d=>`<b>${d.label}</b> — ${why[d.id]}`).join('<br>');
+      A.win();
+      if(!S.useGame){S.useGame=true;saveState();updateProgress();toast('분류 완료! 에너지·정보 분석가 ✓','good');}
+    }
+  }
+  // 빈 탭 = 선택된 토큰 놓기
+  $$('.bin').forEach(b=>b.addEventListener('click',e=>{
+    if(!selected)return;const el=tokensEl.querySelector(`[data-id="${selected}"]`)||document.querySelector(`.token[data-id="${selected}"]`);
+    if(el&&!placed[selected]){const d=data.find(x=>x.id===selected);place(d,b.dataset.bin,el);}
+  }));
+  $('#useReset').addEventListener('click',()=>{A.ensure();build();});
+  build();
+  tabSims.use.push({resize(){},start(){},stop(){}});
+})();
+
+/* =====================================================================
+   TAB4 · 모스부호
+===================================================================== */
+(function(){
+  const lamp=$('#morseLamp');if(!lamp)return;
+  const MORSE={'.-':'A','-...':'B','-.-.':'C','-..':'D','.':'E','..-.':'F','--.':'G','....':'H','..':'I','.---':'J','-.-':'K','.-..':'L','--':'M','-.':'N','---':'O','.--.':'P','--.-':'Q','.-.':'R','...':'S','-':'T','..-':'U','...-':'V','.--':'W','-..-':'X','-.--':'Y','--..':'Z'};
+  const FWD={};for(const k in MORSE)FWD[MORSE[k]]=k;
+  const tone=new SusTone();
+  let pressT=0,buffer='',decoded='',gapTimer=null;
+  function lampOn(on){lamp.classList.toggle('on',on);if(on){tone.start(620,0.12);}else{tone.stop();}}
+  function render(){$('#morseOut').textContent=(decoded?decoded+'  ':'')+buffer;}
+  function down(){A.ensure();pressT=performance.now();lampOn(true);clearTimeout(gapTimer);}
+  function up(){
+    const d=performance.now()-pressT;lampOn(false);
+    buffer+= d<260?'·':'–';render();
+    gapTimer=setTimeout(()=>{
+      const sym=buffer.replace(/·/g,'.').replace(/–/g,'-');
+      const ch=MORSE[sym];if(ch)decoded+=ch;buffer='';render();
+    },850);
+  }
+  const tb=$('#morseTap');
+  tb.addEventListener('pointerdown',e=>{e.preventDefault();down();});
+  tb.addEventListener('pointerup',e=>{e.preventDefault();up();});
+  tb.addEventListener('pointerleave',()=>{if(lamp.classList.contains('on'))up();});
+  $('#morseClear').addEventListener('click',()=>{buffer='';decoded='';render();A.pop();});
+
+  // 수신
+  let playing=false;
+  async function playMsg(msg){
+    if(playing)return;playing=true;A.ensure();
+    $('#rxOut').textContent='';$('#rxDecoded').textContent='';
+    const unit=140;
+    const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+    let symAll='';
+    for(const ch of msg){
+      const code=FWD[ch]||'';
+      $('#rxDecoded').textContent+= ' '+ch;
+      for(const s of code){
+        lampOn(true);await sleep(s==='.'?unit:unit*3);lampOn(false);
+        symAll+= s==='.'?'·':'–';$('#rxOut').textContent=symAll+' ';
+        await sleep(unit);
+      }
+      symAll+='   ';$('#rxOut').textContent=symAll;
+      await sleep(unit*2);
+    }
+    playing=false;
+  }
+  $$('[data-msg]').forEach(b=>b.addEventListener('click',()=>playMsg(b.dataset.msg)));
+  render();
+})();
+/* =====================================================================
+   TAB5 · 파동 마스터 게임
+===================================================================== */
+(function(){
+  if(!$('#gameStart'))return;
+  // 진폭 질문용 파동 SVG
+  function ampQViz(){
+    const w=360,h=150,mid=75,amp=46,lam=120,x0=20,k=TAU/lam;
+    let pts='';for(let x=10;x<=355;x+=3){const y=(mid-amp*Math.sin(k*(x-x0))).toFixed(1);pts+=x+','+y+' ';}
+    return `<svg viewBox="0 0 360 150" style="width:100%;height:auto;background:#0b1426;border:1px solid #2a3b5e;border-radius:12px;margin:6px 0">
+      <line x1="0" y1="75" x2="360" y2="75" stroke="rgba(154,171,206,.3)" stroke-dasharray="4 6"/>
+      <polyline points="${pts}" fill="none" stroke="#2dd4d4" stroke-width="3"/>
+      <circle cx="50" cy="29" r="5" fill="#ffb84d"/><text x="50" y="16" fill="#ffb84d" font-size="14" font-weight="700" text-anchor="middle">가</text>
+      <line x1="170" y1="75" x2="170" y2="29" stroke="#ff6b9d" stroke-width="2.5"/>
+      <polygon points="170,29 166,37 174,37" fill="#ff6b9d"/><polygon points="170,75 166,67 174,67" fill="#ff6b9d"/>
+      <text x="183" y="54" fill="#ff6b9d" font-size="14" font-weight="700">나</text>
+      <line x1="50" y1="130" x2="170" y2="130" stroke="#9ae66e" stroke-width="2.5"/>
+      <polygon points="50,130 58,126 58,134" fill="#9ae66e"/><polygon points="170,130 162,126 162,134" fill="#9ae66e"/>
+      <text x="110" y="146" fill="#9ae66e" font-size="14" font-weight="700" text-anchor="middle">다</text>
+      <circle cx="110" cy="121" r="5" fill="#8b93ff"/><text x="110" y="113" fill="#8b93ff" font-size="14" font-weight="700" text-anchor="middle">라</text>
+    </svg>`;
+  }
+  const QS=[
+    {cat:'medium',q:'소리(음파)를 전달하는 <b>매질</b>은 무엇일까?',
+     ch:[{t:'공기',ok:1},{t:'빛',ok:0},{t:'전기',ok:0},{t:'진공',ok:0}],
+     why:'소리는 공기 같은 물질(매질)을 통해 전달돼요. 진공에서는 전달되지 않죠.'},
+    {cat:'medium',q:'파동이 전달될 때 <b>매질</b>은 어떻게 움직일까?',
+     ch:[{t:'제자리에서 진동만 한다',ok:1},{t:'파동을 따라 끝까지 이동한다',ok:0},{t:'점점 빨라지며 날아간다',ok:0}],
+     why:'매질은 제자리에서 진동만 합니다. 멀리 가는 건 진동(파동)이지 매질이 아니에요!'},
+    {cat:'shape',q:'파동에서 가장 <b>높은 곳</b>을 무엇이라 할까?',
+     ch:[{t:'마루',ok:1},{t:'골',ok:0},{t:'파장',ok:0},{t:'진폭',ok:0}],
+     why:'가장 높은 곳은 마루, 가장 낮은 곳은 골이에요.'},
+    {cat:'shape',q:'한 <b>마루에서 이웃한 마루</b>까지의 거리를 무엇이라 할까?',
+     ch:[{t:'파장',ok:1},{t:'진폭',ok:0},{t:'진동 중심',ok:0},{t:'마루',ok:0}],
+     why:'마루↔이웃 마루(또는 골↔골) 사이 거리가 파장(λ)입니다.'},
+    {cat:'shape',q:'아래 그림에서 <b>진폭</b>을 나타내는 기호는?',viz:ampQViz,
+     ch:[{t:'가 (마루의 점)',ok:0},{t:'나 (중심→마루 화살표)',ok:1},{t:'다 (마루→마루 화살표)',ok:0},{t:'라 (골의 점)',ok:0}],
+     why:'진폭은 진동 중심에서 마루(또는 골)까지의 거리 — 나예요. 다는 파장입니다.'},
+    {cat:'use',q:'전자레인지가 음식을 데우는 것은 파동이 무엇을 전달하기 때문일까?',
+     ch:[{t:'에너지',ok:1},{t:'정보',ok:0}],
+     why:'마이크로파의 에너지가 음식 속 물 분자를 진동시켜 데웁니다. → 에너지 전달.'},
+    {cat:'use',q:'초음파 진단 장치로 몸속을 들여다보는 것은 무엇을 전달하는 예일까?',
+     ch:[{t:'정보',ok:1},{t:'에너지',ok:0}],
+     why:'되돌아온 초음파 신호로 몸속 모습을 알아냅니다. → 정보 전달.'},
+    {cat:'misc',q:'⭕❌  "영화처럼, 우주에서 폭발하면 큰 소리가 들린다."',
+     ch:[{t:'⭕ 맞다',ok:0},{t:'❌ 틀리다',ok:1}],
+     why:'우주는 거의 진공이라 소리를 전할 매질이 없어요. 폭발음은 들리지 않습니다(빛은 보임).'},
+    {cat:'misc',q:'⭕❌  "파도가 칠 때, 바닷물이 통째로 해변으로 떠밀려 이동한다."',
+     ch:[{t:'⭕ 맞다',ok:0},{t:'❌ 틀리다',ok:1}],
+     why:'물(매질)은 제자리에서 위아래로 진동할 뿐, 이동하는 건 파동이에요.'}
+  ];
+
+  let qi=0,score=0,lives=3,streak=0,answered=false,gotCat={};
+  $('#gBest').textContent=S.bestScore||0;
+
+  function showScreen(which){
+    $('#gameStart').style.display=which==='start'?'':'none';
+    $('#gamePlay').style.display=which==='play'?'':'none';
+    $('#gameEnd').style.display=which==='end'?'':'none';
+  }
+  function renderLives(){$$('#lives .h').forEach((h,i)=>h.classList.toggle('gone',i>=lives));}
+  function setHud(){$('#gScore').textContent=score;$('#gStreak').textContent='🔥 연속 '+streak;renderLives();}
+
+  function loadQ(){
+    answered=false;
+    const q=QS[qi];
+    $('#qNum').textContent='문제 '+(qi+1)+' / '+QS.length;
+    $('#qText').innerHTML=q.q;
+    $('#qVisual').innerHTML=q.viz?q.viz():'';
+    $('#docFace').textContent='🧑‍🔬';
+    $('#gExplain').classList.remove('show');
+    $('#gNextRow').style.display='none';
+    const wrap=$('#gChoices');wrap.innerHTML='';
+    const order=q.ch.map((c,i)=>i).sort(()=>Math.random()-0.5);
+    order.forEach((idx,n)=>{
+      const c=q.ch[idx];
+      const b=document.createElement('button');b.className='choice';b.dataset.ok=c.ok?'1':'0';
+      b.innerHTML=`<span class="key">${'①②③④'[n]}</span>${c.t}`;
+      b.addEventListener('click',()=>answer(b,c,q));
+      wrap.appendChild(b);
+    });
+  }
+  function answer(btn,c,q){
+    if(answered)return;answered=true;A.ensure();
+    $$('#gChoices .choice').forEach(x=>x.classList.add('done'));
+    if(c.ok){
+      btn.classList.add('correct');
+      const gain=10+streak*2;score+=gain;streak++;gotCat[q.cat]=true;
+      $('#docFace').textContent='😄';$('#docWrap').classList.add('bounce');setTimeout(()=>$('#docWrap').classList.remove('bounce'),500);
+      A.correct();
+      $('#gExplain').className='explain show ok';
+      $('#gExplain').innerHTML=`<div class="why">✓ 정답! +${gain}점</div>${q.why}`;
+    } else {
+      btn.classList.add('wrong');
+      $$('#gChoices .choice').forEach(x=>{if(x.dataset.ok==='1')x.classList.add('correct');});
+      lives--;streak=0;
+      $('#docFace').textContent='🤔';
+      A.wrong();
+      $('#gExplain').className='explain show no';
+      $('#gExplain').innerHTML=`<div class="why">아쉬워요</div>${q.why}`;
+    }
+    setHud();
+    if(lives<=0){setTimeout(()=>endGame(false),900);}
+    else{$('#gNextRow').style.display='';
+      $('#gNextBtn').textContent=(qi>=QS.length-1)?'결과 보기 🏁':'다음 문제 →';}
+  }
+  function endGame(win){
+    showScreen('end');
+    $$('#medals .medal').forEach(m=>m.classList.remove('got'));
+    if(gotCat.medium)$('[data-medal="medium"]').classList.add('got');
+    if(gotCat.shape)$('[data-medal="shape"]').classList.add('got');
+    if(gotCat.use)$('[data-medal="use"]').classList.add('got');
+    const master = win && lives>0;
+    if(master)$('[data-medal="master"]').classList.add('got');
+    $('#endFace').textContent=master?'🏆':(win?'🎉':'💪');
+    if(win){
+      $('#endMsg').innerHTML= master
+        ? `대단해! <b>${QS.length}문제</b>를 ${lives}개의 생명을 지키며 끝까지 풀었어. 최종 점수 <b>${score}점</b> — 자네는 진정한 <b>파동 마스터</b>일세! 🌊`
+        : `끝까지 도전했어! 최종 점수 <b>${score}점</b>. 틀린 부분은 해당 탭에서 다시 보면 완벽해질 거야.`;
+    } else {
+      $('#endMsg').innerHTML=`생명을 다 썼지만 괜찮아 — 점수 <b>${score}점</b>! 헷갈린 개념은 앞 탭에서 다시 확인하고 또 도전해 보게. 💪`;
+    }
+    if(score>(S.bestScore||0)){S.bestScore=score;saveState();}
+    $('#gBest').textContent=S.bestScore||0;
+    updateProgress();
+    if(master)A.win();
+  }
+  function startGame(){qi=0;score=0;lives=3;streak=0;gotCat={};setHud();showScreen('play');loadQ();A.ensure();A.blip(520,.1,'sine',.12);}
+  $('#gameStartBtn').addEventListener('click',startGame);
+  $('#gameRetry').addEventListener('click',startGame);
+  $('#gNextBtn').addEventListener('click',()=>{
+    if(qi>=QS.length-1){endGame(true);}else{qi++;loadQ();}
+  });
+  setHud();showScreen('start');
+})();
+
+/* =====================================================================
+   TAB6 · 종파 / 횡파 시뮬레이터
+===================================================================== */
+(function(){
+  const cv=$('#waveTypeCv');if(!cv)return;
+  let ctx,w,h,running=false,t=0,mode='trans',spd=0.9;
+  const N=42;
+  function resize(){const r=fit(cv);ctx=r.ctx;w=r.w;h=r.h;}
+  function frame(){
+    if(!running)return;
+    ctx.clearRect(0,0,w,h);
+    const mid=h*0.5, A0=mode==='trans'?h*0.2:13, lam=w/3.2, k=TAU/lam, ph=t;
+    const x0s=[];for(let i=0;i<N;i++)x0s.push(20+i*(w-40)/(N-1));
+    // 진행 방향 화살표
+    arrow(ctx,w*0.5-50,26,w*0.5+50,26,C.info,3,10);label(ctx,w*0.5,14,'파동 진행 방향',C.info,11);
+
+    if(mode==='long'){
+      // 압축 위치: cos(k·x₀ - ph) = -1 → k·x₀ - ph = π 인 곳이 가장 빽빽(압축)
+      for(let n=0;n<6;n++){
+        const xc=(Math.PI+ph+TAU*n)/k;if(xc>20&&xc<w-20){
+          ctx.fillStyle='rgba(255,184,77,.10)';ctx.fillRect(xc-14,mid-44,28,88);}
+      }
+    }
+    // 매질 입자
+    x0s.forEach((x0,i)=>{
+      const s=A0*Math.sin(k*x0-ph);
+      let px,py;
+      if(mode==='trans'){px=x0;py=mid-s;}
+      else{px=x0+s;py=mid;}
+      const hi=(i===Math.round(N*0.5));
+      dot(ctx,px,py,hi?6:3.4,hi?C.amp:C.medium,hi?14:0);
+      if(hi&&mode==='trans'){dline(ctx,px,mid-A0-8,px,mid+A0+8,'rgba(255,107,157,.3)',[3,5],1);}
+    });
+    if(mode==='trans'){
+      label(ctx,w*0.5,mid+A0+24,'입자는 ↕ 수직 진동',C.amp,12);
+    }else{
+      label(ctx,w*0.5,mid+40,'입자는 ↔ 나란히 진동 (압축·팽창)',C.amp,12);
+    }
+    t+=reduceMotion?0.012:0.05*spd*2;requestAnimationFrame(frame);
+  }
+  $('#wtSeg').addEventListener('click',e=>{
+    const b=e.target.closest('button');if(!b)return;A.ensure();mode=b.dataset.wt;
+    $$('#wtSeg button').forEach(x=>x.classList.toggle('on',x===b));
+    if(mode==='trans'){
+      $('#wtTag').textContent='횡파 — 진행방향과 수직으로 진동';
+      $('#wtDesc').innerHTML='<b class="t-wave">횡파</b><br>진동 방향이 진행 방향과 <b style="color:var(--ink)">수직</b>.<br>예: 빛(전자기파), 지진파 S파, 줄의 파동';
+    }else{
+      $('#wtTag').textContent='종파 — 진행방향과 나란히 진동';
+      $('#wtDesc').innerHTML='<b class="t-wave">종파</b><br>진동 방향이 진행 방향과 <b style="color:var(--ink)">나란함</b>. 빽빽한 곳=압축.<br>예: 소리, 초음파, 지진파 P파';
+    }
+  });
+  bindRange($('#wtSpdRange'),v=>{spd=v/9;$('#wtSpd').textContent=spd.toFixed(1)+'×';});
+  tabSims.beyond.push({resize,start(){if(!ctx)resize();running=true;frame();},stop(){running=false;}});
+})();
+
+/* =====================================================================
+   TAB6 · 진동수 / 가청 범위
+===================================================================== */
+(function(){
+  const cv=$('#freqCv');if(!cv)return;
+  let ctx,w,h,running=false,t=0,freq=440,playing=false;
+  const tone=new SusTone();
+  const LMIN=Math.log(20),LMAX=Math.log(22000);
+  function posOf(f){return (Math.log(f)-LMIN)/(LMAX-LMIN);}
+  function resize(){const r=fit(cv);ctx=r.ctx;w=r.w;h=r.h;}
+  function frame(){
+    if(!running)return;
+    ctx.clearRect(0,0,w,h);
+    const topH=h*0.52, mid=topH*0.55;
+    // 파형 — 소리 재생 중이면 실제 파형(AnalyserNode), 아니면 시각용 사인
+    const audible=freq<=20000;
+    const useReal = playing && audible && A.analyser;
+    ctx.beginPath();
+    if(useReal){
+      const buf=new Uint8Array(A.analyser.fftSize);
+      A.analyser.getByteTimeDomainData(buf);
+      const span=Math.min(buf.length, Math.round(clamp(900-posOf(freq)*820,90,900)));
+      for(let x=0;x<=w;x+=2){
+        const v=(buf[Math.floor(x/w*span)]-128)/128;
+        const y=mid - h*0.18*v;
+        x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+      }
+    } else {
+      const cyc=clamp(2+posOf(freq)*40,2,46), k=cyc*TAU/w;
+      for(let x=0;x<=w;x+=2){const y=mid - h*0.16*Math.sin(k*x - t);x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    }
+    ctx.strokeStyle=audible?C.wave:'#8b93ff';ctx.lineWidth=2.4;ctx.shadowColor=audible?C.wave:'#8b93ff';ctx.shadowBlur=8;ctx.stroke();ctx.shadowBlur=0;
+    if(useReal){label(ctx,w/2,16,'🎙 실제 재생음의 파형',C.waveGlow,11);}
+    if(!audible){label(ctx,w/2,mid-h*0.16-16,'사람 귀로는 안 들림 (초음파)',C.trough,12);}
+
+    // 스펙트럼 바
+    const by=topH+22, bh=20;
+    // 가청 영역
+    const x20k=posOf(20000)*w;
+    ctx.fillStyle='rgba(74,222,128,.16)';rr(ctx,0,by,x20k,bh,4);ctx.fill();
+    ctx.fillStyle='rgba(139,147,255,.18)';rr(ctx,x20k,by,w-x20k,bh,4);ctx.fill();
+    ctx.strokeStyle='rgba(154,171,206,.3)';ctx.lineWidth=1;rr(ctx,0,by,w,bh,4);ctx.stroke();
+    // 20kHz 경계
+    dline(ctx,x20k,by-8,x20k,by+bh+8,C.trough,[3,4],1.5);
+    label(ctx,Math.min(x20k,w-54),by+bh+18,'20 kHz',C.trough,11);
+    label(ctx,4,by-8,'가청 영역',C.ok,11,'left');
+    label(ctx,w-4,by-8,'초음파',C.trough,11,'right');
+    // 현재 위치 마커
+    const mx=posOf(freq)*w;
+    ctx.fillStyle=C.gold;ctx.beginPath();ctx.moveTo(mx,by-4);ctx.lineTo(mx-6,by-14);ctx.lineTo(mx+6,by-14);ctx.closePath();ctx.fill();
+    dline(ctx,mx,by,mx,by+bh,C.gold,[2,3],1.5);
+    label(ctx,clamp(mx,30,w-30),by+bh+34,(freq>=1000?(freq/1000).toFixed(freq>=10000?0:1)+' kHz':freq+' Hz'),C.gold,12);
+
+    t+=reduceMotion?0.02:0.12;requestAnimationFrame(frame);
+  }
+  function update(){
+    $('#freqVal').textContent= freq>=1000?(freq/1000).toFixed(freq>=10000?0:1)+' kHz':freq+' Hz';
+    $('#freqHz').textContent= freq>=1000?(freq/1000).toFixed(1)+' kHz':freq+' Hz';
+    const aud=freq<=20000;
+    $('#freqZone').textContent=aud?'가청 영역':'초음파 (안 들림)';
+    $('#freqMsg').innerHTML= aud
+      ? '소리가 들리나요? 진동수를 올릴수록 점점 높은 소리가 됩니다.'
+      : '<b style="color:#8b93ff">초음파!</b> 화면엔 파동이 있지만 사람 귀로는 들리지 않아요.';
+    if(playing){tone.setFreq(Math.min(freq,20000));tone.setVol(aud?0.05:0.0001);}
+  }
+  $('#freqPlay').addEventListener('click',()=>{
+    A.ensure();playing=!playing;const b=$('#freqPlay');
+    if(playing){const aud=freq<=20000;tone.start(Math.min(freq,20000),aud?0.05:0.0001);b.textContent='🔇 멈추기';}
+    else{tone.stop();b.textContent='🔊 들어보기';}
+  });
+  bindRange($('#freqRange'),v=>{freq=v;update();});
+  update();
+  tabSims.beyond.push({resize,start(){if(!ctx)resize();running=true;frame();},stop(){running=false;tone.stop();playing=false;const b=$('#freqPlay');if(b)b.textContent='🔊 들어보기';}});
+})();
+
+/* =====================================================================
+   초기화
+===================================================================== */
+/* =====================================================================
+   빈칸 클릭 공개 (cloze) — 능동적 인출
+===================================================================== */
+(function(){
+  const all=$$('.cloze');
+  CLOZE_TOTAL=all.length;
+  all.forEach((cz,i)=>{
+    const reveal=(silent)=>{
+      if(cz.classList.contains('revealed'))return;
+      cz.textContent=cz.dataset.ans;
+      const col=C[cz.dataset.c]||C.wave;
+      cz.style.color=col; cz.style.borderColor=col;
+      cz.classList.add('revealed');
+      if(!silent){A.ensure();A.blip(720,.08,'sine',.12);}
+      S.cloze[i]=1; saveState();
+      const set=cz.closest('.cloze-set');
+      if(set && $$('.cloze',set).every(x=>x.classList.contains('revealed'))){
+        set.classList.add('complete'); if(!silent)A.pop();
+      }
+      updateProgress();
+    };
+    cz.addEventListener('click',()=>reveal(false));
+    if(S.cloze[i])reveal(true);
+  });
+})();
+
+/* =====================================================================
+   섹션별 개념 확인 미니 퀴즈 — 능동적 인출 (맨 뒤 큰 게임과 별개)
+===================================================================== */
+(function(){
+  const SETS={
+    shake:{title:'매질 개념 확인', qs:[
+      {q:'파동이 전달될 때 매질(예: 용수철의 리본)은?',
+       ch:[{t:'제자리에서 진동만 한다',ok:1},{t:'파동을 따라 멀리 이동한다',ok:0}],
+       why:'매질은 제자리에서 진동만 해요. 이동하는 건 진동(파동)이지 매질이 아닙니다.'},
+      {q:'소리를 전달하는 매질은 무엇일까?',
+       ch:[{t:'공기',ok:1},{t:'빛',ok:0},{t:'진공',ok:0}],
+       why:'소리는 공기 같은 물질을 통해 전달돼요. 진공에선 전달되지 않죠.'}
+    ]},
+    shape:{title:'파동의 요소 확인', qs:[
+      {q:'파동에서 가장 낮은 곳을 무엇이라 할까?',
+       ch:[{t:'골',ok:1},{t:'마루',ok:0},{t:'진폭',ok:0}],
+       why:'가장 낮은 곳은 골, 가장 높은 곳은 마루예요.'},
+      {q:'마루에서 이웃한 마루까지의 거리는?',
+       ch:[{t:'파장',ok:1},{t:'진폭',ok:0},{t:'진동 중심',ok:0}],
+       why:'마루↔이웃 마루(또는 골↔골) 거리가 파장(λ)입니다.'},
+      {q:'진동 중심에서 마루까지의 거리는?',
+       ch:[{t:'진폭',ok:1},{t:'파장',ok:0}],
+       why:'진동 중심에서 마루(또는 골)까지가 진폭 — 흔드는 세기를 나타내죠.'}
+    ]},
+    use:{title:'에너지·정보 전달 확인', qs:[
+      {q:'전자레인지가 음식을 데우는 것은 무엇의 예일까?',
+       ch:[{t:'에너지 전달',ok:1},{t:'정보 전달',ok:0}],
+       why:'마이크로파의 에너지가 음식을 데워요. → 에너지 전달.'},
+      {q:'매질이 없는 진공에서 소리는 어떻게 될까?',
+       ch:[{t:'전달되지 않는다',ok:1},{t:'더 잘 전달된다',ok:0}],
+       why:'전할 매질이 없어 소리가 전달되지 않아요. 우주에서 소리가 안 들리는 이유죠.'}
+    ]}
+  };
+  function build(host,key){
+    const set=SETS[key]; if(!set)return;
+    let done=0; const total=set.qs.length;
+    host.innerHTML=`<div class="mq-head"><span class="mq-badge">✅ 개념 확인 퀴즈</span><span style="font-weight:700;color:var(--ink)">${set.title}</span><span class="mq-prog" data-prog>0/${total}</span></div>`;
+    set.qs.forEach((q,qi)=>{
+      const qEl=document.createElement('div');qEl.className='mq-q';
+      const order=q.ch.map((c,i)=>i).sort(()=>Math.random()-0.5);
+      qEl.innerHTML=`<div class="mq-text"><span class="qn">Q${qi+1}.</span>${q.q}</div><div class="mq-choices"></div><div class="mq-fb"></div>`;
+      const cwrap=$('.mq-choices',qEl), fb=$('.mq-fb',qEl);
+      let answered=false, solved=false;
+      order.forEach((idx,n)=>{
+        const c=q.ch[idx];
+        const b=document.createElement('button');b.className='mq-opt';b.dataset.ok=c.ok?'1':'0';
+        b.innerHTML=`<span class="k">${'①②③④'[n]}</span>${c.t}`;
+        b.addEventListener('click',()=>{
+          if(answered||solved)return;answered=true;A.ensure();
+          if(c.ok){
+            solved=true;b.classList.add('correct');
+            $$('.mq-opt',cwrap).forEach(x=>x.classList.add('locked'));
+            A.correct();
+            fb.className='mq-fb show ok';fb.innerHTML=`<b>정답!</b> ${q.why}`;
+            done++; updateMini();
+          }else{
+            b.classList.add('wrong');A.wrong();
+            fb.className='mq-fb show no';fb.innerHTML=`<b>다시 생각해 볼까요.</b> ${q.why}`;
+            setTimeout(()=>{answered=false;b.classList.remove('wrong');},1500);
+          }
+        });
+        cwrap.appendChild(b);
+      });
+      host.appendChild(qEl);
+    });
+    const doneEl=document.createElement('div');doneEl.className='mq-done';doneEl.innerHTML='🏅 개념 확인 완료! 잘했어요.';
+    host.appendChild(doneEl);
+    function updateMini(){
+      const p=host.querySelector('[data-prog]'); if(p)p.textContent=done+'/'+total;
+      if(done>=total){host.classList.add('alldone');
+        if(!S.mini[key]){S.mini[key]=1;saveState();updateProgress();toast('개념 확인 완료! ✅','good');}
+      }
+    }
+  }
+  $$('.miniquiz').forEach(host=>build(host,host.dataset.quiz));
+})();
+
+(function init(){
+  // 폰트 로드 확인(폴백 안내)
+  updateProgress();
+  const valid=['intro','shake','shape','use','game','beyond'];
+  const start=valid.includes(S.tab)?S.tab:'intro';
+  // 시작 탭 표시 (초기엔 scrollTo 생략 위해 직접 처리)
+  $$('.panel').forEach(p=>p.classList.remove('show'));
+  $('#panel-'+start).classList.add('show');
+  $$('#tabNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===start));
+  S.tab=start;S.visited[start]=true;saveState();
+  setBg(start);
+  requestAnimationFrame(()=>activate(start));
+})();
+</script>
+</body>
+</html>
