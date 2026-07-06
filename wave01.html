@@ -481,6 +481,16 @@ input[type=range]::-moz-range-track{height:8px;border-radius:99px;background:#ec
 .mq-done{display:none;align-items:center;gap:8px;margin-top:14px;padding:11px 14px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid #5a4a1e;color:var(--gold);font-weight:700;font-size:14px}
 .miniquiz.alldone .mq-done{display:flex;animation:fade .4s}
 
+/* ===================== 내용정리 PDF ===================== */
+.pdf-frame{position:relative;width:100%;aspect-ratio:1/1.35;background:#f3ead6;border:1.5px solid var(--line);border-radius:12px 14px 12px 15px/14px 12px 15px 12px;overflow:hidden}
+@media(min-width:760px){.pdf-frame{aspect-ratio:1.35/1}}
+.pdf-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+/* ===================== 영상 임베드 ===================== */
+.video-embed{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:2px solid var(--line);border-radius:14px 16px 14px 17px/16px 14px 17px 14px;overflow:hidden;box-shadow:var(--shadow);margin-top:12px}
+.video-embed.vertical{max-width:300px;aspect-ratio:9/16;margin-left:auto;margin-right:auto}
+.video-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
 /* ===================== 허브 / 차시 연결 ===================== */
 .hub-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
 .hub-links a{text-decoration:none}
@@ -529,6 +539,7 @@ input[type=range]::-moz-range-track{height:8px;border-radius:99px;background:#ec
     <button data-tab="shape"><span class="em">📏</span>파동의 요소</button>
     <button data-tab="use"><span class="em">📡</span>파동이 전달하는 것</button>
     <button data-tab="game"><span class="em">🎮</span>파동 퀴즈!</button>
+    <button data-tab="summary"><span class="em">📝</span>내용 정리</button>
     <button data-tab="beyond"><span class="moon">🌙</span>교과서 밖</button>
   </nav>
 </header>
@@ -978,6 +989,31 @@ input[type=range]::-moz-range-track{height:8px;border-radius:99px;background:#ec
     </div>
   </div>
 
+  <!-- 🎥 소리를 눈으로 보는 영상들 (소리의 매질 = 공기) -->
+  <div class="card" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:10px">🎥 소리를 눈으로 보기 · 실험 영상</div>
+    <h3 class="card-t">소리는 결국 <span class="t-medium">공기의 떨림</span>이다</h3>
+    <p class="lead" style="font-size:14.5px;margin-top:6px">소리를 전달하는 매질은 <b class="k">공기</b>예요. 눈에 안 보여서 실감이 안 나죠? 아래 두 영상이 <b class="k">공기의 떨림(소리)을 눈으로 보이게</b> 만들어 줍니다.</p>
+
+    <div class="grid c2" style="margin-top:14px;align-items:start">
+      <div>
+        <p class="muted" style="font-size:13px;font-weight:700;margin-bottom:6px">📹 카메라로 보는 소리의 파동</p>
+        <div class="video-embed">
+          <iframe src="https://www.youtube.com/embed/XoAjQEXN5L4" title="카메라로 보는 소리의 파동" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <p class="help">특수 촬영으로 <b>공기가 출렁이는 소리의 파동</b>을 실제로 잡아낸 영상. 소리의 매질이 공기라는 걸 눈으로 확인!</p>
+      </div>
+      <div>
+        <p class="muted" style="font-size:13px;font-weight:700;margin-bottom:6px">🔥 루벤스 튜브 — 불꽃으로 그린 소리</p>
+        <div class="video-embed vertical">
+          <iframe src="https://www.youtube.com/embed/ivgv5tFT2Kk" title="루벤스 튜브 실험" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <p class="help">구멍 뚫린 관에 가스를 채우고 소리를 넣으면, <b>불꽃 높이가 소리 파동 모양대로 춤춰요.</b> 소리가 지날 때 공기(가스)가 빽빽해진 곳(마루)은 압력이 높아 불꽃이 크고, 성긴 곳(골)은 낮아지죠 — <b>보이지 않던 소리 파동이 불꽃 지도로!</b></p>
+      </div>
+    </div>
+    <div class="note class"><span class="ic">💬</span><div><b>교실 연결</b> — 두 영상 모두 "소리 = 공기의 파동"을 시각화해요. 진공 실험(공기 빼면 소리 사라짐)과 이어서 보여 주면, <b>매질(공기)의 역할</b>이 확실히 각인됩니다.</div></div>
+  </div>
+
   <!-- 🏹 활시위 에너지 전달 실험 -->
   <div class="card" style="margin-top:18px">
     <div class="badge energy" style="margin-bottom:10px">⚡ 에너지를 전달 · 직접 체험</div>
@@ -1220,6 +1256,29 @@ input[type=range]::-moz-range-track{height:8px;border-radius:99px;background:#ec
 </section>
 
 <!-- ====================================================================
+     TAB · 내용 정리 — 한장 요약 PDF
+==================================================================== -->
+<section class="panel" id="panel-summary">
+  <div class="eyebrow">오늘 배운 것 · 한 장 정리</div>
+  <h2 class="sec">📝 퍼져 나가는 파동 — 내용 정리</h2>
+  <p class="lead">이번 시간의 핵심을 한 장에 담았어요. 아래에서 바로 보고, 필요하면 내려받아 복습하세요.</p>
+
+  <div class="card" style="margin-top:20px;padding:14px">
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px">
+      <span class="badge">📄 한장정리 자료</span>
+      <a class="btn ghost sm" href="summary-wave01.pdf" download style="margin-left:auto">⬇ PDF 내려받기</a>
+      <a class="btn primary sm" href="summary-wave01.pdf" target="_blank" rel="noopener">🔎 새 탭에서 크게 보기</a>
+    </div>
+    <div class="pdf-frame">
+      <iframe src="summary-wave01.pdf#view=FitH" title="퍼져 나가는 파동 내용 정리 PDF" loading="lazy"></iframe>
+    </div>
+    <p class="help" style="margin-top:10px">📱 휴대폰에서 PDF가 안 보이면 위의 <b>‘새 탭에서 크게 보기’</b>를 눌러 주세요.</p>
+  </div>
+
+  <div class="cta-row"><button class="btn primary" data-go="beyond">교과서 밖 이야기도 보기 🌙</button></div>
+</section>
+
+<!-- ====================================================================
      TAB 6 · 교과서 밖 이야기 — 심화
 ==================================================================== -->
 <section class="panel" id="panel-beyond">
@@ -1385,6 +1444,7 @@ const TAB_IMAGES = {
   shape : '',   // 📏 파동의 모양
   use   : '',   // 📡 파동의 쓸모
   game  : '',   // 🎮 파동 마스터
+  summary:'',   // 📝 내용 정리
   beyond: ''    // 🌙 교과서 밖
 };
 const TAB_FALLBACK = {
@@ -1393,6 +1453,7 @@ const TAB_FALLBACK = {
   shape :'linear-gradient(180deg, #e4f0f6, #faf3e6 72%)',
   use   :'radial-gradient(90% 80% at 68% 18%, #fbe7d8, #faf3e6 70%)',
   game  :'radial-gradient(100% 85% at 30% 18%, #dcf0f4, #faf3e6 70%)',
+  summary:'linear-gradient(180deg, #f3ecda, #faf3e6 72%)',
   beyond:'radial-gradient(110% 85% at 50% 0%, #eae3f8, #faf3e6 64%)'
 };
 function setBg(tab){
@@ -1541,7 +1602,7 @@ function toast(msg,kind=''){
 }
 
 /* ---------- 탭 시스템 + 시뮬 생명주기 ---------- */
-const tabSims={intro:[],shake:[],shape:[],use:[],game:[],beyond:[]};
+const tabSims={intro:[],shake:[],shape:[],use:[],game:[],summary:[],beyond:[]};
 function stopAllSims(){for(const k in tabSims)tabSims[k].forEach(s=>s.stop&&s.stop());}
 function activate(id){
   (tabSims[id]||[]).forEach(s=>{s.resize&&s.resize();s.start&&s.start();});
@@ -3208,7 +3269,7 @@ function bindSwitch(el,init,onToggle){
 (function init(){
   // 폰트 로드 확인(폴백 안내)
   updateProgress();
-  const valid=['intro','shake','shape','use','game','beyond'];
+  const valid=['intro','shake','shape','use','game','summary','beyond'];
   const start=valid.includes(S.tab)?S.tab:'intro';
   // 시작 탭 표시 (초기엔 scrollTo 생략 위해 직접 처리)
   $$('.panel').forEach(p=>p.classList.remove('show'));
