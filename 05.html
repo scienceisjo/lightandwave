@@ -4371,5 +4371,49 @@ $$(".blank").forEach(b=>b.addEventListener("click",()=>b.classList.toggle("show"
   requestAnimationFrame(loop);
 })();
 </script>
+
+<script>
+/* SIMLINK-REVEAL : 시뮬레이터 모음에서 #id 로 진입하면 해당 탭을 열고 스크롤·강조 */
+(function(){
+  function btn(name){ return document.querySelector('.tab-btn[data-tab="'+name+'"]'); }
+  function reveal(){
+    var raw=(location.hash||'').replace(/^#/,'');
+    if(!raw) return;
+    var id; try{ id=decodeURIComponent(raw); }catch(e){ id=raw; }
+    var el=document.getElementById(id);
+    if(!el) return;
+    var chain=[], node=el;
+    while(node && node!==document.body){
+      if(node.id){
+        var name=node.id.replace(/^(tab|p|view)-/,'');
+        if(name && btn(name)) chain.push(name);
+      }
+      node=node.parentElement;
+    }
+    chain.reverse().forEach(function(n){ var b=btn(n); if(b) b.click(); });
+    setTimeout(function(){
+      try{ el.scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){ el.scrollIntoView(); }
+      var host=el.closest('.sim-card,.sim,.game-wrap,.cblock,.why-sim,.embed-wrap,section')||el;
+      var pb=host.style.boxShadow, pt=host.style.transition, pr=host.style.borderRadius;
+      host.style.transition='box-shadow .35s ease';
+      if(!pr) host.style.borderRadius='14px';
+      host.style.boxShadow='0 0 0 3px rgba(127,183,255,.95),0 0 34px rgba(127,183,255,.55)';
+      setTimeout(function(){ host.style.boxShadow=pb; host.style.transition=pt; if(!pr) host.style.borderRadius=pr; },2600);
+    },300);
+  }
+  function boot(){ setTimeout(reveal,340); }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',boot); }
+  else { boot(); }
+  window.addEventListener('hashchange',reveal);
+})();
+</script>
+
+
+<!-- HUBLINK-FAB : 빛과 파동 허브로 돌아가기 (고정 버튼) -->
+<a href="https://scienceisjo.github.io/lightandwave/hubpage" title="빛과 파동 허브로" aria-label="빛과 파동 허브로"
+   style="position:fixed;left:14px;bottom:14px;z-index:99999;display:inline-flex;align-items:center;gap:6px;padding:8px 13px;border-radius:999px;font:600 13px/1 'Noto Sans KR',system-ui,-apple-system,sans-serif;text-decoration:none;color:#eaf3ff;background:rgba(18,28,55,.85);border:1px solid rgba(127,183,255,.45);box-shadow:0 6px 20px -6px rgba(0,0,0,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)">
+  <span aria-hidden="true">🏠</span><span>허브</span>
+</a>
+
 </body>
 </html>

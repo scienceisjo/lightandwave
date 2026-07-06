@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>절대음감 테스트 · 음과 진동수</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/quiple/galmuri/dist/galmuri.css">
+
+<style>
+:root{
+  --bg:#E9EDF3; --bg-2:#DCE3EC; --paper:#FBFCFE;
+  --ink:#1A2030; --ink-soft:#5C6678; --ink-faint:#8A93A4;
+  --line:#C9D2DE; --line-soft:#DDE4EC;
+  --panel:#121826; --panel-2:#0B101C; --panel-line:#27334E; --grid:#1B2336;
+  --on-panel:#EAF0FA; --on-panel-soft:#7C8AA8;
+  --accent:#2DD4A7; --accent-bright:#5BE6C2; --accent-glow:rgba(45,212,167,.45);
+  --good:#27B468; --bad:#F2607A;
+  --r:20px; --r-sm:13px; --r-xs:9px;
+  --shadow:0 14px 38px rgba(20,30,55,.12), 0 3px 10px rgba(20,30,55,.06);
+  --shadow-panel:inset 0 0 0 1px var(--panel-line), 0 18px 44px rgba(8,14,30,.30);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0; padding:0}
+body{
+  font-family:'Pretendard','Noto Sans KR',sans-serif;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, #EEF2F8 0%, transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, #E4EAF2 0%, transparent 55%),
+    var(--bg);
+  color:var(--ink); line-height:1.5; min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:880px; margin:0 auto; padding:22px 18px 48px}
+
+/* ---------- Header ---------- */
+.head{display:flex; align-items:flex-end; justify-content:space-between; gap:14px; margin-bottom:18px; flex-wrap:wrap}
+.brand{display:flex; flex-direction:column; gap:2px}
+.eyebrow{font-size:12px; letter-spacing:.14em; color:var(--ink-faint); font-weight:700; text-transform:uppercase}
+h1{font-family:'Black Han Sans',sans-serif; font-weight:400; font-size:clamp(28px,7vw,40px); margin:0; letter-spacing:-.01em; line-height:1.02}
+h1 .em{color:var(--accent); transition:color .4s ease}
+.score-chip{
+  display:flex; align-items:center; gap:14px; background:var(--paper);
+  border:1px solid var(--line); border-radius:999px; padding:9px 16px; box-shadow:var(--shadow);
+}
+.score-chip .blk{display:flex; flex-direction:column; align-items:center; line-height:1; gap:3px; min-width:42px}
+.score-chip .num{font-family:'Galmuri11',monospace; font-size:18px; color:var(--ink); font-weight:700}
+.score-chip .lbl{font-size:10px; color:var(--ink-faint); letter-spacing:.04em}
+.score-chip .sep{width:1px; height:26px; background:var(--line-soft)}
+.score-chip .num.hot{color:var(--accent)}
+
+/* ---------- Tabs ---------- */
+.tabs{display:flex; gap:7px; margin-bottom:16px; overflow-x:auto; padding-bottom:3px; scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:0 0 auto; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft);
+  padding:9px 15px; border-radius:999px; font-size:14px; font-weight:600; cursor:pointer;
+  display:flex; align-items:center; gap:7px; transition:all .18s ease; white-space:nowrap;
+}
+.tab .ico{font-size:15px; opacity:.85}
+.tab:hover{border-color:#B7C1D1; color:var(--ink)}
+.tab.on{background:var(--ink); color:#fff; border-color:var(--ink); box-shadow:0 6px 16px rgba(26,32,48,.22)}
+.tab.on .ico{opacity:1}
+
+/* ---------- Instrument selector ---------- */
+.inst-row{display:flex; align-items:center; gap:6px; margin-bottom:16px; overflow-x:auto; padding-bottom:2px; scrollbar-width:none}
+.inst-row::-webkit-scrollbar{display:none}
+.inst-label{flex:0 0 auto; font-size:11px; font-weight:700; color:var(--ink-faint); letter-spacing:.1em; padding-right:2px}
+.inst-pill{
+  flex:0 0 auto; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft);
+  padding:7px 13px; border-radius:999px; font-size:13px; font-weight:600; cursor:pointer;
+  transition:all .16s ease; white-space:nowrap;
+}
+.inst-pill:hover{border-color:var(--accent); color:var(--ink)}
+.inst-pill.on{background:var(--accent); color:#08221B; border-color:var(--accent); box-shadow:0 4px 12px var(--accent-glow)}
+
+/* ---------- Scope (hero) ---------- */
+.scope-wrap{
+  background:linear-gradient(180deg,var(--panel) 0%,var(--panel-2) 100%);
+  border-radius:var(--r); padding:16px 16px 14px; box-shadow:var(--shadow-panel);
+  position:relative; overflow:hidden; margin-bottom:12px;
+}
+.scope-wrap::before{
+  content:""; position:absolute; inset:0;
+  background:radial-gradient(420px 180px at 50% 0%, var(--accent-glow) 0%, transparent 70%);
+  opacity:.5; transition:opacity .4s; pointer-events:none;
+}
+.scope-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; position:relative; z-index:1}
+.scope-tag{display:flex; align-items:center; gap:8px; color:var(--on-panel-soft); font-size:11px; letter-spacing:.12em; font-weight:700}
+.scope-tag .dot{width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px var(--accent); animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
+.scope-note{font-family:'Galmuri11',monospace; font-size:13px; color:var(--on-panel); letter-spacing:.04em; min-height:16px}
+.scope-note .q{color:var(--on-panel-soft)}
+canvas#scope{display:block; width:100%; height:150px; position:relative; z-index:1}
+.scope-read{display:flex; align-items:baseline; justify-content:flex-end; gap:7px; position:relative; z-index:1; margin-top:2px}
+.hz-big{font-family:'Galmuri11',monospace; font-size:clamp(30px,9vw,46px); font-weight:700; color:var(--accent-bright); line-height:1; letter-spacing:.02em; text-shadow:0 0 22px var(--accent-glow); transition:color .35s}
+.hz-unit{font-family:'Galmuri11',monospace; font-size:16px; color:var(--on-panel-soft); font-weight:700}
+.hz-big.masked{color:var(--on-panel-soft); text-shadow:none}
+
+.hint{font-size:12.5px; color:var(--ink-soft); text-align:center; margin:0 0 18px; display:flex; align-items:center; justify-content:center; gap:7px}
+.hint b{color:var(--ink); font-weight:700}
+.hint .wv{color:var(--accent)}
+
+/* ---------- Panels ---------- */
+.panel{display:none}
+.panel.on{display:block; animation:fade .3s ease}
+@keyframes fade{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
+
+.ask{font-size:16px; font-weight:700; text-align:center; margin:4px 0 14px; color:var(--ink)}
+.ask .sub{display:block; font-size:12.5px; color:var(--ink-faint); font-weight:500; margin-top:3px}
+
+.center-row{display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:14px}
+.btn{
+  font-family:'Pretendard',sans-serif; border:none; cursor:pointer; font-weight:700;
+  border-radius:var(--r-sm); transition:transform .12s, box-shadow .2s, background .2s; user-select:none;
+}
+.btn:active{transform:translateY(1px) scale(.985)}
+.btn-play{
+  background:var(--ink); color:#fff; font-size:15px; padding:13px 26px; border-radius:999px;
+  display:inline-flex; align-items:center; gap:9px; box-shadow:0 8px 20px rgba(26,32,48,.25);
+}
+.btn-play:hover{background:#0E1424}
+.btn-play .pic{font-size:17px}
+.btn-ghost{
+  background:var(--paper); color:var(--ink-soft); border:1px solid var(--line); font-size:14px;
+  padding:12px 20px; border-radius:999px; display:inline-flex; align-items:center; gap:8px;
+}
+.btn-ghost:hover{border-color:#B7C1D1; color:var(--ink)}
+
+/* note answer grid */
+.note-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:9px; max-width:520px; margin:0 auto 14px}
+@media(max-width:520px){.note-grid{grid-template-columns:repeat(4,1fr); gap:7px}}
+.note-btn{
+  background:var(--paper); border:1.5px solid var(--line); border-radius:var(--r-sm);
+  padding:14px 6px 11px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px;
+  transition:all .15s ease;
+}
+.note-btn:hover{border-color:var(--accent); transform:translateY(-2px); box-shadow:0 8px 18px rgba(20,30,55,.10)}
+.note-btn .ko{font-family:'Black Han Sans',sans-serif; font-size:24px; color:var(--ink); line-height:1}
+.note-btn .en{font-family:'Galmuri11',monospace; font-size:13px; color:var(--ink-faint); font-weight:700}
+.note-btn:disabled{cursor:default}
+.note-btn.correct{background:#E9F8F0; border-color:var(--good)}
+.note-btn.correct .ko{color:var(--good)}
+.note-btn.wrong{background:#FCEDF1; border-color:var(--bad)}
+.note-btn.wrong .ko{color:var(--bad)}
+.note-btn.reveal{border-color:var(--good); box-shadow:0 0 0 2px rgba(39,180,104,.25)}
+
+/* big two-choice (compare) */
+.choice-2{display:grid; grid-template-columns:1fr 1fr; gap:11px; max-width:460px; margin:0 auto 14px}
+.choice-btn{
+  background:var(--paper); border:1.5px solid var(--line); border-radius:var(--r-sm); padding:18px 12px;
+  cursor:pointer; text-align:center; transition:all .15s; display:flex; flex-direction:column; align-items:center; gap:6px;
+}
+.choice-btn:hover{border-color:var(--accent); transform:translateY(-2px); box-shadow:0 8px 18px rgba(20,30,55,.10)}
+.choice-btn .big{font-family:'Black Han Sans',sans-serif; font-size:19px; color:var(--ink); line-height:1.1}
+.choice-btn .rep{font-size:12px; color:var(--accent); font-weight:700; display:inline-flex; align-items:center; gap:4px}
+.choice-btn:disabled{cursor:default; opacity:.92}
+.choice-btn.correct{background:#E9F8F0; border-color:var(--good)}
+.choice-btn.wrong{background:#FCEDF1; border-color:var(--bad)}
+
+/* compare replay */
+.play-pair{display:flex; justify-content:center; gap:10px; margin-bottom:8px; flex-wrap:wrap}
+.pill-play{
+  background:var(--paper); border:1.5px solid var(--line); border-radius:999px; padding:10px 18px;
+  font-weight:700; font-size:14px; cursor:pointer; display:inline-flex; gap:8px; align-items:center; color:var(--ink-soft);
+}
+.pill-play:hover{border-color:var(--accent); color:var(--ink)}
+.pill-play .n{font-family:'Galmuri11',monospace; background:var(--bg-2); border-radius:6px; padding:1px 7px; font-size:12px}
+
+/* frequency slider */
+.freq-box{max-width:520px; margin:0 auto 14px}
+.freq-val{text-align:center; margin-bottom:10px}
+.freq-val .g{font-family:'Galmuri11',monospace; font-size:34px; font-weight:700; color:var(--accent)}
+.freq-val .u{font-family:'Galmuri11',monospace; font-size:15px; color:var(--ink-faint); font-weight:700}
+.freq-val .cap{display:block; font-size:12px; color:var(--ink-faint); margin-top:2px}
+input[type=range].fslider{
+  -webkit-appearance:none; appearance:none; width:100%; height:10px; border-radius:999px;
+  background:linear-gradient(90deg, hsl(255 78% 60%), hsl(150 78% 55%), hsl(20 85% 58%));
+  outline:none; cursor:pointer; margin:6px 0 4px;
+}
+input[type=range].fslider::-webkit-slider-thumb{
+  -webkit-appearance:none; width:26px; height:26px; border-radius:50%; background:#fff;
+  border:3px solid var(--accent); box-shadow:0 3px 10px rgba(20,30,55,.25); cursor:grab;
+}
+input[type=range].fslider::-moz-range-thumb{width:26px; height:26px; border-radius:50%; background:#fff; border:3px solid var(--accent); box-shadow:0 3px 10px rgba(20,30,55,.25); cursor:grab}
+.fscale{display:flex; justify-content:space-between; font-family:'Galmuri11',monospace; font-size:11px; color:var(--ink-faint)}
+
+/* reveal box */
+.reveal{
+  max-width:560px; margin:0 auto; background:var(--paper); border:1px solid var(--line); border-radius:var(--r-sm);
+  padding:14px 16px; display:none; align-items:center; gap:13px; box-shadow:var(--shadow);
+}
+.reveal.show{display:flex; animation:fade .25s ease}
+.reveal .badge{
+  flex:0 0 auto; width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:24px; font-weight:800;
+}
+.reveal.ok .badge{background:#E0F5EA; color:var(--good)}
+.reveal.no .badge{background:#FCE6EC; color:var(--bad)}
+.reveal .txt{flex:1; min-width:0}
+.reveal .t1{font-weight:800; font-size:15px; margin-bottom:2px}
+.reveal.ok .t1{color:var(--good)} .reveal.no .t1{color:var(--bad)}
+.reveal .t2{font-size:13px; color:var(--ink-soft); line-height:1.45}
+.reveal .t2 b{font-family:'Galmuri11',monospace; color:var(--ink); font-weight:700}
+
+.diff-row{display:flex; justify-content:center; align-items:center; gap:9px; margin:0 0 16px; flex-wrap:wrap}
+.diff-row .lbl{font-size:12.5px; color:var(--ink-faint); font-weight:600}
+.seg{display:inline-flex; background:var(--bg-2); border-radius:999px; padding:3px; gap:2px}
+.seg button{
+  border:none; background:transparent; padding:6px 13px; border-radius:999px; font-size:13px; font-weight:700;
+  color:var(--ink-soft); cursor:pointer; transition:all .15s;
+}
+.seg button.on{background:var(--paper); color:var(--ink); box-shadow:0 2px 6px rgba(20,30,55,.12)}
+
+/* ---------- Practice keyboard ---------- */
+.kb-wrap{max-width:600px; margin:0 auto 8px}
+.kb{position:relative; height:180px; display:flex; user-select:none; border-radius:10px; overflow:hidden; box-shadow:0 8px 22px rgba(20,30,55,.14)}
+.wkey{
+  flex:1; background:linear-gradient(180deg,#fff,#F3F5F9); border-right:1px solid #E2E7EF;
+  display:flex; flex-direction:column; justify-content:flex-end; align-items:center; padding-bottom:10px; gap:2px;
+  cursor:pointer; transition:background .08s;
+}
+.wkey:last-child{border-right:none}
+.wkey:active,.wkey.lit{background:linear-gradient(180deg,var(--accent-bright),var(--accent))}
+.wkey .wko{font-family:'Black Han Sans',sans-serif; font-size:15px; color:var(--ink-soft)}
+.wkey .wen{font-family:'Galmuri11',monospace; font-size:10px; color:var(--ink-faint)}
+.wkey.lit .wko,.wkey.lit .wen{color:#0B101C}
+.bkey{
+  position:absolute; top:0; width:7%; height:60%; background:linear-gradient(180deg,#2A3346,#10151F);
+  border-radius:0 0 6px 6px; cursor:pointer; z-index:3; transform:translateX(-50%);
+  box-shadow:0 4px 8px rgba(0,0,0,.4); display:flex; align-items:flex-end; justify-content:center; padding-bottom:6px;
+}
+.bkey:active,.bkey.lit{background:linear-gradient(180deg,var(--accent),#0E8E70)}
+.bkey .ben{font-family:'Galmuri11',monospace; font-size:8px; color:#8A93A4}
+.kb-tip{text-align:center; font-size:12px; color:var(--ink-faint); margin-top:10px}
+.kb-tip .oct{color:var(--accent); font-weight:700}
+
+/* ---------- Results overlay ---------- */
+.overlay{
+  position:fixed; inset:0; background:rgba(18,24,38,.55); backdrop-filter:blur(4px);
+  display:none; align-items:center; justify-content:center; padding:20px; z-index:50;
+}
+.overlay.show{display:flex; animation:fade .25s ease}
+.modal{
+  background:var(--paper); border-radius:24px; max-width:420px; width:100%; padding:30px 26px 24px;
+  text-align:center; box-shadow:0 30px 80px rgba(8,14,30,.4); animation:pop .3s cubic-bezier(.2,.9,.3,1.2);
+}
+@keyframes pop{from{transform:scale(.92); opacity:0}to{transform:scale(1); opacity:1}}
+.modal .emo{font-size:46px; margin-bottom:6px}
+.modal h2{font-family:'Black Han Sans',sans-serif; font-weight:400; font-size:26px; margin:0 0 4px}
+.modal .res-stat{display:flex; justify-content:center; gap:0; margin:18px 0 14px}
+.modal .res-stat .b{flex:1; display:flex; flex-direction:column; gap:3px}
+.modal .res-stat .v{font-family:'Galmuri11',monospace; font-size:26px; font-weight:700; color:var(--accent)}
+.modal .res-stat .k{font-size:11px; color:var(--ink-faint)}
+.modal .res-stat .ln{width:1px; background:var(--line-soft)}
+.modal .msg{font-size:13.5px; color:var(--ink-soft); line-height:1.6; margin:0 0 6px; padding:12px 14px; background:var(--bg); border-radius:12px}
+.modal .best{font-size:12px; color:var(--ink-faint); margin:8px 0 18px; font-family:'Galmuri11',monospace}
+.modal .btn-again{width:100%; background:var(--ink); color:#fff; font-size:15px; padding:14px; border-radius:13px}
+.modal .btn-again:hover{background:#0E1424}
+
+/* ---------- Start overlay ---------- */
+.start{
+  position:fixed; inset:0; background:linear-gradient(160deg,#141A28,#0A0E18); z-index:80;
+  display:flex; align-items:center; justify-content:center; padding:24px; text-align:center;
+}
+.start.hide{opacity:0; pointer-events:none; transition:opacity .5s}
+.start .inner{max-width:380px}
+.start .wave-emo{font-size:54px; margin-bottom:14px; filter:drop-shadow(0 0 24px rgba(91,230,194,.5))}
+.start h1.title{font-family:'Black Han Sans',sans-serif; font-weight:400; color:#fff; font-size:36px; margin:0 0 8px; line-height:1.05}
+.start h1.title .g{color:var(--accent-bright)}
+.start p{color:#9BA6BE; font-size:14px; line-height:1.6; margin:0 0 26px}
+.start .go{
+  background:var(--accent); color:#0A0E18; border:none; font-family:'Pretendard',sans-serif; font-weight:800;
+  font-size:16px; padding:15px 40px; border-radius:999px; cursor:pointer; box-shadow:0 10px 30px rgba(45,212,167,.4);
+  transition:transform .15s;
+}
+.start .go:active{transform:scale(.97)}
+.start small{display:block; color:#5C6884; font-size:11px; margin-top:16px}
+
+footer{text-align:center; margin-top:34px; font-size:11.5px; color:var(--ink-faint); line-height:1.7}
+footer .nm{font-weight:700; color:var(--ink-soft)}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001s !important}
+}
+</style>
+</head>
+<body>
+
+<!-- Start gate (also satisfies audio gesture) -->
+<div class="start" id="start">
+  <div class="inner">
+    <div class="wave-emo">🎵</div>
+    <h1 class="title">절대음감 <span class="g">테스트</span></h1>
+    <p>모든 음에는 고유한 <b style="color:#CBD3E4">진동수(Hz)</b>가 있어요.<br>소리를 듣고 어떤 음인지 맞혀보고,<br>음이 어떻게 진동수로 정해지는지 알아봐요.</p>
+    <button class="go" id="startBtn">▶ 시작하기</button>
+    <small>소리가 나오니 볼륨을 확인해 주세요</small>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="head">
+    <div class="brand">
+      <span class="eyebrow">파동으로 알아보는 소리의 특성</span>
+      <h1>절대음감 <span class="em" id="titleEm">테스트</span></h1>
+    </div>
+    <div class="score-chip" id="scoreChip">
+      <div class="blk"><span class="num" id="sCorrect">0</span><span class="lbl">맞힘</span></div>
+      <div class="sep"></div>
+      <div class="blk"><span class="num" id="sTotal">0</span><span class="lbl">문제</span></div>
+      <div class="sep"></div>
+      <div class="blk"><span class="num hot" id="sStreak">0</span><span class="lbl">연속</span></div>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab on" data-mode="practice"><span class="ico">🎹</span>연습</button>
+    <button class="tab" data-mode="absolute"><span class="ico">🎯</span>음 맞히기</button>
+    <button class="tab" data-mode="compare"><span class="ico">⚖️</span>높낮이 비교</button>
+    <button class="tab" data-mode="freq"><span class="ico">📟</span>진동수 맞히기</button>
+  </nav>
+
+  <nav class="inst-row" id="instRow">
+    <span class="inst-label">악기</span>
+    <button class="inst-pill on" data-inst="piano">🎹 피아노</button>
+    <button class="inst-pill" data-inst="guitar">🎸 기타</button>
+    <button class="inst-pill" data-inst="bass">🎻 베이스</button>
+    <button class="inst-pill" data-inst="eguitar">⚡ 일렉기타</button>
+    <button class="inst-pill" data-inst="sine">〰️ 순음</button>
+  </nav>
+
+  <!-- Hero oscilloscope -->
+  <div class="scope-wrap" id="scopeWrap">
+    <div class="scope-top">
+      <div class="scope-tag"><span class="dot"></span>OSCILLOSCOPE · 파형</div>
+      <div class="scope-note" id="scopeNote"><span class="q">소리를 재생하면 파형이 나타나요</span></div>
+    </div>
+    <canvas id="scope"></canvas>
+    <div class="scope-read">
+      <span class="hz-big masked" id="hzBig">— — —</span>
+      <span class="hz-unit">Hz</span>
+    </div>
+  </div>
+  <p class="hint"><span class="wv">〰️</span> 음이 <b>높을수록</b> 진동수(Hz)가 <b>크고</b>, 파동이 <b>촘촘</b>해져요</p>
+
+  <!-- ===== PRACTICE ===== -->
+  <section class="panel on" id="p-practice">
+    <p class="ask">건반을 눌러 음과 진동수를 살펴보세요<span class="sub">같은 음이라도 옥타브가 오르면 진동수가 2배가 돼요 · 악기를 바꾸면 파형(음색)이 달라져요</span></p>
+    <div class="kb-wrap"><div class="kb" id="keyboard"></div></div>
+    <p class="kb-tip"><span class="oct">도(C4) 261Hz → 도(C5) 523Hz</span> · 한 옥타브 높아지면 진동수 2배!</p>
+  </section>
+
+  <!-- ===== ABSOLUTE ===== -->
+  <section class="panel" id="p-absolute">
+    <div class="diff-row">
+      <span class="lbl">음 범위</span>
+      <div class="seg" id="absDiff">
+        <button data-d="1">한 옥타브</button>
+        <button data-d="2">두 옥타브</button>
+        <button data-d="3" class="on">여러 옥타브</button>
+      </div>
+    </div>
+    <p class="ask" id="absAsk">이 음은 어떤 음일까요?</p>
+    <div class="center-row">
+      <button class="btn btn-play" id="absPlay"><span class="pic">🔊</span>다시 듣기</button>
+    </div>
+    <div class="note-grid" id="absGrid"></div>
+    <div class="reveal" id="absReveal"></div>
+  </section>
+
+  <!-- ===== COMPARE ===== -->
+  <section class="panel" id="p-compare">
+    <div class="diff-row">
+      <span class="lbl">음 범위</span>
+      <div class="seg" id="compDiff">
+        <button data-d="1">한 옥타브</button>
+        <button data-d="2">두 옥타브</button>
+        <button data-d="3" class="on">여러 옥타브</button>
+      </div>
+    </div>
+    <p class="ask">어느 음이 더 <b>높을까요?</b><span class="sub">두 음을 듣고 진동수가 더 큰 쪽을 골라요</span></p>
+    <div class="play-pair">
+      <button class="pill-play" id="compPlayA"><span class="n">1</span>▶ 첫 번째 음</button>
+      <button class="pill-play" id="compPlayB"><span class="n">2</span>▶ 두 번째 음</button>
+    </div>
+    <div class="choice-2" id="compChoices">
+      <button class="choice-btn" data-pick="A"><span class="big">첫 번째 음이<br>더 높다</span><span class="rep">🔊 1번</span></button>
+      <button class="choice-btn" data-pick="B"><span class="big">두 번째 음이<br>더 높다</span><span class="rep">🔊 2번</span></button>
+    </div>
+    <div class="reveal" id="compReveal"></div>
+  </section>
+
+  <!-- ===== FREQUENCY ===== -->
+  <section class="panel" id="p-freq">
+    <p class="ask">이 음의 <b>진동수</b>는 몇 Hz일까요?<span class="sub">소리를 듣고 슬라이더로 진동수를 맞혀보세요</span></p>
+    <div class="center-row">
+      <button class="btn btn-play" id="freqPlay"><span class="pic">🔊</span>다시 듣기</button>
+    </div>
+    <div class="freq-box">
+      <div class="freq-val"><span class="g" id="freqGuess">440</span><span class="u"> Hz</span><span class="cap">내가 고른 진동수</span></div>
+      <input type="range" min="0" max="1000" value="500" class="fslider" id="freqSlider">
+      <div class="fscale"><span>낮은 음 130Hz</span><span>높은 음 1047Hz</span></div>
+    </div>
+    <div class="center-row">
+      <button class="btn btn-play" id="freqSubmit" style="background:var(--accent); color:#08221B"><span class="pic">✓</span>이 진동수로 결정</button>
+    </div>
+    <div class="reveal" id="freqReveal"></div>
+  </section>
+
+  <footer>
+    <span class="nm">과학이조선생</span> · 파동으로 알아보는 소리의 특성<br>
+    음의 높낮이는 진동수로 정해집니다 · A4 = 440Hz 기준 · 순음(sine) 파형
+  </footer>
+</div>
+
+<!-- Results overlay -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="emo" id="rEmo">🎧</div>
+    <h2 id="rTitle">라운드 완료!</h2>
+    <div class="res-stat">
+      <div class="b"><span class="v" id="rScore">0</span><span class="k" id="rScoreK">맞힌 개수</span></div>
+      <div class="ln"></div>
+      <div class="b"><span class="v" id="rAcc">0%</span><span class="k">정답률</span></div>
+    </div>
+    <p class="msg" id="rMsg"></p>
+    <p class="best" id="rBest"></p>
+    <button class="btn btn-again" id="rAgain">다시 도전하기</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   음 / 진동수 데이터
+============================================================ */
+const KO = ['도','도♯','레','레♯','미','파','파♯','솔','솔♯','라','라♯','시'];
+const EN = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+const NAT = [0,2,4,5,7,9,11];            // 자연음(흰 건반) pitch class
+const midiToFreq = m => 440 * Math.pow(2,(m-69)/12);
+function info(m){
+  const pc = ((m%12)+12)%12, oct = Math.floor(m/12)-1;
+  return {midi:m, pc, oct, ko:KO[pc], en:EN[pc], enFull:EN[pc]+oct,
+          freq:midiToFreq(m), hz:Math.round(midiToFreq(m))};
+}
+function naturals(lo,hi){const a=[]; for(let m=lo;m<=hi;m++) if(NAT.includes(((m%12)+12)%12)) a.push(m); return a;}
+// 난이도 → MIDI 범위 (C4=60)
+const RANGES = {1:[60,71], 2:[60,83], 3:[48,84]}; // 1옥타브 / 2옥타브 / C3~C6
+
+/* ============================================================
+   색: 진동수 → 색상 (낮음=보라/파랑, 높음=주황)
+============================================================ */
+function freqColor(f){
+  const lo=Math.log2(125), hi=Math.log2(1100);
+  let t=(Math.log2(f)-lo)/(hi-lo); t=Math.max(0,Math.min(1,t));
+  return {h: 256 - t*236, s:78};
+}
+const css = (c,l)=>`hsl(${c.h.toFixed(0)} ${c.s}% ${l}%)`;
+function setAccent(f){
+  const c=freqColor(f), root=document.documentElement.style;
+  root.setProperty('--accent', css(c,57));
+  root.setProperty('--accent-bright', css(c,67));
+  root.setProperty('--accent-glow', `hsl(${c.h.toFixed(0)} ${c.s}% 60% / .45)`);
+}
+
+/* ============================================================
+   오디오
+============================================================ */
+let actx=null, master=null;
+function ensureAudio(){
+  if(!actx){
+    actx = new (window.AudioContext||window.webkitAudioContext)();
+    master = actx.createGain(); master.gain.value=0.85; master.connect(actx.destination);
+  }
+  if(actx.state==='suspended') actx.resume();
+}
+/* ---- 악기 정의 ----
+   scope: 오실로스코프에 그릴 배음 진폭(음색 시각화용)  */
+const INSTRUMENTS = {
+  piano:   {name:'피아노', kind:'piano', scope:[1,0.35,0.45,0.15,0.18,0.08]},
+  guitar:  {name:'기타', kind:'ks', sustain:1.3, lpMul:9, gain:0.85, scope:[1,0.55,0.35,0.42,0.2,0.15]},
+  bass:    {name:'베이스', kind:'ks', sustain:1.9, lpMul:2.6, q:0.9, gain:1.0, scope:[1,0.3,0.12,0.05]},
+  eguitar: {name:'일렉기타', kind:'ks', sustain:2.2, lpMul:6, q:0.8, drive:10, driveGain:4, lp2Mul:5, gain:0.6, scope:[1,0.7,0.55,0.6,0.45,0.35,0.25], scopeClip:2.2},
+  sine:    {name:'순음', kind:'sine', scope:[1]},
+};
+let currentInst='piano';
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+function distCurve(k){ const n=1024,c=new Float32Array(n); for(let i=0;i<n;i++){const x=i/n*2-1; c[i]=(1+k)*x/(1+k*Math.abs(x));} return c; }
+
+// 피아노: 배음 스펙트럼 + 타격 어택 + 밝기 감쇠
+function playPiano(freq,dur){
+  const t=actx.currentTime, N=8, re=new Float32Array(N+1), im=new Float32Array(N+1);
+  const amp=[0,1,0.42,0.32,0.18,0.12,0.06,0.05,0.03];
+  for(let k=1;k<=N;k++) im[k]=amp[k]||0;
+  const wave=actx.createPeriodicWave(re,im,{disableNormalization:false});
+  const g=actx.createGain(), lp=actx.createBiquadFilter();
+  lp.type='lowpass'; lp.Q.value=0.6;
+  lp.frequency.setValueAtTime(6500,t); lp.frequency.exponentialRampToValueAtTime(Math.max(1400,freq*2),t+0.5);
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.linearRampToValueAtTime(0.9,t+0.005);
+  g.gain.exponentialRampToValueAtTime(0.3,t+0.35);
+  g.gain.exponentialRampToValueAtTime(0.0006,t+dur);
+  const o1=actx.createOscillator(); o1.setPeriodicWave(wave); o1.frequency.value=freq;
+  const o2=actx.createOscillator(); o2.setPeriodicWave(wave); o2.frequency.value=freq; o2.detune.value=5;
+  const g2=actx.createGain(); g2.gain.value=0.5;
+  o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(lp); lp.connect(master);
+  o1.start(t); o2.start(t); o1.stop(t+dur+0.05); o2.stop(t+dur+0.05);
+}
+// 현악기: 카플루스-스트롱(뜯은/친 현) 물리 모델
+function playString(freq,dur,I){
+  const t=actx.currentTime, sr=actx.sampleRate;
+  const N=Math.max(2,Math.round(sr/freq)), total=Math.floor(sr*dur);
+  const buf=actx.createBuffer(1,total,sr), out=buf.getChannelData(0), d=new Float32Array(N);
+  for(let i=0;i<N;i++) d[i]=Math.random()*2-1;
+  const damp=Math.exp(Math.log(0.001)/(sr*I.sustain)); // 감쇠 시간 → 샘플당 계수
+  let idx=0;
+  for(let i=0;i<total;i++){ const cur=d[idx], nxt=d[(idx+1)%N]; out[i]=cur; d[idx]=0.5*(cur+nxt)*damp; idx=(idx+1)%N; }
+  const src=actx.createBufferSource(); src.buffer=buf;
+  let node=src;
+  const lp=actx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=clamp(freq*I.lpMul,400,13000); lp.Q.value=I.q||0.7;
+  node.connect(lp); node=lp;
+  if(I.drive){ // 일렉기타 오버드라이브
+    const pre=actx.createGain(); pre.gain.value=I.driveGain||3;
+    const ws=actx.createWaveShaper(); ws.curve=distCurve(I.drive); ws.oversample='4x';
+    node.connect(pre); pre.connect(ws); node=ws;
+    const lp2=actx.createBiquadFilter(); lp2.type='lowpass'; lp2.frequency.value=clamp(freq*(I.lp2Mul||5),600,9000);
+    node.connect(lp2); node=lp2;
+  }
+  const g=actx.createGain();
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(I.gain||0.9,t+0.004);
+  g.gain.setValueAtTime(I.gain||0.9,t+Math.max(0.05,dur-0.08));
+  g.gain.linearRampToValueAtTime(0.0001,t+dur);
+  node.connect(g); g.connect(master); src.start(t); src.stop(t+dur+0.02);
+}
+// 순음
+function playSine(freq,dur){
+  const t=actx.currentTime, o=actx.createOscillator(), g=actx.createGain();
+  o.type='sine'; o.frequency.value=freq;
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.85,t+0.015);
+  g.gain.setValueAtTime(0.85,t+Math.max(0.05,dur-0.13)); g.gain.linearRampToValueAtTime(0.0001,t+dur);
+  o.connect(g); g.connect(master); o.start(t); o.stop(t+dur+0.03);
+}
+function playSound(freq, dur=1.3){
+  ensureAudio(); const I=INSTRUMENTS[currentInst];
+  if(I.kind==='piano') playPiano(freq,dur);
+  else if(I.kind==='ks') playString(freq,dur,I);
+  else playSine(freq,dur);
+}
+// 소리 + 파형 공개 (연습 / 정답 공개용)
+function tone(freq, dur=1.3){ playSound(freq,dur); startScope(freq,dur); }
+// 소리만 재생, 파형은 숨김 (문제 단계 — 귀로만 판단)
+function toneMasked(freq, dur=1.3){ playSound(freq,dur); listenScope(); }
+function sfxCorrect(){
+  ensureAudio(); const t=actx.currentTime;
+  [880,1318.5].forEach((f,i)=>{const o=actx.createOscillator(),g=actx.createGain();o.type='sine';o.frequency.value=f;
+    g.gain.setValueAtTime(0,t+i*0.085);g.gain.linearRampToValueAtTime(0.45,t+i*0.085+0.01);
+    g.gain.exponentialRampToValueAtTime(0.001,t+i*0.085+0.2);o.connect(g);g.connect(master);
+    o.start(t+i*0.085);o.stop(t+i*0.085+0.22);});
+}
+function sfxWrong(){
+  ensureAudio(); const t=actx.currentTime, o=actx.createOscillator(), g=actx.createGain();
+  o.type='triangle'; o.frequency.setValueAtTime(320,t); o.frequency.linearRampToValueAtTime(170,t+0.2);
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.4,t+0.01);
+  g.gain.exponentialRampToValueAtTime(0.001,t+0.28); o.connect(g); g.connect(master); o.start(t); o.stop(t+0.3);
+}
+
+/* ============================================================
+   오실로스코프
+============================================================ */
+const scope=document.getElementById('scope'), sctx=scope.getContext('2d');
+let scopeMode='idle', scopeFreq=440, scopeT0=0, scopeDur=0, scopeC=freqColor(440), dual=null;
+let reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function setAccentNeutral(){ const r=document.documentElement.style;
+  r.setProperty('--accent','#2DD4A7'); r.setProperty('--accent-bright','#5BE6C2'); r.setProperty('--accent-glow','rgba(45,212,167,.4)'); }
+
+function fitCanvas(){
+  const r=scope.getBoundingClientRect(), dpr=Math.min(window.devicePixelRatio||1,2);
+  scope.width=r.width*dpr; scope.height=r.height*dpr; sctx.setTransform(dpr,0,0,dpr,0,0);
+}
+window.addEventListener('resize', fitCanvas);
+
+function startScope(freq,dur){ scopeMode='play'; dual=null; scopeFreq=freq; scopeC=freqColor(freq); scopeT0=performance.now(); scopeDur=dur*1000; setAccent(freq); }
+// 정답 공개: 실제 파형 + 진동수 + 색을 고정 표시
+function revealScope(n){ scopeMode='reveal'; dual=null; scopeFreq=n.freq; scopeC=freqColor(n.freq); scopeT0=performance.now(); setAccent(n.freq); showReadout(n,false); }
+// 문제 단계: 파형 숨김 — "측정 대기" 표시 (음 정보 노출 안 함)
+function listenScope(){ scopeMode='listen'; dual=null; scopeT0=performance.now(); setAccentNeutral();
+  hzBig.textContent='?'; hzBig.classList.add('masked'); scopeNote.innerHTML='<span class="q">잘 듣고 음을 맞혀보세요</span>'; }
+// 두 파형 동시 비교 공개
+function startDual(a,b){ scopeMode='dual'; dual=[a.freq,b.freq]; setAccent(Math.max(a.freq,b.freq)); showReadoutDual(a,b); }
+
+function grid(w,h){
+  sctx.strokeStyle='rgba(255,255,255,.05)'; sctx.lineWidth=1;
+  for(let y=h/4;y<h;y+=h/4){sctx.beginPath();sctx.moveTo(0,y);sctx.lineTo(w,y);sctx.stroke();}
+  for(let x=w/8;x<w;x+=w/8){sctx.beginPath();sctx.moveTo(x,0);sctx.lineTo(x,h);sctx.stroke();}
+  sctx.strokeStyle='rgba(255,255,255,.09)'; sctx.beginPath(); sctx.moveTo(0,h/2); sctx.lineTo(w,h/2); sctx.stroke();
+}
+function wave(freq,amp,midY,w,h,c,now){
+  if(amp<=0.002) return;
+  const I=INSTRUMENTS[currentInst], harm=I.scope, clip=I.scopeClip;
+  let norm=0; for(const a of harm) norm+=Math.abs(a); norm=norm||1;
+  const cycles=freq/440*6, A=h*0.17*amp, ph= reduceMotion?0:(now/520);
+  sctx.beginPath();
+  for(let x=0;x<=w;x++){
+    const th=(x/w)*cycles*Math.PI*2 + ph;
+    let v=0; for(let k=0;k<harm.length;k++) v+=harm[k]*Math.sin((k+1)*th);
+    v/=norm; if(clip) v=Math.tanh(v*clip)/Math.tanh(clip);
+    const y=midY - v*A; x?sctx.lineTo(x,y):sctx.moveTo(x,y);
+  }
+  sctx.lineWidth=2.5; sctx.strokeStyle=css(c,63); sctx.shadowColor=css(c,58); sctx.shadowBlur=11*amp+4; sctx.stroke(); sctx.shadowBlur=0;
+}
+function flatLine(w,h,alpha){ sctx.strokeStyle='rgba(124,138,168,'+alpha+')'; sctx.lineWidth=2; sctx.beginPath(); sctx.moveTo(0,h/2); sctx.lineTo(w,h/2); sctx.stroke(); }
+function drawListen(now,w,h){
+  flatLine(w,h,0.4);
+  const t=reduceMotion?0.5:((now/950)%1), x=t*w;
+  sctx.beginPath(); sctx.arc(x,h/2,5,0,Math.PI*2); sctx.fillStyle='rgba(190,200,220,.95)';
+  sctx.shadowColor='rgba(190,200,220,.85)'; sctx.shadowBlur=12; sctx.fill(); sctx.shadowBlur=0;
+}
+function draw(){
+  requestAnimationFrame(draw);
+  const w=scope.clientWidth, h=scope.clientHeight; sctx.clearRect(0,0,w,h); grid(w,h);
+  const now=performance.now();
+  if(scopeMode==='dual' && dual){ wave(dual[0],0.92,h*0.30,w,h,freqColor(dual[0]),now); wave(dual[1],0.92,h*0.70,w,h,freqColor(dual[1]),now); return; }
+  if(scopeMode==='reveal'){ wave(scopeFreq,1,h/2,w,h,scopeC,now); return; }
+  if(scopeMode==='listen'){ drawListen(now,w,h); return; }
+  if(scopeMode==='play'){ const el=now-scopeT0; const amp = el<scopeDur ? (el<70?el/70:1) : Math.max(0,1-(el-scopeDur)/450); wave(scopeFreq,amp,h/2,w,h,scopeC,now); return; }
+  flatLine(w,h,0.2); // idle
+}
+
+/* readout */
+const hzBig=document.getElementById('hzBig'), scopeNote=document.getElementById('scopeNote'), titleEm=document.getElementById('titleEm');
+function showReadout(n, masked){
+  if(masked){ hzBig.textContent='?'; hzBig.classList.add('masked'); scopeNote.innerHTML='<span class="q">잘 듣고 음을 맞혀보세요</span>'; }
+  else{ hzBig.textContent=n.hz; hzBig.classList.remove('masked'); scopeNote.innerHTML = n.ko+' · '+n.enFull; }
+}
+function showReadoutDual(a,b){
+  hzBig.textContent=Math.max(a.hz,b.hz); hzBig.classList.remove('masked');
+  scopeNote.innerHTML = '1: '+a.enFull+' · 2: '+b.enFull;
+}
+
+/* ============================================================
+   점수
+============================================================ */
+const elC=document.getElementById('sCorrect'), elT=document.getElementById('sTotal'), elS=document.getElementById('sStreak');
+let correct=0, total=0, streak=0;
+function resetScore(){ correct=0; total=0; streak=0; renderScore(); }
+function renderScore(){ elC.textContent=correct; elT.textContent=total; elS.textContent=streak; }
+function score(ok){ total++; if(ok){correct++; streak++;} else streak=0; renderScore(); }
+
+const LS = {get:(k,d)=>{try{const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;}},
+            set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+
+/* ============================================================
+   모드 전환
+============================================================ */
+let mode='practice', roundN=0, roundCorrect=0, roundScore=0;
+const ROUND=10;
+const titleWords={practice:'연습',absolute:'테스트',compare:'비교',freq:'진동수'};
+
+// 예약 타이머 레지스트리 — 모드 전환 시 잔여 콜백이 화면을 덮어쓰지 않도록 취소
+let timers=[];
+function later(fn,ms){ const id=setTimeout(fn,ms); timers.push(id); return id; }
+function clearTimers(){ timers.forEach(clearTimeout); timers=[]; }
+
+document.getElementById('tabs').addEventListener('click',e=>{
+  const t=e.target.closest('.tab'); if(!t) return; ensureAudio();
+  clearTimers();
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
+  mode=t.dataset.mode; titleEm.textContent=titleWords[mode];
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on', p.id==='p-'+mode));
+  resetScore(); hideAllReveals(); resetReadout();
+  if(mode==='absolute') absStart();
+  if(mode==='compare') compStart();
+  if(mode==='freq') freqStart();
+});
+function resetReadout(){ scopeMode='idle'; dual=null; hzBig.textContent='— — —'; hzBig.classList.add('masked'); scopeNote.innerHTML='<span class="q">소리를 재생하면 파형이 나타나요</span>'; }
+function hideAllReveals(){ document.querySelectorAll('.reveal').forEach(r=>r.classList.remove('show')); }
+
+// 악기 선택 — 선택 즉시 A4(라·440Hz)로 미리듣기 + 파형 표시
+document.getElementById('instRow').addEventListener('click',e=>{
+  const b=e.target.closest('.inst-pill'); if(!b) return; ensureAudio();
+  currentInst=b.dataset.inst;
+  document.querySelectorAll('.inst-pill').forEach(x=>x.classList.toggle('on',x===b));
+  playSound(440,1.3); revealScope(info(69));
+});
+
+/* ============================================================
+   연습 (키보드)
+============================================================ */
+(function buildKeyboard(){
+  const kb=document.getElementById('keyboard'); const octs=[4,5];
+  const whites=[]; const blacks=[]; let wc=0;
+  octs.forEach(o=>{ NAT.forEach(pc=>{ const m=(o+1)*12+pc; whites.push(m); wc++;
+    if([0,2,5,7,9].includes(pc)) blacks.push({m:m+1, after:wc}); }); });
+  whites.forEach(m=>{ const n=info(m); const k=document.createElement('div'); k.className='wkey';
+    k.innerHTML=`<span class="wko">${n.ko}</span><span class="wen">${n.enFull}</span>`;
+    k.addEventListener('pointerdown',()=>{ ensureAudio(); tone(n.freq,1.6); showReadout(n,false);
+      k.classList.add('lit'); setTimeout(()=>k.classList.remove('lit'),180); });
+    kb.appendChild(k); });
+  const W=100/whites.length;
+  blacks.forEach(b=>{ const n=info(b.m); const k=document.createElement('div'); k.className='bkey';
+    k.style.left=(b.after*W)+'%'; k.innerHTML=`<span class="ben">${n.en}${n.oct}</span>`;
+    k.addEventListener('pointerdown',ev=>{ ev.stopPropagation(); ensureAudio(); tone(n.freq,1.6); showReadout(n,false);
+      k.classList.add('lit'); setTimeout(()=>k.classList.remove('lit'),180); });
+    kb.appendChild(k); });
+})();
+
+/* ============================================================
+   음 맞히기 (절대음감)
+============================================================ */
+let absDiff=3, absNote=null, absDone=false;
+const absGrid=document.getElementById('absGrid'), absReveal=document.getElementById('absReveal'), absAsk=document.getElementById('absAsk');
+
+(function buildAbsGrid(){
+  NAT.forEach(pc=>{ const b=document.createElement('button'); b.className='note-btn'; b.dataset.pc=pc;
+    b.innerHTML=`<span class="ko">${KO[pc]}</span><span class="en">${EN[pc]}</span>`;
+    b.addEventListener('click',()=>absAnswer(pc,b)); absGrid.appendChild(b); });
+})();
+document.getElementById('absDiff').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return;
+  document.querySelectorAll('#absDiff button').forEach(x=>x.classList.toggle('on',x===b));
+  absDiff=+b.dataset.d; clearTimers(); resetScore(); absStart(); });
+document.getElementById('absPlay').addEventListener('click',()=>{ if(!absNote)return; if(absDone){ playSound(absNote.freq); } else { toneMasked(absNote.freq); } });
+
+function absStart(){ roundN=0; roundCorrect=0; absNewQ(); }
+function absNewQ(){
+  absDone=false; absReveal.classList.remove('show');
+  document.querySelectorAll('#absGrid .note-btn').forEach(b=>{ b.disabled=false; b.className='note-btn'; });
+  const [lo,hi]=RANGES[absDiff], pool=naturals(lo,hi);
+  absNote=info(pool[Math.floor(Math.random()*pool.length)]);
+  absAsk.textContent = `이 음은 어떤 음일까요?  (${roundN+1}/${ROUND})`;
+  listenScope();
+  later(()=>{ toneMasked(absNote.freq); }, 220);
+}
+function absAnswer(pc,btn){
+  if(absDone) return; absDone=true;
+  const ok = pc===absNote.pc; score(ok); if(ok)roundCorrect++;
+  document.querySelectorAll('#absGrid .note-btn').forEach(b=>{ b.disabled=true;
+    if(+b.dataset.pc===absNote.pc) b.classList.add('reveal'); });
+  btn.classList.add(ok?'correct':'wrong');
+  revealScope(absNote);
+  ok?sfxCorrect():sfxWrong();
+  absReveal.className='reveal show '+(ok?'ok':'no');
+  absReveal.innerHTML=`<div class="badge">${ok?'✓':'✕'}</div><div class="txt">
+    <div class="t1">${ok?'정답이에요!':'아쉬워요!'}</div>
+    <div class="t2">이 음은 <b>${absNote.ko} (${absNote.enFull})</b> · 진동수 <b>${absNote.hz}Hz</b> 예요.
+    파형이 1초에 ${absNote.hz}번 진동해요.</div></div>`;
+  roundN++;
+  if(roundN>=ROUND) later(()=>showResult('absolute'),1100);
+  else later(absNewQ,1500);
+}
+
+/* ============================================================
+   높낮이 비교
+============================================================ */
+let compDiff=3, compA=null, compB=null, compDone=false;
+const compReveal=document.getElementById('compReveal');
+document.getElementById('compDiff').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return;
+  document.querySelectorAll('#compDiff button').forEach(x=>x.classList.toggle('on',x===b));
+  compDiff=+b.dataset.d; clearTimers(); resetScore(); compStart(); });
+document.getElementById('compPlayA').addEventListener('click',()=>{ if(!compA)return; if(compDone){ playSound(compA.freq,1.1); } else { toneMasked(compA.freq,1.1); } });
+document.getElementById('compPlayB').addEventListener('click',()=>{ if(!compB)return; if(compDone){ playSound(compB.freq,1.1); } else { toneMasked(compB.freq,1.1); } });
+document.querySelectorAll('#compChoices .choice-btn').forEach(b=> b.addEventListener('click',()=>compAnswer(b.dataset.pick,b)));
+
+function compStart(){ roundN=0; roundCorrect=0; compNewQ(); }
+function compNewQ(){
+  compDone=false; compReveal.classList.remove('show');
+  document.querySelectorAll('#compChoices .choice-btn').forEach(b=>{b.disabled=false; b.classList.remove('correct','wrong');});
+  const [lo,hi]=RANGES[compDiff], pool=naturals(lo,hi);
+  let a=pool[Math.floor(Math.random()*pool.length)], b;
+  do{ b=pool[Math.floor(Math.random()*pool.length)]; }while(b===a);
+  compA=info(a); compB=info(b);
+  document.querySelector('#p-compare .ask').firstChild.textContent='어느 음이 더 ';
+  // 두 음을 파형 숨긴 채 차례로 재생 (귀로 비교) — 서로 겹치지 않게 간격 확보
+  listenScope();
+  later(()=>playSound(compA.freq,1.0), 250);
+  later(()=>playSound(compB.freq,1.0), 1400);
+}
+function compAnswer(pick,btn){
+  if(compDone) return; compDone=true;
+  const higher = compA.freq>compB.freq ? 'A':'B';
+  const ok = pick===higher; score(ok); if(ok)roundCorrect++;
+  document.querySelectorAll('#compChoices .choice-btn').forEach(b=>{ b.disabled=true;
+    if(b.dataset.pick===higher) b.classList.add('correct'); });
+  if(!ok) btn.classList.add('wrong');
+  ok?sfxCorrect():sfxWrong();
+  startDual(compA,compB);
+  const hi = higher==='A'?compA:compB, lo = higher==='A'?compB:compA;
+  const hiLabel = higher==='A'?'첫 번째':'두 번째';
+  compReveal.className='reveal show '+(ok?'ok':'no');
+  compReveal.innerHTML=`<div class="badge">${ok?'✓':'✕'}</div><div class="txt">
+    <div class="t1">${ok?'맞았어요!':'다시 들어봐요!'}</div>
+    <div class="t2"><b>${hiLabel} 음</b>이 더 높아요 — <b>${hi.ko} ${hi.hz}Hz</b> &gt; <b>${lo.ko} ${lo.hz}Hz</b>.
+    진동수가 클수록 음이 높습니다. (위 파형이 더 촘촘해요)</div></div>`;
+  roundN++;
+  if(roundN>=ROUND) later(()=>showResult('compare'),1300);
+  else later(compNewQ,1900);
+}
+
+/* ============================================================
+   진동수 맞히기
+============================================================ */
+let freqNote=null, freqDone=false;
+const fLo=130.81, fHi=1046.5;                       // C3 ~ C6
+const slider=document.getElementById('freqSlider'), guessEl=document.getElementById('freqGuess'), freqReveal=document.getElementById('freqReveal');
+const sliderToHz = v => Math.round(fLo*Math.pow(fHi/fLo, v/1000));
+function renderGuess(){ const hz=sliderToHz(+slider.value); guessEl.textContent=hz; guessEl.style.color=css(freqColor(hz),52); }
+slider.addEventListener('input',renderGuess);
+document.getElementById('freqPlay').addEventListener('click',()=>{ if(!freqNote)return; if(freqDone){ playSound(freqNote.freq); } else { toneMasked(freqNote.freq); } });
+document.getElementById('freqSubmit').addEventListener('click',freqAnswer);
+
+function freqStart(){ roundN=0; roundScore=0; freqNewQ(); }
+function freqNewQ(){
+  freqDone=false; freqReveal.classList.remove('show');
+  const pool=naturals(48,84); freqNote=info(pool[Math.floor(Math.random()*pool.length)]);
+  slider.value=500; renderGuess();
+  document.querySelector('#p-freq .ask').firstChild.textContent='이 음의 ';
+  listenScope();
+  later(()=>{ toneMasked(freqNote.freq); }, 220);
+}
+function freqAnswer(){
+  if(freqDone) return; freqDone=true;
+  const guess=sliderToHz(+slider.value), actual=freqNote.hz;
+  const err=Math.abs(guess-actual)/actual;       // 상대 오차
+  let stars, pts;
+  if(err<0.02){stars='⭐⭐⭐'; pts=100;} else if(err<0.05){stars='⭐⭐'; pts=70;}
+  else if(err<0.12){stars='⭐'; pts=40;} else {stars='😅'; pts=10;}
+  roundScore+=pts; score(err<0.12);
+  revealScope(freqNote);
+  sfxCorrect();
+  freqReveal.className='reveal show '+(err<0.12?'ok':'no');
+  freqReveal.innerHTML=`<div class="badge" style="font-size:20px">${stars.length>2?'🎯':'🎵'}</div><div class="txt">
+    <div class="t1">${stars} <span style="font-size:13px;color:var(--ink-soft)">+${pts}점</span></div>
+    <div class="t2">정답은 <b>${freqNote.ko} (${freqNote.enFull}) · ${actual}Hz</b> · 내 추측 <b>${guess}Hz</b> (오차 ${Math.round(err*100)}%)</div></div>`;
+  roundN++;
+  if(roundN>=ROUND) later(()=>showResult('freq'),1400);
+  else later(freqNewQ,1900);
+}
+
+/* ============================================================
+   결과
+============================================================ */
+const overlay=document.getElementById('overlay');
+function showResult(m){
+  const acc = total>0 ? Math.round(correct/total*100) : 0;
+  let emo,title,msg,scoreVal,scoreK,bestKey,bestVal,bestTxt;
+  if(m==='absolute'){
+    scoreVal=`${roundCorrect}`; scoreK='맞힌 개수';
+    bestKey='best_abs_'+absDiff; bestVal=Math.max(LS.get(bestKey,0),acc);
+    if(acc>=90){emo='🎧';title='절대음감 수준!';msg='놀라워요! 음마다 다른 진동수를 거의 정확히 구분했어요. 절대음감은 아주 드문 능력이에요.';}
+    else if(acc>=60){emo='👂';title='귀가 좋네요!';msg='잘했어요. 음의 높낮이가 곧 진동수의 차이라는 걸 잘 느끼고 있어요.';}
+    else{emo='🎵';title='괜찮아요!';msg='절대음감은 1만 명 중 1명만 가진 희귀한 능력이라 못 맞혀도 전혀 문제없어요. 중요한 건 모든 음이 고유한 진동수(Hz)로 정해진다는 사실이에요!';}
+  } else if(m==='compare'){
+    scoreVal=`${roundCorrect}`; scoreK='맞힌 개수';
+    bestKey='best_comp_'+compDiff; bestVal=Math.max(LS.get(bestKey,0),acc);
+    if(acc>=80){emo='⚖️';title='완벽한 귀!';msg='높은 음일수록 진동수가 크다는 원리를 정확히 듣고 있어요.';}
+    else if(acc>=50){emo='👂';title='잘하고 있어요!';msg='조금만 더 연습하면 미세한 진동수 차이도 들을 수 있어요.';}
+    else{emo='🎵';title='다시 도전!';msg='두 음이 가까울수록 진동수 차이가 작아 구분이 어려워요. 천천히 다시 들어보세요.';}
+  } else {
+    scoreVal=`${roundScore}`; scoreK='총점 (1000점 만점)';
+    bestKey='best_freq'; bestVal=Math.max(LS.get(bestKey,0),roundScore);
+    if(roundScore>=700){emo='🎯';title='진동수 마스터!';msg='소리만 듣고 진동수를 정확히 가늠해요. Hz 감각이 뛰어나요!';}
+    else if(roundScore>=350){emo='📟';title='감을 잡았어요!';msg='높은 음일수록 큰 Hz라는 감각이 자리 잡았어요.';}
+    else{emo='🎵';title='연습이 필요해요!';msg='가청 범위는 약 20~20,000Hz예요. 연습 모드에서 음과 Hz를 살펴보면 도움이 돼요.';}
+  }
+  LS.set(bestKey,bestVal);
+  document.getElementById('rEmo').textContent=emo;
+  document.getElementById('rTitle').textContent=title;
+  document.getElementById('rScore').textContent=scoreVal;
+  document.getElementById('rScoreK').textContent=scoreK;
+  document.getElementById('rAcc').textContent=acc+'%';
+  document.getElementById('rMsg').textContent=msg;
+  document.getElementById('rBest').textContent = m==='freq' ? `최고 기록 ${bestVal}점` : `최고 정답률 ${bestVal}%`;
+  overlay.classList.add('show');
+}
+document.getElementById('rAgain').addEventListener('click',()=>{
+  overlay.classList.remove('show'); clearTimers(); resetScore(); hideAllReveals();
+  if(mode==='absolute') absStart(); else if(mode==='compare') compStart(); else if(mode==='freq') freqStart();
+});
+
+/* ============================================================
+   시작
+============================================================ */
+function boot(){
+  const s=document.getElementById('start'); ensureAudio();
+  s.classList.add('hide'); setTimeout(()=>s.style.display='none',500);
+  fitCanvas();
+}
+document.getElementById('startBtn').addEventListener('click',boot);
+fitCanvas(); requestAnimationFrame(draw);
+</script>
+
+<!-- HUBLINK-FAB : 빛과 파동 허브로 돌아가기 (고정 버튼) -->
+<a href="https://scienceisjo.github.io/lightandwave/hubpage" title="빛과 파동 허브로" aria-label="빛과 파동 허브로"
+   style="position:fixed;left:14px;bottom:14px;z-index:99999;display:inline-flex;align-items:center;gap:6px;padding:8px 13px;border-radius:999px;font:600 13px/1 'Noto Sans KR',system-ui,-apple-system,sans-serif;text-decoration:none;color:#eaf3ff;background:rgba(18,28,55,.85);border:1px solid rgba(127,183,255,.45);box-shadow:0 6px 20px -6px rgba(0,0,0,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)">
+  <span aria-hidden="true">🏠</span><span>허브</span>
+</a>
+
+</body>
+</html>

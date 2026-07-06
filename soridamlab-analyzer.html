@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>소리 파동 분석기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#F2F0FB; --surface:#FFFFFF; --ink:#241E3A; --ink-soft:#6B6483; --line:#E7E3F5;
+    --purple:#7C5CFC; --purple-soft:#EEE9FF; --teal:#2DD4BF; --pink:#FF6B9D; --amber:#FFB020; --rec:#FF4D6D;
+    --shadow:0 10px 30px -12px rgba(60,40,120,.28); --shadow-sm:0 4px 14px -8px rgba(60,40,120,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:"Gowun Dodum",system-ui,sans-serif;color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;
+    background:radial-gradient(1100px 500px at 85% -8%,#FDE7F1 0%,transparent 55%),radial-gradient(900px 480px at 5% 110%,#DEF6F2 0%,transparent 55%),var(--bg);padding:22px 16px 60px}
+  .wrap{max-width:860px;margin:0 auto}
+  header.top{text-align:center;margin-bottom:6px}
+  .eyebrow{display:inline-block;font-size:13px;letter-spacing:.14em;font-weight:700;color:var(--purple);background:var(--purple-soft);padding:5px 13px;border-radius:999px;margin-bottom:12px}
+  h1{font-family:"Jua",sans-serif;font-weight:400;font-size:clamp(28px,6.5vw,44px);line-height:1.15;margin:0 0 6px;background:linear-gradient(100deg,var(--purple),var(--pink) 60%,var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--ink-soft);font-size:15px;margin:0}
+  .tabs{display:flex;gap:8px;background:var(--surface);border:1px solid var(--line);padding:6px;border-radius:16px;margin:16px auto 18px;max-width:440px;box-shadow:var(--shadow-sm)}
+  .tab-btn{flex:1;font-family:"Jua",sans-serif;font-size:15px;border:none;background:transparent;color:var(--ink-soft);padding:11px 8px;border-radius:11px;cursor:pointer;transition:background .15s,color .15s,box-shadow .15s}
+  .tab-btn.active{background:linear-gradient(120deg,var(--purple),var(--pink));color:#fff;box-shadow:0 6px 16px -8px rgba(124,92,252,.6)}
+  .hidden{display:none}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:20px;margin-bottom:18px}
+  .script-card{background:linear-gradient(135deg,#FFF 0%,#FBF9FF 100%);text-align:center}
+  .script-label{font-size:13px;color:var(--ink-soft);margin-bottom:10px}
+  .quote{font-family:"Jua",sans-serif;font-size:clamp(22px,5.2vw,32px);color:var(--ink);border:none;background:transparent;text-align:center;width:100%;padding:8px 6px;border-radius:12px;line-height:1.35;outline:2px dashed transparent;transition:outline-color .15s,background .15s}
+  .quote:hover{outline-color:var(--line)}
+  .quote:focus{outline-color:var(--purple);background:var(--purple-soft)}
+  .edit-hint{font-size:12px;color:var(--ink-soft);margin-top:6px;opacity:.85}
+  .words{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
+  .word-chip{font-size:15px;padding:6px 14px;border-radius:999px;font-weight:700;background:var(--purple-soft);color:var(--purple)}
+  .stage{display:flex;gap:14px;align-items:stretch}
+  .scope-box{flex:1;min-width:0;position:relative;background:linear-gradient(180deg,#2A2350,#221C46);border-radius:18px;overflow:hidden;box-shadow:inset 0 0 40px rgba(0,0,0,.35);aspect-ratio:16/7}
+  .scope-box canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .scope-tag{position:absolute;top:10px;left:12px;font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.1em;color:#B9AEF5;opacity:.75}
+  .rec-dot{position:absolute;top:10px;right:12px;display:none;align-items:center;gap:6px;font-family:"Space Mono",monospace;font-size:11px;color:#FFB9C7}
+  .rec-dot.on{display:flex}
+  .rec-dot i{width:9px;height:9px;border-radius:50%;background:var(--rec);animation:blink 1s steps(2,jump-none) infinite}
+  @keyframes blink{50%{opacity:.25}}
+  .vu-wrap{width:56px;flex:none;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .vu-track{position:relative;flex:1;width:34px;border-radius:12px;overflow:hidden;background:#241E3A;box-shadow:inset 0 0 0 2px rgba(124,92,252,.25)}
+  .vu-fill{position:absolute;left:0;right:0;bottom:0;height:0%;background:linear-gradient(0deg,#6BCB77 0%,#6BCB77 45%,var(--amber) 72%,var(--pink) 100%);transition:height .05s linear}
+  .vu-seg{position:absolute;inset:0;background:repeating-linear-gradient(0deg,#241E3A 0 3px,transparent 3px 11px);pointer-events:none}
+  .vu-peak{position:absolute;left:0;right:0;height:2px;background:#fff;bottom:0;opacity:.85;box-shadow:0 0 6px #fff;transition:bottom .08s linear}
+  .vu-label{font-family:"Space Mono",monospace;font-size:10px;color:var(--ink-soft);text-align:center;line-height:1.2}
+  .controls{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:16px}
+  .rec-btn{font-family:"Jua",sans-serif;font-size:20px;color:#fff;border:none;cursor:pointer;padding:15px 34px;border-radius:999px;background:linear-gradient(120deg,var(--purple),var(--pink));box-shadow:0 12px 26px -10px rgba(124,92,252,.7);transition:transform .12s,box-shadow .12s,filter .12s;display:inline-flex;align-items:center;gap:10px}
+  .rec-btn:hover{transform:translateY(-2px)}
+  .rec-btn:active{transform:translateY(0)}
+  .rec-btn.small{font-size:16px;padding:11px 22px}
+  .rec-btn.teal{background:linear-gradient(120deg,var(--teal),#20B2A2)}
+  .rec-btn.pink{background:linear-gradient(120deg,var(--pink),#FF4D6D)}
+  .rec-btn.recording{background:linear-gradient(120deg,var(--rec),#FF8A5C)}
+  .timer{font-family:"Space Mono",monospace;font-size:15px;color:var(--ink-soft)}
+  .hint-line{font-size:14px;color:var(--ink-soft);text-align:center;max-width:520px;margin-left:auto;margin-right:auto}
+  .error{display:none;margin-top:12px;background:#FFF0F3;border:1px solid #FFD3DC;color:#C0304D;border-radius:14px;padding:12px 16px;font-size:14px;text-align:center}
+  .error.on{display:block}
+  .section-title{font-family:"Jua",sans-serif;font-size:19px;margin:0 0 4px;display:flex;align-items:center;gap:8px}
+  .section-desc{font-size:13px;color:var(--ink-soft);margin:0 0 14px}
+  .section-desc b{color:var(--purple)}
+  .empty{text-align:center;color:var(--ink-soft);padding:34px 10px;font-size:15px}
+  .empty .big{font-size:34px;display:block;margin-bottom:8px}
+  .panel{margin-bottom:20px}
+  .panel:last-child{margin-bottom:0}
+  .panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+  .panel-name{font-weight:700;font-size:15px;color:var(--ink)}
+  .panel-note{font-size:12px;color:var(--ink-soft)}
+  .plot{position:relative;width:100%;border-radius:14px;background:#FBFAFF;border:1px solid var(--line);overflow:hidden}
+  .plot canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .wave-plot{aspect-ratio:16/5}
+  .env-plot{aspect-ratio:16/5}
+  .cmp-plot{aspect-ratio:16/5;background:#fff}
+  .compare-plot{aspect-ratio:16/6}
+  .cursor{position:absolute;top:0;bottom:0;width:2px;background:var(--pink);left:0;opacity:0;pointer-events:none;box-shadow:0 0 8px var(--pink)}
+  .cursor.on{opacity:.9}
+  .flag{position:absolute;transform:translate(-50%,-100%);pointer-events:none;font-family:"Jua",sans-serif;font-size:12px;color:#fff;white-space:nowrap;background:var(--pink);padding:4px 10px;border-radius:10px;top:0;box-shadow:var(--shadow-sm);opacity:0;transition:opacity .3s}
+  .flag::after{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--pink)}
+  .flag.on{opacity:1}
+  .axis-note{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-soft);margin-top:5px;padding:0 2px}
+  .bars{display:flex;align-items:flex-end;gap:10px;min-height:150px;padding:6px 2px 0}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+  .bar-track{width:100%;height:120px;display:flex;align-items:flex-end;justify-content:center}
+  .bar-fill{width:100%;max-width:52px;border-radius:8px 8px 4px 4px;background:linear-gradient(0deg,var(--purple),#A78BFA);transition:height .5s cubic-bezier(.2,.8,.2,1);min-height:4px}
+  .bar-col.top .bar-fill{background:linear-gradient(0deg,var(--pink),#FF9EBE);box-shadow:0 0 0 3px #FFE0EB}
+  .bar-name{font-size:13px;font-weight:700;color:var(--ink);text-align:center;word-break:keep-all;line-height:1.2}
+  .bar-col.top .bar-name{color:var(--pink)}
+  .bar-val{font-family:"Space Mono",monospace;font-size:11px;color:var(--ink-soft)}
+  .bar-crown{font-size:15px;height:18px;line-height:1}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+  .stat{background:var(--purple-soft);border-radius:14px;padding:12px;text-align:center}
+  .stat .k{font-size:12px;color:var(--ink-soft);margin-bottom:4px}
+  .stat .v{font-family:"Space Mono",monospace;font-weight:700;font-size:20px;color:var(--purple)}
+  .stat .u{font-size:11px;color:var(--ink-soft)}
+  .result-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:18px}
+  .btn{font-family:"Gowun Dodum",sans-serif;font-weight:700;font-size:14px;cursor:pointer;border-radius:999px;padding:10px 18px;border:1.5px solid var(--line);background:#fff;color:var(--ink);transition:transform .1s,background .15s,border-color .15s;display:inline-flex;align-items:center;gap:7px}
+  .btn:hover{transform:translateY(-1px);border-color:var(--purple)}
+  .btn.primary{background:var(--purple);color:#fff;border-color:var(--purple)}
+  .btn.primary:hover{filter:brightness(1.05)}
+  .btn.ghost{color:var(--ink-soft)}
+  .save-name{font-family:"Gowun Dodum",sans-serif;font-size:14px;padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);outline:none;min-width:150px;flex:1}
+  .save-name:focus{border-color:var(--purple)}
+  .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
+  .legend-item{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink)}
+  .legend-item .sw{width:16px;height:4px;border-radius:2px}
+  .legend-item button{border:none;background:transparent;color:var(--ink-soft);cursor:pointer;font-size:14px;padding:0 2px;line-height:1}
+  .legend-item button:hover{color:var(--rec)}
+  .compare-empty{font-size:14px;color:var(--ink-soft);text-align:center;padding:24px 10px}
+  .compare-empty b{color:var(--pink)}
+  .slots{display:flex;align-items:stretch;gap:12px}
+  .slot{flex:1;min-width:0;background:#FBFAFF;border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
+  .slot-role{font-family:"Jua",sans-serif;font-size:16px;display:flex;flex-direction:column;line-height:1.2}
+  .slot-role span{font-family:"Gowun Dodum",sans-serif;font-size:11px;color:var(--ink-soft);font-weight:400;margin-top:2px}
+  .scope-mini{position:relative;background:linear-gradient(180deg,#2A2350,#221C46);border-radius:12px;overflow:hidden;aspect-ratio:16/6;box-shadow:inset 0 0 24px rgba(0,0,0,.35);transition:box-shadow .2s}
+  .scope-mini.live{box-shadow:inset 0 0 24px rgba(0,0,0,.35),0 0 0 2px var(--pink)}
+  .scope-mini canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .slot-ctrls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .slot-status{font-family:"Space Mono",monospace;font-size:12px;color:var(--ink-soft);text-align:center;min-height:18px}
+  .vs-badge{align-self:center;font-family:"Jua",sans-serif;font-size:18px;color:var(--purple);flex:none}
+  .score-hero{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center;margin-bottom:10px}
+  .ring{width:132px;height:132px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--purple) 0deg,var(--line) 0deg);flex:none}
+  .ring-inner{width:104px;height:104px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:var(--shadow-sm)}
+  .ring-inner span{font-family:"Jua",sans-serif;font-size:40px;color:var(--ink);line-height:1}
+  .ring-inner small{font-size:12px;color:var(--ink-soft)}
+  .score-side{min-width:180px}
+  .score-cap{font-size:13px;color:var(--ink-soft)}
+  .grade{font-family:"Jua",sans-serif;font-size:22px;margin:4px 0 10px;line-height:1.25}
+  .legend2{display:flex;gap:14px;font-size:13px;color:var(--ink)}
+  .legend2 i{display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:5px;vertical-align:middle}
+  .cat{margin:12px 0}
+  .cat-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+  .cat-name{font-weight:700;font-size:14px}
+  .cat-val{font-family:"Space Mono",monospace;font-weight:700;font-size:16px;color:var(--ink)}
+  .cat-track{height:14px;background:var(--purple-soft);border-radius:999px;overflow:hidden}
+  .cat-fill{height:100%;width:0%;border-radius:999px;background:var(--purple);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+  .vnote{background:#FFF7E8;border:1px solid #FFE2AE;border-radius:12px;padding:11px 14px;font-size:13px;color:#8A5A00;margin-top:14px}
+  .explain h2{font-family:"Jua",sans-serif;font-size:20px;margin:0 0 12px;display:flex;gap:8px;align-items:center}
+  .explain p{margin:0 0 12px;font-size:15px}
+  .explain .key{color:var(--purple);font-weight:700}
+  .explain .box{background:var(--purple-soft);border-radius:14px;padding:14px 16px;font-size:14px;color:var(--ink)}
+  .explain .box b{color:var(--pink)}
+  footer{text-align:center;color:var(--ink-soft);font-size:12px;margin-top:24px}
+  @media (max-width:560px){
+    .slots{flex-direction:column}
+    .vs-badge{transform:rotate(90deg)}
+    .stats{grid-template-columns:repeat(3,1fr)}
+    .result-actions{flex-direction:column;align-items:stretch}
+    .save-name{width:100%}
+    .btn{justify-content:center}
+    .score-hero{gap:14px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms !important}.rec-dot i{animation:none}}
+  /* ===== 오실로스코프 탭 ===== */
+  .src-toggle{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+  .src-btn{font-family:"Jua",sans-serif;font-size:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);padding:9px 18px;border-radius:999px;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+  .src-btn.active{background:linear-gradient(120deg,var(--purple),var(--pink));color:#fff;border-color:transparent}
+  .scope-screen{position:relative;background:#0B1022;border-radius:16px;overflow:hidden;aspect-ratio:2/1;box-shadow:inset 0 0 40px rgba(0,0,0,.5),0 8px 22px -12px rgba(11,16,34,.7)}
+  .scope-screen canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .scope-osd{position:absolute;top:10px;right:12px;font-family:"Space Mono",monospace;font-size:12px;pointer-events:none}
+  .osd-live{color:#5EEAD4} .osd-hold{color:#FFB020}
+  .readouts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+  .ro{background:#FBFAFF;border:1px solid var(--line);border-radius:14px;padding:10px 8px;text-align:center}
+  .ro-freq{background:#EAFBF7;border-color:#B8F0E6}
+  .ro-amp{background:#FFF0F5;border-color:#FFD3E1}
+  .ro-k{font-size:11px;color:var(--ink-soft);margin-bottom:3px}
+  .ro-v{font-family:"Space Mono",monospace;font-weight:700;font-size:22px;color:var(--ink);line-height:1.1}
+  .ro-v small{font-size:12px;color:var(--ink-soft);font-weight:400}
+  .ro-freq .ro-v{color:#159E86} .ro-amp .ro-v{color:#E0447A}
+  .amp-bar{height:6px;background:#fff;border-radius:999px;overflow:hidden;margin-top:6px}
+  .amp-bar div{height:100%;width:0%;background:#2DD4BF;border-radius:999px;transition:width .08s linear}
+  .pitch-scale{display:flex;align-items:center;gap:10px;margin-top:16px}
+  .ps-label{font-size:12px;color:var(--ink-soft);white-space:nowrap}
+  .ps-track{position:relative;flex:1;height:12px;border-radius:999px;background:linear-gradient(90deg,#7C5CFC,#2DD4BF,#FFB020,#FF6B9D)}
+  .ps-marker{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--ink);transform:translate(-50%,-50%);left:0%;box-shadow:var(--shadow-sm);transition:left .08s linear,opacity .2s;opacity:.25}
+  .gen-panel{margin-top:16px;background:#FBFAFF;border:1px solid var(--line);border-radius:16px;padding:14px}
+  .gen-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .wave-types{display:flex;gap:6px;flex-wrap:wrap}
+  .wt{font-family:"Gowun Dodum",sans-serif;font-size:13px;font-weight:700;border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);padding:7px 12px;border-radius:10px;cursor:pointer}
+  .wt.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+  .slider-row{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;margin:12px 0}
+  .slider-row label{font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap}
+  .slider-row output{font-family:"Space Mono",monospace;font-size:13px;color:var(--purple);min-width:66px;text-align:right}
+  input[type=range]{width:100%;accent-color:var(--purple);cursor:pointer;height:22px}
+  .gen-hint,.mic-hint{font-size:13px;color:var(--ink-soft);margin-top:8px;line-height:1.5}
+  .mic-hint{background:#EAFBF7;border:1px solid #B8F0E6;color:#0E7C68;border-radius:12px;padding:11px 14px}
+  .mic-hint b{color:#0E7C68}
+  .scope-ctrls{display:flex;gap:16px;align-items:flex-end;margin-top:18px;flex-wrap:wrap}
+  .sc-item{flex:1;min-width:210px}
+  .sc-item label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+  .sc-item label small{font-family:"Space Mono",monospace;color:var(--ink-soft);font-weight:400}
+  .sc-sub{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-soft);margin-top:2px}
+  .sc-btns{display:flex;gap:8px;flex-wrap:wrap}
+  @media(max-width:560px){.readouts{grid-template-columns:repeat(2,1fr)}.slider-row{grid-template-columns:1fr}.slider-row output{text-align:left}.scope-ctrls{flex-direction:column;align-items:stretch}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow">🔊 소리 단원 실험실</span>
+    <h1>소리 파동 분석기</h1>
+    <p class="sub">녹음한 소리를 파형으로 뜯어봐요 — 강세로 진폭 비교하고, 목소리 닮은 정도까지 점수로!</p>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="tab3">🔬 오실로스코프</button>
+    <button class="tab-btn" data-tab="tab1">📈 진폭 챌린지</button>
+    <button class="tab-btn" data-tab="tab2">🎭 목소리 대결</button>
+  </nav>
+  <!-- ============ TAB 3: 오실로스코프 ============ -->
+  <div id="tab3" class="tabpane">
+    <section class="card">
+      <h3 class="section-title">🔬 소리 오실로스코프</h3>
+      <p class="section-desc">소리를 파형으로 관찰해요. <b>세기=진폭</b> · <b>높낮이=진동수</b> · <b>음색=파형</b> 을 직접 조작하며 확인!</p>
+
+      <div class="src-toggle">
+        <button class="src-btn active" data-src="tone" id="srcTone">🔊 소리 발생기</button>
+        <button class="src-btn" data-src="mic" id="srcMic">🎤 마이크</button>
+      </div>
+
+      <div class="scope-screen">
+        <canvas id="scopeCanvas"></canvas>
+        <div class="scope-osd" id="scopeOsd"></div>
+      </div>
+
+      <div class="readouts">
+        <div class="ro ro-freq"><div class="ro-k">진동수 (높낮이)</div><div class="ro-v"><span id="roFreq">—</span> <small>Hz</small></div></div>
+        <div class="ro"><div class="ro-k">주기 T</div><div class="ro-v"><span id="roPeriod">—</span> <small>ms</small></div></div>
+        <div class="ro"><div class="ro-k">음이름</div><div class="ro-v"><span id="roNote">—</span></div></div>
+        <div class="ro ro-amp"><div class="ro-k">세기 (진폭)</div><div class="ro-v"><span id="roAmp">0.00</span></div><div class="amp-bar"><div id="roAmpBar"></div></div></div>
+      </div>
+
+      <div class="pitch-scale">
+        <div class="ps-label">낮은음 🔈</div>
+        <div class="ps-track"><div class="ps-marker" id="psMarker"></div></div>
+        <div class="ps-label">🔊 높은음</div>
+      </div>
+
+      <div class="gen-panel" id="genPanel">
+        <div class="gen-row">
+          <button class="rec-btn small teal" id="tonePlay">▶ 소리 켜기</button>
+          <div class="wave-types">
+            <button class="wt active" data-wt="sine">∿ 사인</button>
+            <button class="wt" data-wt="square">⊓ 사각</button>
+            <button class="wt" data-wt="triangle">△ 삼각</button>
+            <button class="wt" data-wt="sawtooth">◺ 톱니</button>
+          </div>
+        </div>
+        <div class="slider-row">
+          <label>주파수 (높낮이)</label>
+          <input type="range" id="freqSlider" min="0" max="1000" value="589" />
+          <output id="freqOut">440 Hz</output>
+        </div>
+        <div class="slider-row">
+          <label>음량 (세기)</label>
+          <input type="range" id="volSlider" min="0" max="100" value="45" />
+          <output id="volOut">보통</output>
+        </div>
+        <p class="gen-hint">🎚️ <b>주파수</b>를 올리면 파동이 촘촘해지고(높은 소리) · <b>음량</b>을 올리면 파동이 커져요(큰 소리) · <b>파형</b>을 바꾸면 같은 음도 음색이 달라져요.</p>
+      </div>
+
+      <div class="mic-hint" id="micHint" style="display:none">🎙️ 말하거나 <b>휘파람</b>을 불어보세요. 일정한 소리를 내면 파형이 화면에 멈춰 보여요. 휘파람 높낮이를 바꾸며 진동수(Hz)가 어떻게 변하는지 관찰해봐요!</div>
+
+      <div class="scope-ctrls">
+        <div class="sc-item sc-time">
+          <label>시간축 <small id="tdivLabel">(1칸 = 1.0 ms)</small></label>
+          <input type="range" id="timeSlider" min="0" max="100" value="35" />
+          <div class="sc-sub"><span>◀ 확대(한 칸 짧게)</span><span>축소(한 칸 길게) ▶</span></div>
+        </div>
+        <div class="sc-btns">
+          <button class="btn" id="holdBtn">⏸ 정지(HOLD)</button>
+          <button class="btn primary" id="trigBtn">📍 트리거 ON</button>
+        </div>
+      </div>
+
+      <div class="error" id="scopeError"></div>
+    </section>
+
+    <section class="card explain">
+      <h2>🧪 파형으로 읽는 소리의 3가지</h2>
+      <p><span class="key">진동수</span>는 매질(공기)이 <b>1초 동안 진동하는 횟수</b>예요. 단위는 <span class="key">Hz(헤르츠)</span>. 진동수가 클수록 소리가 <b>높고</b>, 화면에서 파동이 더 촘촘해집니다.</p>
+      <p><span class="key">진폭</span>은 파동이 위아래로 흔들리는 폭이에요. 진폭이 클수록 소리가 <b>크고(세기 ↑)</b>, 화면에서 파동이 더 높아집니다.</p>
+      <div class="box">🔊 <b>소리의 세기 = 진폭</b> (파동의 높이) · 🎵 <b>소리의 높낮이 = 진동수</b> (파동의 촘촘함, Hz) · 🎨 <b>소리의 음색 = 파형</b> (파동의 모양)<br>주기 T와 진동수는 <b>진동수 = 1 ÷ 주기</b> 관계! 1초에 440번 진동하면 440 Hz예요.</div>
+    </section>
+  </div>
+
+  <!-- ============ TAB 1 ============ -->
+  <div id="tab1" class="tabpane hidden">
+    <section class="card script-card">
+      <div class="script-label">📣 이 대사를 강세를 넣어 읽어보자 (탭하면 수정 가능)</div>
+      <div class="quote" id="quote" contenteditable="true" spellcheck="false">쌤 저 똥꼬에서 떡볶이가 나와요</div>
+      <div class="edit-hint">✏️ 다른 문장으로 바꿔도 돼요 · 강세 줄 단어를 정하고 녹음 시작!</div>
+      <div class="words" id="words"></div>
+    </section>
+
+    <section class="card">
+      <div class="stage">
+        <div class="scope-box">
+          <canvas id="liveCanvas"></canvas>
+          <div class="scope-tag">LIVE · 파형</div>
+          <div class="rec-dot" id="recDot"><i></i>REC</div>
+        </div>
+        <div class="vu-wrap">
+          <div class="vu-track"><div class="vu-fill" id="vuFill"></div><div class="vu-seg"></div><div class="vu-peak" id="vuPeak"></div></div>
+          <div class="vu-label">소리<br>크기</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="rec-btn" id="recBtn">🎤 녹음 시작</button>
+        <div class="timer" id="timer">00:00</div>
+        <div class="hint-line" id="hint">버튼을 누르고 대사를 읽으면 위 화면에 파동이 그려져요</div>
+        <div class="error" id="error"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3 class="section-title">📈 녹음 결과 분석</h3>
+      <p class="section-desc">파형의 위아래 폭이 넓을수록 그 순간 소리가 컸다는 뜻이에요</p>
+      <div class="empty" id="emptyState"><span class="big">🎤</span>위 버튼으로 대사를 녹음하면, 소리 크기 그래프가 여기에 나타나요!</div>
+      <div id="resultBody" style="display:none">
+        <div class="panel">
+          <div class="panel-head"><span class="panel-name">① 실제 소리 파동</span><span class="panel-note">공기가 떨린 모습 그대로</span></div>
+          <div class="plot wave-plot"><canvas id="waveCanvas"></canvas><div class="cursor" id="waveCursor"></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-name">② 소리 크기(진폭) 그래프</span><span class="panel-note">높이 = 소리의 세기</span></div>
+          <div class="plot env-plot"><canvas id="envCanvas"></canvas><div class="cursor" id="envCursor"></div><div class="flag" id="peakFlag">💥 여기가 제일 셈!</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-name">③ 구간별 소리 세기</span><span class="panel-note" id="barNote">자동으로 끊어 분석 (또박또박 읽으면 더 정확)</span></div>
+          <div class="bars" id="bars"></div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="k">최고 진폭</div><div class="v" id="statMax">0</div><div class="u">가장 센 순간</div></div>
+          <div class="stat"><div class="k">평균 진폭</div><div class="v" id="statAvg">0</div><div class="u">전체 평균</div></div>
+          <div class="stat"><div class="k">최고점 시각</div><div class="v" id="statTime">0.0</div><div class="u">초</div></div>
+        </div>
+        <div class="result-actions">
+          <button class="btn primary" id="playBtn">▶ 재생</button>
+          <input class="save-name" id="saveName" placeholder="강세 준 단어 메모 (예: 똥꼬)" />
+          <button class="btn" id="saveBtn">⭐ 비교함에 담기</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3 class="section-title">🆚 비교함</h3>
+      <p class="section-desc">여러 번 녹음해서 겹쳐 보면, 강세 준 단어에 따라 봉우리 위치가 바뀌는 게 보여요</p>
+      <div class="plot compare-plot"><canvas id="compareCanvas"></canvas></div>
+      <div class="legend" id="legend"></div>
+      <div class="compare-empty" id="compareEmpty">아직 담긴 녹음이 없어요. 결과에서 <b>⭐ 비교함에 담기</b>를 눌러보세요!</div>
+    </section>
+
+    <section class="card explain">
+      <h2>🧪 왜 이렇게 될까?</h2>
+      <p>소리는 공기의 떨림(진동)이에요. 이 떨림이 <span class="key">크게</span> 흔들릴수록 우리 귀에는 <span class="key">큰 소리</span>로 들려요. 파형에서 위아래로 흔들리는 폭을 <span class="key">진폭</span>이라고 부릅니다.</p>
+      <p>단어에 <span class="key">강세</span>를 주면 그 부분을 더 세게 발음하게 되죠. 그러면 공기가 더 크게 떨려서 파형이 쑥 커지고, ② 그래프의 봉우리도 그 자리에서 솟아올라요.</p>
+      <div class="box">💡 <b>진폭</b> = 소리의 <b>크기(세기)</b> · <b>진동수</b> = 소리의 <b>높낮이(음정)</b><br>같은 문장이라도 어느 단어에 힘을 주느냐에 따라 봉우리 위치가 달라져요. 친구랑 번갈아 녹음해서 비교함에서 겹쳐보면 더 재밌어요!</div>
+    </section>
+  </div>
+  <!-- ============ TAB 2 ============ -->
+  <div id="tab2" class="tabpane hidden">
+    <section class="card">
+      <h3 class="section-title">🎭 목소리 대결 · 성대모사 점수</h3>
+      <p class="section-desc">두 목소리를 녹음하면 <b>억양·리듬·음색</b>이 얼마나 닮았는지 점수로 보여줘요. 친구 목소리 vs 내 목소리, 원본 vs 성대모사 뭐든 OK!</p>
+      <div class="slots">
+        <div class="slot">
+          <div class="slot-role" style="color:var(--teal)">🅐 원본 <span>따라할 목소리 / 친구</span></div>
+          <div class="scope-mini"><canvas id="vScopeA"></canvas></div>
+          <div class="slot-ctrls">
+            <button class="rec-btn small teal" id="vRecA">🎤 녹음</button>
+            <button class="btn ghost" id="vListenA" style="display:none">▶ 듣기</button>
+          </div>
+          <div class="slot-status" id="vStatusA">녹음 전</div>
+        </div>
+        <div class="vs-badge">VS</div>
+        <div class="slot">
+          <div class="slot-role" style="color:var(--pink)">🅑 도전 <span>내 목소리 / 성대모사</span></div>
+          <div class="scope-mini"><canvas id="vScopeB"></canvas></div>
+          <div class="slot-ctrls">
+            <button class="rec-btn small pink" id="vRecB">🎤 녹음</button>
+            <button class="btn ghost" id="vListenB" style="display:none">▶ 듣기</button>
+          </div>
+          <div class="slot-status" id="vStatusB">녹음 전</div>
+        </div>
+      </div>
+      <div class="error" id="vError"></div>
+      <p class="hint-line" id="vHint" style="margin-top:14px">🅐와 🅑를 모두 녹음하면 아래에 점수가 나타나요</p>
+    </section>
+
+    <section class="card" id="vResults" style="display:none">
+      <div class="score-hero">
+        <div class="ring" id="vRing"><div class="ring-inner"><span id="vScoreNum">0</span><small>점</small></div></div>
+        <div class="score-side">
+          <div class="score-cap">성대모사 점수</div>
+          <div class="grade" id="vGrade"></div>
+          <div class="legend2"><span><i style="background:var(--teal)"></i>🅐 원본</span><span><i style="background:var(--pink)"></i>🅑 도전</span></div>
+        </div>
+      </div>
+      <div class="cat">
+        <div class="cat-row"><span class="cat-name">🎵 억양 (음높이 곡선)</span><span class="cat-val" id="vPitchVal">0</span></div>
+        <div class="cat-track"><div class="cat-fill" id="vPitchBar"></div></div>
+      </div>
+      <div class="cat">
+        <div class="cat-row"><span class="cat-name">🥁 리듬 (말 타이밍)</span><span class="cat-val" id="vRhythmVal">0</span></div>
+        <div class="cat-track"><div class="cat-fill" id="vRhythmBar"></div></div>
+      </div>
+      <div class="cat">
+        <div class="cat-row"><span class="cat-name">🎨 음색 (목소리 색깔)</span><span class="cat-val" id="vToneVal">0</span></div>
+        <div class="cat-track"><div class="cat-fill" id="vToneBar"></div></div>
+      </div>
+      <div class="panel" style="margin-top:20px">
+        <div class="panel-head"><span class="panel-name">🎵 억양 겹쳐보기</span><span class="panel-note">선이 겹칠수록 억양이 닮은 것</span></div>
+        <div class="plot cmp-plot"><canvas id="vPitchCanvas"></canvas></div>
+        <div class="axis-note"><span>← 시작</span><span>말하는 동안</span><span>끝 →</span></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span class="panel-name">🥁 리듬(세기) 겹쳐보기</span><span class="panel-note">봉우리 위치가 같으면 말 타이밍이 비슷</span></div>
+        <div class="plot cmp-plot"><canvas id="vEnvCanvas"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span class="panel-name">🎨 음색 지문</span><span class="panel-note">목소리의 주파수 무늬 · 모양이 닮으면 음색이 비슷</span></div>
+        <div class="plot cmp-plot"><canvas id="vToneCanvas"></canvas></div>
+        <div class="axis-note"><span>낮은 음 ←</span><span>주파수</span><span>→ 높은 음</span></div>
+      </div>
+      <div class="vnote" id="vNote" style="display:none">💡 목소리가 작거나 짧아서 억양 분석이 부정확할 수 있어요. 마이크 가까이서 또박또박 다시 녹음하면 더 정확해요.</div>
+      <div class="result-actions" style="justify-content:center"><button class="btn" id="vReset">🔄 처음부터</button></div>
+    </section>
+
+    <section class="card explain">
+      <h2>🧪 성대모사, 뭘 따라하는 걸까?</h2>
+      <p>목소리는 세 가지가 합쳐진 거예요. <span class="key">억양</span>(음높이가 오르내리는 멜로디), <span class="key">리듬</span>(언제 세게·약하게 말하는지), <span class="key">음색</span>(사람마다 다른 목소리 색깔). 성대모사를 잘한다는 건 이 셋을 비슷하게 흉내 낸다는 뜻이에요.</p>
+      <div class="box">🎵 <b>억양</b>은 음높이(진동수) 곡선, 🥁 <b>리듬</b>은 소리 세기(진폭)의 시간 변화, 🎨 <b>음색</b>은 목소리에 섞인 주파수 무늬로 비교했어요. 점수는 재미로 보는 거예요 — 친구랑 누가 더 잘 따라하나 대결해봐요!</div>
+    </section>
+  </div>
+
+  <footer>소리 파동 분석기 · 마이크가 안 되면 주소창 자물쇠 아이콘에서 마이크를 허용하거나 https 주소로 열어주세요</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function $(id){ return document.getElementById(id); }
+  function fitCanvas(canvas){
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var r = canvas.getBoundingClientRect();
+    canvas.width = Math.max(1, Math.round(r.width * dpr));
+    canvas.height = Math.max(1, Math.round(r.height * dpr));
+    var ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    return { ctx: ctx, w: r.width, h: r.height };
+  }
+  var COMPARE_COLORS = ["#7C5CFC","#2DD4BF","#FF6B9D","#FFB020","#4D96FF","#6BCB77"];
+  var A_COLOR = "#2DD4BF", B_COLOR = "#FF6B9D";
+
+  // ===== 검증된 소리 비교 엔진 (아래에 주입) =====
+
+function fft(re, im){
+  const n=re.length;
+  for(let i=1,j=0;i<n;i++){ let bit=n>>1; for(;j&bit;bit>>=1) j^=bit; j^=bit;
+    if(i<j){const tr=re[i];re[i]=re[j];re[j]=tr;const ti=im[i];im[i]=im[j];im[j]=ti;} }
+  for(let len=2;len<=n;len<<=1){ const ang=-2*Math.PI/len,wr=Math.cos(ang),wi=Math.sin(ang);
+    for(let i=0;i<n;i+=len){ let cwr=1,cwi=0;
+      for(let k=0;k<len/2;k++){ const a=i+k,b=i+k+len/2;
+        const vr=re[b]*cwr-im[b]*cwi, vi=re[b]*cwi+im[b]*cwr;
+        re[b]=re[a]-vr; im[b]=im[a]-vi; re[a]=re[a]+vr; im[a]=im[a]+vi;
+        const n2=cwr*wr-cwi*wi; cwi=cwr*wi+cwi*wr; cwr=n2; } } }
+}
+function detectPitch(buf, sr){
+  const n=buf.length; let e=0; for(let i=0;i<n;i++) e+=buf[i]*buf[i];
+  if(Math.sqrt(e/n)<0.008) return 0;
+  const D=Math.max(1,Math.floor(sr/8000)), sr2=sr/D, m=Math.floor(n/D);
+  const d=new Float32Array(m); for(let i=0;i<m;i++) d[i]=buf[i*D];
+  const maxLag=Math.min(m-2,Math.floor(sr2/70)), minLag=Math.max(2,Math.floor(sr2/500));
+  let bestLag=-1,best=0;
+  for(let lag=minLag;lag<=maxLag;lag++){ let ac=0,e1=0,e2=0;
+    for(let i=0;i<m-lag;i++){ ac+=d[i]*d[i+lag]; e1+=d[i]*d[i]; e2+=d[i+lag]*d[i+lag]; }
+    const nrm=ac/Math.sqrt((e1*e2)||1); if(nrm>best){best=nrm;bestLag=lag;} }
+  if(bestLag<0||best<0.5) return 0; return sr2/bestLag;
+}
+function pearson(a,b){ const n=Math.min(a.length,b.length); if(n<2)return 0;
+  let ma=0,mb=0; for(let i=0;i<n;i++){ma+=a[i];mb+=b[i];} ma/=n;mb/=n;
+  let num=0,da=0,db=0; for(let i=0;i<n;i++){const x=a[i]-ma,y=b[i]-mb;num+=x*y;da+=x*x;db+=y*y;}
+  const den=Math.sqrt(da*db); return den?num/den:0; }
+function cosine(a,b){ const n=Math.min(a.length,b.length); let dot=0,na=0,nb=0;
+  for(let i=0;i<n;i++){dot+=a[i]*b[i];na+=a[i]*a[i];nb+=b[i]*b[i];}
+  const den=Math.sqrt(na*nb); return den?dot/den:0; }
+function resample(arr,N){ const out=new Float32Array(N),n=arr.length; if(n===0)return out;
+  if(n===1){out.fill(arr[0]);return out;}
+  for(let i=0;i<N;i++){const p=i/(N-1)*(n-1),lo=Math.floor(p),hi=Math.min(n-1,lo+1),f=p-lo; out[i]=arr[lo]*(1-f)+arr[hi]*f;}
+  return out; }
+function hann(N){ const w=new Float64Array(N); for(let i=0;i<N;i++) w[i]=0.5-0.5*Math.cos(2*Math.PI*i/(N-1)); return w; }
+function fillGaps(arr){ const out=arr.slice(),n=out.length; let fv=-1,lv=-1;
+  for(let i=0;i<n;i++) if(!isNaN(out[i])){ if(fv<0)fv=i; lv=i; }
+  if(fv<0) return out.map(()=>0);
+  for(let i=0;i<fv;i++) out[i]=out[fv]; for(let i=lv+1;i<n;i++) out[i]=out[lv];
+  let i=fv; while(i<=lv){ if(!isNaN(out[i])){i++;continue;} let j=i; while(j<=lv&&isNaN(out[j]))j++;
+    const a=out[i-1],b=out[j],span=j-(i-1); for(let k=i;k<j;k++) out[k]=a+(b-a)*((k-(i-1))/span); i=j; }
+  return out; }
+function pitchContourSemitones(pitchArr, ref){ const r=ref||150;
+  const mf=medianFilter3(pitchArr);
+  return fillGaps(mf.map(f=> isNaN(f)?NaN:clamp(12*Math.log2(f/r),-18,18))); }
+function normArr(a){ let mx=0; for(let i=0;i<a.length;i++) if(a[i]>mx)mx=a[i]; mx=mx||1;
+  return a.map(v=>v/mx); }
+function medianFilter3(arr){ const n=arr.length,out=arr.slice();
+  for(let i=1;i<n-1;i++){ const t=[arr[i-1],arr[i],arr[i+1]].filter(v=>!isNaN(v)); if(t.length){ t.sort((a,b)=>a-b); out[i]=t[Math.floor(t.length/2)]; } }
+  return out; }
+function clamp(v,lo,hi){ return Math.max(lo,Math.min(hi,v)); }
+function scoreFrom(r,p){ return 8+90*Math.pow(Math.max(0,r),p); }
+
+function analyzeClip(buffer){
+  const ch=buffer.getChannelData(0), sr=buffer.sampleRate;
+  const N=2048, hop=1024, win=hann(N);
+  const frames=Math.max(1,Math.floor((ch.length-N)/hop)+1);
+  const env=[], pitch=[], bandCount=40, avg=new Float64Array(bandCount);
+  const fMin=80, fMax=Math.min(8000,sr/2);
+  const re=new Float64Array(N), im=new Float64Array(N);
+  let voiced=0;
+  const k0=[],k1=[];
+  for(let b=0;b<bandCount;b++){ const lo=fMin*Math.pow(fMax/fMin,b/bandCount), hi=fMin*Math.pow(fMax/fMin,(b+1)/bandCount);
+    k0[b]=Math.max(1,Math.floor(lo/sr*N)); k1[b]=Math.min(N/2-1,Math.ceil(hi/sr*N)); }
+  for(let fi=0;fi<frames;fi++){
+    const s0=fi*hop; let e=0;
+    for(let i=0;i<N;i++){ const s=ch[s0+i]||0; re[i]=s*win[i]; im[i]=0; e+=s*s; }
+    const rms=Math.sqrt(e/N); env.push(rms);
+    const slice=ch.subarray(s0, s0+N);
+    const f0=detectPitch(slice, sr); pitch.push(f0>0?f0:NaN);
+    fft(re,im);
+    if(rms>0.02){ voiced++;
+      for(let b=0;b<bandCount;b++){ let mag=0,cnt=0; for(let k=k0[b];k<=k1[b];k++){ mag+=Math.hypot(re[k],im[k]); cnt++; }
+        avg[b]+= cnt?mag/cnt:0; } }
+  }
+  const bands=Array.from(avg,v=>v/(voiced||1));
+  const logB=bands.map(v=>Math.log(v+1e-6));
+  const meanL=logB.reduce((a,b)=>a+b,0)/logB.length;
+  const shape=logB.map(v=>v-meanL);
+  let sc=0,sm=0; for(let b=0;b<bandCount;b++){ const fc=fMin*Math.pow(fMax/fMin,(b+0.5)/bandCount); sc+=fc*bands[b]; sm+=bands[b]; }
+  const centroid=sm?sc/sm:0;
+  const vp=pitch.filter(v=>!isNaN(v)).sort((a,b)=>a-b);
+  const medPitch=vp.length?vp[Math.floor(vp.length/2)]:0;
+  return { env, pitch, shape, bands, centroid, medPitch, duration:buffer.duration, voicedRatio:vp.length/frames };
+}
+
+function compareVoices(A,B){
+  const Np=160, Ne=160;
+  const cA=resample(pitchContourSemitones(A.pitch,A.medPitch),Np);
+  const cB=resample(pitchContourSemitones(B.pitch,B.medPitch),Np);
+  let se=0; for(let i=0;i<Np;i++){ const d=cA[i]-cB[i]; se+=d*d; }
+  const pitchRmse=Math.sqrt(se/Np);
+  const pitchScore=5+95*Math.exp(-pitchRmse/4.5);
+  const eA=resample(normArr(A.env),Ne), eB=resample(normArr(B.env),Ne);
+  const durRatio=Math.min(A.duration,B.duration)/Math.max(A.duration,B.duration);
+  const rhythmScore=clamp(0.7*scoreFrom(pearson(eA,eB),0.85)+0.3*durRatio*100,0,100);
+  const toneScore=scoreFrom(cosine(A.shape,B.shape),0.9);
+  const overall=Math.round(0.40*pitchScore+0.35*toneScore+0.25*rhythmScore);
+  return { overall, pitch:Math.round(pitchScore), rhythm:Math.round(rhythmScore), tone:Math.round(toneScore),
+           contours:{a:cA,b:cB}, envs:{a:eA,b:eB}, durRatio, pitchRmse };
+}
+
+
+  // ===== 엔진 끝 =====
+
+  // ===== 마이크 레코더 (두 탭 공용) =====
+  class MicRecorder{
+    constructor(){ this.ctx=null; this.stream=null; this.rec=null; this.chunks=[]; this.raf=null; this.analyser=null; this._stopPromise=null; this._resolveStop=null; }
+    async start(onFrame){
+      if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw {code:'unsupported'};
+      try{
+        this.stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+      }catch(e){ throw {code: window.isSecureContext ? 'denied' : 'insecure'}; }
+      this.ctx = this.ctx || new (window.AudioContext || window.webkitAudioContext)();
+      if(this.ctx.state === 'suspended') await this.ctx.resume();
+      const src = this.ctx.createMediaStreamSource(this.stream);
+      this.analyser = this.ctx.createAnalyser();
+      this.analyser.fftSize = 2048; this.analyser.smoothingTimeConstant = 0.2;
+      src.connect(this.analyser);
+      this.chunks = [];
+      try{ this.rec = new MediaRecorder(this.stream); }
+      catch(e){ this._stopTracks(); throw {code:'norecorder'}; }
+      this.rec.ondataavailable = e => { if(e.data && e.data.size>0) this.chunks.push(e.data); };
+      this._stopPromise = new Promise(res => { this._resolveStop = res; });
+      this.rec.onstop = () => { if(this._resolveStop) this._resolveStop(); };
+      this.rec.start();
+      if(onFrame){
+        const loop = () => { if(!this.rec || this.rec.state==='inactive') return; this.raf = requestAnimationFrame(loop); onFrame(this.analyser); };
+        loop();
+      }
+    }
+    async stop(){
+      if(!this.rec) return null;
+      const type = this.rec.mimeType || 'audio/webm';
+      if(this.rec.state !== 'inactive') this.rec.stop();
+      await this._stopPromise;
+      if(this.raf) cancelAnimationFrame(this.raf);
+      this._stopTracks();
+      const blob = new Blob(this.chunks, {type:type});
+      let buffer = null;
+      try{ buffer = await this.ctx.decodeAudioData(await blob.arrayBuffer()); }catch(e){ buffer = null; }
+      return { blob: blob, buffer: buffer, duration: buffer ? buffer.duration : 0 };
+    }
+    _stopTracks(){ if(this.stream) this.stream.getTracks().forEach(t => t.stop()); }
+  }
+  function micError(code){
+    switch(code){
+      case 'insecure': return "마이크는 https 주소에서만 작동해요. GitHub Pages 같은 https 주소로 열어주세요.";
+      case 'denied': return "마이크 사용이 거부됐어요. 주소창의 자물쇠 아이콘에서 마이크를 허용한 뒤 다시 눌러주세요.";
+      case 'unsupported': return "이 브라우저는 마이크 녹음을 지원하지 않아요. Chrome이나 Safari 최신 버전을 써보세요.";
+      case 'norecorder': return "이 브라우저는 녹음 저장(MediaRecorder)을 지원하지 않아요.";
+      default: return "마이크에 접근하지 못했어요. 잠시 후 다시 시도해주세요.";
+    }
+  }
+
+  // ===== 탭 전환 =====
+  function setupTabs(){
+    const btns = document.querySelectorAll('.tab-btn');
+    btns.forEach(b => b.addEventListener('click', () => {
+      const target = b.dataset.tab;
+      btns.forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      document.querySelectorAll('.tabpane').forEach(p => p.classList.add('hidden'));
+      document.getElementById(target).classList.remove('hidden');
+      if(target !== 'tab3') scopeOnLeave();
+      if(target === 'tab1'){ startIdle(); if(t1buffer){ drawWaveform(t1buffer); drawEnvelope(t1env); } if(t1saves.length) drawCompare(); }
+      else if(target === 'tab2'){ redrawTab2(); }
+      else if(target === 'tab3'){ scopeOnEnter(); }
+    }));
+  }
+
+  // ===================== TAB 1: 진폭 챌린지 =====================
+  const quoteEl=$("quote"), wordsEl=$("words"), liveCanvas=$("liveCanvas"), vuFill=$("vuFill"), vuPeak=$("vuPeak");
+  const recBtn=$("recBtn"), recDot=$("recDot"), timerEl=$("timer"), hintEl=$("hint"), errorEl=$("error");
+  const emptyState=$("emptyState"), resultBody=$("resultBody"), waveCanvas=$("waveCanvas"), waveCursor=$("waveCursor");
+  const envCanvas=$("envCanvas"), envCursor=$("envCursor"), peakFlag=$("peakFlag"), barsEl=$("bars"), barNote=$("barNote");
+  const statMax=$("statMax"), statAvg=$("statAvg"), statTime=$("statTime");
+  const playBtn=$("playBtn"), saveBtn=$("saveBtn"), saveName=$("saveName");
+  const compareCanvas=$("compareCanvas"), legendEl=$("legend"), compareEmpty=$("compareEmpty");
+  let t1rec=new MicRecorder(), t1recording=false, t1start=0, t1buffer=null, t1env=null, t1dur=0, t1saves=[], t1vuPeak=0;
+  let t1audio=new Audio(), t1url=null, idlePhase=0, idleRAF=null, t1playRAF=null;
+
+  function currentWords(){ return (quoteEl.textContent||"").trim().split(/\s+/).filter(Boolean); }
+  function renderWords(){ wordsEl.innerHTML=""; currentWords().forEach(w => { const c=document.createElement("span"); c.className="word-chip"; c.textContent=w; wordsEl.appendChild(c); }); }
+  quoteEl.addEventListener("input", renderWords);
+
+  function drawIdleFrame(){
+    const o=fitCanvas(liveCanvas), ctx=o.ctx, w=o.w, h=o.h; ctx.clearRect(0,0,w,h);
+    ctx.lineWidth=3; ctx.lineCap="round";
+    const g=ctx.createLinearGradient(0,0,w,0); g.addColorStop(0,"#7C5CFC"); g.addColorStop(.5,"#FF6B9D"); g.addColorStop(1,"#2DD4BF");
+    ctx.strokeStyle=g; ctx.globalAlpha=.55; ctx.beginPath();
+    for(let x=0;x<=w;x+=2){ const y=h/2+Math.sin(x*0.02+idlePhase)*Math.sin(x*0.006+idlePhase*0.5)*(h*0.13); x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+    ctx.stroke(); ctx.globalAlpha=1; idlePhase += reduceMotion?0:0.03;
+  }
+  function startIdle(){ if(idleRAF) return; const loop=()=>{ if(t1recording){ idleRAF=null; return; } drawIdleFrame(); idleRAF=requestAnimationFrame(loop); }; idleRAF=requestAnimationFrame(loop); }
+
+  function t1LiveFrame(analyser){
+    const bufLen=analyser.fftSize, data=new Uint8Array(bufLen); analyser.getByteTimeDomainData(data);
+    const o=fitCanvas(liveCanvas), ctx=o.ctx, w=o.w, h=o.h; ctx.clearRect(0,0,w,h);
+    ctx.strokeStyle="rgba(185,174,245,.18)"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(0,h/2); ctx.lineTo(w,h/2); ctx.stroke();
+    const g=ctx.createLinearGradient(0,0,w,0); g.addColorStop(0,"#8B6BFF"); g.addColorStop(.5,"#FF6B9D"); g.addColorStop(1,"#2DD4BF");
+    ctx.strokeStyle=g; ctx.lineWidth=2.5; ctx.lineJoin="round"; ctx.shadowColor="rgba(255,107,157,.5)"; ctx.shadowBlur=8; ctx.beginPath();
+    const step=w/bufLen; let sumSq=0;
+    for(let i=0;i<bufLen;i++){ const v=(data[i]-128)/128; sumSq+=v*v; const x=i*step, y=h/2+v*(h*0.42); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+    ctx.stroke(); ctx.shadowBlur=0;
+    const rms=Math.sqrt(sumSq/bufLen), level=Math.min(1,rms*3.2);
+    vuFill.style.height=(level*100).toFixed(1)+"%"; t1vuPeak=Math.max(t1vuPeak*0.94,level); vuPeak.style.bottom=(t1vuPeak*100).toFixed(1)+"%";
+  }
+
+  async function startT1(){
+    hideT1Error();
+    try{ await t1rec.start(a => t1LiveFrame(a)); }
+    catch(err){ showT1Error(micError(err && err.code)); return; }
+    t1recording=true; t1start=performance.now();
+    recBtn.textContent="⏹ 정지"; recBtn.classList.add("recording"); recDot.classList.add("on");
+    hintEl.textContent="듣고 있어요… 대사를 읽어보세요! 🎙"; t1vuPeak=0; tickT1();
+  }
+  async function stopT1(){
+    t1recording=false;
+    recBtn.textContent="🎤 다시 녹음"; recBtn.classList.remove("recording"); recDot.classList.remove("on");
+    hintEl.textContent="분석 중… ⏳"; vuFill.style.height="0%"; vuPeak.style.bottom="0%";
+    const res=await t1rec.stop();
+    startIdle();
+    if(!res || !res.buffer){ showT1Error("소리를 분석하지 못했어요. 2초 이상 다시 녹음해보세요."); hintEl.textContent="다시 시도해볼까요?"; return; }
+    if(t1url) URL.revokeObjectURL(t1url); t1url=URL.createObjectURL(res.blob); t1audio.src=t1url;
+    analyzeT1(res.buffer); hintEl.textContent="완성! 다른 단어에 강세를 줘서 또 녹음해봐요 😄";
+  }
+  recBtn.addEventListener("click", () => t1recording ? stopT1() : startT1());
+  function tickT1(){ if(!t1recording) return; const s=(performance.now()-t1start)/1000; timerEl.textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(Math.floor(s%60)).padStart(2,"0"); requestAnimationFrame(tickT1); }
+
+  function showT1Error(m){ errorEl.textContent="⚠️ "+m; errorEl.classList.add("on"); recBtn.textContent="🎤 녹음 시작"; recBtn.classList.remove("recording"); recDot.classList.remove("on"); t1recording=false; }
+  function hideT1Error(){ errorEl.classList.remove("on"); }
+
+  function computeEnvelope(buffer, points){
+    const ch=buffer.getChannelData(0), n=ch.length, win=Math.max(1,Math.floor(n/points)), env=[];
+    for(let i=0;i<points;i++){ const s=i*win, e=Math.min(s+win,n); let sum=0,cnt=0; for(let j=s;j<e;j++){ sum+=ch[j]*ch[j]; cnt++; } env.push(cnt?Math.sqrt(sum/cnt):0); }
+    return env;
+  }
+  function analyzeT1(buffer){
+    t1buffer=buffer; t1dur=buffer.duration; t1env=computeEnvelope(buffer,400);
+    emptyState.style.display="none"; resultBody.style.display="block";
+    drawWaveform(buffer); const peak=drawEnvelope(t1env); drawBars(t1env);
+    const max=Math.max.apply(null,t1env), avg=t1env.reduce((a,b)=>a+b,0)/t1env.length;
+    statMax.textContent=(max*100).toFixed(1); statAvg.textContent=(avg*100).toFixed(1); statTime.textContent=(peak.frac*t1dur).toFixed(2);
+    waveCursor.classList.remove("on"); envCursor.classList.remove("on"); playBtn.textContent="▶ 재생";
+  }
+  function drawWaveform(buffer){
+    const o=fitCanvas(waveCanvas), ctx=o.ctx, w=o.w, h=o.h; ctx.clearRect(0,0,w,h);
+    const ch=buffer.getChannelData(0), n=ch.length, mid=h/2;
+    const g=ctx.createLinearGradient(0,0,0,h); g.addColorStop(0,"#2DD4BF"); g.addColorStop(.5,"#7C5CFC"); g.addColorStop(1,"#2DD4BF"); ctx.fillStyle=g;
+    const cols=Math.floor(w), per=n/cols;
+    for(let x=0;x<cols;x++){ let mn=1,mx=-1; const s=Math.floor(x*per), e=Math.min(Math.floor(s+per),n); for(let j=s;j<e;j++){ const v=ch[j]; if(v<mn)mn=v; if(v>mx)mx=v; } const y1=mid+mn*mid*0.92, y2=mid+mx*mid*0.92; ctx.fillRect(x,y1,1,Math.max(1,y2-y1)); }
+    ctx.strokeStyle="rgba(124,92,252,.2)"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(0,mid); ctx.lineTo(w,mid); ctx.stroke();
+  }
+  function drawEnvelope(env){
+    const o=fitCanvas(envCanvas), ctx=o.ctx, w=o.w, h=o.h; ctx.clearRect(0,0,w,h);
+    const max=Math.max.apply(null,env)||1, pad=8, usableH=h-pad;
+    const xAt=i=>(i/(env.length-1))*w, yAt=v=>h-(v/max)*usableH;
+    const grad=ctx.createLinearGradient(0,0,0,h); grad.addColorStop(0,"rgba(255,107,157,.55)"); grad.addColorStop(1,"rgba(124,92,252,.08)");
+    ctx.beginPath(); ctx.moveTo(0,h); for(let i=0;i<env.length;i++) ctx.lineTo(xAt(i),yAt(env[i])); ctx.lineTo(w,h); ctx.closePath(); ctx.fillStyle=grad; ctx.fill();
+    ctx.beginPath(); for(let i=0;i<env.length;i++){ const x=xAt(i), y=yAt(env[i]); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+    const line=ctx.createLinearGradient(0,0,w,0); line.addColorStop(0,"#7C5CFC"); line.addColorStop(1,"#FF6B9D"); ctx.strokeStyle=line; ctx.lineWidth=2.5; ctx.lineJoin="round"; ctx.stroke();
+    let peakIdx=0; for(let i=1;i<env.length;i++) if(env[i]>env[peakIdx]) peakIdx=i;
+    const px=xAt(peakIdx), py=yAt(env[peakIdx]);
+    ctx.beginPath(); ctx.arc(px,py,5,0,Math.PI*2); ctx.fillStyle="#FF6B9D"; ctx.fill(); ctx.strokeStyle="#fff"; ctx.lineWidth=2; ctx.stroke();
+    const frac=peakIdx/(env.length-1);
+    peakFlag.style.left=Math.min(88,Math.max(12,frac*100))+"%"; peakFlag.style.top=((py/h)*100)+"%"; peakFlag.classList.add("on");
+    return { frac:frac, peakIdx:peakIdx };
+  }
+  function drawBars(env){
+    barsEl.innerHTML="";
+    const max=Math.max.apply(null,env)||1, norm=env.map(v=>v/max), th=0.12, segs=[]; let cur=null;
+    for(let i=0;i<norm.length;i++){
+      if(norm[i]>=th){ if(!cur) cur={s:i,e:i,peak:norm[i]}; else { cur.e=i; if(norm[i]>cur.peak) cur.peak=norm[i]; } }
+      else if(cur){ if(i-cur.e<=3){ cur.e=i; } else { segs.push(cur); cur=null; } }
+    }
+    if(cur) segs.push(cur);
+    const clean=segs.filter(s=>(s.e-s.s)>=3);
+    const words=currentWords(), useWords=clean.length===words.length && words.length>0;
+    barNote.textContent=useWords ? "단어별 소리 세기 · 가장 센 단어에 왕관 👑" : ("자동으로 "+clean.length+"구간 감지 (또박또박 끊어 읽으면 단어별로 딱 나뉘어요)");
+    if(clean.length===0){ barsEl.innerHTML='<div style="color:var(--ink-soft);font-size:14px;margin:auto;text-align:center">소리가 너무 작아요. 조금 더 크게 다시 녹음해볼까요?</div>'; return; }
+    let topIdx=0; for(let i=1;i<clean.length;i++) if(clean[i].peak>clean[topIdx].peak) topIdx=i;
+    clean.forEach((seg,i)=>{
+      const col=document.createElement("div"); col.className="bar-col"+(i===topIdx?" top":"");
+      const crown=document.createElement("div"); crown.className="bar-crown"; crown.textContent=i===topIdx?"👑":"";
+      const track=document.createElement("div"); track.className="bar-track";
+      const fill=document.createElement("div"); fill.className="bar-fill"; fill.style.height="4px"; track.appendChild(fill);
+      const name=document.createElement("div"); name.className="bar-name"; name.textContent=useWords?words[i]:("구간 "+(i+1));
+      const val=document.createElement("div"); val.className="bar-val"; val.textContent=Math.round(seg.peak*100);
+      col.appendChild(crown); col.appendChild(track); col.appendChild(name); col.appendChild(val); barsEl.appendChild(col);
+      requestAnimationFrame(()=>{ fill.style.height=Math.max(4,seg.peak*118)+"px"; });
+    });
+  }
+
+  playBtn.addEventListener("click", ()=>{
+    if(!t1url) return;
+    if(t1audio.paused){ t1audio.play(); playBtn.textContent="⏸ 일시정지"; waveCursor.classList.add("on"); envCursor.classList.add("on"); t1Follow(); }
+    else { t1audio.pause(); playBtn.textContent="▶ 재생"; }
+  });
+  t1audio.addEventListener("ended", ()=>{ playBtn.textContent="▶ 재생"; waveCursor.classList.remove("on"); envCursor.classList.remove("on"); });
+  function t1Follow(){ if(t1audio.paused) return; const dur=t1dur||t1audio.duration||1, frac=Math.min(1,t1audio.currentTime/dur); waveCursor.style.left=(frac*100)+"%"; envCursor.style.left=(frac*100)+"%"; t1playRAF=requestAnimationFrame(t1Follow); }
+
+  saveBtn.addEventListener("click", ()=>{
+    if(!t1env) return;
+    const label=(saveName.value||"").trim() || ("녹음 "+(t1saves.length+1));
+    t1saves.push({ label:label, env:t1env.slice(), max:Math.max.apply(null,t1env), color:COMPARE_COLORS[t1saves.length%COMPARE_COLORS.length] });
+    saveName.value=""; renderCompare();
+  });
+  function renderCompare(){
+    compareEmpty.style.display=t1saves.length?"none":"block"; drawCompare();
+    legendEl.innerHTML="";
+    t1saves.forEach((s,idx)=>{
+      const item=document.createElement("div"); item.className="legend-item";
+      const sw=document.createElement("span"); sw.className="sw"; sw.style.background=s.color;
+      const nm=document.createElement("span"); nm.textContent=s.label;
+      const del=document.createElement("button"); del.textContent="✕"; del.title="삭제";
+      del.addEventListener("click",()=>{ t1saves.splice(idx,1); renderCompare(); });
+      item.appendChild(sw); item.appendChild(nm); item.appendChild(del); legendEl.appendChild(item);
+    });
+  }
+  function drawCompare(){
+    const o=fitCanvas(compareCanvas), ctx=o.ctx, w=o.w, h=o.h; ctx.clearRect(0,0,w,h);
+    if(!t1saves.length) return;
+    const gMax=Math.max.apply(null,t1saves.map(s=>s.max))||1, pad=8, usableH=h-pad;
+    t1saves.forEach(s=>{
+      const env=s.env, len=env.length; ctx.beginPath();
+      for(let i=0;i<len;i++){ const x=(i/(len-1))*w, y=h-(env[i]/gMax)*usableH; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+      ctx.strokeStyle=s.color; ctx.lineWidth=2.4; ctx.lineJoin="round"; ctx.globalAlpha=.9; ctx.stroke(); ctx.globalAlpha=1;
+    });
+  }
+
+  // ===================== TAB 2: 목소리 대결 =====================
+  const vError=$("vError"), vResults=$("vResults"), vReset=$("vReset"), vNote=$("vNote");
+  const vScoreNum=$("vScoreNum"), vRing=$("vRing"), vGrade=$("vGrade");
+  const vPitchBar=$("vPitchBar"), vPitchVal=$("vPitchVal"), vRhythmBar=$("vRhythmBar"), vRhythmVal=$("vRhythmVal"), vToneBar=$("vToneBar"), vToneVal=$("vToneVal");
+  const vPitchCanvas=$("vPitchCanvas"), vEnvCanvas=$("vEnvCanvas"), vToneCanvas=$("vToneCanvas");
+  let vLast=null;
+  function mkSlot(key){
+    const K=key.toUpperCase();
+    return { key:key, rec:new MicRecorder(), buffer:null, url:null, audio:new Audio(), features:null, recording:false, start:0,
+      btn:$("vRec"+K), canvas:$("vScope"+K), status:$("vStatus"+K), listen:$("vListen"+K) };
+  }
+  const vslots={ a:mkSlot("a"), b:mkSlot("b") };
+
+  function vMiniScope(analyser, canvas){
+    const bufLen=analyser.fftSize, data=new Uint8Array(bufLen); analyser.getByteTimeDomainData(data);
+    const o=fitCanvas(canvas), ctx=o.ctx, w=o.w, h=o.h; ctx.clearRect(0,0,w,h);
+    const g=ctx.createLinearGradient(0,0,w,0); g.addColorStop(0,"#8B6BFF"); g.addColorStop(1,"#2DD4BF");
+    ctx.strokeStyle=g; ctx.lineWidth=2; ctx.lineJoin="round"; ctx.beginPath();
+    const step=w/bufLen;
+    for(let i=0;i<bufLen;i++){ const v=(data[i]-128)/128, x=i*step, y=h/2+v*(h*0.42); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+    ctx.stroke();
+  }
+  function vMiniWave(buffer, canvas){
+    const o=fitCanvas(canvas), ctx=o.ctx, w=o.w, h=o.h; ctx.clearRect(0,0,w,h);
+    const ch=buffer.getChannelData(0), n=ch.length, mid=h/2, cols=Math.floor(w), per=n/cols;
+    const g=ctx.createLinearGradient(0,0,0,h); g.addColorStop(0,"#2DD4BF"); g.addColorStop(.5,"#7C5CFC"); g.addColorStop(1,"#2DD4BF"); ctx.fillStyle=g;
+    for(let x=0;x<cols;x++){ let mn=1,mx=-1; const s=Math.floor(x*per), e=Math.min(Math.floor(s+per),n); for(let j=s;j<e;j++){ const v=ch[j]; if(v<mn)mn=v; if(v>mx)mx=v; } ctx.fillRect(x,mid+mn*mid*0.9,1,Math.max(1,(mx-mn)*mid*0.9)); }
+  }
+
+  async function vStart(key){
+    const s=vslots[key]; hideVError();
+    try{ await s.rec.start(a => vMiniScope(a, s.canvas)); }
+    catch(err){ showVError(micError(err && err.code)); return; }
+    s.recording=true; s.start=performance.now();
+    s.btn.textContent="⏹ 정지"; s.btn.classList.add("recording");
+    s.status.textContent="녹음 중… 🎙"; s.canvas.parentElement.classList.add("live"); vTick(key);
+  }
+  async function vStop(key){
+    const s=vslots[key]; s.recording=false;
+    s.btn.textContent="🎤 다시"; s.btn.classList.remove("recording");
+    s.status.textContent="분석 중…"; s.canvas.parentElement.classList.remove("live");
+    const res=await s.rec.stop();
+    if(!res || !res.buffer){ s.status.textContent="⚠️ 다시 녹음"; showVError("소리를 분석하지 못했어요. 1~3초 정도 말해보세요."); return; }
+    s.buffer=res.buffer; if(s.url) URL.revokeObjectURL(s.url); s.url=URL.createObjectURL(res.blob); s.audio.src=s.url;
+    vMiniWave(res.buffer, s.canvas); s.features=analyzeClip(res.buffer);
+    const d=res.buffer.duration;
+    s.status.innerHTML="✓ "+d.toFixed(1)+"초 녹음됨"+(d<0.5?" <span style='color:var(--rec)'>(조금 짧아요)</span>":"");
+    s.listen.style.display="inline-flex"; maybeCompare();
+  }
+  function vTick(key){ const s=vslots[key]; if(!s.recording) return; const t=(performance.now()-s.start)/1000; s.status.textContent="녹음 중… "+t.toFixed(1)+"초 🎙"; requestAnimationFrame(()=>vTick(key)); }
+
+  ["a","b"].forEach(key=>{
+    const s=vslots[key];
+    s.btn.addEventListener("click", ()=> s.recording ? vStop(key) : vStart(key));
+    s.listen.addEventListener("click", ()=>{
+      const other=vslots[key==="a"?"b":"a"]; other.audio.pause(); other.listen.textContent="▶ 듣기";
+      if(s.audio.paused){ s.audio.currentTime=0; s.audio.play(); s.listen.textContent="⏸ 정지"; s.audio.onended=()=>{ s.listen.textContent="▶ 듣기"; }; }
+      else { s.audio.pause(); s.listen.textContent="▶ 듣기"; }
+    });
+  });
+
+  function maybeCompare(){
+    if(!vslots.a.features || !vslots.b.features) return;
+    vLast=compareVoices(vslots.a.features, vslots.b.features); renderVResults(vLast);
+  }
+  function showVError(m){ vError.textContent="⚠️ "+m; vError.classList.add("on"); }
+  function hideVError(){ vError.classList.remove("on"); }
+
+  // ===================== TAB 3: 오실로스코프 =====================
+  const scopeCanvas=$("scopeCanvas"), scopeOsd=$("scopeOsd"), scopeError=$("scopeError");
+  const srcTone=$("srcTone"), srcMic=$("srcMic"), genPanel=$("genPanel"), micHint=$("micHint");
+  const tonePlay=$("tonePlay"), freqSlider=$("freqSlider"), freqOut=$("freqOut"), volSlider=$("volSlider"), volOut=$("volOut");
+  const roFreq=$("roFreq"), roPeriod=$("roPeriod"), roNote=$("roNote"), roAmp=$("roAmp"), roAmpBar=$("roAmpBar"), psMarker=$("psMarker");
+  const timeSlider=$("timeSlider"), tdivLabel=$("tdivLabel"), holdBtn=$("holdBtn"), trigBtn=$("trigBtn");
+  const H_DIVS=10, V_DIVS=8;
+  let scopeCtx=null, scopeAnalyser=null, scopeData=null, scopeSR=44100;
+  let oscNode=null, oscGain=null, tonePlaying=false, oscType='sine';
+  let scopeMicStream=null, scopeMicSource=null;
+  let scopeSrc='tone', scopeActive=false, scopeHold=false, scopeTrigger=true, heldData=null, scopeRAF=null;
+  let msPerDiv=1.0, freqEMA=0, lastPitchTime=0;
+
+  function sliderToFreq(v){ return Math.round(50*Math.pow(2000/50, v/1000)); }
+  function freqToNorm(f){ return Math.max(0, Math.min(1, Math.log(f/50)/Math.log(2000/50))); }
+  function sliderToMsDiv(v){ return +(0.2*Math.pow(10/0.2, v/100)).toFixed(2); }
+  function volToGain(v){ return (v/100)*0.28; }
+  function volLabel(x){ return x<0.1?'아주 작게':x<0.35?'작게':x<0.6?'보통':x<0.85?'크게':'아주 크게'; }
+  function noteName(f){
+    if(!f || f<=0) return {name:'—', cents:0};
+    const midi=69+12*Math.log2(f/440), r=Math.round(midi);
+    const names=['도(C)','도#','레(D)','레#','미(E)','파(F)','파#','솔(G)','솔#','라(A)','라#','시(B)'];
+    return { name: names[((r%12)+12)%12]+(Math.floor(r/12)-1), cents: Math.round((midi-r)*100) };
+  }
+  function ensureScopeCtx(){
+    if(!scopeCtx){
+      scopeCtx=new (window.AudioContext||window.webkitAudioContext)();
+      scopeSR=scopeCtx.sampleRate;
+      scopeAnalyser=scopeCtx.createAnalyser();
+      scopeAnalyser.fftSize=8192; scopeAnalyser.smoothingTimeConstant=0;
+      scopeData=new Float32Array(scopeAnalyser.fftSize);
+    }
+    return scopeCtx;
+  }
+  async function toneStart(){
+    ensureScopeCtx(); if(scopeCtx.state==='suspended') await scopeCtx.resume();
+    toneStop();
+    oscNode=scopeCtx.createOscillator(); oscGain=scopeCtx.createGain();
+    oscNode.type=oscType; oscNode.frequency.value=sliderToFreq(+freqSlider.value); oscGain.gain.value=volToGain(+volSlider.value);
+    oscNode.connect(oscGain); oscGain.connect(scopeAnalyser); oscGain.connect(scopeCtx.destination);
+    oscNode.start(); tonePlaying=true; tonePlay.textContent="⏹ 소리 끄기"; tonePlay.classList.add('recording');
+  }
+  function toneStop(){
+    if(oscNode){ try{oscNode.stop();}catch(e){} try{oscNode.disconnect();}catch(e){} oscNode=null; }
+    if(oscGain){ try{oscGain.disconnect();}catch(e){} oscGain=null; }
+    tonePlaying=false; tonePlay.textContent="▶ 소리 켜기"; tonePlay.classList.remove('recording');
+  }
+  async function scopeMicStart(){
+    ensureScopeCtx(); if(scopeCtx.state==='suspended') await scopeCtx.resume();
+    try{ scopeMicStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}}); }
+    catch(e){ showScopeError(micError(window.isSecureContext?'denied':'insecure')); return false; }
+    scopeMicSource=scopeCtx.createMediaStreamSource(scopeMicStream); scopeMicSource.connect(scopeAnalyser); return true;
+  }
+  function scopeMicStop(){
+    if(scopeMicSource){ try{scopeMicSource.disconnect();}catch(e){} scopeMicSource=null; }
+    if(scopeMicStream){ scopeMicStream.getTracks().forEach(t=>t.stop()); scopeMicStream=null; }
+  }
+  async function setSource(src){
+    hideScopeError(); toneStop(); scopeMicStop(); scopeHold=false; heldData=null;
+    holdBtn.textContent="⏸ 정지(HOLD)"; holdBtn.classList.remove('primary');
+    scopeSrc=src;
+    srcTone.classList.toggle('active', src==='tone'); srcMic.classList.toggle('active', src==='mic');
+    genPanel.style.display = src==='tone'?'block':'none';
+    micHint.style.display = src==='mic'?'block':'none';
+    resetReadouts();
+    if(src==='mic') await scopeMicStart();
+  }
+  function resetReadouts(){ roFreq.textContent="—"; roPeriod.textContent="—"; roNote.textContent="—"; roAmp.textContent="0.00"; roAmpBar.style.width="0%"; psMarker.style.opacity=.25; freqEMA=0; }
+
+  function drawScopeGrid(ctx,w,h){
+    ctx.fillStyle="#0B1022"; ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle="rgba(45,212,191,.12)"; ctx.lineWidth=1;
+    for(let i=1;i<H_DIVS;i++){ const x=w*i/H_DIVS; ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+    for(let j=1;j<V_DIVS;j++){ const y=h*j/V_DIVS; ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+    ctx.strokeStyle="rgba(45,212,191,.3)"; ctx.beginPath(); ctx.moveTo(0,h/2); ctx.lineTo(w,h/2); ctx.stroke(); ctx.beginPath(); ctx.moveTo(w/2,0); ctx.lineTo(w/2,h); ctx.stroke();
+  }
+  function drawScopeIdle(ctx,w,h){
+    ctx.fillStyle="rgba(185,174,245,.65)"; ctx.font="14px 'Gowun Dodum',sans-serif"; ctx.textAlign="center";
+    ctx.fillText(scopeSrc==='tone'?"▶ 소리 켜기를 눌러 파형을 관찰해보세요":"🎤 마이크를 켜고 소리를 내보세요", w/2, h/2);
+    ctx.textAlign="start";
+  }
+  function findRisingEdge(data, limit){ for(let i=1;i<limit;i++){ if(data[i-1]<-0.03 && data[i]>=0) return i; } return 0; }
+  function drawScopeTrace(ctx,w,h,data){
+    const windowMs=msPerDiv*H_DIVS; let needed=Math.round(windowMs/1000*scopeSR); needed=Math.min(needed, data.length-1);
+    let start=0; if(scopeTrigger) start=findRisingEdge(data, Math.max(2, data.length-needed-1));
+    if(start+needed>=data.length) start=Math.max(0, data.length-needed-1);
+    const amp=3.4*(h/V_DIVS);
+    ctx.strokeStyle="#5EEAD4"; ctx.lineWidth=2.5; ctx.lineJoin="round"; ctx.lineCap="round"; ctx.shadowColor="rgba(94,234,212,.55)"; ctx.shadowBlur=8;
+    ctx.beginPath();
+    for(let x=0;x<=w;x++){ const idx=start+Math.floor(x/w*needed), v=data[idx]||0, y=h/2 - v*amp; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+    ctx.stroke(); ctx.shadowBlur=0;
+  }
+  function updateScopeReadouts(data){
+    let peak=0; for(let i=0;i<data.length;i++){ const a=Math.abs(data[i]); if(a>peak)peak=a; }
+    roAmp.textContent=peak.toFixed(2); roAmpBar.style.width=Math.min(100,peak*100)+"%";
+    roAmpBar.style.background = peak>0.66?"#FF6B9D":(peak>0.33?"#FFB020":"#2DD4BF");
+    let f=0;
+    if(scopeSrc==='tone' && tonePlaying) f=sliderToFreq(+freqSlider.value);
+    else f=detectPitch(data, scopeSR);
+    const now=performance.now();
+    if(f>0){ freqEMA = freqEMA? 0.8*freqEMA+0.2*f : f; lastPitchTime=now; }
+    const showF=(now-lastPitchTime<400 && freqEMA>0)?freqEMA:0;
+    if(showF>0){
+      roFreq.textContent=Math.round(showF); roPeriod.textContent=(1000/showF).toFixed(2);
+      const nn=noteName(showF); roNote.textContent=nn.name+(nn.cents?(nn.cents>0?" +"+nn.cents:" "+nn.cents):"");
+      psMarker.style.left=(freqToNorm(showF)*100)+"%"; psMarker.style.opacity=1;
+    } else { roFreq.textContent="—"; roPeriod.textContent="—"; roNote.textContent="—"; psMarker.style.opacity=.25; }
+  }
+  function scopeDraw(){
+    const o=fitCanvas(scopeCanvas), ctx=o.ctx, w=o.w, h=o.h;
+    drawScopeGrid(ctx,w,h);
+    if(scopeHold && heldData){ scopeOsd.innerHTML='<span class="osd-hold">⏸ HOLD</span>'; drawScopeTrace(ctx,w,h,heldData); return; }
+    const live=(scopeSrc==='tone'&&tonePlaying)||(scopeSrc==='mic'&&!!scopeMicStream);
+    if(live && scopeAnalyser){ scopeOsd.innerHTML='<span class="osd-live">● LIVE</span>'; scopeAnalyser.getFloatTimeDomainData(scopeData); drawScopeTrace(ctx,w,h,scopeData); updateScopeReadouts(scopeData); return; }
+    scopeOsd.textContent=''; drawScopeIdle(ctx,w,h);
+  }
+  function scopeOnEnter(){ scopeActive=true; if(!scopeRAF){ const loop=()=>{ if(!scopeActive){ scopeRAF=null; return; } scopeDraw(); scopeRAF=requestAnimationFrame(loop); }; scopeRAF=requestAnimationFrame(loop); } }
+  function scopeOnLeave(){ scopeActive=false; if(scopeRAF){ cancelAnimationFrame(scopeRAF); scopeRAF=null; } toneStop(); scopeMicStop(); scopeHold=false; heldData=null; holdBtn.textContent="⏸ 정지(HOLD)"; holdBtn.classList.remove('primary'); }
+  function showScopeError(m){ scopeError.textContent="⚠️ "+m; scopeError.classList.add("on"); }
+  function hideScopeError(){ scopeError.classList.remove("on"); }
+
+  // 이벤트
+  srcTone.addEventListener('click', ()=> setSource('tone'));
+  srcMic.addEventListener('click', ()=> setSource('mic'));
+  tonePlay.addEventListener('click', async ()=>{ if(tonePlaying) toneStop(); else await toneStart(); });
+  freqSlider.addEventListener('input', ()=>{ const f=sliderToFreq(+freqSlider.value); freqOut.textContent=f+" Hz"; if(oscNode) oscNode.frequency.setTargetAtTime(f, scopeCtx.currentTime, 0.008); });
+  volSlider.addEventListener('input', ()=>{ volOut.textContent=volLabel((+volSlider.value)/100); if(oscGain) oscGain.gain.setTargetAtTime(volToGain(+volSlider.value), scopeCtx.currentTime, 0.008); });
+  document.querySelectorAll('#genPanel .wt').forEach(b=> b.addEventListener('click', ()=>{
+    document.querySelectorAll('#genPanel .wt').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+    oscType=b.dataset.wt; if(oscNode) oscNode.type=oscType;
+  }));
+  timeSlider.addEventListener('input', ()=>{ msPerDiv=sliderToMsDiv(+timeSlider.value); tdivLabel.textContent="(1칸 = "+msPerDiv.toFixed(msPerDiv<1?2:1)+" ms)"; });
+  holdBtn.addEventListener('click', ()=>{
+    if(!scopeHold){
+      const live=(scopeSrc==='tone'&&tonePlaying)||(scopeSrc==='mic'&&!!scopeMicStream);
+      if(live && scopeAnalyser){ const tmp=new Float32Array(scopeAnalyser.fftSize); scopeAnalyser.getFloatTimeDomainData(tmp); heldData=tmp; }
+      scopeHold=true; holdBtn.textContent="▶ 라이브"; holdBtn.classList.add('primary');
+    } else { scopeHold=false; heldData=null; holdBtn.textContent="⏸ 정지(HOLD)"; holdBtn.classList.remove('primary'); }
+  });
+  trigBtn.addEventListener('click', ()=>{ scopeTrigger=!scopeTrigger; trigBtn.textContent=scopeTrigger?"📍 트리거 ON":"📍 트리거 OFF"; trigBtn.classList.toggle('primary', scopeTrigger); });
+
+  // 초기 라벨
+  msPerDiv=sliderToMsDiv(+timeSlider.value); tdivLabel.textContent="(1칸 = "+msPerDiv.toFixed(msPerDiv<1?2:1)+" ms)";
+  freqOut.textContent=sliderToFreq(+freqSlider.value)+" Hz"; volOut.textContent=volLabel((+volSlider.value)/100);
+
+
+  function gradeFor(s){
+    if(s>=90) return {t:"완벽한 성대모사! 사기 수준 🎭", c:"#FF6B9D"};
+    if(s>=75) return {t:"오, 꽤 비슷한데?! 👏", c:"#7C5CFC"};
+    if(s>=60) return {t:"느낌은 살았어 🙂", c:"#2DD4BF"};
+    if(s>=40) return {t:"음… 본인 목소리가 자꾸 나와요 😅", c:"#FFB020"};
+    return {t:"이건… 그냥 다른 사람인데요? 🤣", c:"#FF4D6D"};
+  }
+  function countUp(target, color){
+    const dur=reduceMotion?0:750, t0=performance.now();
+    const step=now=>{ const p=dur?Math.min(1,(now-t0)/dur):1, val=Math.round(target*p);
+      vScoreNum.textContent=val; vRing.style.background="conic-gradient("+color+" "+(val*3.6)+"deg, var(--line) 0deg)";
+      if(p<1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }
+  function setBar(bar, val, score){
+    const c=score>=75?"#2DD4BF":(score>=50?"#FFB020":"#FF6B9D");
+    bar.style.width=score+"%"; bar.style.background=c; val.textContent=score;
+  }
+  function drawLines(canvas, series, opts){
+    const o=fitCanvas(canvas), ctx=o.ctx, w=o.w, h=o.h; ctx.clearRect(0,0,w,h);
+    const pad=10; let mn=Infinity, mx=-Infinity;
+    series.forEach(s=>{ for(let i=0;i<s.data.length;i++){ const v=s.data[i]; if(v<mn)mn=v; if(v>mx)mx=v; } });
+    if(!isFinite(mn)){ mn=0; mx=1; }
+    if(mx-mn<1e-6){ mx=mn+1; }
+    const range=mx-mn, yAt=v=>pad+(1-(v-mn)/range)*(h-2*pad);
+    if(opts && opts.zero && mn<0 && mx>0){ const yz=yAt(0); ctx.strokeStyle="rgba(107,100,131,.25)"; ctx.setLineDash([4,4]); ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(0,yz); ctx.lineTo(w,yz); ctx.stroke(); ctx.setLineDash([]); }
+    series.forEach(s=>{
+      const n=s.data.length; ctx.strokeStyle=s.color; ctx.lineWidth=2.6; ctx.lineJoin="round"; ctx.beginPath();
+      for(let i=0;i<n;i++){ const x=(i/(n-1))*w, y=yAt(s.data[i]); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+      ctx.stroke();
+    });
+  }
+  function drawPitchOverlay(a,b){ drawLines(vPitchCanvas,[{data:a,color:A_COLOR},{data:b,color:B_COLOR}],{zero:true}); }
+  function drawEnvOverlay(a,b){ drawLines(vEnvCanvas,[{data:a,color:A_COLOR},{data:b,color:B_COLOR}],{}); }
+  function drawToneOverlay(a,b){ drawLines(vToneCanvas,[{data:a,color:A_COLOR},{data:b,color:B_COLOR}],{zero:true}); }
+
+  function renderVResults(res){
+    vResults.style.display="block";
+    if(vResults.scrollIntoView) vResults.scrollIntoView({behavior:reduceMotion?"auto":"smooth", block:"nearest"});
+    const g=gradeFor(res.overall); vGrade.textContent=g.t; vGrade.style.color=g.c;
+    countUp(res.overall, g.c);
+    setBar(vPitchBar, vPitchVal, res.pitch);
+    setBar(vRhythmBar, vRhythmVal, res.rhythm);
+    setBar(vToneBar, vToneVal, res.tone);
+    drawPitchOverlay(res.contours.a, res.contours.b);
+    drawEnvOverlay(res.envs.a, res.envs.b);
+    drawToneOverlay(vslots.a.features.shape, vslots.b.features.shape);
+    const vr=Math.min(vslots.a.features.voicedRatio, vslots.b.features.voicedRatio);
+    vNote.style.display = vr<0.25 ? "block" : "none";
+  }
+  function redrawTab2(){
+    if(vslots.a.buffer) vMiniWave(vslots.a.buffer, vslots.a.canvas);
+    if(vslots.b.buffer) vMiniWave(vslots.b.buffer, vslots.b.canvas);
+    if(vLast){
+      drawPitchOverlay(vLast.contours.a, vLast.contours.b);
+      drawEnvOverlay(vLast.envs.a, vLast.envs.b);
+      if(vslots.a.features && vslots.b.features) drawToneOverlay(vslots.a.features.shape, vslots.b.features.shape);
+      vRing.style.background="conic-gradient("+gradeFor(vLast.overall).c+" "+(vLast.overall*3.6)+"deg, var(--line) 0deg)";
+    }
+  }
+  vReset.addEventListener("click", ()=>{
+    ["a","b"].forEach(key=>{ const s=vslots[key]; s.audio.pause(); if(s.url) URL.revokeObjectURL(s.url);
+      s.url=null; s.buffer=null; s.features=null; s.recording=false;
+      s.btn.textContent="🎤 녹음"; s.btn.classList.remove("recording"); s.status.textContent="녹음 전"; s.listen.style.display="none"; s.listen.textContent="▶ 듣기";
+      const o=fitCanvas(s.canvas); o.ctx.clearRect(0,0,o.w,o.h); s.canvas.parentElement.classList.remove("live"); });
+    vLast=null; vResults.style.display="none"; hideVError();
+  });
+
+  // ===== 리사이즈 / 초기화 =====
+  let rzT; window.addEventListener("resize", ()=>{ clearTimeout(rzT); rzT=setTimeout(()=>{
+    if(t1buffer){ drawWaveform(t1buffer); drawEnvelope(t1env); } if(t1saves.length) drawCompare(); redrawTab2();
+  },150); });
+
+  renderWords(); setupTabs(); scopeOnEnter();
+})();
+</script>
+
+<!-- HUBLINK-FAB : 빛과 파동 허브로 돌아가기 (고정 버튼) -->
+<a href="https://scienceisjo.github.io/lightandwave/hubpage" title="빛과 파동 허브로" aria-label="빛과 파동 허브로"
+   style="position:fixed;left:14px;bottom:14px;z-index:99999;display:inline-flex;align-items:center;gap:6px;padding:8px 13px;border-radius:999px;font:600 13px/1 'Noto Sans KR',system-ui,-apple-system,sans-serif;text-decoration:none;color:#eaf3ff;background:rgba(18,28,55,.85);border:1px solid rgba(127,183,255,.45);box-shadow:0 6px 20px -6px rgba(0,0,0,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)">
+  <span aria-hidden="true">🏠</span><span>허브</span>
+</a>
+
+</body>
+</html>

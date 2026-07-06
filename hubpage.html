@@ -175,6 +175,47 @@
   .lesson__detail-inner p{font-family:var(--font-serif);font-size:1.04rem;line-height:1.92;color:var(--ink-dim)}
   .lesson__detail-inner p strong{color:var(--ink);font-weight:700}
 
+  /* ============ FEATURE (시뮬레이터 모음) ============ */
+  .feature{max-width:880px;margin:3.2rem auto 0;padding:0 1.5rem}
+  .feature__card{
+    position:relative;display:flex;align-items:center;gap:1.4rem;flex-wrap:wrap;
+    background:linear-gradient(120deg,rgba(30,46,92,.55),rgba(20,30,60,.4));
+    border:1px solid var(--line-strong);border-radius:20px;
+    padding:1.8rem 1.9rem;text-decoration:none;overflow:hidden;
+    backdrop-filter:blur(10px);
+    transition:border-color .35s,transform .35s,box-shadow .35s;
+  }
+  .feature__card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#7fb7ff,#a99cff)}
+  .feature__card:hover{border-color:rgba(127,183,255,.55);transform:translateY(-3px);box-shadow:0 22px 60px -30px rgba(0,0,0,.85)}
+  .feature__icon{font-size:2.6rem;line-height:1}
+  .feature__text{flex:1;min-width:200px}
+  .feature__eyebrow{font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.4rem}
+  .feature__title{font-family:var(--font-serif);font-weight:700;font-size:clamp(1.4rem,3.6vw,1.9rem);color:var(--ink);letter-spacing:-.01em}
+  .feature__sub{margin-top:.5rem;color:var(--ink-dim);font-size:.95rem;line-height:1.6}
+  .feature__go{flex-shrink:0;background:rgba(127,183,255,.14);color:#eaf3ff;border:1px solid rgba(127,183,255,.4);border-radius:999px;padding:.7rem 1.3rem;font-size:.92rem;font-weight:500;white-space:nowrap;transition:background .28s,transform .28s}
+  .feature__card:hover .feature__go{background:rgba(127,183,255,.24);transform:translateX(3px)}
+
+  /* ============ TOOLBOX ============ */
+  .tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:1rem;padding-top:1.8rem}
+  .tool{
+    position:relative;display:flex;flex-direction:column;gap:.5rem;
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:1.35rem 1.25rem 1.2rem;text-decoration:none;overflow:hidden;
+    backdrop-filter:blur(10px);
+    transition:border-color .35s,background .35s,transform .35s,box-shadow .35s;
+    opacity:0;transform:translateY(18px);
+    animation:rise .8s cubic-bezier(.2,.7,.2,1) forwards;
+    animation-delay:calc(var(--i,0) * 80ms + .1s);
+  }
+  .tool::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent,var(--cyan));opacity:.5;transition:opacity .35s}
+  .tool:hover{border-color:var(--line-strong);background:var(--card-hover);transform:translateY(-3px);box-shadow:0 18px 50px -28px rgba(0,0,0,.8)}
+  .tool:hover::before{opacity:1}
+  .tool__icon{font-size:1.75rem;line-height:1;margin-bottom:.15rem}
+  .tool__name{font-family:var(--font-serif);font-weight:700;font-size:1.15rem;color:var(--ink);letter-spacing:-.01em}
+  .tool__desc{font-size:.85rem;color:var(--ink-faint);line-height:1.55;flex:1}
+  .tool__go{margin-top:.4rem;font-size:.84rem;color:#cfe2ff;font-weight:500;transition:color .28s,transform .28s}
+  .tool:hover .tool__go{color:#eaf3ff;transform:translateX(2px)}
+
   /* ============ FOOTER ============ */
   .foot{margin-top:7rem;padding:4rem 1.5rem 5rem;text-align:center;border-top:1px solid var(--line)}
   .foot__line{font-family:var(--font-serif);font-size:1.1rem;color:var(--ink-dim);letter-spacing:.02em;margin-bottom:1rem}
@@ -212,6 +253,19 @@
   <main id="units">
     <div class="lead">
       <p>우리는 세상을 직접 본다고 믿어요. 하지만 우리가 보고 듣는 건 빛과 파동이 실어 나른 <em>신호</em>일 뿐이죠. 이 단원은 세상과 나의 경험 사이, 그 좁은 틈에 관한 일곱 개의 이야기입니다.</p>
+    </div>
+
+    <!-- ============ 시뮬레이터 모음 (feature) ============ -->
+    <div class="feature">
+      <a class="feature__card" href="simulators.html">
+        <span class="feature__icon">🔬</span>
+        <span class="feature__text">
+          <span class="feature__eyebrow">Simulator Gallery</span>
+          <span class="feature__title">시뮬레이터 모음</span>
+          <span class="feature__sub">빛과 파동 전 차시의 인터랙티브 시뮬레이터 82개를 한곳에서. 원하는 실험을 골라 바로 열어 보세요.</span>
+        </span>
+        <span class="feature__go">모두 보기 →</span>
+      </a>
     </div>
 
     <!-- ============ 3-1 빛 ============ -->
@@ -390,6 +444,46 @@
             </div>
           </div>
         </article>
+
+      </div>
+    </section>
+
+    <!-- ============ 도구 상자 ============ -->
+    <section class="section wrap">
+      <div class="section__head">
+        <span class="section__no">✦</span>
+        <h2 class="section__name">도구 상자</h2>
+        <span class="section__en">Toolbox</span>
+      </div>
+      <div class="tools">
+
+        <a class="tool" style="--i:0;--accent:#6fb6ff" href="https://scienceisjo.github.io/lightandwave/flipchallenge.html" target="_blank" rel="noopener">
+          <span class="tool__icon">🪞</span>
+          <span class="tool__name">좌우반전 챌린지</span>
+          <span class="tool__desc">거울 속 내 얼굴은 왜 낯설까? 얼굴의 좌우 대칭을 직접 확인해 봐요.</span>
+          <span class="tool__go">열기 →</span>
+        </a>
+
+        <a class="tool" style="--i:1;--accent:#5fd0c9" href="https://scienceisjo.github.io/lightandwave/soridamlab-analyzer.html" target="_blank" rel="noopener">
+          <span class="tool__icon">〰️</span>
+          <span class="tool__name">소리 파동 분석기</span>
+          <span class="tool__desc">목소리를 녹음해 파형으로 확인해요. 소리의 크기와 강세가 눈에 보여요.</span>
+          <span class="tool__go">열기 →</span>
+        </a>
+
+        <a class="tool" style="--i:2;--accent:#c88cff" href="https://scienceisjo.github.io/lightandwave/pitch-test.html" target="_blank" rel="noopener">
+          <span class="tool__icon">🎹</span>
+          <span class="tool__name">절대음감 테스트</span>
+          <span class="tool__desc">들려주는 음이 무엇인지 맞혀 봐요. 음의 높낮이는 곧 진동수의 차이예요.</span>
+          <span class="tool__go">열기 →</span>
+        </a>
+
+        <a class="tool" style="--i:3;--accent:#ffb26f" href="https://scienceisjo.github.io/lightandwave/sound-visualizer.html" target="_blank" rel="noopener">
+          <span class="tool__icon">🎤</span>
+          <span class="tool__name">실시간 소리 분석기</span>
+          <span class="tool__desc">마이크로 들어오는 소리를 실시간 파형으로 보여줘요.</span>
+          <span class="tool__go">열기 →</span>
+        </a>
 
       </div>
     </section>

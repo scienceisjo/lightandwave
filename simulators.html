@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시뮬레이터 모음 · 빛과 파동</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
+  :root{
+    --bg:#070b16; --bg2:#0b1224;
+    --ink:#eaf0ff; --ink-dim:#b7c2dc; --ink-faint:#7c88a6;
+    --line:rgba(120,140,190,.16); --line-strong:rgba(140,165,220,.34);
+    --card:rgba(18,28,55,.44); --card-hover:rgba(28,42,82,.62);
+    --cyan:#7fb7ff;
+    --font-serif:'Noto Serif KR',serif; --font-sans:'Noto Sans KR',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:var(--font-sans);color:var(--ink);
+    background:
+      radial-gradient(1100px 600px at 50% -8%,rgba(60,90,170,.18),transparent 60%),
+      linear-gradient(180deg,var(--bg),var(--bg2));
+    min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 1.5rem}
+
+  /* HEADER */
+  .top{padding:3.2rem 0 1.6rem;text-align:center;position:relative}
+  .top__back{position:absolute;left:1.5rem;top:3.4rem;font-size:.85rem;color:var(--ink-faint);text-decoration:none;transition:color .25s}
+  .top__back:hover{color:var(--cyan)}
+  .top__kicker{font-size:.8rem;letter-spacing:.34em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.9rem}
+  .top__title{font-family:var(--font-serif);font-weight:700;font-size:clamp(2rem,5vw,3rem);letter-spacing:-.01em}
+  .top__sub{margin-top:.9rem;color:var(--ink-dim);font-size:1rem}
+  .top__count{margin-top:.5rem;color:var(--ink-faint);font-size:.85rem}
+
+  /* CHAPTER NAV */
+  .nav{position:sticky;top:0;z-index:20;background:rgba(7,11,22,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);margin-top:1.4rem}
+  .nav__inner{display:flex;gap:.5rem;overflow-x:auto;padding:.7rem 1.5rem;max-width:1080px;margin:0 auto;scrollbar-width:thin}
+  .nav a{white-space:nowrap;font-size:.82rem;color:var(--ink-faint);text-decoration:none;padding:.35rem .8rem;border-radius:999px;border:1px solid transparent;transition:all .22s}
+  .nav a:hover{color:var(--ink);border-color:var(--line-strong);background:rgba(127,183,255,.08)}
+
+  /* CHAPTER */
+  .chapter{padding-top:3rem;scroll-margin-top:3.6rem}
+  .chapter__head{display:flex;align-items:baseline;gap:.9rem;padding-bottom:1.1rem;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .chapter__no{font-family:var(--font-serif);font-size:1rem;color:var(--accent,var(--cyan));letter-spacing:.06em;font-weight:700}
+  .chapter__name{font-family:var(--font-serif);font-weight:700;font-size:clamp(1.35rem,3.4vw,1.85rem)}
+  .chapter__badge{margin-left:auto;font-size:.75rem;color:var(--ink-faint);border:1px solid var(--line-strong);border-radius:999px;padding:.2rem .7rem;white-space:nowrap}
+
+  /* GRID */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.9rem;padding-top:1.5rem}
+  .sim{
+    position:relative;display:flex;flex-direction:column;gap:.45rem;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:1.1rem 1.15rem 1rem;text-decoration:none;color:inherit;overflow:hidden;
+    transition:border-color .3s,background .3s,transform .3s,box-shadow .3s;
+  }
+  .sim::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent,var(--cyan));opacity:.5;transition:opacity .3s}
+  .sim:hover{border-color:var(--line-strong);background:var(--card-hover);transform:translateY(-3px);box-shadow:0 16px 42px -26px rgba(0,0,0,.85)}
+  .sim:hover::before{opacity:1}
+  .sim__name{font-family:var(--font-serif);font-weight:700;font-size:1.06rem;letter-spacing:-.01em;line-height:1.35}
+  .sim__desc{font-size:.82rem;color:var(--ink-faint);line-height:1.5;flex:1}
+  .sim__go{margin-top:.3rem;font-size:.8rem;color:#cfe2ff;font-weight:500;opacity:.85;transition:opacity .25s,transform .25s}
+  .sim:hover .sim__go{opacity:1;transform:translateX(2px)}
+
+  .foot{margin-top:5rem;padding:3rem 1.5rem 4rem;text-align:center;border-top:1px solid var(--line);color:var(--ink-faint);font-size:.82rem;letter-spacing:.06em}
+
+  @media (max-width:520px){
+    .top__back{position:static;display:inline-block;margin-bottom:1rem}
+    .grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+  <header class="top wrap">
+    <a class="top__back" href="hubpage.html">← 허브로</a>
+    <p class="top__kicker">3단원 · 빛과 파동</p>
+    <h1 class="top__title">시뮬레이터 모음</h1>
+    <p class="top__sub">차시별 인터랙티브 시뮬레이터를 한곳에서</p>
+    <p class="top__count" id="totalCount"></p>
+  </header>
+
+  <nav class="nav"><div class="nav__inner" id="chapterNav"></div></nav>
+
+  <main class="wrap" id="app"></main>
+
+  <footer class="foot">빛과 파동 · 시뮬레이터 모음 — 클릭하면 해당 차시 페이지의 시뮬레이터로 바로 이동합니다.</footer>
+
+<script>
+/* ── 시뮬레이터 데이터 (차시별) ─────────────────────────────
+   page: 원본 차시 파일 / id: 딥링크 앵커(요소 id 또는 탭 패널 id) */
+const CHAPTERS = [
+  { no:'01', name:'물체를 보는 과정', sub:'빛의 반사와 굴절', accent:'#6fb6ff', page:'01.html', sims:[
+    ['빛의 반사 탐구','reflCanvas','거울에 빛을 쏘아 입사각=반사각 규칙을 직접 발견'],
+    ['빛의 굴절 탐구','refrCanvas','공기·물·유리·다이아몬드에서 빛이 꺾이는 정도 비교'],
+    ['레이저 미로 대탈출','mazeCanvas','거울(/,\\)을 배치해 반사로 레이저를 포탈까지'],
+    ['최소 시간의 원리·페르마','whyFermatCanvas','왜 입사각=반사각인지 이동 시간이 최소임을 확인'],
+    ['파동의 원리·호이겐스(반사)','whyHuyCanvas','파면의 2차 파동으로 반사각이 생기는 과정'],
+    ['전자기학 관점·전자 재방출','whyEmCanvas','전자가 흔들려 재방출한 빛이 정반사만 보강'],
+    ['파동의 원리·호이겐스(굴절)','whyRefrHuyCanvas','느린 매질에서 파면이 꺾이는 스넬 법칙'],
+    ['마차 비유·굴절','wagonFrame','한쪽 바퀴가 먼저 느려져 방향이 꺾이는 원리'],
+    ['⚽ Light Soccer','soccerFrame','광자를 반사·굴절로 설계해 골문에 넣는 게임'],
+    ['💡 빛 포켓볼','poolFrame','입사각=반사각으로 공을 쳐서 포켓에'],
+    ['🐟 물총고기와 굴절','fishFrame','굴절 착시를 감안해 곤충의 실제 위치를 조준'],
+  ]},
+  { no:'02', name:'평면거울에서 상이 생기는 원리', sub:'', accent:'#8ea4ff', page:'02.html', sims:[
+    ['거울 탐정','featCanvas','물체를 드래그하며 상의 크기·거리로 대칭 규칙 발견'],
+    ['상의 위치 맞히기','quizCanvas','반사 규칙을 적용해 상의 위치를 클릭으로 맞히기'],
+    ['빛의 경로 3단계','rayCanvas','퍼짐→반사→눈→연장 단계로 상이 보이는 과정'],
+    ['6단계 광원 추적','storyCanvas','광원부터 뇌의 착각까지 6단계로 따라가기'],
+    ['거울 속 글자 3D','mir3d','거울은 좌우가 아니라 앞뒤를 뒤집는다(입체)'],
+    ['좌표축 반전 3D','coord3d','사람 좌표축으로 보는 거울의 깊이 반전'],
+    ['F 글자 앞뒤 반전','depthCanvas','F와 거울상을 돌려 비교하며 반전의 정체 확인'],
+    ['빛의 길 잇기','ptCanvas','거울의 반사점을 찾는 광선 작도 게임'],
+    ['거울 검수관 2D','inspCanvas','규칙을 어긴 가짜 상을 찾아내는 게임'],
+    ['거울 검수관 3D','insp3d','입체로 가짜 상을 찾는 심화 게임'],
+    ['빛다발 분석','whyBundleCanvas','빛다발의 꼭짓점을 물체 위치로 역추적하는 뇌'],
+    ['경로 펼치기','whyBrainCanvas','접힌 빛의 경로를 펼쳐 상의 위치 이해'],
+    ['수학 증명·합동삼각형','whyProofCanvas','상과 물체가 같은 거리임을 기하로 증명'],
+    ['전신거울 필요 길이','whyHalfCanvas','전신을 보려면 키의 절반 거울이면 충분'],
+    ['두 거울 무한 반사','whyTwoCanvas','거울 사이 각도로 상의 개수가 늘어나는 규칙'],
+    ['얼굴 좌우 반전','faceCanvas','사진 모드↔거울 모드로 얼굴 비대칭 확인'],
+    ['오른손 들기','handCanvas','거울 속 반대편 손도 실은 같은 오른손'],
+  ]},
+  { no:'03', name:'생활 속 거울과 렌즈', sub:'', accent:'#5fd0c9', page:'03.html', sims:[
+    ['시야 비교기','mirCanvas','평면·볼록·오목 거울의 시야와 비친 모습 비교'],
+    ['렌즈 공방','shapeCanvas','두께를 조절해 볼록/오목 렌즈 단면 변화 관찰'],
+    ['렌즈 너머 보기','lookCanvas','루페와 안경 렌즈가 글자를 다르게 보이는 방식'],
+  ]},
+  { no:'04', name:'거울과 렌즈에 의한 상', sub:'', accent:'#a99cff', page:'04.html', sims:[
+    ['거울 관찰 카메라','mirCanvas','볼록/오목 거울의 상 변화를 2D·3D로 관찰'],
+    ['렌즈 관찰 카메라','lenCanvas','렌즈의 굴절과 상 형성을 2D·3D로 탐구'],
+    ['빛의 여행 추적','rcCanvas','세 광선이 초점을 지나 상을 맺는 과정 추적'],
+    ['광학 수사대','gmCanvas','상 변화로 숨은 광학 장치를 추리하는 게임'],
+    ['초점 찾기','fcCanvas','나란한 빛으로 빛을 모으는지 퍼뜨리는지 판별'],
+    ['볼록 거울은 왜 넓게','bvCanvas','반사 법칙 하나로 넓은 시야가 생기는 원리'],
+    ['오목 거울 빛 모으기','cvCanvas','빛을 모으고 멀리 보내는 양방향 기능'],
+    ['거울 속 상·연장선','miCanvas','반사광 연장선이 만나는 곳에 상이 보인다'],
+    ['렌즈 상 형성 원리','lnCanvas','볼록·오목 렌즈의 실상·허상 비교'],
+    ['수정체 조절작용','accCanvas','먼·가까운 물체에 따라 수정체 두께 변화'],
+    ['호수에 비친 구름','rflCanvas','수면 반사로 생기는 허상의 위치'],
+    ['물속 빛의 굴절','rfrCanvas','입사각을 바꿔 굴절각<입사각 확인'],
+    ['물속 꺾인 연필','pencCanvas','굴절로 떠오르고 꺾여 보이는 연필'],
+    ['떠오르는 동전','coinCanvas','물을 채우면 굴절로 동전이 떠올라 보인다'],
+    ['렌즈 두 번 굴절','trCanvas','렌즈 진입·퇴출 시 두 번 꺾이는 빛'],
+    ['눈 광학 실험실(근시·원시)','eyCanvas','정상·근시·원시와 교정 렌즈 효과 관찰'],
+  ]},
+  { no:'05', name:'물체의 색과 빛의 합성', sub:'', accent:'#ff9ec4', page:'05.html', sims:[
+    ['반사하는 빛의 색','cvE1','손전등을 물체에 비춰 반사·흡수 관찰(3D)'],
+    ['화소 관찰','cvE2','화면 색을 확대해 RGB 화소 점화 상태 보기'],
+    ['조명으로 색 표현','cvE3','RGB 손전등을 겹쳐 가산혼합 관찰'],
+    ['물체의 색·반사와 흡수','cv1','조명을 바꾸며 물체가 다르게 보이는 까닭'],
+    ['빛의 합성·천장조명','cv2','RGB 조명 각도를 조절해 겹친 색 관찰'],
+    ['RGB 색 만들기','cvRgb','슬라이더로 원하는 색의 RGB 조합 찾기'],
+    ['비트맵 색 송출기','cv3','그림을 픽셀 격자로 한 줄씩 송출하는 과정'],
+    ['LCD 디스플레이','cv4','백라이트와 액정으로 색을 만드는 원리'],
+    ['통합 색 실험실','clCanvas','가산혼합·선택 반사·미션을 통합한 대형 실험실'],
+    ['색 맞히기 1단계','lc1','백색광에서 물체가 반사하는 RGB 찾기'],
+    ['색 맞히기 2단계','lc2','조명을 바꿔 물체가 보일 색 예측'],
+    ['눈과 뇌·색은 해석','cvCone','빛에 대한 원뿔세포 반응과 뇌의 해석'],
+    ['조건등색','cvMeta','진짜 노랑과 빨강+초록이 같게 보이는 현상'],
+    ['물감 감산혼합','cvSub','색소를 겹칠수록 어두워지는 감산혼합'],
+    ['전자와 빛·흡수 원리','cvAbs','광자 에너지와 전자 준위로 흡수/반사 판단'],
+    ['무슨 색으로 보일까 퀴즈','cvQuiz','빛·물체·필터를 거친 최종 색 추리 게임'],
+    ['빛 그림판','cvPaint','무채색 사진을 색 손전등으로 칠하는 가산혼합'],
+    ['강아지가 보는 세상','cvDogSpec','사람과 강아지의 색 인식 차이 비교'],
+    ['갯가재의 눈','cvMantis','사람 vs 갯가재, 자외선·편광까지 전환'],
+  ]},
+  { no:'W1', name:'퍼져 나가는 파동', sub:'wave01', accent:'#6fb6ff', page:'wave01.html', sims:[
+    ['영웅의 파동 시연','heroCv','매질은 제자리 진동하고 모양만 이동함을 관찰'],
+    ['지진의 수수께끼','quakeCv','흔들림만 전달되는 지진파 퍼짐 체험'],
+    ['사자와 호랑이 울음','roarCv','같은 동물도 소리의 파형이 다를 수 있다'],
+    ['용수철 파동 만들기','springCv','진폭·파장·속도를 조절하며 매질의 진동 관찰'],
+    ['파동의 해부도','anatomyCv','마루·골·파장·진폭을 라벨로 학습'],
+    ['파장 측정 미션','measCv','마루 사이 거리를 드래그로 측정하고 채점'],
+  ]},
+  { no:'W2', name:'파동으로 알아보는 소리의 특성', sub:'wave02', accent:'#a99cff', page:'wave02.html', sims:[
+    ['악기 음색 소개','view-hook','피아노와 바이올린의 같은 음, 다른 음색'],
+    ['오실로스코프','scopeMain','진폭·진동수·파형을 조절하며 소리와 파동 관계'],
+    ['파형 선택기','view-lab','사인·삼각·사각·톱니파의 음색 차이'],
+    ['진폭·진동수·파형 비교','view-concept','두 파동을 나란히 보고 들으며 비교'],
+    ['파장-진동수 시뮬','wlCanvas','진동수를 바꾸면 파장이 어떻게 달라지나'],
+    ['악보 파형 예측','poeRefCanvas','크레셴도에서 세 음의 파동을 예측·비교'],
+    ['파형 맞추기 게임','matchTargetCanvas','목표 파동에 맞게 조절해 일치도 높이기'],
+    ['소리 형사 퀴즈','quizCanvas','파동을 보고 소리의 특성을 판단하는 퀴즈'],
+    ['귀의 구조와 소리 전달','earSvg','공기의 진동이 뇌 신호로 바뀌는 과정(SVG)'],
+    ['배음 시뮬레이터','harmCanvas','배음의 진폭을 조절하며 음색 변화 체험'],
+  ]},
+];
+
+(function(){
+  const app = document.getElementById('app');
+  const nav = document.getElementById('chapterNav');
+  let total = 0;
+  CHAPTERS.forEach((ch, ci) => {
+    total += ch.sims.length;
+    const secId = 'ch-' + ch.no;
+
+    const a = document.createElement('a');
+    a.href = '#' + secId;
+    a.textContent = ch.no + ' ' + ch.name;
+    a.style.setProperty('--accent', ch.accent);
+    nav.appendChild(a);
+
+    const sec = document.createElement('section');
+    sec.className = 'chapter';
+    sec.id = secId;
+    sec.style.setProperty('--accent', ch.accent);
+    sec.innerHTML =
+      '<div class="chapter__head">' +
+        '<span class="chapter__no">' + ch.no + '</span>' +
+        '<h2 class="chapter__name">' + ch.name + '</h2>' +
+        '<span class="chapter__badge">' + ch.sims.length + '개</span>' +
+      '</div><div class="grid"></div>';
+    const grid = sec.querySelector('.grid');
+    ch.sims.forEach(s => {
+      const [name, id, desc] = s;
+      const card = document.createElement('a');
+      card.className = 'sim';
+      card.href = ch.page + '#' + id;
+      card.target = '_blank';
+      card.rel = 'noopener';
+      card.style.setProperty('--accent', ch.accent);
+      card.innerHTML =
+        '<span class="sim__name">' + name + '</span>' +
+        '<span class="sim__desc">' + desc + '</span>' +
+        '<span class="sim__go">열기 →</span>';
+      grid.appendChild(card);
+    });
+    app.appendChild(sec);
+  });
+  document.getElementById('totalCount').textContent = '전체 ' + total + '개 시뮬레이터 · 7개 차시';
+})();
+</script>
+</body>
+</html>
