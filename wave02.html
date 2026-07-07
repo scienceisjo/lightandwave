@@ -434,10 +434,16 @@ input[type=range]::-moz-range-thumb{
 .stars .st.lit{color:var(--gold);text-shadow:0 0 10px rgba(255,211,92,.5)}
 .combo{color:var(--gold)}
 
-.match-target{background:var(--screen);border:2.5px solid var(--line);border-radius:10px;padding:10px;position:relative;margin-bottom:14px;box-shadow:inset 0 0 0 2px #7d9b0d}
+.match-target{background:var(--screen);border:2.5px solid var(--line);border-radius:10px;padding:10px;position:relative;box-shadow:inset 0 0 0 2px #7d9b0d}
+.match-scopes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+#game-match .controls{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:880px){
+  #game-match .controls{grid-template-columns:1fr 1fr 1.5fr;align-items:stretch}
+  .match-target canvas{height:150px}
+}
 .match-target .cap{position:absolute;top:8px;left:10px;font-size:.76rem;font-weight:700;color:#ffa3c9;
   background:rgba(15,56,15,.9);padding:3px 9px;border-radius:7px;z-index:2}
-.match-target canvas{width:100%;height:150px;display:block}
+.match-target canvas{width:100%;height:118px;display:block}
 .accuracy-bar{height:12px;border-radius:99px;background:var(--panel-3);overflow:hidden;margin:6px 0 2px;border:2px solid var(--line)}
 .accuracy-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--no),var(--gold),var(--ok));transition:width .25s}
 
@@ -568,6 +574,10 @@ input[type=range]::-moz-range-thumb{
   *{animation-duration:.001ms !important;transition-duration:.05ms !important}
 }
 @media(max-width:620px){
+  .match-target canvas{height:96px}
+  .match-scopes{gap:7px}
+  .cmp-cell .cap,.match-target .cap{font-size:.68rem;padding:2px 7px}
+  .cmp-cell .play-mini,.match-target .play-mini{width:28px;height:28px}
   .topbar-inner{padding:9px 14px}
   main{padding:18px 14px 80px}
   .card{padding:17px}
@@ -781,6 +791,8 @@ input[type=range]::-moz-range-thumb{
         <input type="range" id="birthAmp" min="1" max="5" step="1" value="3">
       </div>
     </div>
+    <div class="fact"><span class="ic">💨</span><div><b>공기는 어떻게 진동을 전달할까?</b> 줄이 앞으로 밀면 주변 공기가 <b>빽빽</b>해지고(압축), 물러나면 <b>성글</b>어져요(팽창). 이 빽빽·성글 패턴이 옆 공기로 릴레이되며 퍼지는 게 소리! 위 시뮬의 공기 입자들이 <b>제자리에서 좌우로만</b> 흔들리는 걸 잘 보세요 — 공기 자체가 귀까지 날아가는 게 아니에요(매질은 제자리!).</div></div>
+    <div class="fact"><span class="ic">🚀</span><div><b>매질(공기)이 없으면?</b> 진동을 전달할 물질이 없으니 소리도 못 가요. 그래서 우주는 고요! 진공 종 실험은 <a href="wave01.html" style="color:var(--freq);font-weight:700">1차시 '파도 파도 파동!'</a>에서 직접 해 볼 수 있어요.</div></div>
     <div class="cloze-line"><span class="lead">📝 한 줄 정리 · 빈칸을 눌러 확인</span>소리는 물체의 <span class="cloze" data-c="gold">진동</span>으로 발생하고, <span class="cloze" data-c="freq">공기</span>와 같은 매질이 그 진동을 전달하며, 진동이 <span class="cloze" data-c="amp">귀</span>에 도달하면 소리로 들린다.<span class="cloze-done">✓ 정리 완성!</span></div>
   </div>
 
@@ -1077,7 +1089,7 @@ input[type=range]::-moz-range-thumb{
       <div class="cmp-cell"><div class="cap" style="color:#ffa3c9">🎹 피아노 느낌</div><canvas data-wave="triangle" data-amp="3" data-freq="4" data-c="wave"></canvas><div class="play-mini" data-amp="3" data-freq="4" data-wv="triangle">▶</div></div>
       <div class="cmp-cell"><div class="cap" style="color:#ffa3c9">🎻 바이올린 느낌</div><canvas data-wave="sawtooth" data-amp="3" data-freq="4" data-c="wave"></canvas><div class="play-mini" data-amp="3" data-freq="4" data-wv="sawtooth">▶</div></div>
     </div>
-    <div class="fact"><span class="ic">🎨</span><div>사람마다 목소리가 다른 까닭도 같아요 — 각자의 <b>파형</b>이 다르기 때문! 파형은 그 소리만의 '지문' 같은 거예요.</div></div>
+    <div class="fact"><span class="ic">🎨</span><div>사람마다 목소리가 다른 까닭도 같아요 — 각자의 <b>파형</b>이 다르기 때문! 파형은 그 소리만의 '지문' 같은 거예요. <span style="color:var(--text-mute)">(그럼 파형은 <b>왜</b> 달라질까? 🌙 교과서 밖 탭의 <b>'배음과 합성파'</b>에서 직접 만들어 보며 알 수 있어요!)</span></div></div>
     <div class="cloze-line"><span class="lead">📝 한 줄 정리 · 빈칸을 눌러 확인</span>진폭·진동수가 같아도 <span class="cloze" data-c="wave">파형</span>이/가 다르면 <span class="cloze" data-c="wave">음색</span>(맵시)이 달라진다.<span class="cloze-done">✓ 정리 완성!</span></div>
   </div>
 
@@ -1240,16 +1252,17 @@ input[type=range]::-moz-range-thumb{
 
       <p style="color:var(--text-dim);font-size:.92rem;margin-bottom:12px">🎯 <b style="color:var(--text)">목표 소리</b>를 듣고 보면서, 아래 슬라이더로 <b class="t-amp">진폭</b>·<b class="t-freq">진동수</b>·<b class="t-wave">파형</b>을 똑같이 맞춰 보세요!</p>
 
-      <div class="match-target">
-        <div class="cap">🎯 목표 파형</div>
-        <canvas id="matchTargetCanvas"></canvas>
-        <div class="play-mini" id="matchPlayTarget" style="z-index:3">▶</div>
-      </div>
-
-      <div class="match-target" style="border-color:var(--line)">
-        <div class="cap" style="color:#d6e5a3">🎚️ 내 파형</div>
-        <canvas id="matchMineCanvas"></canvas>
-        <div class="play-mini" id="matchPlayMine" style="z-index:3">▶</div>
+      <div class="match-scopes">
+        <div class="match-target">
+          <div class="cap">🎯 목표</div>
+          <canvas id="matchTargetCanvas"></canvas>
+          <div class="play-mini" id="matchPlayTarget" style="z-index:3">▶</div>
+        </div>
+        <div class="match-target" style="border-color:var(--line)">
+          <div class="cap" style="color:#d6e5a3">🎚️ 내 파형</div>
+          <canvas id="matchMineCanvas"></canvas>
+          <div class="play-mini" id="matchPlayMine" style="z-index:3">▶</div>
+        </div>
       </div>
 
       <div class="controls" style="margin-top:14px">
@@ -1354,6 +1367,7 @@ input[type=range]::-moz-range-thumb{
       <div style="text-align:center"><div style="font-size:.75rem;color:var(--text-mute)">1</div><div style="border-top:2px solid var(--line);padding-top:3px;font-size:1.1rem;color:var(--freq)">f (진동수)</div></div>
     </div>
     <p style="font-size:.86rem;color:var(--text-mute);text-align:center;margin-top:12px">예) 진동수 2 Hz → 주기 0.5초. 진동수가 클수록 주기는 짧아져요.<br><span style="color:var(--text-dim)">(교과서에서는 진동수만 다루고 주기는 깊이 다루지 않아요.)</span></p>
+    <div class="fact"><span class="ic">👀</span><div><b>눈으로 확인!</b> 📖 개념 도감 탭의 <b>모눈종이 시뮬</b>에서 진동수를 4Hz로 올리면, 물결 하나(1회 진동)가 차지하는 가로 시간이 짧아지는 게 바로 보여요. 그리고 <b>진동수↔파장 시뮬</b>의 주기 readout과도 연결!</div></div>
   </div>
 
   <!-- 옥타브와 진동수 -->
@@ -2026,35 +2040,35 @@ function buildQuestions(){
   const R=n=>Math.floor(Math.random()*n);
   const Q=[];
   // 파동 그림 2개를 비교해야 풀 수 있는 문제들
-  Q.push({type:'cmp',q:'A와 B 중 더 높은 소리는?',sub:'파동의 촘촘함(진동수)을 비교!',opts:['A','B'],
+  Q.push({type:'cmp',q:'A와 B 중 더 높은 소리는?',sub:'파동의 촘촘함(진동수)을 비교!',opts:['A','B'],why:'더 촘촘한 쪽 = 진동수가 큰 쪽 = 높은 소리! (높낮이는 진동수가 결정)',
     gen:()=>{const a=2+R(3),f1=2+R(2),f2=f1+2+R(2),hi=R(2);
       return {A:{amp:a,freq:hi?f1:f2,wave:'sine'},B:{amp:a,freq:hi?f2:f1,wave:'sine'},ans:hi?1:0};}});
-  Q.push({type:'cmp',q:'A와 B 중 더 큰 소리는?',sub:'파동의 높이(진폭)를 비교!',opts:['A','B'],
+  Q.push({type:'cmp',q:'A와 B 중 더 큰 소리는?',sub:'파동의 높이(진폭)를 비교!',opts:['A','B'],why:'위아래로 더 크게 출렁이는 쪽 = 진폭이 큰 쪽 = 큰 소리! (세기는 진폭이 결정)',
     gen:()=>{const f=3+R(3),big=R(2);
       return {A:{amp:big?2:5,freq:f,wave:'sine'},B:{amp:big?5:2,freq:f,wave:'sine'},ans:big?1:0};}});
-  Q.push({type:'cmp',q:'A의 진동수는 몇 Hz일까?',sub:'⏱ 화면 가로 전체 = 1초! A의 반복 횟수를 세자',opts:['2 Hz','3 Hz','4 Hz','5 Hz'],
+  Q.push({type:'cmp',q:'A의 진동수는 몇 Hz일까?',sub:'⏱ 화면 가로 전체 = 1초! A의 반복 횟수를 세자',opts:['2 Hz','3 Hz','4 Hz','5 Hz'],why:'가로 전체가 1초니까, 1초 동안 반복된 물결 수가 곧 진동수(Hz)예요. 마루 개수를 세면 끝!',
     gen:()=>{const f=2+R(4);
       return {A:{amp:3,freq:f,wave:'sine'},B:{amp:1,freq:7,wave:'sine'},ans:f-2};}});
-  Q.push({type:'cmp',q:'A와 B의 진동수 차이는 몇 Hz일까?',sub:'⏱ 가로 전체 = 1초. 각각 세어서 빼자!',opts:['1 Hz','2 Hz','3 Hz','4 Hz'],
+  Q.push({type:'cmp',q:'A와 B의 진동수 차이는 몇 Hz일까?',sub:'⏱ 가로 전체 = 1초. 각각 세어서 빼자!',opts:['1 Hz','2 Hz','3 Hz','4 Hz'],why:'A와 B 각각의 반복 횟수(Hz)를 센 다음 큰 수에서 작은 수를 빼면 돼요.',
     gen:()=>{const f1=2+R(2),d=1+R(3);
       return {A:{amp:3,freq:f1,wave:'sine'},B:{amp:3,freq:f1+d,wave:'sine'},ans:d-1};}});
-  Q.push({type:'cmp',q:'A의 진폭은 B의 몇 배일까?',sub:'중심선에서 마루까지의 높이를 비교!',opts:['2배','3배','같다','절반'],
+  Q.push({type:'cmp',q:'A의 진폭은 B의 몇 배일까?',sub:'중심선에서 마루까지의 높이를 비교!',opts:['2배','3배','같다','절반'],why:'진폭 = 중심선에서 마루(꼭대기)까지의 높이! 모눈 칸수로 비교하면 정확해요.',
     gen:()=>{const f=3+R(3),two=R(2);
       return two? {A:{amp:4,freq:f,wave:'sine'},B:{amp:2,freq:f,wave:'sine'},ans:0}
                 : {A:{amp:3,freq:f,wave:'sine'},B:{amp:1,freq:f,wave:'sine'},ans:1};}});
-  Q.push({type:'cmp',q:'두 파동은 진폭만 다르다. 두 소리는 무엇이 다르게 들릴까?',sub:'',opts:['세기(크기)','높낮이','음색','다르지 않다'],
+  Q.push({type:'cmp',q:'두 파동은 진폭만 다르다. 두 소리는 무엇이 다르게 들릴까?',sub:'',opts:['세기(크기)','높낮이','음색','다르지 않다'],why:'진폭은 소리의 세기(크기)만 결정! 진동수가 같으니 높낮이는 같고, 파형이 같으니 음색도 같아요.',
     gen:()=>({A:{amp:5,freq:4,wave:'sine'},B:{amp:2,freq:4,wave:'sine'},ans:0})});
-  Q.push({type:'cmp',q:'두 파동은 진동수만 다르다. 무엇이 다르게 들릴까?',sub:'',opts:['높낮이','세기(크기)','음색','빠르기'],
+  Q.push({type:'cmp',q:'두 파동은 진동수만 다르다. 무엇이 다르게 들릴까?',sub:'',opts:['높낮이','세기(크기)','음색','빠르기'],why:'진동수는 소리의 높낮이를 결정! 진동수가 큰 쪽이 높은 소리로 들려요.',
     gen:()=>({A:{amp:3,freq:2,wave:'sine'},B:{amp:3,freq:6,wave:'sine'},ans:0})});
-  Q.push({type:'cmp',q:'진폭·진동수는 같고 모양만 다르다. 무엇이 다르게 들릴까?',sub:'피아노 vs 바이올린을 떠올려!',opts:['음색(맵시)','세기','높낮이','다르지 않다'],
+  Q.push({type:'cmp',q:'진폭·진동수는 같고 모양만 다르다. 무엇이 다르게 들릴까?',sub:'피아노 vs 바이올린을 떠올려!',opts:['음색(맵시)','세기','높낮이','다르지 않다'],why:'파형(모양)은 음색을 결정! 피아노와 바이올린이 같은 도를 쳐도 다르게 들리는 이유예요.',
     gen:()=>({A:{amp:3,freq:4,wave:'triangle'},B:{amp:3,freq:4,wave:'sawtooth'},ans:0})});
-  Q.push({type:'cmp',q:'B가 A보다 높은 소리인 까닭은?',sub:'',opts:['진동수가 커서','진폭이 커서','파형이 달라서','속력이 빨라서'],
+  Q.push({type:'cmp',q:'B가 A보다 높은 소리인 까닭은?',sub:'',opts:['진동수가 커서','진폭이 커서','파형이 달라서','속력이 빨라서'],why:'B가 더 촘촘하죠? 진동수가 커서 높은 소리! 참고로 속력은 매질이 정해서 A·B 똑같아요.',
     gen:()=>({A:{amp:3,freq:2,wave:'sine'},B:{amp:3,freq:6,wave:'sine'},ans:0})});
-  Q.push({type:'cmp',q:"'크고 낮은' 소리는 어느 쪽일까?",sub:'진폭과 진동수를 동시에 보자!',opts:['A','B'],
+  Q.push({type:'cmp',q:"'크고 낮은' 소리는 어느 쪽일까?",sub:'진폭과 진동수를 동시에 보자!',opts:['A','B'],why:"'크다' = 진폭이 크다, '낮다' = 진동수가 작다(듬성듬성). 두 조건을 모두 만족하는 쪽!",
     gen:()=>{const big=R(2);
       return big? {A:{amp:2,freq:6,wave:'sine'},B:{amp:5,freq:2,wave:'sine'},ans:1}
                 : {A:{amp:5,freq:2,wave:'sine'},B:{amp:2,freq:6,wave:'sine'},ans:0};}});
-  Q.push({type:'mc',q:'한 옥타브 높은 음은 진동수가 어떻게 될까?',sub:'🎵 보너스 문제',opts:['2배','절반','같음','3배'],ans:0});
+  Q.push({type:'mc',q:'한 옥타브 높은 음은 진동수가 어떻게 될까?',sub:'🎵 보너스 문제',opts:['2배','절반','같음','3배'],ans:0,why:'낮은 도 262Hz → 높은 도 523Hz, 정확히 2배! 그래서 두 음이 잘 어울려요.'});
   for(let i=Q.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[Q[i],Q[j]]=[Q[j],Q[i]];}
   return Q;
 }
@@ -2117,14 +2131,14 @@ function answerQuiz(i,btn){
     btn.classList.add('correct'); quizState.combo++;
     const pts=10+quizState.combo*2; quizState.score+=pts;
     sfx(quizState.combo>=3?'star':'ok');
-    fb.className='quiz-feedback show good'; fb.innerHTML=`<b>정답! +${pts}점</b>${quizState.combo>=2?` 🔥 ${quizState.combo}콤보!`:''}`;
+    fb.className='quiz-feedback show good'; fb.innerHTML=`<b>정답! +${pts}점</b>${quizState.combo>=2?` 🔥 ${quizState.combo}콤보!`:''}${q.why?`<br><span style="color:var(--text-dim)">💡 ${q.why}</span>`:''}`;
   }else{
     btn.classList.add('wrong'); $(`.quiz-opt[data-i="${ans}"]`).classList.add('correct');
     quizState.combo=0; quizState.lives--; sfx('no');
-    fb.className='quiz-feedback show bad'; fb.innerHTML=`<b>아쉬워요!</b> 정답은 <b>${q.opts[ans]}</b>.`;
+    fb.className='quiz-feedback show bad'; fb.innerHTML=`<b>아쉬워요!</b> 정답은 <b>${q.opts[ans]}</b>.${q.why?`<br><span style="color:var(--text-dim)">💡 ${q.why}</span>`:''}`;
   }
   updateQuizHud();
-  setTimeout(()=>{ quizState.idx++; nextQuestion(); },1450);
+  setTimeout(()=>{ quizState.idx++; nextQuestion(); },2600);
 }
 function endQuiz(){
   quizState.active=false;
