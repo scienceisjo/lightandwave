@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>소리 분석 실험실 · 파동으로 알아보는 소리의 특성</title>
+<title>소리 도감 SOUND DEX · 파동으로 알아보는 소리의 특성</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500&family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+KR:wght@400;500;600;700&family=Nanum+Myeongjo:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css">
 <style>
 /* ============================================================
    소리 분석 실험실 — 디자인 토큰
@@ -17,54 +17,61 @@
    의미색: 진폭=호박(amber) · 진동수=사파이어(sapphire) · 파형=자줏빛 와인(wine)
    ============================================================ */
 :root{
-  --bg:#1c1218;
-  --bg-2:#150d12;
-  --panel:#271a22;
-  --panel-2:#31222b;
-  --panel-3:#3d2c36;
-  --screen:#130c11;
-  --line:#5a4636;          /* antique brass 톤 테두리 */
-  --line-soft:#3a2b34;
+  /* ── 소리 도감 SOUND DEX : 몬스터볼 팔레트 + 게임보이 스크린 ── */
+  --bg:#f2f4fa;            /* 도감 밝은 배경 */
+  --bg-2:#e7eaf3;
+  --panel:#ffffff;
+  --panel-2:#f3f5fb;
+  --panel-3:#e8ebf4;
+  --screen:#9bbc0f;        /* 게임보이 그린 스크린! */
+  --screen-dark:#0f380f;   /* GB 잉크 */
+  --screen-mid:#306230;
+  --screen-grid:#8bac0f;
+  --line:#22242a;          /* 잉크 테두리 */
+  --line-soft:#cfd3de;
 
-  --text:#f4ebd9;          /* 샴페인 크림 */
-  --text-dim:#cdbb9f;      /* 바랜 양피지 잉크 */
-  --text-mute:#9c8a74;     /* 세피아 */
+  --text:#22242a;
+  --text-dim:#4c505c;
+  --text-mute:#7d8290;
 
-  /* 의미색: 개념마다 고정 색 (클래식 보석 톤) */
-  --amp:#e3a64a;            /* 진폭 (세기) — 호박/금 */
-  --amp-d:#c4861f;
-  --amp-soft:rgba(227,166,74,.16);
-  --amp-line:rgba(227,166,74,.45);
+  /* 의미색 (밝은 배경에서 또렷한 크레용 톤) */
+  --amp:#c47100;            /* 진폭 (세기) — 호박 */
+  --amp-d:#9a5800;
+  --amp-soft:rgba(196,113,0,.12);
+  --amp-line:rgba(196,113,0,.5);
 
-  --freq:#7595d8;           /* 진동수 (높낮이) — 사파이어 */
-  --freq-d:#4f6fb0;
-  --freq-soft:rgba(117,149,216,.16);
-  --freq-line:rgba(117,149,216,.45);
+  --freq:#2760c8;           /* 진동수 (높낮이) — 파랑 */
+  --freq-d:#1c4a9e;
+  --freq-soft:rgba(39,96,200,.10);
+  --freq-line:rgba(39,96,200,.45);
 
-  --wave:#c074a2;           /* 파형 (음색) — 자줏빛 와인 */
-  --wave-d:#9a4f80;
-  --wave-soft:rgba(192,116,162,.16);
-  --wave-line:rgba(192,116,162,.45);
+  --wave:#c2417e;           /* 파형 (음색) — 핑크 */
+  --wave-d:#9c2f63;
+  --wave-soft:rgba(194,65,126,.10);
+  --wave-line:rgba(194,65,126,.45);
 
-  --ok:#5cbf92;             /* 에메랄드 */
-  --ok-soft:rgba(92,191,146,.15);
-  --no:#d4596a;             /* 루비 */
-  --no-soft:rgba(212,89,106,.15);
-  --gold:#dcb463;           /* 금박 */
-  --gold-bright:#f0d693;
-  --gold-line:rgba(220,180,99,.42);
-  --gold-soft:rgba(220,180,99,.12);
-  --moon:#9a9fd0;
-  --moon-soft:rgba(154,159,208,.13);
+  --ok:#1e9e57;
+  --ok-soft:rgba(30,158,87,.12);
+  --no:#e3350d;             /* 몬스터볼 레드! */
+  --no-soft:rgba(227,53,13,.10);
+  --gold:#c79600;           /* 전기 노랑(진한) */
+  --gold-bright:#ffcb05;    /* 전기 노랑(밝은) */
+  --gold-line:rgba(199,150,0,.55);
+  --gold-soft:rgba(255,203,5,.2);
+  --moon:#6d5fc9;
+  --moon-soft:rgba(109,95,201,.12);
 
-  --font-display:'Playfair Display','Nanum Myeongjo','Noto Serif KR',serif;
-  --font-body:'Noto Serif KR','Nanum Myeongjo',serif;
-  --font-mono:'Cormorant Garamond','Playfair Display','Noto Serif KR',serif;
+  --poke-red:#e3350d;
+  --poke-red-d:#b32a0a;
 
-  --radius:15px;
+  --font-display:'Galmuri11','Galmuri9','Pretendard',sans-serif;
+  --font-body:'Pretendard',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  --font-mono:'Galmuri11','Galmuri9',monospace;
+
+  --radius:14px;
   --radius-sm:11px;
-  --shadow:0 20px 52px -20px rgba(12,5,8,.75);
-  --shadow-glow:0 0 0 1px var(--gold-line), 0 18px 50px -22px rgba(12,5,8,.8);
+  --shadow:0 5px 0 rgba(34,36,42,.75);
+  --shadow-glow:0 0 0 2.5px var(--line), 0 5px 0 rgba(34,36,42,.75);
   --maxw:1180px;
 }
 
@@ -73,9 +80,8 @@ html{-webkit-text-size-adjust:100%}
 body{
   font-family:var(--font-body);
   background:
-    radial-gradient(1200px 700px at 80% -10%, rgba(220,180,99,.09), transparent 60%),
-    radial-gradient(1000px 600px at 0% 0%, rgba(192,116,162,.07), transparent 55%),
-    var(--bg);
+    repeating-linear-gradient(45deg, rgba(34,36,42,.028) 0 12px, transparent 12px 24px),
+    linear-gradient(180deg,#eef1f8,var(--bg));
   color:var(--text);
   line-height:1.7;
   letter-spacing:0;
@@ -85,73 +91,74 @@ body{
 }
 img{max-width:100%}
 button{font-family:inherit}
-::selection{background:var(--gold);color:#2a1a0a}
+::selection{background:var(--gold-bright);color:#412402}
 
-/* ---------- 헤더 ---------- */
+/* ---------- 헤더 : 몬스터볼 바 ---------- */
 .topbar{
   position:sticky;top:0;z-index:50;
-  background:linear-gradient(180deg, rgba(28,18,24,.96), rgba(28,18,24,.84));
-  backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--line-soft);
+  background:linear-gradient(180deg,var(--poke-red),var(--poke-red-d));
+  border-bottom:3.5px solid var(--line);
 }
 .topbar-inner{
-  max-width:var(--maxw);margin:0 auto;padding:11px 18px;
+  max-width:var(--maxw);margin:0 auto;padding:10px 18px;
   display:flex;align-items:center;gap:14px;flex-wrap:wrap;
 }
 .brand{display:flex;align-items:center;gap:11px;min-width:0}
 .brand-mark{
-  width:42px;height:42px;border-radius:12px;flex:none;
-  background:radial-gradient(circle at 35% 30%, #1c2438, #0c1019);
-  border:1px solid var(--line);
+  width:42px;height:42px;border-radius:50%;flex:none;
+  background:linear-gradient(180deg,var(--poke-red) 0 44%, var(--line) 44% 56%, #fff 56%);
+  border:3px solid var(--line);
   display:grid;place-items:center;position:relative;overflow:hidden;
-  box-shadow:inset 0 0 18px rgba(220,180,99,.16);
+  box-shadow:0 3px 0 rgba(0,0,0,.3);
 }
-.brand-mark svg{width:30px;height:30px}
+.brand-mark::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:13px;height:13px;border-radius:50%;background:#fff;border:3px solid var(--line)}
+.brand-mark svg{display:none}
 .brand-txt h1{
-  font-family:var(--font-display);font-weight:400;font-size:1.12rem;
-  letter-spacing:0;line-height:1.1;color:var(--text);
+  font-family:var(--font-display);font-weight:400;font-size:1.08rem;
+  letter-spacing:.5px;line-height:1.15;color:#fff;text-shadow:2px 2px 0 rgba(0,0,0,.3);
 }
-.brand-txt p{font-size:.72rem;color:var(--text-mute);letter-spacing:.02em;margin-top:1px}
+.brand-txt h1 .dx{color:var(--gold-bright)}
+.brand-txt p{font-size:.72rem;color:#ffd9cd;letter-spacing:.02em;margin-top:2px}
 
 .progress-wrap{margin-left:auto;display:flex;align-items:center;gap:10px}
 .progress-bar{
-  width:120px;height:7px;border-radius:99px;background:var(--panel-2);
-  overflow:hidden;border:1px solid var(--line-soft);
+  width:120px;height:10px;border-radius:99px;background:#fff;
+  overflow:hidden;border:2px solid var(--line);
 }
 .progress-fill{height:100%;width:0;border-radius:99px;
-  background:linear-gradient(90deg,var(--amp),var(--gold));
+  background:var(--gold-bright);
   transition:width .5s cubic-bezier(.2,.8,.2,1)}
-.progress-num{font-family:var(--font-mono);font-size:.72rem;color:var(--text-dim);
+.progress-num{font-family:var(--font-mono);font-size:.74rem;color:#fff;
   min-width:34px;text-align:right;font-variant-numeric:tabular-nums}
 
-/* ---------- 탭 네비 ---------- */
+/* ---------- 탭 네비 : 게임 메뉴 버튼 ---------- */
 .tabnav{
-  position:sticky;top:64px;z-index:40;
-  background:linear-gradient(180deg, rgba(28,18,24,.95), rgba(28,18,24,.62));
+  position:sticky;top:63px;z-index:40;
+  background:rgba(242,244,250,.95);
   backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--line-soft);
+  border-bottom:3px solid var(--line);
 }
 .tabnav-inner{
-  max-width:var(--maxw);margin:0 auto;padding:9px 12px;
-  display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;
+  max-width:var(--maxw);margin:0 auto;padding:10px 12px 12px;
+  display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;
 }
 .tabnav-inner::-webkit-scrollbar{display:none}
 .tab-btn{
-  flex:none;display:flex;align-items:center;gap:8px;
-  padding:9px 15px;border-radius:12px;cursor:pointer;
-  background:transparent;border:1px solid transparent;
-  color:var(--text-dim);font-size:.86rem;font-weight:600;
-  white-space:nowrap;transition:.18s;position:relative;
+  flex:none;display:flex;align-items:center;gap:7px;
+  padding:8px 14px;border-radius:11px;cursor:pointer;
+  background:#fff;border:2.5px solid var(--line);
+  color:var(--text-dim);font-size:.84rem;font-weight:700;
+  white-space:nowrap;transition:.1s;position:relative;
+  box-shadow:0 3px 0 var(--line);
 }
-.tab-btn .ti{font-size:1.02rem;line-height:1}
-.tab-btn:hover{background:var(--panel);color:var(--text)}
-.tab-btn.active{background:var(--panel-2);color:var(--text);border-color:var(--line)}
-.tab-btn.active::after{
-  content:"";position:absolute;left:14px;right:14px;bottom:-9px;height:2px;border-radius:2px;
-  background:var(--accent,var(--freq));
-}
-.tab-btn .dot{width:7px;height:7px;border-radius:99px;background:var(--ok);
-  box-shadow:0 0 8px var(--ok);display:none}
+.tab-btn .ti{font-size:1rem;line-height:1}
+.tab-btn:hover{transform:translateY(-1px);color:var(--text)}
+.tab-btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.tab-btn.active{background:var(--gold-bright);color:var(--text);border-color:var(--line)}
+.tab-btn.active::after{content:none}
+.tab-btn .dot{width:8px;height:8px;border-radius:99px;background:var(--ok);
+  border:1.5px solid var(--line);display:none}
 .tab-btn.done .dot{display:block}
 .tab-btn .lock{opacity:.6;font-size:.8rem}
 
@@ -164,21 +171,21 @@ main{max-width:var(--maxw);margin:0 auto;padding:24px 18px 90px}
 .section-head{margin-bottom:18px}
 .eyebrow{
   display:inline-flex;align-items:center;gap:7px;
-  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--text-mute);
-  padding:5px 11px;border:1px solid var(--line);border-radius:99px;
-  background:var(--panel);margin-bottom:13px;
+  font-family:var(--font-mono);font-size:.76rem;letter-spacing:.04em;
+  color:var(--text-dim);
+  padding:5px 12px;border:2px solid var(--line);border-radius:99px;
+  background:#fff;margin-bottom:13px;box-shadow:0 2px 0 var(--line);
 }
-.eyebrow b{color:var(--freq);font-weight:700}
+.eyebrow b{color:var(--no);font-weight:700}
 .section-head h2{
   font-family:var(--font-display);font-weight:400;
-  font-size:clamp(1.5rem,4.4vw,2.15rem);line-height:1.12;letter-spacing:0;
+  font-size:clamp(1.4rem,4.2vw,2rem);line-height:1.35;letter-spacing:0;
 }
 .section-head .lead{color:var(--text-dim);margin-top:9px;max-width:62ch;font-size:1.0rem}
 
-/* ---------- 공용 카드 ---------- */
+/* ---------- 공용 카드 : 도감 패널 ---------- */
 .card{
-  background:var(--panel);border:1px solid var(--line);
+  background:var(--panel);border:3px solid var(--line);
   border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);
 }
 .card + .card{margin-top:18px}
@@ -203,62 +210,60 @@ main{max-width:var(--maxw);margin:0 auto;padding:24px 18px 90px}
 
 .classroom{
   display:flex;gap:10px;align-items:flex-start;
-  background:linear-gradient(180deg,var(--panel-2),var(--panel));
-  border:1px dashed var(--line);border-left:3px solid var(--freq);
-  border-radius:12px;padding:12px 14px;margin-top:16px;font-size:.9rem;color:var(--text-dim);
+  background:var(--panel-2);
+  border:1.5px dashed var(--line);border-left:4px solid var(--freq);
+  border-radius:4px 12px 12px 4px;padding:12px 14px;margin-top:16px;font-size:.9rem;color:var(--text-dim);
 }
 .classroom .ic{flex:none;font-size:1.05rem;margin-top:1px}
 .classroom b{color:var(--text)}
 
-/* ---------- 오실로스코프 화면 (시그니처) ---------- */
+/* ---------- 오실로스코프 : 게임보이 스크린 ---------- */
 .scope{
-  position:relative;border-radius:16px;overflow:hidden;
-  background:
-    linear-gradient(180deg, rgba(220,180,99,.04), transparent 30%),
-    var(--screen);
-  border:1px solid var(--gold-line);
-  box-shadow:inset 0 0 60px rgba(0,0,0,.72), inset 0 0 0 1px rgba(220,180,99,.07);
+  position:relative;border-radius:12px;overflow:hidden;
+  background:var(--screen);
+  border:3px solid var(--line);
+  box-shadow:inset 0 0 0 3px #7d9b0d, var(--shadow);
   aspect-ratio:16/9;min-height:200px;
 }
 .scope canvas{display:block;width:100%;height:100%}
 .scope-overlay{
   position:absolute;inset:0;pointer-events:none;
   background:
-    repeating-linear-gradient(0deg, transparent 0 2px, rgba(0,0,0,.06) 2px 3px);
-  opacity:.5;mix-blend-mode:overlay;
+    repeating-linear-gradient(0deg, transparent 0 2px, rgba(15,56,15,.08) 2px 4px);
+  opacity:.8;
 }
 .scope-tag{
   position:absolute;top:10px;left:12px;display:flex;gap:7px;align-items:center;
-  font-family:var(--font-mono);font-size:.7rem;color:var(--text-dim);
-  background:rgba(8,12,21,.6);border:1px solid var(--line-soft);
+  font-family:var(--font-mono);font-size:.68rem;color:var(--screen);
+  background:rgba(15,56,15,.88);border:1.5px solid var(--screen-mid);
   padding:4px 9px;border-radius:8px;letter-spacing:.04em;
 }
-.scope-tag .live{width:7px;height:7px;border-radius:99px;background:var(--text-mute)}
-.scope.playing .scope-tag .live{background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pulse 1s infinite}
+.scope-tag .live{width:7px;height:7px;border-radius:99px;background:#5f7a12}
+.scope.playing .scope-tag .live{background:#ffcb05;box-shadow:0 0 8px #ffcb05;animation:pulse 1s infinite}
 @keyframes pulse{50%{opacity:.35}}
 .scope-readout{
   position:absolute;bottom:10px;right:12px;display:flex;gap:14px;
   font-family:var(--font-mono);font-size:.74rem;
-  background:rgba(8,12,21,.62);border:1px solid var(--line-soft);
+  background:rgba(15,56,15,.9);border:1.5px solid var(--screen-mid);
   padding:6px 11px;border-radius:9px;
 }
 .scope-readout .ro{display:flex;flex-direction:column;line-height:1.25}
-.scope-readout .ro span{font-size:.6rem;color:var(--text-mute);letter-spacing:.06em}
-.scope-readout .ro b{font-size:.92rem;font-weight:700}
-.ro.amp b{color:var(--amp)} .ro.freq b{color:var(--freq)} .ro.wave b{color:var(--wave)}
+.scope-readout .ro span{font-size:.6rem;color:#9bbc0f;opacity:.8;letter-spacing:.06em}
+.scope-readout .ro b{font-size:.9rem;font-weight:700}
+.ro.amp b{color:#ffcb05} .ro.freq b{color:#8fd3ff} .ro.wave b{color:#ffa3c9}
 
 .scope-modes{position:absolute;top:9px;right:12px;display:flex;gap:5px}
 .scope-mode{
   font-size:.68rem;font-family:var(--font-mono);padding:4px 9px;border-radius:7px;cursor:pointer;
-  background:rgba(8,12,21,.6);border:1px solid var(--line-soft);color:var(--text-mute);
+  background:rgba(15,56,15,.88);border:1.5px solid var(--screen-mid);color:#8bac0f;
 }
-.scope-mode.on{color:var(--freq);border-color:var(--freq-line);background:var(--freq-soft)}
+.scope-mode.on{color:#0f380f;border-color:var(--line);background:var(--gold-bright)}
 
 /* ---------- 컨트롤 (슬라이더/버튼) ---------- */
 .controls{display:flex;flex-direction:column;gap:18px}
 @media(min-width:880px){ .controls.sticky{position:sticky;top:124px} }
 
-.ctrl{background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:15px 16px}
+.ctrl{background:#fff;border:2.5px solid var(--line);border-radius:14px;padding:15px 16px;box-shadow:0 3px 0 rgba(34,36,42,.6)}
 .ctrl-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px}
 .ctrl-head .lbl{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.96rem}
 .ctrl-head .swatch{width:11px;height:11px;border-radius:4px;flex:none}
@@ -270,24 +275,25 @@ input[type=range]{
   -webkit-appearance:none;appearance:none;width:100%;height:34px;background:transparent;cursor:pointer;
 }
 input[type=range]::-webkit-slider-runnable-track{
-  height:8px;border-radius:99px;background:var(--track,linear-gradient(90deg,var(--panel-3),var(--line)));
+  height:9px;border-radius:99px;background:var(--track,var(--panel-3));
+  border:1.5px solid var(--line-soft);
 }
-input[type=range]::-moz-range-track{height:8px;border-radius:99px;background:var(--panel-3)}
+input[type=range]::-moz-range-track{height:9px;border-radius:99px;background:var(--panel-3)}
 input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;margin-top:-9px;
-  background:var(--thumb,#fff);border:3px solid var(--bg);
-  box-shadow:0 2px 8px rgba(0,0,0,.5),0 0 0 1px var(--line);
+  -webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;margin-top:-10px;
+  background:var(--thumb,#fff);border:3px solid var(--line);
+  box-shadow:0 3px 0 rgba(34,36,42,.55);
 }
 input[type=range]::-moz-range-thumb{
-  width:24px;height:24px;border-radius:50%;border:3px solid var(--bg);
-  background:var(--thumb,#fff);box-shadow:0 2px 8px rgba(0,0,0,.5)}
+  width:24px;height:24px;border-radius:50%;border:3px solid var(--line);
+  background:var(--thumb,#fff);box-shadow:0 3px 0 rgba(34,36,42,.55)}
 .ctrl.amp input[type=range]{--thumb:var(--amp);--track:linear-gradient(90deg,var(--amp-d),var(--amp))}
 .ctrl.freq input[type=range]{--thumb:var(--freq);--track:linear-gradient(90deg,var(--freq-d),var(--freq))}
 .ctrl.wave input[type=range]{--thumb:var(--wave)}
 
 .wave-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .wave-opt{
-  background:var(--panel);border:1.5px solid var(--line);border-radius:11px;
+  background:#fff;border:2px solid var(--line-soft);border-radius:11px;
   padding:10px 6px 8px;cursor:pointer;text-align:center;transition:.15s;
 }
 .wave-opt svg{width:100%;height:30px;display:block;margin-bottom:5px}
@@ -298,49 +304,52 @@ input[type=range]::-moz-range-thumb{
 .wave-opt svg path{stroke:var(--text-mute);stroke-width:2.5;fill:none;vector-effect:non-scaling-stroke}
 .wave-opt.on svg path{stroke:var(--wave)}
 
-/* 버튼 */
+/* 버튼 : 통통한 레트로 게임 버튼 */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:12px 20px;border-radius:12px;border:1px solid var(--line);
-  background:var(--panel-2);color:var(--text);font-weight:700;font-size:.94rem;
-  cursor:pointer;transition:.16s;user-select:none;
+  padding:12px 20px;border-radius:12px;border:2.5px solid var(--line);
+  background:#fff;color:var(--text);font-weight:800;font-size:.94rem;
+  cursor:pointer;transition:.1s;user-select:none;
+  box-shadow:0 4px 0 var(--line);
 }
-.btn:hover{background:var(--panel-3);transform:translateY(-1px)}
-.btn:active{transform:translateY(0)}
-.btn.primary{background:linear-gradient(180deg,var(--gold-bright),var(--gold));color:#3a2606;border-color:transparent}
-.btn.primary:hover{filter:brightness(1.08)}
-.btn.play{background:linear-gradient(180deg,var(--ok),#2bb27c);color:#03150d;border-color:transparent;font-size:1rem;padding:14px 22px}
-.btn.play.on{background:linear-gradient(180deg,#ff8a96,var(--no));color:#1a0509}
-.btn.ghost{background:transparent}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.btn.primary{background:var(--gold-bright);color:#412402}
+.btn.primary:hover{filter:brightness(1.04)}
+.btn.play{background:var(--ok);color:#fff;font-size:1rem;padding:14px 22px}
+.btn.play.on{background:var(--no);color:#fff}
+.btn.ghost{background:var(--panel-2);box-shadow:0 3px 0 rgba(34,36,42,.55)}
 .btn.wide{width:100%}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .btn .k{font-size:1.1rem}
 
 /* ---------- 도입 훅 ---------- */
 .hook{
-  position:relative;border-radius:24px;overflow:hidden;padding:38px 26px;
+  position:relative;border-radius:20px;overflow:hidden;padding:38px 26px;
   background:
-    radial-gradient(600px 300px at 85% 10%, rgba(192,116,162,.16), transparent 60%),
-    radial-gradient(500px 280px at 10% 90%, rgba(220,180,99,.14), transparent 60%),
-    linear-gradient(160deg,var(--panel),var(--bg-2));
-  border:1px solid var(--line);text-align:center;
+    radial-gradient(600px 300px at 85% 10%, rgba(255,203,5,.18), transparent 60%),
+    radial-gradient(500px 280px at 10% 90%, rgba(227,53,13,.08), transparent 60%),
+    #fff;
+  border:3px solid var(--line);box-shadow:var(--shadow);text-align:center;
 }
 .hook h2{font-family:var(--font-display);font-weight:400;letter-spacing:0;
-  font-size:clamp(1.7rem,6vw,3rem);line-height:1.1;margin-bottom:8px}
+  font-size:clamp(1.5rem,5.4vw,2.5rem);line-height:1.4;margin-bottom:8px}
 .hook .sub{color:var(--text-dim);max-width:54ch;margin:0 auto 24px;font-size:1.05rem}
 .hook-quote{
   display:inline-block;font-family:var(--font-display);font-weight:400;letter-spacing:0;
   font-size:clamp(1.2rem,4vw,1.8rem);line-height:1.35;color:var(--text);
   padding:0 4px;
 }
-.hook-quote em{font-style:normal;color:var(--freq)}
+.hook-quote em{font-style:normal;color:var(--no)}
 .hook-quote em.w{color:var(--wave)}
 .hook-instruments{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:26px 0}
 .inst-card{
-  background:var(--panel-2);border:1px solid var(--line);border-radius:16px;
-  padding:16px 20px;min-width:150px;cursor:pointer;transition:.18s;
+  background:#fff;border:2.5px solid var(--line);border-radius:16px;
+  padding:16px 20px;min-width:150px;cursor:pointer;transition:.12s;
+  box-shadow:0 4px 0 rgba(34,36,42,.7);
 }
-.inst-card:hover{transform:translateY(-3px);border-color:var(--wave-line)}
+.inst-card:hover{transform:translateY(-3px)}
+.inst-card:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(34,36,42,.7)}
 .inst-card .emo{font-size:2.2rem;line-height:1;margin-bottom:8px}
 .inst-card .nm{font-weight:700;font-size:1rem}
 .inst-card .note{font-family:var(--font-mono);font-size:.74rem;color:var(--text-mute);margin-top:3px}
@@ -349,18 +358,18 @@ input[type=range]::-moz-range-thumb{
 .inst-card.ringing .bars i{opacity:1}
 
 .mystery-list{display:flex;flex-direction:column;gap:10px;max-width:520px;margin:8px auto 0;text-align:left}
-.mystery{display:flex;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);
+.mystery{display:flex;gap:12px;align-items:center;background:var(--panel-2);border:2px solid var(--line);
   border-radius:12px;padding:12px 15px}
 .mystery .q{font-size:1.4rem;flex:none}
 .mystery .t b{color:var(--text)} .mystery .t{color:var(--text-dim);font-size:.92rem}
 
 /* ---------- 발견 카드 (POE) ---------- */
-.discovery{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel)}
+.discovery{border:2.5px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);box-shadow:0 4px 0 rgba(34,36,42,.7)}
 .discovery + .discovery{margin-top:16px}
 .disc-head{display:flex;align-items:center;gap:12px;padding:15px 18px;background:var(--panel-2);
-  border-bottom:1px solid var(--line);cursor:pointer}
+  border-bottom:2px solid var(--line);cursor:pointer}
 .disc-num{width:30px;height:30px;border-radius:9px;flex:none;display:grid;place-items:center;
-  font-family:var(--font-mono);font-weight:700;font-size:.9rem;background:var(--panel-3);border:1px solid var(--line)}
+  font-family:var(--font-mono);font-weight:700;font-size:.9rem;background:var(--gold-bright);border:2px solid var(--line);color:#412402}
 .disc-head h3{font-size:1.02rem;font-weight:700;flex:1}
 .disc-head .chev{color:var(--text-mute);transition:.25s}
 .discovery.open .disc-head .chev{transform:rotate(180deg)}
@@ -370,7 +379,7 @@ input[type=range]::-moz-range-thumb{
 .discovery.open .disc-body{display:block}
 .predict-row{display:flex;gap:9px;flex-wrap:wrap;margin:6px 0 4px}
 .predict-opt{
-  flex:1;min-width:130px;background:var(--panel-2);border:1.5px solid var(--line);border-radius:12px;
+  flex:1;min-width:130px;background:#fff;border:2px solid var(--line-soft);border-radius:12px;
   padding:12px;cursor:pointer;transition:.15s;text-align:center;font-weight:600;font-size:.9rem;color:var(--text-dim)}
 .predict-opt:hover{border-color:var(--freq-line);color:var(--text)}
 .predict-opt.sel{border-color:var(--freq);background:var(--freq-soft);color:var(--text)}
@@ -393,27 +402,28 @@ input[type=range]::-moz-range-thumb{
 .concept-title .term{font-weight:700;font-size:1.05rem}
 .compare{display:grid;gap:12px}
 @media(min-width:620px){.compare{grid-template-columns:1fr 1fr}}
-.cmp-cell{background:var(--screen);border:1px solid var(--line);border-radius:12px;padding:10px;position:relative}
-.cmp-cell .cap{position:absolute;top:8px;left:10px;font-size:.78rem;font-weight:700;
-  background:rgba(8,12,21,.7);padding:3px 9px;border-radius:7px;z-index:2}
+.cmp-cell{background:var(--screen);border:2.5px solid var(--line);border-radius:10px;padding:10px;position:relative;
+  box-shadow:inset 0 0 0 2px #7d9b0d}
+.cmp-cell .cap{position:absolute;top:8px;left:10px;font-size:.78rem;font-weight:700;color:#d6e5a3;
+  background:rgba(15,56,15,.9);padding:3px 9px;border-radius:7px;z-index:2}
 .cmp-cell canvas{width:100%;height:120px;display:block}
 .cmp-cell .play-mini{position:absolute;bottom:8px;right:8px;width:34px;height:34px;border-radius:9px;
   display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line);cursor:pointer;z-index:2}
 .cmp-cell .play-mini:hover{background:var(--panel-3)}
 
-.wavelength-demo{background:var(--screen);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:8px}
+.wavelength-demo{background:var(--screen);border:2.5px solid var(--line);border-radius:10px;padding:14px;margin-top:8px;box-shadow:inset 0 0 0 2px #7d9b0d}
 .wavelength-demo canvas{width:100%;height:160px;display:block}
 
 /* ---------- 게임 ---------- */
-.game-switch{display:flex;gap:8px;margin-bottom:18px;background:var(--panel);padding:6px;border-radius:14px;border:1px solid var(--line)}
+.game-switch{display:flex;gap:8px;margin-bottom:18px;background:#fff;padding:6px;border-radius:14px;border:2.5px solid var(--line);box-shadow:0 3px 0 rgba(34,36,42,.6)}
 .game-switch button{flex:1;padding:11px;border-radius:10px;border:none;background:transparent;
   color:var(--text-dim);font-weight:700;font-size:.92rem;cursor:pointer;transition:.15s}
-.game-switch button.on{background:var(--panel-3);color:var(--text)}
+.game-switch button.on{background:var(--gold-bright);color:#412402}
 .game-mode{display:none}
 .game-mode.on{display:block}
 
 .game-hud{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
-.hud-item{display:flex;align-items:center;gap:7px;background:var(--panel-2);border:1px solid var(--line);
+.hud-item{display:flex;align-items:center;gap:7px;background:#fff;border:2px solid var(--line);
   border-radius:11px;padding:8px 13px;font-weight:700;font-size:.9rem}
 .hud-item .k{font-size:.74rem;color:var(--text-mute);font-weight:600}
 .lives{display:flex;gap:3px}
@@ -424,20 +434,20 @@ input[type=range]::-moz-range-thumb{
 .stars .st.lit{color:var(--gold);text-shadow:0 0 10px rgba(255,211,92,.5)}
 .combo{color:var(--gold)}
 
-.match-target{background:var(--screen);border:1px solid var(--wave-line);border-radius:12px;padding:10px;position:relative;margin-bottom:14px}
-.match-target .cap{position:absolute;top:8px;left:10px;font-size:.76rem;font-weight:700;color:var(--wave);
-  background:rgba(8,12,21,.7);padding:3px 9px;border-radius:7px;z-index:2}
+.match-target{background:var(--screen);border:2.5px solid var(--line);border-radius:10px;padding:10px;position:relative;margin-bottom:14px;box-shadow:inset 0 0 0 2px #7d9b0d}
+.match-target .cap{position:absolute;top:8px;left:10px;font-size:.76rem;font-weight:700;color:#ffa3c9;
+  background:rgba(15,56,15,.9);padding:3px 9px;border-radius:7px;z-index:2}
 .match-target canvas{width:100%;height:150px;display:block}
-.accuracy-bar{height:10px;border-radius:99px;background:var(--panel-3);overflow:hidden;margin:6px 0 2px;border:1px solid var(--line-soft)}
+.accuracy-bar{height:12px;border-radius:99px;background:var(--panel-3);overflow:hidden;margin:6px 0 2px;border:2px solid var(--line)}
 .accuracy-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--no),var(--gold),var(--ok));transition:width .25s}
 
 .quiz-q{font-size:1.15rem;font-weight:700;margin-bottom:6px;line-height:1.4}
 .quiz-sub{color:var(--text-dim);font-size:.92rem;margin-bottom:16px}
-.quiz-scope{background:var(--screen);border:1px solid var(--line);border-radius:12px;padding:8px;margin-bottom:14px}
+.quiz-scope{background:var(--screen);border:2.5px solid var(--line);border-radius:10px;padding:8px;margin-bottom:14px;box-shadow:inset 0 0 0 2px #7d9b0d}
 .quiz-scope canvas{width:100%;height:130px;display:block}
 .quiz-opts{display:grid;gap:10px}
 @media(min-width:560px){.quiz-opts.two{grid-template-columns:1fr 1fr}}
-.quiz-opt{padding:14px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--panel-2);
+.quiz-opt{padding:14px 16px;border-radius:12px;border:2px solid var(--line-soft);background:#fff;
   cursor:pointer;font-weight:600;transition:.15s;text-align:left;font-size:.96rem}
 .quiz-opt:hover{border-color:var(--freq-line);transform:translateY(-1px)}
 .quiz-opt.correct{border-color:var(--ok);background:var(--ok-soft);color:var(--ok)}
@@ -456,9 +466,8 @@ input[type=range]::-moz-range-thumb{
 /* ---------- 심화 (교과서 밖) ---------- */
 .beyond-hero{
   border-radius:20px;padding:26px;margin-bottom:20px;
-  background:radial-gradient(500px 300px at 80% 0%, rgba(142,162,216,.12), transparent),
-    linear-gradient(160deg,var(--panel),var(--bg-2));
-  border:1px solid rgba(142,162,216,.25);
+  background:radial-gradient(500px 300px at 80% 0%, rgba(109,95,201,.1), transparent),#fff;
+  border:3px solid var(--line);box-shadow:var(--shadow);
 }
 .beyond-hero h2{font-family:var(--font-display);font-weight:400;letter-spacing:0;font-size:1.7rem;
   display:flex;align-items:center;gap:10px}
@@ -486,10 +495,10 @@ input[type=range]::-moz-range-thumb{
 
 /* ---------- 소리의 여행 시뮬레이션 ---------- */
 .ear-sim{margin-top:8px}
-.ear-stage{background:radial-gradient(620px 300px at 58% 28%,rgba(220,180,99,.06),transparent),linear-gradient(180deg,#130c11,#180f14);border:1px solid var(--gold-line);border-radius:14px;padding:6px;overflow:hidden}
+.ear-stage{background:linear-gradient(180deg,#141a2e,#0e1322);border:2.5px solid var(--line);border-radius:14px;padding:6px;overflow:hidden}
 #earSvg{width:100%;height:auto;display:block}
-#earSvg .reg{fill:var(--text-mute);font-size:13px;font-weight:700;font-family:var(--font-body);text-anchor:middle;opacity:.65}
-#earSvg .lbl{fill:var(--text-dim);font-size:12px;font-weight:600;font-family:var(--font-body);text-anchor:middle}
+#earSvg .reg{fill:#8b93ad;font-size:13px;font-weight:700;font-family:var(--font-body);text-anchor:middle;opacity:.65}
+#earSvg .lbl{fill:#c6cde4;font-size:12px;font-weight:600;font-family:var(--font-body);text-anchor:middle}
 #earSvg .organ{transition:opacity .3s,filter .3s}
 #earSvg .air-wave{fill:none;stroke:#7595d8;stroke-width:3;stroke-linecap:round;opacity:.45;animation:airpulse 1.9s ease-out infinite}
 @keyframes airpulse{0%{opacity:0}35%{opacity:.55}100%{opacity:0}}
@@ -502,24 +511,24 @@ input[type=range]::-moz-range-thumb{
 #soundBorn{fill:var(--gold);font-family:var(--font-display);font-size:27px;text-anchor:middle;opacity:0;transition:opacity .4s}
 #brain.on #soundBorn{opacity:1}
 
-.ear-desc{margin-top:12px;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-height:78px}
+.ear-desc{margin-top:12px;background:var(--panel-2);border:2px solid var(--line);border-radius:12px;padding:14px 16px;min-height:78px}
 .ear-desc .st-title{font-family:var(--font-display);font-weight:400;font-size:1.18rem;color:var(--freq);margin-bottom:4px}
 .ear-desc.neural .st-title{color:var(--gold)}
 .ear-desc .st-body{font-size:.92rem;color:var(--text-dim);line-height:1.55}
 .ear-dots{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
-.ear-dot{flex:1;min-width:70px;cursor:pointer;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:8px 5px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.73rem;font-weight:700;color:var(--text-mute);transition:.16s}
+.ear-dot{flex:1;min-width:70px;cursor:pointer;border:2px solid var(--line-soft);background:#fff;border-radius:10px;padding:8px 5px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.73rem;font-weight:700;color:var(--text-mute);transition:.16s}
 .ear-dot span{width:21px;height:21px;border-radius:6px;background:var(--panel-3);display:grid;place-items:center;font-family:var(--font-mono);font-size:.72rem}
 .ear-dot:hover{border-color:var(--text-mute)}
 .ear-dot.active{border-color:var(--freq);color:var(--text);box-shadow:0 0 0 1px var(--freq)}
-.ear-dot.active span{background:var(--freq);color:#0a1428}
+.ear-dot.active span{background:var(--freq);color:#fff}
 .ear-dot.neural.active{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
-.ear-dot.neural.active span{background:var(--gold);color:#3a2c00}
+.ear-dot.neural.active span{background:var(--gold-bright);color:#412402}
 .ear-ctrls{display:flex;gap:10px;margin-top:13px;flex-wrap:wrap}
 .ear-key{display:flex;gap:18px;margin-top:13px;flex-wrap:wrap;font-size:.8rem;color:var(--text-dim);align-items:center}
 .ear-key i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:middle}
 
 /* ---------- 에필로그 ---------- */
-.epilogue{background:radial-gradient(620px 340px at 82% 0%,rgba(142,162,216,.15),transparent),linear-gradient(160deg,#111a2e,#0c1119);border:1px solid #2b3a5a;position:relative;overflow:hidden}
+.epilogue{background:radial-gradient(620px 340px at 82% 0%,rgba(142,162,216,.15),transparent),linear-gradient(160deg,#111a2e,#0c1119);border:3px solid var(--line);position:relative;overflow:hidden}
 .epilogue .epi-moon{font-size:2rem;margin-bottom:8px;filter:drop-shadow(0 0 14px rgba(142,162,216,.5))}
 .epilogue h3{font-family:var(--font-display);font-weight:400;font-size:1.38rem;color:#cfd9f4;margin-bottom:14px;line-height:1.32}
 .epilogue p{color:#b3bdd8;font-size:.98rem;line-height:1.78;margin-bottom:12px;max-width:66ch}
@@ -527,7 +536,7 @@ input[type=range]::-moz-range-thumb{
 .epilogue .epi-last{color:#d2dbf3;font-style:italic;border-top:1px solid #2b3a5a;padding-top:14px;margin-top:6px}
 @media(max-width:720px){.epilogue h3{font-size:1.15rem}.ear-desc .st-title{font-size:1.05rem}}
 
-.fact{display:flex;gap:11px;padding:13px 15px;background:var(--panel-2);border:1px solid var(--line);
+.fact{display:flex;gap:11px;padding:13px 15px;background:var(--panel-2);border:2px solid var(--line-soft);
   border-radius:12px;margin-top:12px;font-size:.9rem;color:var(--text-dim)}
 .fact .ic{flex:none;font-size:1.1rem}
 .fact b{color:var(--text)}
@@ -535,7 +544,7 @@ input[type=range]::-moz-range-thumb{
 /* ---------- 토스트 ---------- */
 .toast-wrap{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:200;
   display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
-.toast{background:var(--panel-3);border:1px solid var(--line);border-radius:12px;
+.toast{background:#fff;border:2.5px solid var(--line);border-radius:12px;
   padding:11px 18px;font-weight:700;font-size:.92rem;box-shadow:var(--shadow);
   display:flex;align-items:center;gap:9px;animation:toastIn .3s ease;max-width:90vw}
 .toast.ok{border-color:rgba(69,224,160,.4)} .toast.ok .ic{color:var(--ok)}
@@ -551,7 +560,7 @@ input[type=range]::-moz-range-thumb{
 /* 인라인 의미색 강조 */
 .t-amp{color:var(--amp);font-weight:700} .t-freq{color:var(--freq);font-weight:700} .t-wave{color:var(--wave);font-weight:700}
 
-.hl-card{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.hl-card{background:#fff;border:2px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:0 3px 0 rgba(34,36,42,.55)}
 .hl-card h4{font-size:.96rem;margin-bottom:6px;display:flex;align-items:center;gap:7px}
 .hl-card p{font-size:.88rem;color:var(--text-dim)}
 
@@ -568,26 +577,25 @@ input[type=range]::-moz-range-thumb{
 /* ============================================================
    클래식 마감 — 금장 디테일 & 세리프 다듬기
    ============================================================ */
-.topbar{border-bottom:1px solid var(--gold-line)}
-.tabnav{border-bottom:1px solid var(--gold-line)}
+.topbar{border-bottom:3.5px solid var(--line)}
+.tabnav{border-bottom:3px solid var(--line)}
 
 /* 디스플레이 세리프는 700 무게로 또렷하게 */
 .brand-txt h1,.section-head h2,.hook h2,.beyond-hero h2,.epilogue h3,.ear-desc .st-title{font-weight:700;letter-spacing:.004em}
 
 /* 작은 표제(eyebrow) — 금빛 테두리 & 강조 */
-.eyebrow{border-color:var(--gold-line);color:var(--text-dim)}
-.eyebrow b{color:var(--gold)}
+.eyebrow{border-color:var(--line);color:var(--text-dim)}
+.eyebrow b{color:var(--no)}
 
 /* 탭 활성 밑줄 — 금빛 */
-.tab-btn.active::after{background:var(--gold)!important}
+
 
 /* 카드 상단 금색 헤어라인 */
 .card{position:relative}
-.card::before{content:"";position:absolute;left:18px;right:18px;top:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold-line),transparent);opacity:.65;pointer-events:none}
+.card::before{content:none}
 
 /* 배지 — 금테 */
-.badge{border:1px solid var(--gold-line)}
+.badge{border:1.5px solid currentColor}
 .badge.beyond{background:var(--moon-soft);color:var(--moon);border:1px solid rgba(154,159,208,.34)}
 
 /* 장식 구분선 ◆ */
@@ -605,40 +613,40 @@ input[type=range]::-moz-range-thumb{
 
 /* 악기 카드 재생 버튼 */
 .inst-play{margin-top:10px;display:inline-flex;align-items:center;gap:7px;cursor:pointer;
-  font-family:var(--font-body);font-weight:600;font-size:.82rem;color:var(--gold);
-  background:var(--gold-soft);border:1px solid var(--gold-line);border-radius:9px;padding:6px 13px;transition:.15s}
+  font-family:var(--font-body);font-weight:700;font-size:.82rem;color:#412402;
+  background:var(--gold-soft);border:2px solid var(--line);border-radius:9px;padding:6px 13px;transition:.12s;box-shadow:0 2px 0 var(--line)}
 .inst-play:hover{background:rgba(220,180,99,.2)}
-.inst-play.playing{color:var(--bg);background:var(--gold);border-color:transparent}
+.inst-play.playing{color:#412402;background:var(--gold-bright)}
 .hl-card{display:flex;flex-direction:column}
 .hl-card h4{justify-content:flex-start}
 
 /* 비주얼라이저 링크 CTA */
 .viz-cta{position:relative;overflow:hidden;margin-top:18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;
-  background:radial-gradient(520px 240px at 88% 0%,rgba(117,149,216,.14),transparent),linear-gradient(150deg,var(--panel),var(--bg-2));
-  border:1px solid var(--gold-line);border-radius:var(--radius);padding:22px 24px}
+  background:radial-gradient(520px 240px at 88% 0%,rgba(255,203,5,.16),transparent),#fff;
+  border:3px solid var(--line);box-shadow:var(--shadow);border-radius:var(--radius);padding:22px 24px}
 .viz-cta .vc-ic{width:60px;height:60px;flex:none;border-radius:14px;display:grid;place-items:center;font-size:1.9rem;
-  background:linear-gradient(145deg,#2a1d26,#181014);border:1px solid var(--gold-line);box-shadow:inset 0 0 16px rgba(220,180,99,.14)}
+  background:var(--gold-soft);border:2.5px solid var(--line);box-shadow:0 3px 0 rgba(34,36,42,.55)}
 .viz-cta .vc-tx{flex:1;min-width:200px}
 .viz-cta .vc-tx h3{font-family:var(--font-display);font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:4px}
 .viz-cta .vc-tx p{font-size:.9rem;color:var(--text-dim);line-height:1.5}
 .viz-cta a.vc-btn{flex:none;text-decoration:none;display:inline-flex;align-items:center;gap:9px;
-  font-family:var(--font-body);font-weight:700;font-size:.95rem;color:#3a2606;
-  background:linear-gradient(180deg,var(--gold-bright),var(--gold));border-radius:12px;padding:13px 22px;transition:.15s;
-  box-shadow:0 10px 26px -12px rgba(220,180,99,.6)}
+  font-family:var(--font-body);font-weight:800;font-size:.95rem;color:#412402;
+  background:var(--gold-bright);border:2.5px solid var(--line);border-radius:12px;padding:13px 22px;transition:.1s;
+  box-shadow:0 4px 0 var(--line)}
 .viz-cta a.vc-btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
 @media(max-width:600px){.viz-cta a.vc-btn{width:100%;justify-content:center}}
 /* ---------- 빈칸 클릭 공개 (cloze) ---------- */
-.cloze-line{margin-top:14px;background:var(--panel-2);border:1px solid var(--gold-line);border-radius:11px;
+.cloze-line{margin-top:14px;background:var(--panel-2);border:2px solid var(--line);border-radius:11px;
   padding:12px 15px;font-size:.96rem;color:var(--text-dim);line-height:2.1}
 .cloze-line .lead{display:block;color:var(--gold);font-size:.76rem;font-weight:700;margin-bottom:4px;letter-spacing:.02em}
 .cloze{cursor:pointer;display:inline-block;min-width:2.4em;text-align:center;padding:1px 9px;margin:0 2px;border-radius:7px;font-weight:700;
-  background:var(--panel-3);border:1px solid var(--gold-line);color:transparent;position:relative;transition:.16s;user-select:none}
+  background:#fff;border:1.5px dashed var(--line);color:transparent;position:relative;transition:.16s;user-select:none}
 .cloze::before{content:"?";font-weight:700;color:var(--text-mute);position:absolute;inset:0;display:grid;place-items:center}
 .cloze:hover{background:var(--gold-soft);border-color:var(--gold)}
 .cloze.on{color:var(--cc,var(--gold));background:transparent;border-color:transparent;border-bottom:2px solid var(--cc,var(--gold));border-radius:0;padding:1px 5px}
 .cloze.on::before{content:""}
 .cloze.flash{animation:clozeflash .55s ease}
-@keyframes clozeflash{0%{background:var(--cc,var(--gold));color:#2a1a0a}100%{background:transparent}}
+@keyframes clozeflash{0%{background:var(--gold-bright);color:#412402}100%{background:transparent}}
 .cloze[data-c="amp"]{--cc:var(--amp)}
 .cloze[data-c="freq"]{--cc:var(--freq)}
 .cloze[data-c="wave"]{--cc:var(--wave)}
@@ -652,7 +660,7 @@ input[type=range]::-moz-range-thumb{
 .ccq-prog{margin-left:auto;font-family:var(--font-mono);font-size:.84rem;color:var(--text-dim)}
 .ccq-q{font-size:1.04rem;color:var(--text);font-weight:600;margin:16px 0 12px;line-height:1.5}
 .ccq-opts{display:grid;gap:9px}
-.ccq-opt{text-align:left;cursor:pointer;border:1px solid var(--line);background:var(--panel-2);color:var(--text-dim);
+.ccq-opt{text-align:left;cursor:pointer;border:2px solid var(--line-soft);background:#fff;color:var(--text-dim);
   border-radius:11px;padding:12px 15px;font-size:.94rem;font-weight:600;font-family:var(--font-body);transition:.15s}
 .ccq-opt:hover{border-color:var(--gold);color:var(--text)}
 .ccq-opt.correct{border-color:var(--ok);background:var(--ok-soft);color:var(--text)}
@@ -678,7 +686,7 @@ input[type=range]::-moz-range-thumb{
         </svg>
       </div>
       <div class="brand-txt">
-        <h1>소리 분석 실험실</h1>
+        <h1>소리 도감 <span class="dx">SOUND DEX</span></h1>
         <p>파동으로 알아보는 소리의 특성 · III. 빛과 파동</p>
       </div>
     </div>
@@ -692,11 +700,12 @@ input[type=range]::-moz-range-thumb{
 <!-- ===================== 탭 네비 ===================== -->
 <nav class="tabnav">
   <div class="tabnav-inner" id="tabnav">
-    <button class="tab-btn active" data-tab="hook" style="--accent:var(--wave)"><span class="ti">🎻</span>도입<span class="dot"></span></button>
-    <button class="tab-btn" data-tab="lab" style="--accent:var(--freq)"><span class="ti">🔬</span>소리 분석 실험실<span class="dot"></span></button>
-    <button class="tab-btn" data-tab="concept" style="--accent:var(--amp)"><span class="ti">📊</span>개념 정리<span class="dot"></span></button>
+    <button class="tab-btn active" data-tab="hook" style="--accent:var(--wave)"><span class="ti">▶</span>시작<span class="dot"></span></button>
+    <button class="tab-btn" data-tab="birth" style="--accent:var(--ok)"><span class="ti">🎸</span>소리의 발생<span class="dot"></span></button>
+    <button class="tab-btn" data-tab="lab" style="--accent:var(--freq)"><span class="ti">🔬</span>분석 실험실<span class="dot"></span></button>
+    <button class="tab-btn" data-tab="concept" style="--accent:var(--amp)"><span class="ti">📖</span>개념 도감<span class="dot"></span></button>
     <button class="tab-btn" data-tab="poe" style="--accent:var(--freq)"><span class="ti">🎼</span>예측 챌린지<span class="dot"></span></button>
-    <button class="tab-btn" data-tab="game" style="--accent:var(--gold)"><span class="ti">🎮</span>소리 미션<span class="dot"></span></button>
+    <button class="tab-btn" data-tab="game" style="--accent:var(--gold)"><span class="ti">⚔️</span>배틀 퀴즈<span class="dot"></span></button>
     <button class="tab-btn" data-tab="beyond" style="--accent:var(--moon)"><span class="ti">🌙</span>교과서 밖 이야기<span class="dot"></span></button>
   </div>
 </nav>
@@ -708,7 +717,7 @@ input[type=range]::-moz-range-thumb{
      ============================================================ -->
 <section class="panel-view active" id="view-hook">
   <div class="hook">
-    <span class="eyebrow"><b>들어가기</b> · 같은 악보, 다른 소리</span>
+    <span class="eyebrow"><b>STAGE 1</b> · 야생의 소리가 나타났다!</span>
     <h2>두 악기가 같은 음을 연주하면<br>무엇이 같고 무엇이 다를까?</h2>
     <p class="sub">피아노와 바이올린으로 똑같은 '도'를 눌러 본다. 같은 음인데… 분명히 다르게 들린다. 두 소리, 무엇이 같고 무엇이 다른지 직접 들어 보자.</p>
 
@@ -748,6 +757,51 @@ input[type=range]::-moz-range-thumb{
     <p style="font-size:1.05rem;color:var(--text)">소리의 특성을 <span class="t-amp">진폭</span>, <span class="t-freq">진동수</span>, <span class="t-wave">파형</span> 등 과학적 용어로 설명할 수 있다.</p>
     <div class="classroom"><span class="ic">💬</span><div><b>교실 연결</b> — 초등학교 '소리의 성질'에서 배운 큰 소리·작은 소리, 높은 소리·낮은 소리를 떠올려 보게 한 뒤, 그 차이를 '파동'과 연결해 설명하도록 안내한다.</div></div>
   </div>
+</section>
+
+
+<!-- ============================================================
+     TAB 0.5 · 소리의 발생
+     ============================================================ -->
+<section class="panel-view" id="view-birth">
+  <div class="section-head">
+    <span class="eyebrow"><b>STAGE 2</b> · 소리는 어떻게 태어날까</span>
+    <h2>모든 소리의 시작은 <span style="color:var(--no)">떨림</span>이다</h2>
+    <p class="lead">기타 줄을 튕기면 왜 멀리 있는 내 귀까지 소리가 올까? 줄의 <b style="color:var(--text)">진동</b>이 <b style="color:var(--text)">공기</b>를 진동시키고, 그 진동이 물결처럼 퍼져 귀에 닿는다 — 직접 튕겨서 확인해 보자.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="font-family:var(--font-display);font-weight:400;font-size:1.1rem;margin-bottom:6px">🎸 기타 줄 실험 — 진동의 여행</h3>
+    <p style="color:var(--text-dim);font-size:.92rem;margin-bottom:10px">줄을 <b>클릭해서 잡아당겼다 놓거나</b>, 버튼으로 튕겨 보자. <b style="color:var(--ok)">① 줄의 진동</b> → <b style="color:var(--freq)">② 공기(매질)의 진동</b> → <b style="color:var(--amp)">③ 귀</b> 순서로 전달된다!</p>
+    <div class="cmp-cell" style="padding:6px"><canvas id="birthCv" style="width:100%;height:230px;display:block"></canvas></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center">
+      <button class="btn play" id="birthPluck"><span class="k">🎸</span> 줄 튕기기</button>
+      <div class="ctrl amp" style="flex:1;min-width:220px;padding:10px 14px">
+        <div class="ctrl-head" style="margin-bottom:6px"><div class="lbl"><span class="swatch" style="background:var(--amp)"></span> 튕기는 세기</div><div class="val"><span id="birthAmpVal">3</span></div></div>
+        <input type="range" id="birthAmp" min="1" max="5" step="1" value="3">
+      </div>
+    </div>
+    <div class="cloze-line"><span class="lead">📝 한 줄 정리 · 빈칸을 눌러 확인</span>소리는 물체의 <span class="cloze" data-c="gold">진동</span>으로 발생하고, <span class="cloze" data-c="freq">공기</span>와 같은 매질이 그 진동을 전달하며, 진동이 <span class="cloze" data-c="amp">귀</span>에 도달하면 소리로 들린다.<span class="cloze-done">✓ 정리 완성!</span></div>
+  </div>
+
+  <div class="grid grid-3" style="margin-top:18px">
+    <div class="hl-card"><h4>🗣️ 목소리</h4><p><b>성대</b>가 떨려요. 목에 손을 대고 "아—" 해 보면 떨림이 느껴져요!</p></div>
+    <div class="hl-card"><h4>🥁 북</h4><p><b>가죽(막)</b>이 떨려요. 친 직후 손을 대면 떨림이 멈추며 소리도 끊겨요.</p></div>
+    <div class="hl-card"><h4>🔊 스피커</h4><p><b>떨림판</b>이 떨려요. 재생 중인 스피커에 살짝 손을 대 보세요.</p></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h4 style="font-size:1rem;margin-bottom:8px">🧠 스스로 확인하기</h4>
+    <p style="color:var(--text-dim);font-size:.94rem">소리가 나고 있는 물체들의 <b>공통점</b>은 무엇일까?</p>
+    <div class="predict-row" id="birthCheck" data-answer="1" style="margin-top:12px">
+      <div class="predict-opt" data-i="0">모두 금속으로 되어 있다</div>
+      <div class="predict-opt" data-i="1">모두 <b style="color:var(--no)">떨리고(진동하고)</b> 있다</div>
+      <div class="predict-opt" data-i="2">모두 뜨거워져 있다</div>
+    </div>
+    <div class="reveal" id="birthReveal"><p class="why">✅ <b>소리 나는 물체는 반드시 떨리고 있다!</b> 떨림(진동)을 멈추면 소리도 즉시 사라져요. 소리굽쇠를 울린 뒤 손으로 잡으면 소리가 뚝 끊기는 이유죠.</p></div>
+  </div>
+
+  <div class="classroom"><span class="ic">💬</span><div><b>교실 연결</b> — 소리굽쇠를 울려 물에 대 보는 시범(물이 튐)으로 "소리 = 진동"을 눈으로 확인시키면 효과적입니다.</div></div>
 </section>
 
 <!-- ============================================================
@@ -899,9 +953,32 @@ input[type=range]::-moz-range-thumb{
      ============================================================ -->
 <section class="panel-view" id="view-concept">
   <div class="section-head">
-    <span class="eyebrow"><b>개념 정리</b> · 소리의 세 가지 특성</span>
+    <span class="eyebrow"><b>개념 도감</b> · 소리의 세 가지 스탯</span>
     <h2>소리에 따라 파동은<br>어떻게 다르게 나타날까?</h2>
     <p class="lead">소리의 세 가지 특성과 파동의 세 가지 모습을 짝지어 보자. 각 화면의 ▶ 버튼으로 두 소리를 직접 비교해 들을 수 있다.</p>
+  </div>
+
+  <!-- 0. 진동수의 정의 · 모눈종이 -->
+  <div class="card concept-block" id="freqDefCard">
+    <div class="concept-title">
+      <span class="chip freq">핵심 정의</span><span class="eq">·</span><span class="term">진동수란?</span>
+      <span class="badge freq" style="margin-left:auto">단위: Hz</span>
+    </div>
+    <p style="font-size:1.02rem;color:var(--text);line-height:1.75;background:var(--freq-soft);border:2px solid var(--freq-line);border-radius:12px;padding:13px 16px">
+      <b style="color:var(--freq)">진동수</b> = 파동을 전달하는 <b style="color:var(--freq)">매질이 1초 동안 진동하는 횟수</b><br>
+      <span style="font-size:.9rem;color:var(--text-dim)">단위: <b>Hz(헤르츠)</b> — 3 Hz면 매질이 1초에 3번 위아래로 왕복!</span>
+    </p>
+    <p style="color:var(--text-dim);font-size:.9rem;margin:12px 0 6px">📐 <b style="color:var(--text)">모눈종이에 그려 보기</b> — 세로축은 매질의 <b>위치</b>, 가로축은 <b>시간</b>. ▶를 누르면 점(매질)이 실제로 진동하며 그래프를 그려요. <b>1초 동안 몇 번 진동하는지</b> 세어 보세요!</p>
+    <div style="background:#fff;border:2.5px solid var(--line);border-radius:10px;padding:8px"><canvas id="gridFreqCv" style="width:100%;height:200px;display:block"></canvas></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;align-items:center">
+      <button class="btn primary" id="gfPlay">▶ 1초 재생</button>
+      <div class="ctrl freq" style="flex:1;min-width:220px;padding:10px 14px">
+        <div class="ctrl-head" style="margin-bottom:6px"><div class="lbl"><span class="swatch" style="background:var(--freq)"></span> 진동수</div><div class="val"><span id="gfVal">1</span> Hz</div></div>
+        <input type="range" id="gfSlider" min="1" max="4" step="1" value="1">
+      </div>
+      <div class="hud-item"><span class="k">1초 동안 진동</span> <span id="gfCount" style="color:var(--freq)">0회</span></div>
+    </div>
+    <div class="cloze-line"><span class="lead">📝 한 줄 정리 · 빈칸을 눌러 확인</span>진동수는 <span class="cloze" data-c="freq">매질</span>이/가 <span class="cloze" data-c="freq">1초</span> 동안 진동하는 횟수이며, 단위는 Hz(<span class="cloze" data-c="freq">헤르츠</span>)이다. 진동수가 클수록 1회 진동에 걸리는 시간은 <span class="cloze" data-c="amp">짧아</span>진다.<span class="cloze-done">✓ 정리 완성!</span></div>
   </div>
 
   <!-- 1. 세기 ↔ 진폭 -->
@@ -912,8 +989,8 @@ input[type=range]::-moz-range-thumb{
     </div>
     <p style="color:var(--text-dim);font-size:.92rem;margin-bottom:14px">같은 악기로 세게/약하게 칠 때 — <b class="t-amp">큰 소리는 진폭이 크고</b>, 작은 소리는 진폭이 작다. 진동수는 그대로다.</p>
     <div class="compare">
-      <div class="cmp-cell"><div class="cap" style="color:var(--amp)">🔊 큰 소리</div><canvas data-wave="sine" data-amp="5" data-freq="3" data-c="amp"></canvas><div class="play-mini" data-amp="5" data-freq="3" data-wv="sine">▶</div></div>
-      <div class="cmp-cell"><div class="cap" style="color:var(--text-dim)">🔉 작은 소리</div><canvas data-wave="sine" data-amp="2" data-freq="3" data-c="amp"></canvas><div class="play-mini" data-amp="2" data-freq="3" data-wv="sine">▶</div></div>
+      <div class="cmp-cell"><div class="cap" style="color:#ffcb05">🔊 큰 소리</div><canvas data-wave="sine" data-amp="5" data-freq="3" data-c="amp"></canvas><div class="play-mini" data-amp="5" data-freq="3" data-wv="sine">▶</div></div>
+      <div class="cmp-cell"><div class="cap" style="color:#d6e5a3">🔉 작은 소리</div><canvas data-wave="sine" data-amp="2" data-freq="3" data-c="amp"></canvas><div class="play-mini" data-amp="2" data-freq="3" data-wv="sine">▶</div></div>
     </div>
     <div class="fact"><span class="ic">🥁</span><div>북을 <b>세게</b> 치면 큰 소리, <b>약하게</b> 치면 작은 소리. 음악에서 '점점 세게(crescendo)'는 진폭을 점점 키운다는 뜻이에요.</div></div>
     <div class="cloze-line"><span class="lead">📝 한 줄 정리 · 빈칸을 눌러 확인</span>소리의 <b style="color:var(--amp)">세기</b>(크기)는 파동의 <span class="cloze" data-c="amp">진폭</span>이/가 결정한다. 진폭이 클수록 <span class="cloze" data-c="amp">큰</span> 소리가 난다.<span class="cloze-done">✓ 정리 완성!</span></div>
@@ -927,23 +1004,66 @@ input[type=range]::-moz-range-thumb{
     </div>
     <p style="color:var(--text-dim);font-size:.92rem;margin-bottom:14px">같은 악기로 높은/낮은 음을 낼 때 — <b class="t-freq">높은 소리는 진동수가 크다</b>(파동이 촘촘). 진폭은 그대로다.</p>
     <div class="compare">
-      <div class="cmp-cell"><div class="cap" style="color:var(--freq)">⬆️ 높은 소리</div><canvas data-wave="sine" data-amp="3" data-freq="6" data-c="freq"></canvas><div class="play-mini" data-amp="3" data-freq="6" data-wv="sine">▶</div></div>
-      <div class="cmp-cell"><div class="cap" style="color:var(--text-dim)">⬇️ 낮은 소리</div><canvas data-wave="sine" data-amp="3" data-freq="2" data-c="freq"></canvas><div class="play-mini" data-amp="3" data-freq="2" data-wv="sine">▶</div></div>
+      <div class="cmp-cell"><div class="cap" style="color:#8fd3ff">⬆️ 높은 소리</div><canvas data-wave="sine" data-amp="3" data-freq="6" data-c="freq"></canvas><div class="play-mini" data-amp="3" data-freq="6" data-wv="sine">▶</div></div>
+      <div class="cmp-cell"><div class="cap" style="color:#d6e5a3">⬇️ 낮은 소리</div><canvas data-wave="sine" data-amp="3" data-freq="2" data-c="freq"></canvas><div class="play-mini" data-amp="3" data-freq="2" data-wv="sine">▶</div></div>
     </div>
     <div class="fact"><span class="ic">🎹</span><div><b>칼림바</b>는 금속 막대의 길이로, <b>팬 플루트</b>는 공기가 진동하는 길이로 높낮이를 바꿔요. 짧을수록 빠르게 진동해 높은 소리!</div></div>
     <div class="cloze-line"><span class="lead">📝 한 줄 정리 · 빈칸을 눌러 확인</span>소리의 <b style="color:var(--freq)">높낮이</b>는 파동의 <span class="cloze" data-c="freq">진동수</span>이/가 결정한다. 진동수가 클수록 <span class="cloze" data-c="freq">높은</span> 소리가 난다.<span class="cloze-done">✓ 정리 완성!</span></div>
   </div>
 
-  <!-- 진동수 ↔ 파장 (그림 3-19) -->
-  <div class="card concept-block">
+  <!-- 높은 소리 vs 낮은 소리 · 부등호 정리 -->
+  <div class="card concept-block" id="ineqCard">
     <div class="concept-title">
-      <span class="chip freq">진동수</span><span class="eq">↔</span><span class="term">파장</span>
-      <span class="badge beyond" style="margin-left:auto">📚 살짝 더</span>
+      <span class="chip freq">높은 소리</span><span class="eq">vs</span><span class="chip freq" style="opacity:.8">낮은 소리</span>
+      <span class="badge ok" style="margin-left:auto">부등호로 정리!</span>
     </div>
-    <p style="color:var(--text-dim);font-size:.92rem;margin-bottom:6px">진동수가 클수록 1번 진동하는 시간이 짧아, 파동이 한 번에 나아가는 거리(<b>파장</b>)가 <b class="t-freq">짧아진다</b>. 슬라이더를 움직여 보자.</p>
+    <p style="color:var(--text-dim);font-size:.9rem;margin-bottom:12px">빈칸(부등호)을 먼저 머릿속으로 채우고, 눌러서 확인해 보자.</p>
+    <div style="display:grid;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--panel-2);border:2px solid var(--line);border-radius:12px;padding:13px 16px;font-size:1.05rem;font-weight:700">
+        <span style="color:var(--freq)">진동수</span> : 높은 소리 <span class="cloze" data-c="freq" style="min-width:2em">&gt;</span> 낮은 소리
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--panel-2);border:2px solid var(--line);border-radius:12px;padding:13px 16px;font-size:1.05rem;font-weight:700">
+        <span style="color:var(--wave)">파장</span> : 높은 소리 <span class="cloze" data-c="wave" style="min-width:2em">&lt;</span> 낮은 소리
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--panel-2);border:2px solid var(--line);border-radius:12px;padding:13px 16px;font-size:1.05rem;font-weight:700">
+        <span style="color:var(--amp)">진폭</span> : 큰 소리 <span class="cloze" data-c="amp" style="min-width:2em">&gt;</span> 작은 소리
+      </div>
+    </div>
+    <div class="fact"><span class="ic">🧠</span><div>진동수가 크면 왜 파장이 짧아질까? 바로 아래 시뮬레이션에서 <b>직접 조작하며</b> 알아내 보자!</div></div>
+  </div>
+
+  <!-- 실로폰 · 칼림바 : 길이와 진동수 -->
+  <div class="card concept-block" id="instBarsCard">
+    <div class="concept-title">
+      <span class="chip freq">길이</span><span class="eq">↔</span><span class="term">진동수</span>
+      <span class="badge freq" style="margin-left:auto">직접 연주!</span>
+    </div>
+    <p style="color:var(--text-dim);font-size:.92rem;margin-bottom:12px"><b style="color:var(--text)">실로폰의 긴 막대</b>를 치면 낮은 소리, <b style="color:var(--text)">칼림바의 긴 부분</b>을 튕겨도 낮은 소리! 긴 것은 <b>무겁고 천천히 진동</b>해서(진동수 작음) 낮은 소리가 나요. 막대를 눌러 확인해 보자.</p>
+    <div class="game-switch" style="margin-bottom:12px;max-width:320px">
+      <button class="on" data-instbar="xylo">🎶 실로폰</button>
+      <button data-instbar="kalimba">🎹 칼림바</button>
+    </div>
+    <div id="instBars" style="display:flex;align-items:flex-end;gap:10px;justify-content:center;padding:10px 6px 4px"></div>
+    <p id="barMsg" style="text-align:center;font-size:.9rem;color:var(--text-mute);margin-top:10px;min-height:1.4em">막대를 눌러 보세요!</p>
+    <div class="cloze-line"><span class="lead">📝 한 줄 정리 · 빈칸을 눌러 확인</span>긴 막대는 <span class="cloze" data-c="freq">느리게</span> 진동해(진동수 작음) <span class="cloze" data-c="freq">낮은</span> 소리가 나고, 짧은 막대는 빠르게 진동해 <span class="cloze" data-c="amp">높은</span> 소리가 난다.<span class="cloze-done">✓ 정리 완성!</span></div>
+  </div>
+
+  <!-- 진동수 ↔ 파장 (그림 3-19) -->
+  <div class="card concept-block" id="whyWlCard">
+    <div class="concept-title">
+      <span class="chip freq">진동수</span><span class="eq">↔</span><span class="term">파장 — 왜?</span>
+      <span class="badge beyond" style="margin-left:auto">📚 조작하며 발견</span>
+    </div>
+    <p style="color:var(--text-dim);font-size:.92rem;margin-bottom:8px">진동수 슬라이더를 움직이며 <b style="color:var(--text)">무엇이 변하고 무엇이 안 변하는지</b> 찾아보자. 힌트: 초록 점(파동의 마루)이 달리는 <b>빠르기</b>를 잘 봐!</p>
     <div class="wavelength-demo"><canvas id="wlCanvas"></canvas></div>
     <input type="range" id="wlSlider" class="" min="1" max="6" step="1" value="2" style="--thumb:var(--freq);--track:linear-gradient(90deg,var(--freq-d),var(--freq));margin-top:8px">
-    <p style="font-size:.82rem;color:var(--text-mute);margin-top:4px">즉, 높은 소리는 낮은 소리보다 <b class="t-freq">진동수가 크고 파장이 짧다.</b> (파동의 속력은 여기선 다루지 않아요.)</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+      <div class="hud-item" style="flex:1;min-width:150px"><span class="k">⏱ 주기(1회 진동 시간)</span> <span id="wlPeriod" style="color:var(--amp)">0.50초</span></div>
+      <div class="hud-item" style="flex:1;min-width:150px"><span class="k">📏 파장</span> <span id="wlLambda" style="color:var(--wave)">—</span></div>
+      <div class="hud-item" style="flex:1;min-width:150px"><span class="k">🚀 속력</span> <span style="color:var(--ok)">일정!</span></div>
+    </div>
+    <div class="fact"><span class="ic">🎯</span><div><b>발견의 열쇠</b> — 파동의 <b>속력은 매질(공기)이 정하기 때문에 항상 일정</b>해요(공기 중 소리 약 340 m/s). 그런데 진동수가 커지면 <b>1회 진동하는 시간(주기)이 짧아</b>지죠. 파장은 "한 번 진동하는 동안 파동이 나아간 거리" — <b>같은 속력 × 짧아진 시간 = 짧아진 거리(파장)</b>가 되는 거예요!</div></div>
+    <div class="cloze-line"><span class="lead">📝 한 줄 정리 · 빈칸을 눌러 확인</span>파동의 <span class="cloze" data-c="gold">속력</span>은 매질이 정해 일정하다. 진동수가 크면 <span class="cloze" data-c="amp">주기</span>(1회 진동 시간)가 짧아지고, 같은 속력으로 짧은 시간 동안 가므로 <span class="cloze" data-c="wave">파장</span>도 짧아진다.<span class="cloze-done">✓ 정리 완성!</span></div>
   </div>
 
   <!-- 3. 음색 ↔ 파형 -->
@@ -954,8 +1074,8 @@ input[type=range]::-moz-range-thumb{
     </div>
     <p style="color:var(--text-dim);font-size:.92rem;margin-bottom:14px">세기·높낮이가 같아도 — <b class="t-wave">악기마다 파형이 다르면 다른 소리</b>로 들린다. 진폭·진동수는 같고 모양만 다르다.</p>
     <div class="compare">
-      <div class="cmp-cell"><div class="cap" style="color:var(--wave)">🎹 피아노 느낌</div><canvas data-wave="triangle" data-amp="3" data-freq="4" data-c="wave"></canvas><div class="play-mini" data-amp="3" data-freq="4" data-wv="triangle">▶</div></div>
-      <div class="cmp-cell"><div class="cap" style="color:var(--wave)">🎻 바이올린 느낌</div><canvas data-wave="sawtooth" data-amp="3" data-freq="4" data-c="wave"></canvas><div class="play-mini" data-amp="3" data-freq="4" data-wv="sawtooth">▶</div></div>
+      <div class="cmp-cell"><div class="cap" style="color:#ffa3c9">🎹 피아노 느낌</div><canvas data-wave="triangle" data-amp="3" data-freq="4" data-c="wave"></canvas><div class="play-mini" data-amp="3" data-freq="4" data-wv="triangle">▶</div></div>
+      <div class="cmp-cell"><div class="cap" style="color:#ffa3c9">🎻 바이올린 느낌</div><canvas data-wave="sawtooth" data-amp="3" data-freq="4" data-c="wave"></canvas><div class="play-mini" data-amp="3" data-freq="4" data-wv="sawtooth">▶</div></div>
     </div>
     <div class="fact"><span class="ic">🎨</span><div>사람마다 목소리가 다른 까닭도 같아요 — 각자의 <b>파형</b>이 다르기 때문! 파형은 그 소리만의 '지문' 같은 거예요.</div></div>
     <div class="cloze-line"><span class="lead">📝 한 줄 정리 · 빈칸을 눌러 확인</span>진폭·진동수가 같아도 <span class="cloze" data-c="wave">파형</span>이/가 다르면 <span class="cloze" data-c="wave">음색</span>(맵시)이 달라진다.<span class="cloze-done">✓ 정리 완성!</span></div>
@@ -1100,13 +1220,13 @@ input[type=range]::-moz-range-thumb{
      ============================================================ -->
 <section class="panel-view" id="view-game">
   <div class="section-head">
-    <span class="eyebrow"><b>소리 미션</b> · 배운 걸 써먹을 시간</span>
-    <h2>소리 미션</h2>
+    <span class="eyebrow"><b>BATTLE</b> · 배운 걸 써먹을 시간</span>
+    <h2>⚔️ 배틀 퀴즈!</h2>
   </div>
 
   <div class="game-switch">
     <button class="on" data-game="match">🎯 파형 맞추기</button>
-    <button data-game="quiz">🕵️ 소리 형사</button>
+    <button data-game="quiz">⚔️ 파동 비교 배틀</button>
   </div>
 
   <!-- 모드 A: 파형 맞추기 -->
@@ -1127,7 +1247,7 @@ input[type=range]::-moz-range-thumb{
       </div>
 
       <div class="match-target" style="border-color:var(--line)">
-        <div class="cap" style="color:var(--text-dim)">🎚️ 내 파형</div>
+        <div class="cap" style="color:#d6e5a3">🎚️ 내 파형</div>
         <canvas id="matchMineCanvas"></canvas>
         <div class="play-mini" id="matchPlayMine" style="z-index:3">▶</div>
       </div>
@@ -1171,12 +1291,12 @@ input[type=range]::-moz-range-thumb{
         <div class="hud-item"><span class="k">문제</span> <span id="quizNum">1</span></div>
       </div>
 
-      <div class="quiz-q" id="quizQ">동물의 울음소리도 진폭·진동수·파형으로 분석할 수 있어요!</div>
-      <div class="quiz-sub" id="quizSub">형사가 되어 소리의 정체를 밝혀 보자.</div>
+      <div class="quiz-q" id="quizQ">야생의 소리 A와 B가 나타났다!</div>
+      <div class="quiz-sub" id="quizSub">두 파동을 비교·분석해서 정체를 밝히면 승리! (진폭·진동수·파형을 총동원하자)</div>
       <div class="quiz-scope" id="quizScopeBox" style="display:none"><canvas id="quizCanvas"></canvas><div class="play-mini" id="quizPlay" style="z-index:3">▶</div></div>
       <div class="quiz-opts" id="quizOpts"></div>
       <div class="quiz-feedback" id="quizFeedback"></div>
-      <div style="margin-top:16px"><button class="btn primary" id="quizStart">🕵️ 수사 시작</button></div>
+      <div style="margin-top:16px"><button class="btn primary" id="quizStart">⚔️ 배틀 시작</button></div>
     </div>
   </div>
 </section>
@@ -1190,10 +1310,22 @@ input[type=range]::-moz-range-thumb{
     <p>교과서가 살짝만 보여 준 '그다음'이 궁금하다면. 모두 <b style="color:var(--moon)">교육과정 밖 심화</b>예요 — 시험엔 안 나오지만, 알면 소리가 다르게 들릴지도?</p>
   </div>
 
+  <!-- 푸리에의 마법 -->
+  <div class="card" style="margin-bottom:18px">
+    <h3 style="font-size:1.15rem;display:flex;align-items:center;gap:9px;margin-bottom:4px">🧙 푸리에의 마법 — 모든 파형의 비밀 레시피 <span class="badge beyond">교육과정 밖 심화</span></h3>
+    <p style="color:var(--text-dim);font-size:.94rem;line-height:1.7">200년 전 수학자 <b style="color:var(--text)">푸리에</b>는 놀라운 사실을 증명했어요 — <b style="color:var(--text)">아무리 복잡한 파형도, 단순한 사인파 여러 개를 더한 것</b>과 같다! 거꾸로 말하면, 어떤 소리든 "사인파 재료들"로 분해할 수 있다는 뜻이죠. 이 분해 기술이 바로 <b style="color:var(--moon)">푸리에 변환</b>이에요.</p>
+    <div class="grid grid-3" style="margin-top:12px">
+      <div class="hl-card"><h4>🎧 MP3 압축</h4><p>소리를 사인파 성분으로 분해 → 귀에 안 들리는 성분만 삭제 → 용량 1/10!</p></div>
+      <div class="hl-card"><h4>🗣️ 음성 인식</h4><p>"시리야~"를 알아듣는 첫 단계가 목소리의 푸리에 분해예요.</p></div>
+      <div class="hl-card"><h4>🎤 목소리 지문</h4><p>사람마다 사인파 재료의 배합(성문)이 달라 — 범죄 수사에도 쓰여요!</p></div>
+    </div>
+    <div class="fact"><span class="ic">👇</span><div>말로만 들으면 마법 같죠? <b>바로 아래 시뮬레이터가 푸리에 "합성"</b>이에요 — 사인파 5개를 섞어 진짜 복잡한 파형을 만들어 보세요. 특히 <b>🔲 사각파 레시피</b> 버튼을 눌러 보세요!</div></div>
+  </div>
+
   <!-- 배음과 합성파 -->
   <div class="card">
     <h3 style="font-size:1.15rem;display:flex;align-items:center;gap:9px;margin-bottom:4px">🎨 파형의 비밀: 배음과 합성파 <span class="badge beyond">교육과정 밖 심화</span></h3>
-    <p style="color:var(--text-dim);font-size:.92rem;margin-bottom:6px">실제 악기 소리는 하나의 진동수가 아니라, <b>기본음 + 여러 배음</b>이 합쳐진 '합성파'예요. 어떤 배음을 얼마나 섞느냐가 바로 <b class="t-wave">음색</b>! 슬라이더로 직접 합성해 보세요.</p>
+    <p style="color:var(--text-dim);font-size:.92rem;margin-bottom:6px">실제 악기 소리는 하나의 진동수가 아니라, <b>기본음 + 여러 배음</b>이 합쳐진 '합성파'예요(= 푸리에 합성!). 어떤 배음을 얼마나 섞느냐가 바로 <b class="t-wave">음색</b>! 슬라이더로 직접 합성해 보세요.</p>
     <div class="cmp-cell" style="height:auto;margin:10px 0"><canvas id="harmCanvas" style="height:150px"></canvas></div>
     <div class="harmonic-rows" id="harmRows">
       <div class="harm-row"><div class="hl">기본음<span>1배</span></div><input type="range" data-h="1" min="0" max="100" value="100"><div class="hv">100</div></div>
@@ -1206,6 +1338,7 @@ input[type=range]::-moz-range-thumb{
       <button class="btn play" id="harmPlay" style="padding:10px 18px"><span class="k">▶</span> 합성한 소리 듣기</button>
       <button class="btn ghost" data-preset="piano">🎹 피아노 느낌</button>
       <button class="btn ghost" data-preset="violin">🎻 바이올린 느낌</button>
+      <button class="btn ghost" data-preset="square">🔲 사각파 레시피</button>
       <button class="btn ghost" data-preset="reset">↺ 기본음만</button>
     </div>
     <div class="fact"><span class="ic">💡</span><div>피아노 '도'와 클라리넷 '도'는 진동수가 같아도 <b>배음 구성</b>이 달라 합성파 모양이 달라요. 그래서 음색이 다른 거예요.</div></div>
@@ -1382,7 +1515,7 @@ input[type=range]::-moz-range-thumb{
 </section>
 
 <footer class="foot">
-  <div>소리 분석 실험실 · 「파동으로 알아보는 소리의 특성」 (III. 빛과 파동) 수업용 인터랙티브</div>
+  <div>소리 도감 SOUND DEX · 「파동으로 알아보는 소리의 특성」 (III. 빛과 파동) 수업용 인터랙티브</div>
   <div class="credit">제작 : 조승재(과학이조선생) · chuseonjae@outlook.kr · 인스타 <a href="https://instagram.com/science_is_jo">@science_is_jo</a></div>
 </footer>
 
@@ -1398,7 +1531,7 @@ const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
-const COL={amp:'#e3a64a',freq:'#7595d8',wave:'#c074a2',ok:'#5cbf92',no:'#d4596a',gold:'#dcb463',moon:'#9a9fd0',dim:'#cdbb9f',signal:'#f0e3c2'};
+const COL={amp:'#b45f04',freq:'#1d4fa8',wave:'#b23470',ok:'#136b3c',no:'#c22a08',gold:'#7a6a00',moon:'#5b4fb0',dim:'#306230',signal:'#0f380f'};
 const WAVE_NAMES={sine:'사인파',triangle:'삼각파',square:'사각파',sawtooth:'톱니파'};
 const WAVE_LIST=['sine','triangle','square','sawtooth'];
 
@@ -1522,14 +1655,14 @@ function fitCanvas(cv){
 }
 function drawGrid(ctx,w,h){
   ctx.save();
-  ctx.strokeStyle='rgba(220,180,99,0.08)'; ctx.lineWidth=1;
+  ctx.strokeStyle='rgba(48,98,48,.28)'; ctx.lineWidth=1;
   ctx.beginPath();
   const sx=w/12, sy=h/6;
   for(let x=sx;x<w-0.5;x+=sx){ctx.moveTo(x,0);ctx.lineTo(x,h);}
   for(let y=sy;y<h-0.5;y+=sy){ctx.moveTo(0,y);ctx.lineTo(w,y);}
   ctx.stroke();
-  ctx.strokeStyle='rgba(205,187,159,0.22)';
-  ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();
+  ctx.strokeStyle='rgba(48,98,48,.6)'; ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke(); ctx.setLineDash([]);
   ctx.restore();
 }
 function plotWave(ctx,x,y,w,h,opt){
@@ -1538,7 +1671,7 @@ function plotWave(ctx,x,y,w,h,opt){
   let norm=1;
   if(weights){ let mx=0.0001; for(let i=0;i<=80;i++){mx=Math.max(mx,Math.abs(harmonicValueAt(i/80,weights)));} norm=1/mx; }
   ctx.save();
-  if(glow){ctx.shadowColor=color;ctx.shadowBlur=Math.min(14,h*0.11);}
+  if(glow){ctx.shadowColor=color;ctx.shadowBlur=2;}
   ctx.strokeStyle=color;ctx.lineWidth=lineW;ctx.lineJoin='round';ctx.lineCap='round';
   ctx.beginPath();
   const N=Math.max(120,Math.floor(w));
@@ -1574,8 +1707,7 @@ function drawAnalyser(ctx,w,h){
   const len=aData.length; let start=0;
   for(let i=1;i<len/2;i++){ if(aData[i-1]<128&&aData[i]>=128){start=i;break;} }
   ctx.save();
-  ctx.shadowColor=COL.ok; ctx.shadowBlur=9;
-  ctx.strokeStyle=COL.ok; ctx.lineWidth=2.2; ctx.lineJoin='round';
+  ctx.strokeStyle='#0f380f'; ctx.lineWidth=2.4; ctx.lineJoin='round';
   ctx.beginPath();
   const span=Math.floor(len*0.5);
   for(let i=0;i<span;i++){
@@ -1595,7 +1727,7 @@ function scopeLoop(ts){
   if(state.scopeMode==='real'){
     if(labPlaying){ drawAnalyser(ctx,w,h); }
     else {
-      plotWave(ctx,0,0,w,h,{cycles:state.freq,ampFrac,type:state.wave,color:'rgba(223,243,255,.35)'});
+      plotWave(ctx,0,0,w,h,{cycles:state.freq,ampFrac,type:state.wave,color:'rgba(15,56,15,.30)'});
       ctx.save(); ctx.fillStyle=COL.dim; ctx.font='600 13px Pretendard,sans-serif'; ctx.textAlign='center';
       ctx.fillText('소리를 켜면 실제 진동 파형이 보여요', w/2, h/2-14); ctx.restore();
     }
@@ -1610,10 +1742,10 @@ requestAnimationFrame(scopeLoop);
 /* ---------- 상태 & 저장 ---------- */
 const state={amp:3,freq:3,wave:'sine',scopeMode:'slow'};
 const SAVE_KEY='soundLab.v1';
-let progress={disc:{amp:false,freq:false,wave:false},poe:false,self:false,match:false,quiz:false,seen:{}};
+let progress={disc:{amp:false,freq:false,wave:false},poe:false,self:false,match:false,quiz:false,birth:false,seen:{}};
 function load(){ try{const r=localStorage.getItem(SAVE_KEY); if(r)progress=Object.assign(progress,JSON.parse(r));}catch(e){} }
 function save(){ try{localStorage.setItem(SAVE_KEY,JSON.stringify(progress));}catch(e){} }
-const MILESTONES=['disc.amp','disc.freq','disc.wave','poe','self','match','quiz'];
+const MILESTONES=['birth','disc.amp','disc.freq','disc.wave','poe','self','match','quiz'];
 function milestoneDone(path){ return path.includes('.')?progress[path.split('.')[0]][path.split('.')[1]]:progress[path]; }
 function setMilestone(path,val=true){
   if(path.includes('.')){const[a,b]=path.split('.');progress[a][b]=val;} else progress[path]=val;
@@ -1737,22 +1869,7 @@ $$('#view-concept .play-mini[data-amp]').forEach(b=>{
 });
 // 진동수 ↔ 파장 데모
 const wlCanvas=$('#wlCanvas'), wlSlider=$('#wlSlider');
-function renderWavelength(){
-  const {ctx,w,h}=fitCanvas(wlCanvas); ctx.clearRect(0,0,w,h); drawGrid(ctx,w,h);
-  const cycles=+wlSlider.value;
-  plotWave(ctx,0,0,w,h,{cycles,ampFrac:0.62,type:'sine',color:COL.freq});
-  // 파장 표시 (한 주기)
-  const period=w/cycles, y=h-22;
-  ctx.save();
-  ctx.strokeStyle=COL.gold; ctx.fillStyle=COL.gold; ctx.lineWidth=2;
-  ctx.beginPath(); ctx.moveTo(4,y); ctx.lineTo(4+period,y); ctx.stroke();
-  [[4,-1],[4+period,1]].forEach(([xx,d])=>{ctx.beginPath();ctx.moveTo(xx,y);ctx.lineTo(xx+6*d,y-4);ctx.lineTo(xx+6*d,y+4);ctx.closePath();ctx.fill();});
-  ctx.font='600 12px JetBrains Mono,monospace'; ctx.textAlign='left';
-  ctx.fillText('파장(짧을수록 높은 소리)',10,y-7);
-  ctx.fillStyle=COL.freq; ctx.textAlign='right'; ctx.font='700 13px JetBrains Mono,monospace';
-  ctx.fillText('진동수 '+cycles+' Hz',w-8,20);
-  ctx.restore();
-}
+function renderWavelength(){ /* 진행파 애니메이션 루프가 대신 그립니다 (파일 하단) */ }
 wlSlider.addEventListener('input',()=>{ renderWavelength(); playTone({type:'sine',freq:audioFreq(+wlSlider.value),amp:0.14,dur:0.35}); });
 
 /* ============================================================
@@ -1906,18 +2023,38 @@ function resetMatch(){
 /* --- 모드 B: 소리 형사 퀴즈 --- */
 const quizState={active:false,score:0,lives:3,combo:0,idx:0,questions:[],current:null};
 function buildQuestions(){
+  const R=n=>Math.floor(Math.random()*n);
   const Q=[];
-  Q.push({type:'mc',q:'큰 소리는 작은 소리보다 파동의 무엇이 클까?',sub:'세기 ↔ ?',opts:['진폭','진동수','파형','파장'],ans:0});
-  Q.push({type:'mc',q:'높은 소리는 낮은 소리보다 파동의 무엇이 클까?',sub:'높낮이 ↔ ?',opts:['진폭','진동수','속력','크기'],ans:1});
-  Q.push({type:'mc',q:'진폭·진동수가 같아도 다른 소리가 나게 하는 것은?',sub:'음색(맵시) ↔ ?',opts:['진폭','진동수','파형','파장'],ans:2});
-  Q.push({type:'mc',q:'음성 변조 앱으로 낮은 목소리를 높게 바꾸면?',sub:'',opts:['진동수가 커진다','진폭이 커진다','파형만 바뀐다','아무 변화 없다'],ans:0});
-  Q.push({type:'mc',q:'악기마다 음색이 다른 가장 큰 이유는?',sub:'',opts:['연주자가 달라서','파형(배음 구성)이 달라서','크기가 달라서','색이 달라서'],ans:1});
-  Q.push({type:'mc',q:'한 옥타브 높은 음은 진동수가 어떻게 될까?',sub:'🎵 살짝 어려움',opts:['2배','절반','같음','3배'],ans:0});
-  // 동적: 파형 비교
-  Q.push({type:'cmp',q:'A와 B 중 더 큰 소리는?',sub:'진폭을 비교해 보세요',gen:()=>{const f=2+Math.floor(Math.random()*4);return{A:{amp:5,freq:f,wave:'sine'},B:{amp:2,freq:f,wave:'sine'},ans:0,key:'더 큰'};},opts:['A','B']});
-  Q.push({type:'cmp',q:'A와 B 중 더 높은 소리는?',sub:'진동수를 비교해 보세요',gen:()=>{const a=2+Math.floor(Math.random()*3);return{A:{amp:a,freq:2,wave:'sine'},B:{amp:a,freq:6,wave:'sine'},ans:1,key:'더 높은'};},opts:['A','B']});
-  Q.push({type:'cmp',q:'A와 B는 무엇이 다를까?',sub:'같은 크기·높이, 모양만 비교',gen:()=>({A:{amp:3,freq:4,wave:'triangle'},B:{amp:3,freq:4,wave:'sawtooth'},ans:2,key:'파형'}),opts:['진폭','진동수','파형(음색)','아무것도']});
-  // 셔플
+  // 파동 그림 2개를 비교해야 풀 수 있는 문제들
+  Q.push({type:'cmp',q:'A와 B 중 더 높은 소리는?',sub:'파동의 촘촘함(진동수)을 비교!',opts:['A','B'],
+    gen:()=>{const a=2+R(3),f1=2+R(2),f2=f1+2+R(2),hi=R(2);
+      return {A:{amp:a,freq:hi?f1:f2,wave:'sine'},B:{amp:a,freq:hi?f2:f1,wave:'sine'},ans:hi?1:0};}});
+  Q.push({type:'cmp',q:'A와 B 중 더 큰 소리는?',sub:'파동의 높이(진폭)를 비교!',opts:['A','B'],
+    gen:()=>{const f=3+R(3),big=R(2);
+      return {A:{amp:big?2:5,freq:f,wave:'sine'},B:{amp:big?5:2,freq:f,wave:'sine'},ans:big?1:0};}});
+  Q.push({type:'cmp',q:'A의 진동수는 몇 Hz일까?',sub:'⏱ 화면 가로 전체 = 1초! A의 반복 횟수를 세자',opts:['2 Hz','3 Hz','4 Hz','5 Hz'],
+    gen:()=>{const f=2+R(4);
+      return {A:{amp:3,freq:f,wave:'sine'},B:{amp:1,freq:7,wave:'sine'},ans:f-2};}});
+  Q.push({type:'cmp',q:'A와 B의 진동수 차이는 몇 Hz일까?',sub:'⏱ 가로 전체 = 1초. 각각 세어서 빼자!',opts:['1 Hz','2 Hz','3 Hz','4 Hz'],
+    gen:()=>{const f1=2+R(2),d=1+R(3);
+      return {A:{amp:3,freq:f1,wave:'sine'},B:{amp:3,freq:f1+d,wave:'sine'},ans:d-1};}});
+  Q.push({type:'cmp',q:'A의 진폭은 B의 몇 배일까?',sub:'중심선에서 마루까지의 높이를 비교!',opts:['2배','3배','같다','절반'],
+    gen:()=>{const f=3+R(3),two=R(2);
+      return two? {A:{amp:4,freq:f,wave:'sine'},B:{amp:2,freq:f,wave:'sine'},ans:0}
+                : {A:{amp:3,freq:f,wave:'sine'},B:{amp:1,freq:f,wave:'sine'},ans:1};}});
+  Q.push({type:'cmp',q:'두 파동은 진폭만 다르다. 두 소리는 무엇이 다르게 들릴까?',sub:'',opts:['세기(크기)','높낮이','음색','다르지 않다'],
+    gen:()=>({A:{amp:5,freq:4,wave:'sine'},B:{amp:2,freq:4,wave:'sine'},ans:0})});
+  Q.push({type:'cmp',q:'두 파동은 진동수만 다르다. 무엇이 다르게 들릴까?',sub:'',opts:['높낮이','세기(크기)','음색','빠르기'],
+    gen:()=>({A:{amp:3,freq:2,wave:'sine'},B:{amp:3,freq:6,wave:'sine'},ans:0})});
+  Q.push({type:'cmp',q:'진폭·진동수는 같고 모양만 다르다. 무엇이 다르게 들릴까?',sub:'피아노 vs 바이올린을 떠올려!',opts:['음색(맵시)','세기','높낮이','다르지 않다'],
+    gen:()=>({A:{amp:3,freq:4,wave:'triangle'},B:{amp:3,freq:4,wave:'sawtooth'},ans:0})});
+  Q.push({type:'cmp',q:'B가 A보다 높은 소리인 까닭은?',sub:'',opts:['진동수가 커서','진폭이 커서','파형이 달라서','속력이 빨라서'],
+    gen:()=>({A:{amp:3,freq:2,wave:'sine'},B:{amp:3,freq:6,wave:'sine'},ans:0})});
+  Q.push({type:'cmp',q:"'크고 낮은' 소리는 어느 쪽일까?",sub:'진폭과 진동수를 동시에 보자!',opts:['A','B'],
+    gen:()=>{const big=R(2);
+      return big? {A:{amp:2,freq:6,wave:'sine'},B:{amp:5,freq:2,wave:'sine'},ans:1}
+                : {A:{amp:5,freq:2,wave:'sine'},B:{amp:2,freq:6,wave:'sine'},ans:0};}});
+  Q.push({type:'mc',q:'한 옥타브 높은 음은 진동수가 어떻게 될까?',sub:'🎵 보너스 문제',opts:['2배','절반','같음','3배'],ans:0});
   for(let i=Q.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[Q[i],Q[j]]=[Q[j],Q[i]];}
   return Q;
 }
@@ -1954,14 +2091,17 @@ function renderQuizScope(){
   const q=quizState.current; if(!q||q.type!=='cmp'||!q.data)return;
   const cv=$('#quizCanvas'); const {ctx,w,h}=fitCanvas(cv);
   ctx.clearRect(0,0,w,h);
-  // 상/하 두 파형 (A 위, B 아래)
-  const pad=8;
-  ctx.save();ctx.strokeStyle='rgba(205,187,159,0.2)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();ctx.restore();
+  drawGrid(ctx,w,h);
+  ctx.save();ctx.strokeStyle='rgba(34,36,42,.65)';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();ctx.restore();
   const A=q.data.A,B=q.data.B;
-  plotWave(ctx,0,2,w,h/2-2,{cycles:A.freq,ampFrac:A.amp/5,type:A.wave,color:COL.freq,lineW:2.4});
-  plotWave(ctx,0,h/2,w,h/2-2,{cycles:B.freq,ampFrac:B.amp/5,type:B.wave,color:COL.wave,lineW:2.4});
-  ctx.save();ctx.fillStyle=COL.freq;ctx.font='700 13px Pretendard';ctx.fillText('A',8,18);
-  ctx.fillStyle=COL.wave;ctx.fillText('B',8,h/2+18);ctx.restore();
+  plotWave(ctx,0,2,w,h/2-2,{cycles:A.freq,ampFrac:A.amp/5,type:A.wave,color:COL.freq,lineW:2.6});
+  plotWave(ctx,0,h/2,w,h/2-2,{cycles:B.freq,ampFrac:B.amp/5,type:B.wave,color:COL.wave,lineW:2.6});
+  ctx.save();
+  ctx.font='700 14px Pretendard';
+  ctx.fillStyle='#0f380f';ctx.fillText('A',8,18);ctx.fillText('B',8,h/2+18);
+  ctx.font='700 11px Pretendard';ctx.textAlign='right';ctx.fillStyle='#306230';
+  ctx.fillText('⏱ 화면 가로 전체 = 1초',w-8,h-8);
+  ctx.restore();
 }
 $('#quizPlay').addEventListener('click',()=>{
   const q=quizState.current; if(!q||q.type!=='cmp')return;
@@ -1990,14 +2130,14 @@ function endQuiz(){
   quizState.active=false;
   if(!progress.quiz) setMilestone('quiz',true);
   const total=quizState.questions.length, ansd=quizState.idx;
-  const rank=quizState.score>=120?'🥇 명탐정 소리 셜록!':quizState.score>=70?'🥈 유능한 소리 형사!':'🥉 수습 형사 — 다시 도전!';
+  const rank=quizState.score>=120?'🥇 소리 도감 마스터!':quizState.score>=70?'🥈 유능한 소리 트레이너!':'🥉 수련이 더 필요하다!';
   const card=$('#quizCard');
   card.innerHTML=`<div class="game-over"><div class="big">${quizState.score}점</div>
     <div class="rank">${rank}</div>
     <p style="color:var(--text-dim);font-size:.9rem">${quizState.lives>0?'모든 문제 해결!':'생명을 모두 소진했어요.'}</p>
-    <button class="btn primary" id="quizRestart" style="margin-top:16px">↺ 다시 수사하기</button></div>`;
+    <button class="btn primary" id="quizRestart" style="margin-top:16px">↺ 다시 배틀!</button></div>`;
   $('#quizRestart').addEventListener('click',()=>location.reload());
-  sfx('star'); toast('수사 종료! 🕵️','star');
+  sfx('star'); toast('배틀 종료! ⚔️','star');
 }
 $('#quizStart').addEventListener('click',startQuiz);
 
@@ -2026,6 +2166,7 @@ $$('#view-beyond [data-preset]').forEach(b=>b.addEventListener('click',()=>{
   sfx('click');
   if(b.dataset.preset==='piano') setHarmPreset([100,55,35,20,12]);
   else if(b.dataset.preset==='violin') setHarmPreset([100,80,65,50,40]);
+  else if(b.dataset.preset==='square') setHarmPreset([100,0,33,0,20]);
   else setHarmPreset([100,0,0,0,0]);
 }));
 $('#harmPlay').addEventListener('click',()=>playHarmonic(harmWeights,220,1.4));
@@ -2281,6 +2422,231 @@ function ccqAnswer(i,btn){
   setTimeout(()=>{ ccqIdx++; ccqRender(); },1550);
 }
 ccqRender();
+
+/* ============================================================
+   NEW · 소리의 발생 — 기타 줄 → 공기(매질) → 귀
+   ============================================================ */
+(function(){
+  const cv=$('#birthCv'); if(!cv) return;
+  const N=64; let y=new Float32Array(N), v=new Float32Array(N);
+  let energy=0, airT=0, lastTs=0, earPulse=0, pluckAmp=3;
+  $('#birthAmp').addEventListener('input',e=>{pluckAmp=+e.target.value;$('#birthAmpVal').textContent=e.target.value;});
+  function pluck(){
+    const A=8+pluckAmp*7, ci=Math.floor(N*0.5);
+    for(let i=1;i<N-1;i++){const d=i<ci?i/ci:(N-1-i)/(N-1-ci); y[i]=A*d; v[i]=0;}
+    instNote({weights:INSTRUMENTS.guitar.weights,freq:196,dur:1.1,attack:.004,gain:.05+pluckAmp*.035,filter:2600});
+  }
+  $('#birthPluck').addEventListener('click',()=>{ensureAudio();pluck();});
+  cv.addEventListener('pointerdown',()=>{ensureAudio();pluck();});
+  function frame(ts){
+    requestAnimationFrame(frame);
+    if(activeTab!=='birth')return;
+    const dt=Math.min(.05,(ts-lastTs)/1000||0); lastTs=ts;
+    for(let st=0;st<3;st++){
+      for(let i=1;i<N-1;i++){ v[i]+=0.38*(y[i-1]-2*y[i]+y[i+1]); v[i]*=0.9985; }
+      for(let i=1;i<N-1;i++) y[i]+=v[i];
+    }
+    energy=0; for(let i=0;i<N;i++)energy+=Math.abs(y[i]); energy/=N;
+    airT+=dt*(2+Math.min(4,energy));
+    const {ctx,w,h}=fitCanvas(cv); ctx.clearRect(0,0,w,h);
+    drawGrid(ctx,w,h);
+    const sx0=w*0.06, sx1=w*0.52, cy=h*0.5;
+    ctx.fillStyle='#0f380f';
+    ctx.fillRect(sx0-7,cy-28,7,56); ctx.fillRect(sx1,cy-28,7,56);
+    ctx.strokeStyle='#0f380f'; ctx.lineWidth=3; ctx.lineJoin='round'; ctx.beginPath();
+    for(let i=0;i<N;i++){ const px=sx0+(sx1-sx0)*i/(N-1), py=cy-y[i]; i?ctx.lineTo(px,py):ctx.moveTo(px,py); }
+    ctx.stroke();
+    const cols=9, ax0=sx1+26, ax1=w*0.85;
+    const A_air=Math.min(9,energy*1.3);
+    for(let c=0;c<cols;c++){
+      const bx=ax0+(ax1-ax0)*c/(cols-1);
+      const dx=A_air*Math.sin(airT*3-c*0.9);
+      for(let r=0;r<5;r++){
+        const py=cy-36+r*18;
+        ctx.fillStyle='rgba(15,56,15,.78)';
+        ctx.beginPath(); ctx.arc(bx+dx,py,3,0,6.2832); ctx.fill();
+      }
+    }
+    ctx.font='28px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('👂', w*0.93, cy);
+    if(A_air>0.8){ earPulse=(earPulse+dt*2.6)%1;
+      ctx.strokeStyle='rgba(122,106,0,'+(0.85-earPulse*0.85).toFixed(2)+')'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.arc(w*0.93,cy,14+earPulse*16,0,6.2832); ctx.stroke();
+    }
+    ctx.font='700 12px Pretendard'; ctx.fillStyle='#136b3c'; ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+    ctx.fillText('① 줄의 진동',(sx0+sx1)/2,h-12);
+    ctx.fillText('② 공기(매질)의 진동',(ax0+ax1)/2,h-12);
+    ctx.fillText('③ 귀',w*0.93,h-12);
+  }
+  requestAnimationFrame(frame);
+  const row=$('#birthCheck');
+  if(row){
+    wireSinglePredict(row,()=>{ $('#birthReveal').style.display='block';
+      if(!progress.birth){ setMilestone('birth',true); toast('소리의 발생 마스터! 🎸','ok'); } });
+    if(progress.birth){ const a=+row.dataset.answer;
+      const c=row.querySelector('.predict-opt[data-i="'+a+'"]'); if(c)c.classList.add('correct');
+      row.dataset.locked='1'; $('#birthReveal').style.display='block'; }
+  }
+})();
+
+/* ============================================================
+   NEW · 진동수 정의 — 모눈종이 1 Hz 그래프
+   ============================================================ */
+(function(){
+  const cv=$('#gridFreqCv'); if(!cv)return;
+  let f=1, playT=3, playing=false, lastTs=0, count=0;
+  const DURX=3;
+  function draw(){
+    const {ctx,w,h}=fitCanvas(cv); ctx.clearRect(0,0,w,h);
+    ctx.fillStyle='#fdfefd'; ctx.fillRect(0,0,w,h);
+    const L=46, R=w-12, T=12, B=h-30, cy=(T+B)/2, A=(B-T)*0.38;
+    const sec=(R-L)/DURX;
+    ctx.fillStyle='rgba(255,203,5,.20)'; ctx.fillRect(L,T,sec,B-T);
+    ctx.strokeStyle='rgba(39,96,200,.18)'; ctx.lineWidth=1; ctx.beginPath();
+    for(let i=0;i<=12;i++){const x=L+(R-L)*i/12; ctx.moveTo(x,T); ctx.lineTo(x,B);}
+    for(let j=0;j<=6;j++){const yy=T+(B-T)*j/6; ctx.moveTo(L,yy); ctx.lineTo(R,yy);}
+    ctx.stroke();
+    ctx.strokeStyle='rgba(39,96,200,.55)'; ctx.lineWidth=1.6; ctx.beginPath();
+    for(let sc=0;sc<=DURX;sc++){const x=L+sec*sc; ctx.moveTo(x,T); ctx.lineTo(x,B);}
+    ctx.stroke();
+    ctx.strokeStyle='#22242a'; ctx.lineWidth=2; ctx.beginPath();
+    ctx.moveTo(L,T); ctx.lineTo(L,B); ctx.lineTo(R,B); ctx.stroke();
+    ctx.fillStyle='#4c505c'; ctx.font='600 11px Pretendard'; ctx.textAlign='center';
+    for(let sc=0;sc<=DURX;sc++) ctx.fillText(sc+'초', L+sec*sc, B+16);
+    ctx.save(); ctx.translate(13,cy); ctx.rotate(-Math.PI/2); ctx.fillText('매질의 위치',0,0); ctx.restore();
+    ctx.strokeStyle='rgba(34,36,42,.3)'; ctx.setLineDash([4,4]); ctx.beginPath();
+    ctx.moveTo(L,cy); ctx.lineTo(R,cy); ctx.stroke(); ctx.setLineDash([]);
+    const tEnd=Math.min(playT,DURX);
+    ctx.strokeStyle='#2760c8'; ctx.lineWidth=2.6; ctx.lineJoin='round'; ctx.beginPath();
+    const NPT=300; let started=false;
+    for(let i=0;i<=NPT;i++){
+      const t=DURX*i/NPT; if(t>tEnd)break;
+      const x=L+(R-L)*t/DURX, yy=cy-A*Math.sin(2*Math.PI*f*t);
+      started? ctx.lineTo(x,yy):(ctx.moveTo(x,yy),started=true);
+    }
+    ctx.stroke();
+    const yNow=cy-A*Math.sin(2*Math.PI*f*tEnd);
+    ctx.strokeStyle='rgba(227,53,13,.4)'; ctx.lineWidth=1.5; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(L-16,cy-A-8); ctx.lineTo(L-16,cy+A+8); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='#e3350d'; ctx.beginPath(); ctx.arc(L-16,yNow,7,0,6.2832); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.font='700 8px Pretendard'; ctx.fillText('매질',L-16,yNow+3);
+    if(tEnd<DURX){ const x=L+(R-L)*tEnd/DURX;
+      ctx.fillStyle='#2760c8'; ctx.beginPath(); ctx.arc(x,yNow,5,0,6.2832); ctx.fill(); }
+    ctx.fillStyle='#8a6d00'; ctx.font='700 12px Pretendard'; ctx.textAlign='center';
+    ctx.fillText('★ 1초 구간', L+sec/2, T+15);
+  }
+  function loop(ts){
+    requestAnimationFrame(loop);
+    if(activeTab!=='concept'||!playing)return;
+    const dt=Math.min(.05,(ts-lastTs)/1000||0); lastTs=ts;
+    const prev=playT; playT+=dt*0.9;
+    const c1=Math.floor(Math.min(prev,1)*f+1e-6), c2=Math.floor(Math.min(playT,1)*f+1e-6);
+    if(c2>c1){ count=c2; $('#gfCount').textContent=count+'회'; sfx('click'); }
+    if(playT>=DURX){ playing=false; $('#gfPlay').innerHTML='↺ 다시 재생'; sfx('ok'); }
+    draw();
+  }
+  requestAnimationFrame(loop);
+  $('#gfSlider').addEventListener('input',e=>{
+    f=+e.target.value; $('#gfVal').textContent=f;
+    playing=false; playT=DURX; count=f; $('#gfCount').textContent=f+'회';
+    $('#gfPlay').innerHTML='▶ 1초 재생'; draw();
+  });
+  $('#gfPlay').addEventListener('click',()=>{
+    ensureAudio(); playT=0; count=0; $('#gfCount').textContent='0회';
+    playing=true; lastTs=performance.now(); $('#gfPlay').innerHTML='⏱ 그리는 중…';
+  });
+  window.gfDraw=draw;
+  draw();
+})();
+
+/* ============================================================
+   NEW · 실로폰 · 칼림바 — 길이와 진동수
+   ============================================================ */
+(function(){
+  const box=$('#instBars'); if(!box)return;
+  const NOTES=[262,330,392,440,523];
+  const XCOL=['#2760c8','#1e9e57','#c79600','#e3350d','#c2417e'];
+  let mode='xylo';
+  function build(){
+    box.innerHTML='';
+    NOTES.forEach((hz,i)=>{
+      const hpx=124-i*19;
+      const b=document.createElement('button');
+      b.style.cssText='width:54px;height:'+hpx+'px;border:2.5px solid #22242a;border-radius:8px;cursor:pointer;box-shadow:0 3px 0 #22242a;transition:.08s;font-weight:800;color:#fff;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;font-size:.7rem;';
+      b.style.background = mode==='xylo' ? XCOL[i] : 'linear-gradient(180deg,#b7a06a,#8a7a50)';
+      b.textContent = i===0?'낮은음':(i===NOTES.length-1?'높은음':'');
+      b.addEventListener('click',()=>{
+        ensureAudio();
+        const I=INSTRUMENTS[mode==='xylo'?'xylophone':'kalimba'];
+        instNote({weights:I.weights,freq:hz,dur:.6,attack:.002,gain:.17});
+        $('#barMsg').innerHTML = i<2
+          ? '<b style="color:var(--freq)">긴 막대</b> → 무겁고 <b>천천히 진동</b>(진동수 작음) → <b>낮은 소리!</b>'
+          : (i>2 ? '<b style="color:var(--no)">짧은 막대</b> → 가볍고 <b>빠르게 진동</b>(진동수 큼) → <b>높은 소리!</b>'
+                 : '중간 길이 → 중간 높이의 소리!');
+        b.style.transform='translateY(3px)'; setTimeout(()=>{b.style.transform='';},120);
+      });
+      box.appendChild(b);
+    });
+  }
+  $$('#instBarsCard .game-switch button').forEach(btn=>btn.addEventListener('click',()=>{
+    $$('#instBarsCard .game-switch button').forEach(x=>x.classList.remove('on'));
+    btn.classList.add('on'); mode=btn.dataset.instbar; build(); sfx('click');
+  }));
+  build();
+})();
+
+/* ============================================================
+   NEW · 진동수↔파장 — 속력 일정 진행파 애니메이션
+   ============================================================ */
+(function(){
+  if(!wlCanvas)return;
+  let t=0,last=0;
+  const V=120; /* px/s — 속력은 매질이 정한다(항상 일정) */
+  function draw(){
+    const {ctx,w,h}=fitCanvas(wlCanvas); ctx.clearRect(0,0,w,h); drawGrid(ctx,w,h);
+    const f=+wlSlider.value, lam=V/f;
+    const cy=h*0.40, A=h*0.24;
+    ctx.save(); ctx.strokeStyle=COL.freq; ctx.lineWidth=2.8; ctx.lineJoin='round'; ctx.beginPath();
+    for(let x=0;x<=w;x+=2){ const yy=cy-A*Math.sin(2*Math.PI*(f*t-x/lam)); x===0?ctx.moveTo(x,yy):ctx.lineTo(x,yy); }
+    ctx.stroke(); ctx.restore();
+    let cx=lam*((((f*t-0.25)%1)+1)%1);
+    ctx.fillStyle='#136b3c';
+    ctx.beginPath(); ctx.arc(cx,cy-A,6,0,6.2832); ctx.fill();
+    ctx.font='700 11px Pretendard'; ctx.textAlign='center'; ctx.fillStyle='#136b3c';
+    ctx.fillText('마루 — 속력 일정!',Math.max(52,Math.min(w-52,cx)), cy-A-13);
+    const ry=h-18;
+    if(cx+lam<=w-4){
+      ctx.save();
+      ctx.setLineDash([3,4]); ctx.strokeStyle='rgba(178,52,112,.55)'; ctx.lineWidth=1.4; ctx.beginPath();
+      ctx.moveTo(cx,cy-A); ctx.lineTo(cx,ry); ctx.moveTo(cx+lam,cy-A); ctx.lineTo(cx+lam,ry); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle=COL.wave; ctx.fillStyle=COL.wave; ctx.lineWidth=2.2;
+      ctx.beginPath(); ctx.moveTo(cx,ry); ctx.lineTo(cx+lam,ry); ctx.stroke();
+      [[cx,1],[cx+lam,-1]].forEach(([xx,d])=>{ctx.beginPath();ctx.moveTo(xx,ry);ctx.lineTo(xx+6*d,ry-4);ctx.lineTo(xx+6*d,ry+4);ctx.closePath();ctx.fill();});
+      ctx.textAlign='center'; ctx.font='700 12px Pretendard';
+      ctx.fillText('파장',cx+lam/2,ry-7);
+      ctx.restore();
+    }
+    ctx.fillStyle=COL.freq; ctx.textAlign='right'; ctx.font='700 13px Pretendard';
+    ctx.fillText('진동수 '+f+' Hz', w-8, 18);
+  }
+  function upd(){
+    const f=+wlSlider.value;
+    const per=$('#wlPeriod'), lm=$('#wlLambda');
+    if(per) per.textContent=(1/f).toFixed(2)+'초';
+    if(lm){ const cw=wlCanvas._w||wlCanvas.getBoundingClientRect().width||360;
+      lm.textContent='모눈 약 '+((V/f)/(cw/12)).toFixed(1)+'칸'; }
+  }
+  function loop(ts){ requestAnimationFrame(loop); if(activeTab!=='concept')return;
+    const dt=Math.min(.05,(ts-last)/1000||0); last=ts; t+=dt; draw(); }
+  requestAnimationFrame(loop);
+  wlSlider.addEventListener('input',upd);
+  window.wlUpd=upd; upd();
+})();
+
+/* 개념 탭 리드로우에 새 캔버스 포함 */
+const _origRenderConcept=renderConcept;
+renderConcept=function(){ _origRenderConcept(); if(window.gfDraw)window.gfDraw(); if(window.wlUpd)window.wlUpd(); };
+
 </script>
 
 <script>
