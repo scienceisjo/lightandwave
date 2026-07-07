@@ -189,7 +189,16 @@ h3.card-t{font-family:var(--jua);font-size:20px;letter-spacing:.2px;color:var(--
 .t-wave{color:var(--wave-glow)}.t-crest{color:var(--crest)}.t-trough{color:var(--trough)}
 .t-amp{color:var(--amp)}.t-wlen{color:var(--wlen)}.t-energy{color:var(--energy)}
 .t-info{color:var(--info)}.t-medium{color:var(--medium)}
-b.k{color:var(--ink);font-weight:800}
+b.k{color:var(--ink);font-weight:800;font-size:1.07em;letter-spacing:-.2px;
+  background:linear-gradient(transparent 56%, rgba(255,209,102,.55) 56%, rgba(255,209,102,.55) 93%, transparent 93%);
+  padding:0 2px;border-radius:2px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+/* 의미색 키워드도 살짝 키우고 옅은 형광 밑줄 */
+.t-wave,.t-crest,.t-trough,.t-amp,.t-wlen,.t-energy,.t-info,.t-medium{font-weight:800;font-size:1.05em}
+b.k.t-wave,b.k.t-crest,b.k.t-trough,b.k.t-amp,b.k.t-wlen,b.k.t-energy,b.k.t-info,b.k.t-medium{background:none;padding:0}
+b.k.t-wave{border-bottom:2.5px solid rgba(18,167,155,.4)}
+b.k.t-energy{border-bottom:2.5px solid rgba(232,106,53,.4)}
+b.k.t-info{border-bottom:2.5px solid rgba(36,146,204,.4)}
+b.k.t-medium{border-bottom:2.5px solid rgba(126,136,163,.45)}
 
 /* ===================== 버튼 ===================== */
 .btn{
@@ -481,6 +490,15 @@ input[type=range]::-moz-range-track{height:8px;border-radius:99px;background:#ec
 .mq-done{display:none;align-items:center;gap:8px;margin-top:14px;padding:11px 14px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid #5a4a1e;color:var(--gold);font-weight:700;font-size:14px}
 .miniquiz.alldone .mq-done{display:flex;animation:fade .4s}
 
+/* ===================== 연계 흐름(왜 배우는가) ===================== */
+.link-flow{margin-top:16px;display:flex;flex-direction:column;gap:6px}
+.link-node{background:#fff;border:2px solid var(--nc,var(--wave));border-radius:14px 16px 13px 17px/16px 13px 17px 14px;padding:12px 15px;box-shadow:2px 2px 0 rgba(67,64,58,.12)}
+.link-node .ln-tag{font-family:var(--jua);font-size:16px;color:var(--nc,var(--ink));margin-bottom:8px}
+.link-node .ln-keys{display:flex;flex-wrap:wrap;gap:7px}
+.link-node .ln-keys span{font-size:13.5px;font-weight:700;color:var(--ink);background:color-mix(in srgb, var(--nc) 13%, #fff);border:1.5px solid color-mix(in srgb, var(--nc) 45%, #fff);border-radius:99px;padding:5px 12px}
+.link-arrow{text-align:center;font-size:15px;font-weight:800;color:var(--ink-mute);padding:2px 0}
+.link-arrow span{font-family:var(--hand);font-size:14px;color:var(--ink-dim);margin-left:4px}
+
 /* ===================== 내용정리 PDF ===================== */
 .pdf-frame{position:relative;width:100%;aspect-ratio:1/1.35;background:#f3ead6;border:1.5px solid var(--line);border-radius:12px 14px 12px 15px/14px 12px 15px 12px;overflow:hidden}
 @media(min-width:760px){.pdf-frame{aspect-ratio:1.35/1}}
@@ -601,6 +619,17 @@ input[type=range]::-moz-range-track{height:8px;border-radius:99px;background:#ec
     </div>
   </div>
 
+  <!-- 🎧 노이즈 캔슬링 — 파동으로 파동을 지운다 -->
+  <div class="card" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:10px">🎧 매일 쓰는 파동 기술</div>
+    <h3 class="card-t">이어폰·헤드셋 ‘노이즈 캔슬링’은 어떻게 소음을 지울까?</h3>
+    <p class="lead" style="font-size:14.5px;margin-top:6px">비행기·지하철에서 시끄러운 소음을 <b class="k">싹 지워 주는</b> 그 기능! 비밀은 <b class="k">파동으로 파동을 없애는 것</b>이에요. 소음 파동과 <b class="k">정반대 모양(마루↔골)</b>의 파동을 이어폰이 만들어 내면, 둘이 겹쳐 <b class="k">서로 상쇄</b>돼 조용해집니다. 오늘 배울 마루·골·파동의 성질이 바로 이 기술의 핵심이에요.</p>
+    <div class="video-embed">
+      <iframe src="https://www.youtube.com/embed/-UEj0wcgeUk" title="이어폰·헤드셋 노이즈 캔슬링 원리" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <p class="help">💡 파동은 서로 <b>더해질(보강)</b> 수도, <b>지워질(상쇄)</b> 수도 있어요. 이걸 이해하면 노이즈 캔슬링·와이파이·통신이 전부 보입니다.</p>
+  </div>
+
   <!-- 🤿 선생님의 다이빙 영상 (dive-wave.mp4 파일이 있으면 자동 표시) -->
   <div class="card" id="diveCard" style="margin-top:18px;display:none">
     <div class="badge" style="margin-bottom:10px">🤿 선생님의 실험 영상</div>
@@ -668,6 +697,33 @@ input[type=range]::-moz-range-track{height:8px;border-radius:99px;background:#ec
       <span class="pill"><b>마루·골</b></span>
       <span class="pill"><b>파장·진폭</b></span>
     </div>
+  </div>
+
+  <!-- 🎓 왜 파동을 배울까 — 고등·수학 연계 -->
+  <div class="card" style="margin-top:22px;background:linear-gradient(180deg,#fff6e2,#fffdf6);border-color:var(--gold)">
+    <div class="badge" style="margin-bottom:10px;color:var(--gold);border-color:var(--gold)">🎓 왜 파동을 배울까?</div>
+    <h3 class="card-t">파동은 중학교에서 끝나지 않는다 — <span class="t-crest">기초 공사</span>다</h3>
+    <p class="lead" style="font-size:14.5px;margin-top:6px">지금 배우는 파동은 <b class="k">고등학교 과학과 수학으로 그대로 이어지는 핵심 개념</b>이에요. 2022 개정 교육과정을 보면 확실히 드러나죠.</p>
+
+    <!-- 연계 흐름: 중학 → 고등 → 수학 -->
+    <div class="link-flow">
+      <div class="link-node" style="--nc:var(--wave)">
+        <div class="ln-tag">🏫 지금 · 중학교 파동</div>
+        <div class="ln-keys"><span>진폭</span><span>진동수</span><span>파장</span><span>파동의 전달</span></div>
+      </div>
+      <div class="link-arrow">↓ <span>그대로 이어짐</span></div>
+      <div class="link-node" style="--nc:var(--info)">
+        <div class="ln-tag">🔬 고등학교 통합과학</div>
+        <div class="ln-keys"><span>빛</span><span>전자기파</span><span>파동의 간섭·굴절</span></div>
+      </div>
+      <div class="link-arrow">↕ <span>같은 언어로 만난다</span></div>
+      <div class="link-node" style="--nc:var(--amp)">
+        <div class="ln-tag">📐 수학 · 삼각함수</div>
+        <div class="ln-keys"><span>주기 = 파장·진동수</span><span>최댓값·최솟값 = 마루·골(진폭)</span><span>sin 곡선 = 파동 그래프</span></div>
+      </div>
+    </div>
+
+    <div class="note class" style="margin-top:16px"><span class="ic">✨</span><div>지금 눈으로 보는 <b class="k">마루·골·진폭·파장</b>은, 고등학교에 가면 <b class="k">sin·cos 그래프의 최댓값·최솟값·주기</b>로 다시 만나요. 파동을 제대로 이해해 두면 <b class="k">과학도 수학도 훨씬 쉬워집니다.</b> 오늘의 이 그림들이 3년 뒤의 나를 도와줘요!</div></div>
   </div>
 
   <div class="note" style="margin-top:18px"><span class="ic">🌙</span><div><b>예고</b> — 이 수업의 마지막 탭에는 파동이 알려주는 <b>‘나’에 대한 소름 돋는 반전</b>이 숨어 있어요. 힌트: <i>“움직인 것은, 정말 물이었을까?”</i></div></div>
