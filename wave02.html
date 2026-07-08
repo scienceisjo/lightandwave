@@ -1200,7 +1200,7 @@ input[type=range]::-moz-range-thumb{
       <h3>내 목소리로 직접 분석하기</h3>
       <p>마이크나 음악 파일의 실제 소리를 파형·스펙트럼으로 실시간 분석하는 <b>실시간 소리 분석기</b>로 이어집니다.</p>
     </div>
-    <a class="vc-btn" id="vizLink" href="https://scienceisjo.github.io/lightandwave/sound-visualizer.html" target="_blank" rel="noopener">실시간 소리 분석기 열기 →</a>
+    <a class="vc-btn" id="vizLink" href="https://scienceisjo.github.io/lightandwave/sound-pokedex.html" target="_blank" rel="noopener">소리 도감 (통합 분석기) 열기 →</a>
   </div>
 </section>
 
@@ -1418,14 +1418,18 @@ input[type=range]::-moz-range-thumb{
   <!-- 배음과 합성파 -->
   <div class="card">
     <h3 style="font-size:1.15rem;display:flex;align-items:center;gap:9px;margin-bottom:4px">🎨 파형의 비밀: 배음과 합성파 <span class="badge beyond">교육과정 밖 심화</span></h3>
-    <p style="color:var(--text-dim);font-size:.92rem;margin-bottom:6px">실제 악기 소리는 하나의 진동수가 아니라, <b>기본음 + 여러 배음</b>이 합쳐진 '합성파'예요(= 푸리에 합성!). 어떤 배음을 얼마나 섞느냐가 바로 <b class="t-wave">음색</b>! 슬라이더로 직접 합성해 보세요.</p>
-    <div class="cmp-cell" style="height:auto;margin:10px 0"><canvas id="harmCanvas" style="height:150px"></canvas></div>
+    <p style="color:var(--text-dim);font-size:.92rem;margin-bottom:8px">실제 악기 소리는 하나의 진동수가 아니라, <b>기본음 + 여러 배음</b>이 합쳐진 '합성파'예요(= 푸리에 합성!). 어떤 배음을 얼마나 섞느냐가 바로 <b class="t-wave">음색</b>! <b style="color:var(--text)">🔬 분해해서 보기</b>로 켜면 <b>각 배음(가는 선)</b>이 서로 <b>보강(위+위=더 크게)·상쇄(위+아래=작아짐)</b>돼 <b>굵은 결과 파형</b>이 만들어지는 걸 볼 수 있어요.</p>
+    <div class="game-switch" style="max-width:340px;margin-bottom:10px">
+      <button class="on" data-harmview="decomp">🔬 분해해서 보기</button>
+      <button data-harmview="result">🌊 합성 결과만</button>
+    </div>
+    <div class="cmp-cell" style="height:auto;margin:10px 0"><canvas id="harmCanvas" style="height:180px"></canvas></div>
     <div class="harmonic-rows" id="harmRows">
-      <div class="harm-row"><div class="hl">기본음<span>1배</span></div><input type="range" data-h="1" min="0" max="100" value="100"><div class="hv">100</div></div>
-      <div class="harm-row"><div class="hl">2배음<span>2배</span></div><input type="range" data-h="2" min="0" max="100" value="0"><div class="hv">0</div></div>
-      <div class="harm-row"><div class="hl">3배음<span>3배</span></div><input type="range" data-h="3" min="0" max="100" value="0"><div class="hv">0</div></div>
-      <div class="harm-row"><div class="hl">4배음<span>4배</span></div><input type="range" data-h="4" min="0" max="100" value="0"><div class="hv">0</div></div>
-      <div class="harm-row"><div class="hl">5배음<span>5배</span></div><input type="range" data-h="5" min="0" max="100" value="0"><div class="hv">0</div></div>
+      <div class="harm-row"><div class="hl" style="color:#1d4fa8">기본음<span>1배</span></div><input type="range" data-h="1" min="0" max="100" value="100"><div class="hv">100</div></div>
+      <div class="harm-row"><div class="hl" style="color:#c22a08">2배음<span>2배</span></div><input type="range" data-h="2" min="0" max="100" value="0"><div class="hv">0</div></div>
+      <div class="harm-row"><div class="hl" style="color:#b23470">3배음<span>3배</span></div><input type="range" data-h="3" min="0" max="100" value="0"><div class="hv">0</div></div>
+      <div class="harm-row"><div class="hl" style="color:#6d28b8">4배음<span>4배</span></div><input type="range" data-h="4" min="0" max="100" value="0"><div class="hv">0</div></div>
+      <div class="harm-row"><div class="hl" style="color:#8a5a00">5배음<span>5배</span></div><input type="range" data-h="5" min="0" max="100" value="0"><div class="hv">0</div></div>
     </div>
     <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:6px">
       <button class="btn play" id="harmPlay" style="padding:10px 18px"><span class="k">▶</span> 합성한 소리 듣기</button>
@@ -1434,7 +1438,7 @@ input[type=range]::-moz-range-thumb{
       <button class="btn ghost" data-preset="square">🔲 사각파 레시피</button>
       <button class="btn ghost" data-preset="reset">↺ 기본음만</button>
     </div>
-    <div class="fact"><span class="ic">💡</span><div>피아노 '도'와 클라리넷 '도'는 진동수가 같아도 <b>배음 구성</b>이 달라 합성파 모양이 달라요. 그래서 음색이 다른 거예요.</div></div>
+    <div class="fact"><span class="ic">💡</span><div>가는 색선들이 만나 <b>같은 방향이면 더해져(보강)</b>, <b>반대 방향이면 깎여(상쇄)</b> 굵은 합성파가 돼요 — 이게 바로 파동의 <b>간섭</b>! 피아노 '도'와 클라리넷 '도'가 진동수가 같아도 다르게 들리는 건 <b>배음 구성(간섭 결과)</b>이 다르기 때문이에요.</div></div>
   </div>
 
   <!-- 주기와 진동수 -->
@@ -2311,11 +2315,29 @@ $('#quizStart').addEventListener('click',startQuiz);
    ============================================================ */
 const harmWeights=[100,0,0,0,0];
 const harmCanvas=$('#harmCanvas');
+let harmDecomp=true;
+const HARM_COL=['#1d4fa8','#c22a08','#b23470','#6d28b8','#8a5a00'];
 function renderHarm(){
   if(!harmCanvas)return;
   const {ctx,w,h}=fitCanvas(harmCanvas); ctx.clearRect(0,0,w,h); drawGrid(ctx,w,h);
-  plotWave(ctx,0,0,w,h,{cycles:2,ampFrac:0.78,type:'sine',color:COL.wave,weights:harmWeights});
+  const cy=h/2, cycles=2, ampPx=(h/2-16);
+  let mx=0.0001; for(let i=0;i<=240;i++){ mx=Math.max(mx,Math.abs(harmonicValueAt(i/240*cycles,harmWeights))); }
+  if(harmDecomp){
+    harmWeights.forEach((wv,i)=>{ if(wv<=0)return;
+      ctx.save(); ctx.globalAlpha=.55; ctx.strokeStyle=HARM_COL[i]||'#555'; ctx.lineWidth=1.6; ctx.beginPath();
+      for(let x=0;x<=w;x+=2){ const t=x/w*cycles, v=(wv/100)*Math.sin(2*Math.PI*(i+1)*t), y=cy-(v/mx)*ampPx; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+      ctx.stroke(); ctx.restore(); });
+  }
+  ctx.strokeStyle='#0f380f'; ctx.lineWidth=3; ctx.lineJoin='round'; ctx.beginPath();
+  for(let x=0;x<=w;x+=2){ const t=x/w*cycles, v=harmonicValueAt(t,harmWeights), y=cy-(v/mx)*ampPx; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+  ctx.stroke();
+  ctx.fillStyle='#0f380f'; ctx.font='700 10px Pretendard'; ctx.textAlign='left';
+  ctx.fillText(harmDecomp?'가는 색선 = 각 배음(성분)  ·  굵은 선 = 합쳐진 결과(간섭)':'합성 결과', 6, 13);
 }
+$$('#view-beyond [data-harmview]').forEach(b=>b.addEventListener('click',()=>{
+  $$('#view-beyond [data-harmview]').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  harmDecomp=b.dataset.harmview==='decomp'; if(typeof sfx==='function')sfx('click'); renderHarm();
+}));
 $$('#harmRows input').forEach(inp=>{
   inp.addEventListener('input',()=>{
     harmWeights[(+inp.dataset.h)-1]=+inp.value;
@@ -2510,17 +2532,67 @@ function drumHit(t0,freq,gain){
   o.connect(g); g.connect(master);
   ns.start(st); ns.stop(st+dur); o.start(st); o.stop(st+0.3);
 }
-const INSTRUMENTS={
-  guitar:{weights:[1,.6,.45,.35,.28,.2,.16,.12], filter:2600, attack:.005, gain:.16, notes:[262,330,392,523], step:.17, dur:.5},
-  kalimba:{weights:[1,.35,.18,.08], attack:.002, gain:.17, notes:[523,659,392,523], step:.16, dur:.6},
-  panflute:{weights:[1,.12,.05], attack:.06, gain:.17, vibrato:3, notes:[392,440,494,440], step:.26, dur:.5},
-  xylophone:{weights:[1,.3,.15,.4,.2], attack:.002, gain:.16, notes:[523,659,392,523], step:.14, dur:.28},
-  oboe:{weights:[1,.8,.6,.5,.4,.3,.25,.2], attack:.03, gain:.14, vibrato:4, filter:4200, notes:[440,494,440], step:.34, dur:.5}
+/* 사실적 악기 엔진 — 배음합성 + ADSR + 필터 스윕 + 비브라토 + 어택 노이즈/숨소리 */
+function playVoice(opt){
+  if(typeof ensureAudio==='function') ensureAudio();
+  if(!actx) return;
+  const t0=actx.currentTime+(opt.when||0), dur=opt.dur;
+  const o=actx.createOscillator();
+  const H=opt.harmonics, n=H.length+1, real=new Float32Array(n), imag=new Float32Array(n);
+  H.forEach((wv,i)=>{ imag[i+1]=wv; });
+  o.setPeriodicWave(actx.createPeriodicWave(real,imag,{disableNormalization:false}));
+  o.frequency.value=opt.freq;
+  let node=o, filt=null;
+  if(opt.filter){ filt=actx.createBiquadFilter(); filt.type='lowpass'; filt.frequency.value=opt.filter; filt.Q.value=opt.Q||0.7; node.connect(filt); node=filt; }
+  const g=actx.createGain(); node.connect(g); g.connect(master);
+  const peak=opt.peak, A=opt.attack;
+  g.gain.setValueAtTime(0.0001,t0);
+  g.gain.linearRampToValueAtTime(peak,t0+A);
+  if(opt.sustain!=null){                 // 지속음(관악기): 감쇠→지속→릴리스
+    const D=opt.decay||0.08, S=Math.max(0.001,peak*opt.sustain), R=opt.release||0.13;
+    g.gain.exponentialRampToValueAtTime(S,t0+A+D);
+    g.gain.setValueAtTime(S,t0+Math.max(A+D,dur-R));
+    g.gain.exponentialRampToValueAtTime(0.0006,t0+dur);
+  } else {                               // 타현·발현: 자연 감쇠
+    g.gain.exponentialRampToValueAtTime(0.0006,t0+dur);
+  }
+  if(filt && opt.filterEnd){ filt.frequency.setValueAtTime(opt.filter,t0); filt.frequency.exponentialRampToValueAtTime(Math.max(200,opt.filterEnd),t0+dur*0.8); }
+  if(opt.vibrato){ const lfo=actx.createOscillator(), lg=actx.createGain(); lfo.type='sine'; lfo.frequency.value=opt.vibRate||5.5; lg.gain.value=opt.vibrato; lfo.connect(lg); lg.connect(o.frequency); lfo.start(t0+(opt.vibDelay||0)); lfo.stop(t0+dur+0.05); }
+  o.start(t0); o.stop(t0+dur+0.08);
+  // 어택 노이즈(발현·타현의 '툭') 또는 숨소리(관악기)
+  if(opt.noise){
+    const nz=opt.noise, nd=nz.dur||0.04;
+    const buf=actx.createBuffer(1,Math.max(1,Math.floor(actx.sampleRate*(nz.loop?0.4:nd))),actx.sampleRate);
+    const d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+    const ns=actx.createBufferSource(); ns.buffer=buf; ns.loop=!!nz.loop;
+    const nf=actx.createBiquadFilter(); nf.type=nz.type||'bandpass'; nf.frequency.value=nz.freq||2500; nf.Q.value=nz.Q||0.8;
+    const ng=actx.createGain(); ns.connect(nf); nf.connect(ng); ng.connect(master);
+    ng.gain.setValueAtTime(0.0001,t0);
+    ng.gain.linearRampToValueAtTime(nz.gain||0.05,t0+(nz.attack||0.004));
+    ng.gain.exponentialRampToValueAtTime(0.0004,t0+(nz.decay||nd));
+    ns.start(t0); ns.stop(t0+(nz.loop?dur:nd)+0.05);
+  }
+}
+const INST2={
+  guitar:   {harmonics:[1,.55,.5,.38,.3,.24,.18,.13,.09,.06], attack:.004, dur:1.1, peak:.24, filter:4200, filterEnd:820, Q:.6, noise:{type:'bandpass',freq:2600,Q:.7,gain:.05,dur:.035,attack:.002,decay:.03}},
+  kalimba:  {harmonics:[1,.25,.5,.1,.2,.06,.12], attack:.002, dur:1.2, peak:.24, filter:5500, filterEnd:1800, Q:.9, noise:{type:'bandpass',freq:4500,Q:1.2,gain:.04,dur:.018,attack:.001,decay:.016}},
+  panflute: {harmonics:[1,.12,.06,.03], attack:.05, decay:.08, sustain:.85, release:.14, dur:.72, peak:.2, filter:2800, Q:.6, vibrato:3.5, vibRate:5.2, vibDelay:.15, noise:{type:'bandpass',freq:1900,Q:.5,gain:.045,dur:.72,loop:true,attack:.05,decay:.72}},
+  xylophone:{harmonics:[1,.2,.15,.55,.14,.32,.1], attack:.001, dur:.5, peak:.22, filter:7500, filterEnd:2400, Q:.7, noise:{type:'bandpass',freq:5200,Q:.8,gain:.06,dur:.02,attack:.001,decay:.018}},
+  oboe:     {harmonics:[1,.85,.95,.62,.6,.44,.38,.28,.22,.16], attack:.035, decay:.1, sustain:.9, release:.13, dur:.62, peak:.15, filter:4800, Q:1.2, vibrato:4.5, vibRate:5.4, vibDelay:.2}
 };
+const INST_NOTES={
+  guitar:{notes:[196,247,294,392], step:.19},
+  kalimba:{notes:[523,659,392,523], step:.17},
+  panflute:{notes:[392,440,494,440], step:.28},
+  xylophone:{notes:[523,659,392,523], step:.15},
+  oboe:{notes:[440,494,440], step:.36}
+};
+function playInst(name,freq,when,peak){ const p=INST2[name]; if(!p) return;
+  playVoice(Object.assign({},p,{freq,when:when||0},peak!=null?{peak}:{})); }
 function playInstrument(name){
-  if(name==='drum'){ [[0,140,.55],[.22,150,.4],[.44,120,.6],[.62,150,.4]].forEach(a=>drumHit(a[0],a[1],a[2])); return; }
-  const I=INSTRUMENTS[name]; if(!I) return;
-  I.notes.forEach((f,i)=>instNote({weights:I.weights,freq:f,t0:i*I.step,dur:I.dur,attack:I.attack,gain:I.gain,filter:I.filter,vibrato:I.vibrato}));
+  if(name==='drum'){ [[0,150,.62],[.22,162,.44],[.44,128,.64],[.62,162,.44]].forEach(a=>drumHit(a[0],a[1],a[2])); return; }
+  const nn=INST_NOTES[name]; if(!nn) return;
+  nn.notes.forEach((f,i)=>playInst(name,f,i*nn.step));
 }
 $$('.inst-play').forEach(b=>b.addEventListener('click',()=>{
   if(typeof ensureAudio==='function') ensureAudio();
@@ -2599,7 +2671,7 @@ ccqRender();
   function pluck(){
     const A=8+pluckAmp*7, ci=Math.floor(N*0.5);
     for(let i=1;i<N-1;i++){const d=i<ci?i/ci:(N-1-i)/(N-1-ci); y[i]=A*d; v[i]=0;}
-    instNote({weights:INSTRUMENTS.guitar.weights,freq:196,dur:1.1,attack:.004,gain:.05+pluckAmp*.035,filter:2600});
+    playInst('guitar',196,0,0.07+pluckAmp*0.045);
   }
   $('#birthPluck').addEventListener('click',()=>{ensureAudio();pluck();});
   cv.addEventListener('pointerdown',()=>{ensureAudio();pluck();});
@@ -2780,8 +2852,7 @@ ccqRender();
       b.textContent = i===0?'낮은음':(i===NOTES.length-1?'높은음':'');
       b.addEventListener('click',()=>{
         ensureAudio();
-        const I=INSTRUMENTS[mode==='xylo'?'xylophone':'kalimba'];
-        instNote({weights:I.weights,freq:hz,dur:.6,attack:.002,gain:.17});
+        playInst(mode==='xylo'?'xylophone':'kalimba', hz);
         $('#barMsg').innerHTML = i<2
           ? '<b style="color:var(--freq)">긴 막대</b> → 무겁고 <b>천천히 진동</b>(진동수 작음) → <b>낮은 소리!</b>'
           : (i>2 ? '<b style="color:var(--no)">짧은 막대</b> → 가볍고 <b>빠르게 진동</b>(진동수 큼) → <b>높은 소리!</b>'
