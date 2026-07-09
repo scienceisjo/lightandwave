@@ -516,6 +516,11 @@ body::after{ content:""; position:fixed; left:0; right:0; bottom:0; height:84px;
 .inq-verdict{margin-top:12px;background:var(--ok-soft);border:1px solid rgba(28,168,107,.35);border-radius:12px;padding:14px 16px;font-size:.98rem;color:var(--text);line-height:1.65}
 .inq-verdict.warn{background:var(--no-soft);border-color:rgba(224,69,90,.4)}
 .inq-verdict b{color:var(--ok-d,#12864f)}.inq-verdict.warn b{color:var(--no)}
+.inq-count{position:absolute;inset:0;display:none;place-items:center;text-align:center;background:rgba(6,16,26,.62);z-index:6;padding:12px}
+.inq-count.on{display:grid}
+.inq-count .ic-lab{font-family:var(--font-title);font-size:1.1rem;color:#fff;margin-bottom:8px}
+.inq-count .ic-lab b{color:#ffcb05}
+.inq-count .ic-num{font-family:var(--font-display);font-size:3.4rem;line-height:1;color:#ffcb05;text-shadow:0 0 20px rgba(255,203,5,.5)}
 </style>
 </head>
 <body>
@@ -691,6 +696,7 @@ body::after{ content:""; position:fixed; left:0; right:0; bottom:0; height:84px;
         <div class="viz-overlay"></div>
         <div class="viz-tag amp"><span class="d">●</span> 내 소리 실시간 파형</div>
         <div class="idle-msg" id="inqIdle"><div><span class="em">🎤</span>마이크를 켜고 소리를 내보세요</div></div>
+        <div class="inq-count" id="inqCount"></div>
       </div>
     </div>
     <div class="inq-instr" id="inqInstr"></div>
@@ -1722,17 +1728,17 @@ battleSetMode('hi');
 /* ============================================================
    TAB · 소리 3요소 탐구
    ============================================================ */
-const INQ={ station:0, A:null, B:null, tick:0 };
+const INQ={ station:0, A:null, B:null, tick:0, arm:null };
 const INQ_ST=[
-  {instr:'① <b>세기(크기)</b> 탐구 — 같은 "아~"를 <b>작게</b> 한 번, <b>크게</b> 한 번 내고 담아요. 무엇이 달라질까요?', a:'📸 작은 소리(A)', b:'📸 큰 소리(B)', ref:false},
-  {instr:'② <b>높낮이</b> 탐구 — 비슷한 크기로 <b>낮은</b> "아~", <b>높은</b> "아~"를 담아요. 파형이 어떻게 변할까요?', a:'📸 낮은 소리(A)', b:'📸 높은 소리(B)', ref:false},
-  {instr:'③ <b>음색</b> 탐구 — 기준음을 듣고 <b>둘 다 같은 음</b>으로! 나(A)와 친구(B)를 담아 비교해요.', a:'📸 내 소리(A)', b:'📸 친구 소리(B)', ref:true}
+  {instr:'① <b>세기(크기)</b> 탐구 — 버튼을 누르고 안내에 따라 <b>작게</b> "아~", 그다음 <b>크게</b> "아~" 소리를 내요. 파형이 어떻게 달라질까요?', a:'🔉 작은 소리 담기!', b:'🔊 큰 소리 담기!', pa:'작은 소리', pb:'큰 소리', ref:false},
+  {instr:'② <b>높낮이</b> 탐구 — 비슷한 크기로 <b>낮은</b> "아~", <b>높은</b> "아~"를 소리 내요. 파동이 어떻게 변할까요?', a:'⬇️ 낮은 소리 담기!', b:'⬆️ 높은 소리 담기!', pa:'낮은 소리', pb:'높은 소리', ref:false},
+  {instr:'③ <b>음색</b> 탐구 — 기준음을 듣고 <b>둘 다 같은 음</b>으로! 버튼을 누르고 나(A), 친구(B)가 소리를 내요.', a:'🙋 내 소리 담기!', b:'👥 친구 소리 담기!', pa:'내 소리', pb:'친구 소리', ref:true}
 ];
 const INQ_REF_HZ=440;   // 라4
 
 function inqSetMicBtn(on){ const b=$('#inqMicBtn'); if(!b)return; b.classList.toggle('on',on); b.innerHTML=on?'<span class="k">⏹</span> 마이크 끄기':'<span class="k">🎤</span> 마이크 켜기'; }
 async function inqToggleMic(){
-  if(RT.mode==='inquiry'&&RT.running){ RT.running=false; RT.mode='scan'; rtDisconnect(); setStatus('대기 중',''); inqSetMicBtn(false); $('#inqIdle').style.display='grid'; return; }
+  if(RT.mode==='inquiry'&&RT.running){ inqCancelArm(); RT.running=false; RT.mode='scan'; rtDisconnect(); setStatus('대기 중',''); inqSetMicBtn(false); $('#inqIdle').style.display='grid'; return; }
   const ok=await rtStartMic();
   if(!ok){ toast(RT._lastErr||'마이크를 켤 수 없어요','poke'); return; }
   RT.mode='inquiry'; setStatus('탐구 · 마이크 스캔','live'); $('#inqIdle').style.display='none'; inqSetMicBtn(true); rtStartLoop();
@@ -1741,6 +1747,7 @@ async function inqToggleMic(){
 $('#inqMicBtn').addEventListener('click',inqToggleMic);
 
 function inqSetStation(i){
+  inqCancelArm();
   INQ.station=i; INQ.A=null; INQ.B=null;
   $$('.inq-tab').forEach(b=>b.classList.toggle('on',+b.dataset.st===i));
   const st=INQ_ST[i];
@@ -1754,7 +1761,7 @@ function inqSetStation(i){
 }
 $('#inqNav').addEventListener('click',e=>{ const b=e.target.closest('.inq-tab'); if(b) inqSetStation(+b.dataset.st); });
 $('#inqRefBtn').addEventListener('click',()=>playRefTone(INQ_REF_HZ,1.1));
-$('#inqReset').addEventListener('click',()=>{ INQ.A=null; INQ.B=null; $('#inqCompare').style.display='none'; inqClearSlot('A'); inqClearSlot('B'); });
+$('#inqReset').addEventListener('click',()=>{ inqCancelArm(); INQ.A=null; INQ.B=null; $('#inqCompare').style.display='none'; inqClearSlot('A'); inqClearSlot('B'); });
 
 function inqClearSlot(which){
   const cv=$('#inqWave'+which); if(cv){ const o=fit(cv); o.ctx.clearRect(0,0,o.w,o.h); }
@@ -1763,53 +1770,84 @@ function inqClearSlot(which){
 }
 function inqPeak(w){ let m=0; for(let i=0;i<w.length;i++){ const a=Math.abs(w[i]); if(a>m)m=a; } return m; }
 
-function inqCapture(which){
-  if(!(RT.mode==='inquiry'&&RT.running&&RT.source==='mic')){ toast('먼저 마이크를 켜세요 🎤','poke'); return; }
+function inqBuildCap(){
   RT.analyser.getFloatTimeDomainData(RT.floatBuf);
   RT.analyser.getByteFrequencyData(RT.freqBuf);
   let rms=0; for(let i=0;i<RT.floatBuf.length;i++) rms+=RT.floatBuf[i]*RT.floatBuf[i]; rms=Math.sqrt(rms/RT.floatBuf.length);
   const amp=clamp(Math.round(rms*420),0,100);
-  if(amp<5){ toast('소리를 내면서 담아요! 🔊','poke'); return; }
   const sr=RT.actx.sampleRate;
   const {f}=detectPitchMPM(RT.floatBuf,sr,60,1100);
   const note=f>0?freqToNote(f):null;
   const binHz=sr/RT.analyser.fftSize, harm=[];
   if(f>0){ for(let h=1;h<=8;h++){ const bin=Math.round(h*f/binHz); let m=0; for(let b=bin-1;b<=bin+1;b++){ if(b>0&&b<RT.freqBuf.length&&RT.freqBuf[b]>m)m=RT.freqBuf[b]; } harm.push(m); } }
   const wave=RT.floatBuf.slice(0, Math.min(4096,RT.floatBuf.length));
-  INQ[which]={amp,f,note,harm,wave,sr};
-  inqDrawSlot(which,INQ[which]);
+  return {amp,f,note,harm,wave,sr};
+}
+function inqStore(which,cap){
+  INQ[which]=cap;
+  inqDrawSlot(which,cap);
   $('#inqEmpty'+which).style.display='none';
-  $('#inqMet'+which).innerHTML=inqMetricsText(INQ[which]);
-  toast(which+' 담았어요 📸');
+  $('#inqMet'+which).innerHTML=inqMetricsText(cap);
+  toast((which==='A'?'A':'B')+' 담았어요 📸');
   if(INQ.A&&INQ.B) inqCompare();
 }
-$('#inqCapA').addEventListener('click',()=>inqCapture('A'));
-$('#inqCapB').addEventListener('click',()=>inqCapture('B'));
+function inqCancelArm(){ if(INQ.arm){ if(INQ.arm.timer) clearInterval(INQ.arm.timer); INQ.arm=null; } const cd=$('#inqCount'); if(cd) cd.classList.remove('on'); }
+function inqArm(which){
+  if(!(RT.mode==='inquiry'&&RT.running&&RT.source==='mic')){ toast('먼저 마이크를 켜세요 🎤','poke'); return; }
+  if(INQ.arm) return;                       // 이미 카운트다운 중
+  const st=INQ_ST[INQ.station], label=(which==='A'?st.pa:st.pb);
+  const cd=$('#inqCount'); cd.classList.add('on');
+  cd.innerHTML='<div class="ic-lab">🔴 지금 <b>'+label+'</b>를 내보세요!</div><div class="ic-num">3</div>';
+  let n=3;
+  INQ.arm={which,best:null,timer:null};
+  INQ.arm.timer=setInterval(()=>{
+    n--;
+    if(n>=1){ const el=cd.querySelector('.ic-num'); if(el) el.textContent=n; }
+    else { clearInterval(INQ.arm.timer); inqArmFinish(); }
+  },650);
+}
+function inqArmFinish(){
+  const cd=$('#inqCount'), arm=INQ.arm; INQ.arm=null;
+  if(!arm||!arm.best||arm.best.amp<5){
+    cd.innerHTML='<div class="ic-lab">소리가 약했어요 😅 다시 눌러요!</div>';
+    setTimeout(()=>cd.classList.remove('on'),1100); return;
+  }
+  cd.innerHTML='<div class="ic-num">📸</div>';
+  setTimeout(()=>cd.classList.remove('on'),450);
+  inqStore(arm.which, arm.best);
+}
+$('#inqCapA').addEventListener('click',()=>inqArm('A'));
+$('#inqCapB').addEventListener('click',()=>inqArm('B'));
 
 function inqMetricsText(c){
   return '세기 <b style="color:var(--amp)">'+c.amp+'</b> · 진동수 <b style="color:var(--freq)">'+(c.f>0?c.f.toFixed(0):'–')+'</b>Hz · 음 <b style="color:var(--wave)">'+(c.note?c.note.name:'–')+'</b>';
 }
-function inqDrawWave(cv, wave, color, span, norm){
+function inqDrawWave(cv, wave, color, span, norm, gain){
   const {ctx,w,h}=fit(cv); ctx.clearRect(0,0,w,h);
   ctx.strokeStyle='rgba(154,166,196,.16)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();
   if(!wave||!wave.length) return;
   let start=0; for(let i=1;i<wave.length/2;i++){ if(wave[i-1]<0&&wave[i]>=0){ start=i; break; } }
   const sp=span||Math.floor(wave.length*0.5);
-  const k=norm?(1/Math.max(0.02,inqPeak(wave))):1;
+  const k=norm?(1/Math.max(0.02,inqPeak(wave))):(gain||1);
   ctx.strokeStyle=color;ctx.lineWidth=2.3;ctx.lineJoin='round';ctx.shadowColor=color;ctx.shadowBlur=6;ctx.beginPath();
   for(let i=0;i<sp;i++){ const idx=start+i; if(idx>=wave.length)break; const v=clamp(wave[idx]*k,-1,1); const x=i/sp*w, y=h/2 - v*(h/2-8); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
   ctx.stroke(); ctx.shadowBlur=0;
 }
-function inqDrawSlot(which,cap){ inqDrawWave($('#inqWave'+which), cap.wave, which==='A'?'#41b6ff':'#ff9c42', Math.floor(cap.wave.length*0.5), false); }
+function inqDrawSlot(which,cap){
+  const cv=$('#inqWave'+which), color=which==='A'?'#41b6ff':'#ff9c42', L=cap.wave.length;
+  // ① 세기 = 진폭 그대로(고정 스케일+게인) → 크기 차이 확실히 / ②③ = 진폭 정규화(촘촘함·모양 부각)
+  if(INQ.station===0) inqDrawWave(cv, cap.wave, color, Math.floor(L*0.5), false, 3.0);
+  else inqDrawWave(cv, cap.wave, color, Math.floor(L*0.55), true);
+}
 
-function inqCmpOverlay(cv, layers, norm){
+function inqCmpOverlay(cv, layers, norm, gain){
   const {ctx,w,h}=fit(cv); ctx.clearRect(0,0,w,h);
   ctx.strokeStyle='rgba(154,166,196,.14)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();
   layers.forEach(L=>{
     const wave=L.w; if(!wave||!wave.length)return;
     let start=0; for(let i=1;i<wave.length/2;i++){ if(wave[i-1]<0&&wave[i]>=0){ start=i; break; } }
     const sp=Math.floor(wave.length*0.5);
-    const k=norm?(1/Math.max(0.02,inqPeak(wave))):1;
+    const k=norm?(1/Math.max(0.02,inqPeak(wave))):(gain||1);
     ctx.strokeStyle=L.c;ctx.lineWidth=2.2;ctx.lineJoin='round';ctx.globalAlpha=.9;ctx.beginPath();
     for(let i=0;i<sp;i++){ const idx=start+i; if(idx>=wave.length)break; const v=clamp(wave[idx]*k,-1,1); const x=i/sp*w, y=h/2 - v*(h/2-8); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
     ctx.stroke();
@@ -1836,7 +1874,7 @@ function inqCompare(){
   const vEl=$('#inqVerdict'); vEl.classList.remove('warn');
   const cv=$('#inqCmpCanvas');
   if(st===0){
-    inqCmpOverlay(cv, [{w:A.wave,c:'#41b6ff'},{w:B.wave,c:'#ff9c42'}], false);
+    inqCmpOverlay(cv, [{w:A.wave,c:'#41b6ff'},{w:B.wave,c:'#ff9c42'}], false, 3.0);
     const ratio=A.amp>0?(B.amp/A.amp):0;
     const fSame=(A.f>0&&B.f>0)?Math.abs(12*Math.log2(B.f/A.f))<2:true;
     vEl.innerHTML='🔊 큰 소리(B·주황)는 작은 소리(A·파랑)보다 <b>진폭(위아래 폭)</b>이 '+(ratio>0?'약 '+ratio.toFixed(1)+'배 ':'')+'커요. 진동수는 '+(A.f>0?A.f.toFixed(0):'–')+'→'+(B.f>0?B.f.toFixed(0):'–')+'Hz로 '+(fSame?'거의 같죠':'차이가 있지만')+'. ⟹ <b>소리의 크기(세기)는 진폭</b>이 정한다!';
@@ -1870,6 +1908,11 @@ function inquiryFrame(){
   let rms=0; for(let i=0;i<RT.floatBuf.length;i++) rms+=RT.floatBuf[i]*RT.floatBuf[i]; rms=Math.sqrt(rms/RT.floatBuf.length);
   const amp=clamp(Math.round(rms*420),0,100);
   INQ.tick++;
+  // 카운트다운 중이면 가장 큰 소리 프레임을 계속 포착
+  if(INQ.arm && INQ.tick%2===0){
+    const cap=inqBuildCap();
+    if(cap.amp>=5 && (!INQ.arm.best || cap.amp>INQ.arm.best.amp)) INQ.arm.best=cap;
+  }
   if(INQ.tick%3===0){
     const {f}=detectPitchMPM(RT.floatBuf,RT.actx.sampleRate,60,1100);
     $('#inqAmp').textContent=amp;
@@ -1888,7 +1931,7 @@ function switchTab(tab){
   // 배틀 탭을 떠나면 배틀 중지
   if(tab!=='battle' && BAT.active) battleStop();
   // 탐구 탭을 떠나면 마이크 정지
-  if(tab!=='inquiry' && RT.mode==='inquiry'){ RT.running=false; RT.mode='scan'; rtDisconnect(); setStatus('대기 중',''); inqSetMicBtn(false); $('#inqIdle').style.display='grid'; }
+  if(tab!=='inquiry' && RT.mode==='inquiry'){ inqCancelArm(); RT.running=false; RT.mode='scan'; rtDisconnect(); setStatus('대기 중',''); inqSetMicBtn(false); $('#inqIdle').style.display='grid'; }
   if(tab==='accent'){ accStartIdle(); if(ACC.buffer){accDrawWave(ACC.buffer);accDrawEnv(ACC.env);} if(ACC.saves.length)accRenderCompare(); }
   if(tab==='mimic') mimRedraw();
   if(tab==='battle'){ battleBuildPhrase(); battleResetLive(); }
