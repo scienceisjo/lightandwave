@@ -413,6 +413,109 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   .bl-hz{font-size:2.6rem}
 }
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.05ms!important}}
+
+/* ============================================================
+   ☀️ 밝은 포켓몬 들판 테마 (오버라이드) — 나중 정의가 우선
+   카드 = 밝은 종이 · 화면(캔버스) = 어둠 유지
+   ============================================================ */
+:root{
+  --panel:#fffdf6; --panel-2:#f5efe0; --panel-3:#eadfca;
+  --line:#e2d6ba; --line-soft:#efe8d7;
+  --text:#2b2515; --text-dim:#5e5335; --text-mute:#8a7c5c;
+  --screen:#0c1a24; --bg2:#0a1622;
+  --amp:#d97316; --amp-d:#b45f0c;
+  --freq:#1f83d0; --freq-d:#1568a8;
+  --wave:#9a4fd4; --wave-d:#7e37b8;
+  --amp-soft:rgba(217,115,22,.12); --amp-line:rgba(217,115,22,.42);
+  --freq-soft:rgba(31,131,208,.12); --freq-line:rgba(31,131,208,.42);
+  --wave-soft:rgba(154,79,212,.12); --wave-line:rgba(154,79,212,.42);
+  --ok:#1ca86b; --ok-soft:rgba(28,168,107,.14);
+  --no:#e0455a; --no-soft:rgba(224,69,90,.12);
+  --pika:#e6a100; --gold:#c98a00;
+  --shadow:0 14px 30px -16px rgba(70,52,18,.45);
+  --scr-text:#eaf6ff; --scr-dim:#a9c3d6; --scr-mute:#6f8798;
+}
+button{color:inherit}
+/* 배경 : 하늘 → 잔디 → 흙 들판 (고정) */
+body{
+  background:linear-gradient(180deg,#a9e2f4 0%,#c9ecac 30%,#90d06a 52%,#6cbb50 72%,#8a6a3e 88%,#6f5230 100%);
+  background-attachment:fixed;
+}
+body::before{ content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
+  background:
+    radial-gradient(230px 92px at 12% 50%, rgba(58,120,50,.55), transparent 70%),
+    radial-gradient(270px 104px at 40% 47%, rgba(70,140,60,.5), transparent 70%),
+    radial-gradient(320px 116px at 72% 52%, rgba(52,110,46,.55), transparent 70%),
+    radial-gradient(210px 84px at 90% 49%, rgba(74,146,64,.5), transparent 70%);
+}
+body::after{ content:""; position:fixed; left:0; right:0; bottom:0; height:84px; z-index:-1; pointer-events:none;
+  opacity:.92; background-repeat:repeat-x; background-size:150px 84px;
+  background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='150'%20height='84'%20viewBox='0%200%20150%2084'%3E%3Cg%20fill='%232f6b2b'%3E%3Cpath%20d='M12%2084C6%2052%2022%2038%2014%206%2026%2040%2022%2062%2026%2084Z'/%3E%3Cpath%20d='M34%2084C30%2056%2040%2042%2040%2014%2048%2044%2044%2064%2048%2084Z'/%3E%3Cpath%20d='M60%2084C54%2050%2070%2034%2062%206%2074%2040%2070%2060%2074%2084Z'/%3E%3Cpath%20d='M86%2084C82%2056%2092%2042%2092%2012%20100%2044%2096%2064%20100%2084Z'/%3E%3Cpath%20d='M112%2084C106%2052%20122%2038%20114%208%20126%2042%20122%2062%20126%2084Z'/%3E%3Cpath%20d='M138%2084C134%2058%20144%2044%20144%2016%20152%2046%20148%2064%20152%2084Z'/%3E%3C/g%3E%3C/svg%3E");
+}
+/* 헤더 / 탭 밝게 */
+.topbar{background:linear-gradient(180deg,rgba(255,253,246,.96),rgba(255,253,246,.82));border-bottom:3px solid var(--poke)}
+.tabnav{background:linear-gradient(180deg,rgba(255,253,246,.94),rgba(255,253,246,.66));border-bottom:2px solid var(--line)}
+.brand-txt h1{color:var(--text)}
+.tab-btn{color:var(--text-dim)}
+.tab-btn:hover{background:var(--panel-2);color:var(--text)}
+.tab-btn.active{background:#fff;color:var(--text);border-color:var(--ac,var(--freq))}
+.status-pill{background:var(--panel);color:var(--text-dim);border-color:var(--line)}
+/* 카드가 들판 위에 떠 보이게 */
+.card,.lead,.mission{box-shadow:0 12px 26px -14px rgba(60,45,15,.5);border-color:var(--line)}
+.lead{background:linear-gradient(150deg,rgba(31,131,208,.07),rgba(154,79,212,.05)),var(--panel)}
+.lead .eyebrow{color:#b45f0c;background:rgba(230,161,0,.16);border-color:rgba(230,161,0,.45)}
+.lead .hl{color:var(--text)}
+.foot{background:rgba(255,253,246,.62);border-radius:14px;color:var(--text-mute)}
+.foot a{color:var(--freq-d)}
+/* 밝은 카드 위 강조 텍스트 대비 보정 */
+.target-note{color:#c2610a}
+.br-stat .v{color:#c2610a}
+.mission-target{background:var(--panel-2)}
+.note-hz small,.note-cents,.amp-val small{color:var(--text-mute)}
+/* 어두운 화면(캔버스) 위 텍스트는 밝게 유지 */
+.viz-tag{color:var(--scr-dim);background:rgba(8,18,28,.72);border-color:rgba(255,255,255,.14)}
+.viz-tag .d{color:#41b6ff}.viz-tag.amp .d{color:#ff9c42}
+.viz-hint{color:var(--scr-mute);background:rgba(8,18,28,.6)}
+.idle-msg{color:var(--scr-mute)}
+.scope-tag{color:#7cc6ff}
+.battle-live .bl-note{color:var(--scr-dim)}
+.battle-live .bl-hz{color:#ffcb05}
+.battle-live .bl-hz small{color:var(--scr-mute)}
+.energy-cap{color:var(--scr-mute)}
+.energy{background:rgba(255,255,255,.1)}
+
+/* ---------- 🔍 소리 3요소 탐구 ---------- */
+.inq-nav{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.inq-tab{flex:1;min-width:120px;cursor:pointer;border:2px solid var(--line);background:var(--panel);color:var(--text-dim);
+  border-radius:12px;padding:11px;font-family:var(--font-title);font-size:.95rem;transition:.15s}
+.inq-tab:hover{border-color:var(--freq-line)}
+.inq-tab.on{background:var(--panel-2);color:var(--text);border-color:var(--freq);box-shadow:0 0 0 1px var(--freq)}
+.inq-live-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.inq-readout{display:flex;gap:16px;flex-wrap:wrap;font-size:.9rem;color:var(--text-dim);font-family:var(--font-mono)}
+.inq-readout b{font-size:1.15rem}
+.inq-readout .ir-amp b{color:var(--amp)}.inq-readout .ir-freq b{color:var(--freq)}.inq-readout .ir-note b{color:var(--wave)}
+.inq-instr{margin-top:14px;background:var(--freq-soft);border:1px solid var(--freq-line);border-radius:12px;padding:12px 15px;font-size:.96rem;color:var(--text);line-height:1.6}
+.inq-instr b{color:var(--freq-d)}
+.inq-cap-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.inq-cap-row .btn{flex:1;min-width:130px;justify-content:center}
+.inq-ref{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;background:var(--panel-2);border:1px dashed var(--line);border-radius:12px;padding:11px 14px;font-size:.88rem;color:var(--text-dim)}
+.notedex-btn{cursor:pointer;border:1px solid var(--freq-line);background:var(--freq-soft);color:var(--freq-d);border-radius:10px;padding:8px 13px;font-weight:800;font-family:var(--font-mono)}
+.inq-ref-hint{color:var(--text-mute)}
+.inq-slots{display:flex;gap:14px;flex-wrap:wrap}
+.inq-slot{flex:1;min-width:220px;background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:12px}
+.is-role{font-family:var(--font-title);font-size:1rem;margin-bottom:8px}
+.is-screen{position:relative;aspect-ratio:16/6;background:var(--screen);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.is-screen canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
+.is-empty{position:absolute;inset:0;display:grid;place-items:center;color:var(--scr-mute);font-size:.85rem}
+.is-metrics{margin-top:9px;font-family:var(--font-mono);font-size:.82rem;color:var(--text-dim);line-height:1.55}
+.inq-compare{margin-top:16px}
+.inq-cmp-screen{position:relative;aspect-ratio:16/6;background:var(--screen);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.inq-cmp-screen canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
+.inq-legend{display:flex;gap:16px;margin-top:8px;font-size:.8rem;color:var(--text-dim)}
+.inq-legend i{display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.inq-verdict{margin-top:12px;background:var(--ok-soft);border:1px solid rgba(28,168,107,.35);border-radius:12px;padding:14px 16px;font-size:.98rem;color:var(--text);line-height:1.65}
+.inq-verdict.warn{background:var(--no-soft);border-color:rgba(224,69,90,.4)}
+.inq-verdict b{color:var(--ok-d,#12864f)}.inq-verdict.warn b{color:var(--no)}
 </style>
 </head>
 <body>
@@ -434,6 +537,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <!-- ===================== 탭 ===================== -->
 <nav class="tabnav"><div class="tabnav-inner" id="tabnav">
   <button class="tab-btn active" data-tab="scan"   style="--ac:var(--freq)"><span class="ti">🔬</span>음파 스캐너</button>
+  <button class="tab-btn"        data-tab="inquiry" style="--ac:var(--ok)"><span class="ti">🔍</span>3요소 탐구</button>
   <button class="tab-btn"        data-tab="accent" style="--ac:var(--amp)"><span class="ti">📈</span>강세 챌린지</button>
   <button class="tab-btn"        data-tab="mimic"  style="--ac:var(--wave)"><span class="ti">🎭</span>목소리 대결</button>
   <button class="tab-btn"        data-tab="battle" style="--ac:var(--poke)"><span class="ti">⚡</span>클레오파트라 배틀</button>
@@ -552,6 +656,75 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
     <div class="mission-btns">
       <button class="btn poke" id="missionStartBtn"><span class="k">🎤</span> 마이크 켜고 도전</button>
       <button class="btn ghost" id="missionNewBtn">🔀 다른 음으로</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TAB · 소리 3요소 탐구
+     ============================================================ -->
+<section class="view" id="view-inquiry">
+  <div class="lead">
+    <span class="eyebrow">🔍 소리의 3요소 탐구</span>
+    <h2>내 목소리로 직접<br>소리의 3요소를 발견하자</h2>
+    <p>마이크로 소리를 내고 <b class="hl">📸 담기</b>로 두 소리를 붙잡아 비교해요. 무엇이 소리의 <b>크기</b>를, <b>높낮이</b>를, <b>목소리 색깔</b>을 정하는지 스스로 찾아봐요.</p>
+  </div>
+
+  <div class="inq-nav" id="inqNav">
+    <button class="inq-tab on" data-st="0">① 세기(크기)</button>
+    <button class="inq-tab" data-st="1">② 높낮이</button>
+    <button class="inq-tab" data-st="2">③ 음색 · 친구 vs 나</button>
+  </div>
+
+  <div class="card">
+    <div class="inq-live-head">
+      <button class="btn poke" id="inqMicBtn"><span class="k">🎤</span> 마이크 켜기</button>
+      <div class="inq-readout">
+        <span class="ir-amp">세기 <b id="inqAmp">0</b></span>
+        <span class="ir-freq">진동수 <b id="inqHz">–</b> Hz</span>
+        <span class="ir-note">음 <b id="inqNote">–</b></span>
+      </div>
+    </div>
+    <div class="dexscreen" style="margin-top:12px">
+      <div class="viz-panel">
+        <canvas id="inqScope" style="height:150px"></canvas>
+        <div class="viz-overlay"></div>
+        <div class="viz-tag amp"><span class="d">●</span> 내 소리 실시간 파형</div>
+        <div class="idle-msg" id="inqIdle"><div><span class="em">🎤</span>마이크를 켜고 소리를 내보세요</div></div>
+      </div>
+    </div>
+    <div class="inq-instr" id="inqInstr"></div>
+    <div class="inq-ref" id="inqRef" style="display:none">
+      <span>🎹 기준음</span>
+      <button class="notedex-btn" id="inqRefBtn">▶ 라4 (440Hz) 듣기</button>
+      <span class="inq-ref-hint">이 음을 듣고 <b>둘 다 같은 높이</b>로 "아~"</span>
+    </div>
+    <div class="inq-cap-row">
+      <button class="btn primary" id="inqCapA">📸 A 담기</button>
+      <button class="btn primary" id="inqCapB">📸 B 담기</button>
+      <button class="btn ghost" id="inqReset">↺ 지우기</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="inq-slots">
+      <div class="inq-slot">
+        <div class="is-role" id="inqRoleA" style="color:var(--freq)">🅐</div>
+        <div class="is-screen"><canvas id="inqWaveA"></canvas><div class="is-empty" id="inqEmptyA">아직 안 담김</div></div>
+        <div class="is-metrics" id="inqMetA">–</div>
+      </div>
+      <div class="inq-slot">
+        <div class="is-role" id="inqRoleB" style="color:var(--amp)">🅑</div>
+        <div class="is-screen"><canvas id="inqWaveB"></canvas><div class="is-empty" id="inqEmptyB">아직 안 담김</div></div>
+        <div class="is-metrics" id="inqMetB">–</div>
+      </div>
+    </div>
+    <div class="inq-compare" id="inqCompare" style="display:none">
+      <div class="inq-cmp-screen"><canvas id="inqCmpCanvas" style="height:150px"></canvas>
+        <div class="viz-tag">🔬 A vs B 비교</div>
+      </div>
+      <div class="inq-legend"><span><i style="background:#41b6ff"></i>🅐</span><span><i style="background:#ff9c42"></i>🅑</span></div>
+      <div class="inq-verdict" id="inqVerdict"></div>
     </div>
   </div>
 </section>
@@ -1026,6 +1199,8 @@ function rtLoop(){
     }
   } else if(RT.mode==='battle'){
     battleFrame();
+  } else if(RT.mode==='inquiry'){
+    inquiryFrame();
   }
 }
 function scanUpdatePitch(f,amp){
@@ -1545,6 +1720,165 @@ function battleRenderBoard(){
 battleSetMode('hi');
 
 /* ============================================================
+   TAB · 소리 3요소 탐구
+   ============================================================ */
+const INQ={ station:0, A:null, B:null, tick:0 };
+const INQ_ST=[
+  {instr:'① <b>세기(크기)</b> 탐구 — 같은 "아~"를 <b>작게</b> 한 번, <b>크게</b> 한 번 내고 담아요. 무엇이 달라질까요?', a:'📸 작은 소리(A)', b:'📸 큰 소리(B)', ref:false},
+  {instr:'② <b>높낮이</b> 탐구 — 비슷한 크기로 <b>낮은</b> "아~", <b>높은</b> "아~"를 담아요. 파형이 어떻게 변할까요?', a:'📸 낮은 소리(A)', b:'📸 높은 소리(B)', ref:false},
+  {instr:'③ <b>음색</b> 탐구 — 기준음을 듣고 <b>둘 다 같은 음</b>으로! 나(A)와 친구(B)를 담아 비교해요.', a:'📸 내 소리(A)', b:'📸 친구 소리(B)', ref:true}
+];
+const INQ_REF_HZ=440;   // 라4
+
+function inqSetMicBtn(on){ const b=$('#inqMicBtn'); if(!b)return; b.classList.toggle('on',on); b.innerHTML=on?'<span class="k">⏹</span> 마이크 끄기':'<span class="k">🎤</span> 마이크 켜기'; }
+async function inqToggleMic(){
+  if(RT.mode==='inquiry'&&RT.running){ RT.running=false; RT.mode='scan'; rtDisconnect(); setStatus('대기 중',''); inqSetMicBtn(false); $('#inqIdle').style.display='grid'; return; }
+  const ok=await rtStartMic();
+  if(!ok){ toast(RT._lastErr||'마이크를 켤 수 없어요','poke'); return; }
+  RT.mode='inquiry'; setStatus('탐구 · 마이크 스캔','live'); $('#inqIdle').style.display='none'; inqSetMicBtn(true); rtStartLoop();
+  toast('마이크가 켜졌어요 🎤 소리를 내며 담아보세요!');
+}
+$('#inqMicBtn').addEventListener('click',inqToggleMic);
+
+function inqSetStation(i){
+  INQ.station=i; INQ.A=null; INQ.B=null;
+  $$('.inq-tab').forEach(b=>b.classList.toggle('on',+b.dataset.st===i));
+  const st=INQ_ST[i];
+  $('#inqInstr').innerHTML=st.instr;
+  $('#inqCapA').textContent=st.a; $('#inqCapB').textContent=st.b;
+  $('#inqRoleA').textContent = i===2?'🅐 나':'🅐';
+  $('#inqRoleB').textContent = i===2?'🅑 친구':'🅑';
+  $('#inqRef').style.display=st.ref?'flex':'none';
+  $('#inqCompare').style.display='none';
+  inqClearSlot('A'); inqClearSlot('B');
+}
+$('#inqNav').addEventListener('click',e=>{ const b=e.target.closest('.inq-tab'); if(b) inqSetStation(+b.dataset.st); });
+$('#inqRefBtn').addEventListener('click',()=>playRefTone(INQ_REF_HZ,1.1));
+$('#inqReset').addEventListener('click',()=>{ INQ.A=null; INQ.B=null; $('#inqCompare').style.display='none'; inqClearSlot('A'); inqClearSlot('B'); });
+
+function inqClearSlot(which){
+  const cv=$('#inqWave'+which); if(cv){ const o=fit(cv); o.ctx.clearRect(0,0,o.w,o.h); }
+  const em=$('#inqEmpty'+which); if(em) em.style.display='grid';
+  const m=$('#inqMet'+which); if(m) m.textContent='–';
+}
+function inqPeak(w){ let m=0; for(let i=0;i<w.length;i++){ const a=Math.abs(w[i]); if(a>m)m=a; } return m; }
+
+function inqCapture(which){
+  if(!(RT.mode==='inquiry'&&RT.running&&RT.source==='mic')){ toast('먼저 마이크를 켜세요 🎤','poke'); return; }
+  RT.analyser.getFloatTimeDomainData(RT.floatBuf);
+  RT.analyser.getByteFrequencyData(RT.freqBuf);
+  let rms=0; for(let i=0;i<RT.floatBuf.length;i++) rms+=RT.floatBuf[i]*RT.floatBuf[i]; rms=Math.sqrt(rms/RT.floatBuf.length);
+  const amp=clamp(Math.round(rms*420),0,100);
+  if(amp<5){ toast('소리를 내면서 담아요! 🔊','poke'); return; }
+  const sr=RT.actx.sampleRate;
+  const {f}=detectPitchMPM(RT.floatBuf,sr,60,1100);
+  const note=f>0?freqToNote(f):null;
+  const binHz=sr/RT.analyser.fftSize, harm=[];
+  if(f>0){ for(let h=1;h<=8;h++){ const bin=Math.round(h*f/binHz); let m=0; for(let b=bin-1;b<=bin+1;b++){ if(b>0&&b<RT.freqBuf.length&&RT.freqBuf[b]>m)m=RT.freqBuf[b]; } harm.push(m); } }
+  const wave=RT.floatBuf.slice(0, Math.min(4096,RT.floatBuf.length));
+  INQ[which]={amp,f,note,harm,wave,sr};
+  inqDrawSlot(which,INQ[which]);
+  $('#inqEmpty'+which).style.display='none';
+  $('#inqMet'+which).innerHTML=inqMetricsText(INQ[which]);
+  toast(which+' 담았어요 📸');
+  if(INQ.A&&INQ.B) inqCompare();
+}
+$('#inqCapA').addEventListener('click',()=>inqCapture('A'));
+$('#inqCapB').addEventListener('click',()=>inqCapture('B'));
+
+function inqMetricsText(c){
+  return '세기 <b style="color:var(--amp)">'+c.amp+'</b> · 진동수 <b style="color:var(--freq)">'+(c.f>0?c.f.toFixed(0):'–')+'</b>Hz · 음 <b style="color:var(--wave)">'+(c.note?c.note.name:'–')+'</b>';
+}
+function inqDrawWave(cv, wave, color, span, norm){
+  const {ctx,w,h}=fit(cv); ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle='rgba(154,166,196,.16)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();
+  if(!wave||!wave.length) return;
+  let start=0; for(let i=1;i<wave.length/2;i++){ if(wave[i-1]<0&&wave[i]>=0){ start=i; break; } }
+  const sp=span||Math.floor(wave.length*0.5);
+  const k=norm?(1/Math.max(0.02,inqPeak(wave))):1;
+  ctx.strokeStyle=color;ctx.lineWidth=2.3;ctx.lineJoin='round';ctx.shadowColor=color;ctx.shadowBlur=6;ctx.beginPath();
+  for(let i=0;i<sp;i++){ const idx=start+i; if(idx>=wave.length)break; const v=clamp(wave[idx]*k,-1,1); const x=i/sp*w, y=h/2 - v*(h/2-8); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+  ctx.stroke(); ctx.shadowBlur=0;
+}
+function inqDrawSlot(which,cap){ inqDrawWave($('#inqWave'+which), cap.wave, which==='A'?'#41b6ff':'#ff9c42', Math.floor(cap.wave.length*0.5), false); }
+
+function inqCmpOverlay(cv, layers, norm){
+  const {ctx,w,h}=fit(cv); ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle='rgba(154,166,196,.14)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();
+  layers.forEach(L=>{
+    const wave=L.w; if(!wave||!wave.length)return;
+    let start=0; for(let i=1;i<wave.length/2;i++){ if(wave[i-1]<0&&wave[i]>=0){ start=i; break; } }
+    const sp=Math.floor(wave.length*0.5);
+    const k=norm?(1/Math.max(0.02,inqPeak(wave))):1;
+    ctx.strokeStyle=L.c;ctx.lineWidth=2.2;ctx.lineJoin='round';ctx.globalAlpha=.9;ctx.beginPath();
+    for(let i=0;i<sp;i++){ const idx=start+i; if(idx>=wave.length)break; const v=clamp(wave[idx]*k,-1,1); const x=i/sp*w, y=h/2 - v*(h/2-8); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+    ctx.stroke();
+  });
+  ctx.globalAlpha=1;
+}
+function inqCmpOnePeriod(cv, A, B){
+  const {ctx,w,h}=fit(cv); ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle='rgba(154,166,196,.14)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();
+  [{cap:A,c:'#41b6ff'},{cap:B,c:'#ff9c42'}].forEach(L=>{
+    const cap=L.cap; if(!cap||!(cap.f>0))return;
+    const period=cap.sr/cap.f, wave=cap.wave, nP=Math.max(8,Math.floor(period*2));
+    let start=0; for(let i=1;i<wave.length-nP-1;i++){ if(wave[i-1]<0&&wave[i]>=0){ start=i; break; } }
+    const k=1/Math.max(0.02,inqPeak(wave));
+    ctx.strokeStyle=L.c;ctx.lineWidth=2.5;ctx.lineJoin='round';ctx.globalAlpha=.9;ctx.beginPath();
+    for(let i=0;i<=nP;i++){ const idx=start+i; if(idx>=wave.length)break; const v=clamp(wave[idx]*k,-1,1); const x=i/nP*w, y=h/2 - v*(h/2-8); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+    ctx.stroke();
+  });
+  ctx.globalAlpha=1;
+}
+function inqCompare(){
+  const A=INQ.A, B=INQ.B, st=INQ.station; if(!A||!B) return;
+  $('#inqCompare').style.display='block';
+  const vEl=$('#inqVerdict'); vEl.classList.remove('warn');
+  const cv=$('#inqCmpCanvas');
+  if(st===0){
+    inqCmpOverlay(cv, [{w:A.wave,c:'#41b6ff'},{w:B.wave,c:'#ff9c42'}], false);
+    const ratio=A.amp>0?(B.amp/A.amp):0;
+    const fSame=(A.f>0&&B.f>0)?Math.abs(12*Math.log2(B.f/A.f))<2:true;
+    vEl.innerHTML='🔊 큰 소리(B·주황)는 작은 소리(A·파랑)보다 <b>진폭(위아래 폭)</b>이 '+(ratio>0?'약 '+ratio.toFixed(1)+'배 ':'')+'커요. 진동수는 '+(A.f>0?A.f.toFixed(0):'–')+'→'+(B.f>0?B.f.toFixed(0):'–')+'Hz로 '+(fSame?'거의 같죠':'차이가 있지만')+'. ⟹ <b>소리의 크기(세기)는 진폭</b>이 정한다!';
+  } else if(st===1){
+    inqCmpOverlay(cv, [{w:A.wave,c:'#41b6ff'},{w:B.wave,c:'#ff9c42'}], true);
+    const up=(A.f>0&&B.f>0&&B.f>A.f);
+    vEl.innerHTML='🎵 높은 소리(B·주황)는 파형이 더 <b>촘촘</b>해요. 진동수 '+(A.f>0?A.f.toFixed(0):'–')+'→'+(B.f>0?B.f.toFixed(0):'–')+'Hz, 음이 '+(A.note?A.note.name:'–')+'→'+(B.note?B.note.name:'–')+(up?'로 올라갔고':'로 바뀌었고')+' 진폭(세기)은 '+A.amp+'~'+B.amp+'로 비슷하죠. ⟹ <b>소리의 높낮이는 진동수</b>가 정한다!';
+  } else {
+    const sameNote=(A.note&&B.note)?A.note.midi===B.note.midi:false;
+    inqCmpOnePeriod(cv, A, B);
+    if(!sameNote){
+      vEl.classList.add('warn');
+      vEl.innerHTML='⚠️ 두 소리의 음이 달라요 (A: <b>'+(A.note?A.note.name:'–')+'</b> vs B: <b>'+(B.note?B.note.name:'–')+'</b>). 기준음 <b>'+freqToNote(INQ_REF_HZ).name+'</b>를 듣고 <b>같은 음</b>으로 다시 담아봐요!';
+    } else {
+      vEl.innerHTML='🎨 둘 다 <b>'+A.note.name+'</b>(같은 높이)·비슷한 크기인데, <b>한 주기 파형 모양</b>과 배음(소리 지문)이 서로 달라요. 그래서 목소리가 다르게 들려요. ⟹ <b>목소리 색깔(음색)은 파형</b>이 정한다!';
+    }
+  }
+}
+
+function inquiryFrame(){
+  const cv=$('#inqScope'); if(!cv) return;
+  const {ctx,w,h}=fit(cv); ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle='rgba(65,182,255,.07)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();
+  RT.analyser.getByteTimeDomainData(RT.timeBuf);
+  const len=RT.timeBuf.length; let start=0; for(let i=1;i<len/2;i++){ if(RT.timeBuf[i-1]<128&&RT.timeBuf[i]>=128){ start=i; break; } }
+  const span=Math.floor(len*0.5);
+  ctx.strokeStyle='#eaf6ff';ctx.lineWidth=2.2;ctx.lineJoin='round';ctx.shadowColor='#eaf6ff';ctx.shadowBlur=7;ctx.beginPath();
+  for(let i=0;i<span;i++){ const v=(RT.timeBuf[(start+i)%len]-128)/128; const x=i/span*w, y=h/2 - v*(h/2-8); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+  ctx.stroke(); ctx.shadowBlur=0;
+  RT.analyser.getFloatTimeDomainData(RT.floatBuf);
+  let rms=0; for(let i=0;i<RT.floatBuf.length;i++) rms+=RT.floatBuf[i]*RT.floatBuf[i]; rms=Math.sqrt(rms/RT.floatBuf.length);
+  const amp=clamp(Math.round(rms*420),0,100);
+  INQ.tick++;
+  if(INQ.tick%3===0){
+    const {f}=detectPitchMPM(RT.floatBuf,RT.actx.sampleRate,60,1100);
+    $('#inqAmp').textContent=amp;
+    $('#inqHz').textContent=f>0?f.toFixed(0):'–';
+    $('#inqNote').textContent=f>0?freqToNote(f).name:'–';
+  }
+}
+
+/* ============================================================
    탭 전환 & 초기화
    ============================================================ */
 function switchTab(tab){
@@ -1553,10 +1887,12 @@ function switchTab(tab){
   $('#view-'+tab).classList.add('active');
   // 배틀 탭을 떠나면 배틀 중지
   if(tab!=='battle' && BAT.active) battleStop();
-  // 스캔이 배틀로 넘어가면 스캔 루프 유지되지만 mode로 분기됨
+  // 탐구 탭을 떠나면 마이크 정지
+  if(tab!=='inquiry' && RT.mode==='inquiry'){ RT.running=false; RT.mode='scan'; rtDisconnect(); setStatus('대기 중',''); inqSetMicBtn(false); $('#inqIdle').style.display='grid'; }
   if(tab==='accent'){ accStartIdle(); if(ACC.buffer){accDrawWave(ACC.buffer);accDrawEnv(ACC.env);} if(ACC.saves.length)accRenderCompare(); }
   if(tab==='mimic') mimRedraw();
   if(tab==='battle'){ battleBuildPhrase(); battleResetLive(); }
+  if(tab==='inquiry'){ if(RT.running&&RT.source==='mic'){ RT.mode='inquiry'; inqSetMicBtn(true); $('#inqIdle').style.display='none'; } else { inqSetMicBtn(false); } inqSetStation(INQ.station); }
 }
 $('#tabnav').addEventListener('click',e=>{ const b=e.target.closest('.tab-btn'); if(b) switchTab(b.dataset.tab); });
 
@@ -1564,7 +1900,7 @@ let rzT; window.addEventListener('resize',()=>{ clearTimeout(rzT); rzT=setTimeou
   if(ACC.buffer){accDrawWave(ACC.buffer);accDrawEnv(ACC.env);} if(ACC.saves.length)accDrawCompare(); mimRedraw();
 },150); });
 
-accRenderWords(); accStartIdle(); updateHarmonics(0);
+accRenderWords(); accStartIdle(); updateHarmonics(0); inqSetStation(0);
 </script>
 </body>
 </html>
