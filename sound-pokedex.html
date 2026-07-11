@@ -242,8 +242,26 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .quote:hover{outline-color:var(--line)}
 .quote:focus{outline-color:var(--freq);background:var(--panel-3)}
 .edit-hint{font-size:.72rem;color:var(--text-mute);margin-top:6px}
+.edit-hint b{color:var(--text-dim)}
+.sent-picker{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:12px}
+.sent-chip{font-family:var(--font-body);font-size:.82rem;font-weight:800;padding:7px 13px;border-radius:999px;cursor:pointer;
+  background:var(--panel);color:var(--text-dim);border:2px solid var(--line);transition:.12s;box-shadow:0 2px 0 var(--line)}
+.sent-chip:hover{transform:translateY(-1px);color:var(--text)}
+.sent-chip.on{background:var(--pika);color:#3a2c00;border-color:var(--text)}
 .words{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
 .word-chip{font-size:.86rem;padding:6px 14px;border-radius:999px;font-weight:800;background:var(--freq-soft);color:var(--freq);border:1px solid var(--freq-line)}
+/* 강세 점수 */
+.acc-score{display:flex;align-items:center;gap:16px;padding:6px 4px}
+.as-ring{--p:0;width:88px;height:88px;border-radius:50%;flex:none;display:grid;place-items:center;position:relative;
+  background:conic-gradient(var(--pika) calc(var(--p)*1%), var(--panel-3) 0)}
+.as-ring::before{content:'';position:absolute;inset:8px;border-radius:50%;background:var(--panel)}
+.as-num{position:relative;font-family:var(--font-display);font-size:1.7rem;color:var(--text);line-height:1}
+.as-num small{font-size:.7rem;color:var(--text-mute);margin-left:1px}
+.as-info{flex:1;min-width:0}
+.as-rank{font-family:var(--font-title);font-size:1.15rem;color:var(--text);margin-bottom:3px}
+.as-tip{font-size:.86rem;color:var(--text-dim);line-height:1.5}
+.as-best{margin-top:8px;font-size:.82rem;color:var(--text-mute)}
+.as-best b{color:var(--amp)}
 .stage{display:flex;gap:14px;align-items:stretch}
 .scope-box{flex:1;min-width:0;position:relative;background:var(--screen);border-radius:16px;overflow:hidden;box-shadow:inset 0 0 40px rgba(0,0,0,.5);border:1px solid var(--line);aspect-ratio:16/7}
 .scope-box canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -746,9 +764,18 @@ body::after{ content:""; position:fixed; left:0; right:0; bottom:0; height:84px;
   </div>
 
   <div class="card script-card">
-    <div class="script-label">📣 이 대사를 강세를 넣어 읽어보자 (탭하면 수정 가능)</div>
+    <div class="script-label">📣 문장을 고르거나 직접 써서, 한 단어에 강세를 콱 넣어 읽어보자!</div>
+    <div class="sent-picker" id="sentPicker">
+      <button class="sent-chip on" data-s="쌤 저 똥꼬에서 떡볶이가 나와요">🍢 똥꼬떡볶이</button>
+      <button class="sent-chip" data-s="야 너 지금 뭐라고 했어">😤 뭐라고 했어</button>
+      <button class="sent-chip" data-s="내가 언제 그랬어">🙅 언제 그랬어</button>
+      <button class="sent-chip" data-s="오늘 급식 진짜 맛있었어요">🍚 급식 맛있어</button>
+      <button class="sent-chip" data-s="이 문제 정답은 삼번이에요">✏️ 정답은 삼번</button>
+      <button class="sent-chip" data-s="선생님 저 화장실 다녀와도 돼요">🚻 화장실</button>
+      <button class="sent-chip" data-custom="1">✍️ 직접 쓰기</button>
+    </div>
     <div class="quote" id="quote" contenteditable="true" spellcheck="false">쌤 저 똥꼬에서 떡볶이가 나와요</div>
-    <div class="edit-hint">✏️ 다른 문장으로 바꿔도 돼요 · 강세 줄 단어를 정하고 녹음 시작!</div>
+    <div class="edit-hint">💡 <b>같은 문장이라도 강세 위치를 바꾸면 느낌·뜻이 달라져요!</b> (예: "<b>야</b> 너~" vs "야 <b>너</b>~") · 강세 줄 단어를 정하고 녹음!</div>
     <div class="words" id="words"></div>
   </div>
 
@@ -788,6 +815,17 @@ body::after{ content:""; position:fixed; left:0; right:0; bottom:0; height:84px;
       <div class="panel">
         <div class="panel-head"><span class="panel-name">③ 구간별 소리 세기</span><span class="panel-note" id="barNote">자동으로 끊어 분석 (또박또박 읽으면 더 정확)</span></div>
         <div class="bars" id="bars"></div>
+      </div>
+      <div class="panel acc-score-panel" id="accScorePanel" style="display:none">
+        <div class="panel-head"><span class="panel-name">🏆 강세 점수</span><span class="panel-note">한 단어를 확실히 세게 줄수록 높아요</span></div>
+        <div class="acc-score">
+          <div class="as-ring"><div class="as-num"><span id="asVal">0</span><small>점</small></div></div>
+          <div class="as-info">
+            <div class="as-rank" id="asRank">—</div>
+            <div class="as-tip" id="asTip">녹음하면 강세 점수가 나와요</div>
+            <div class="as-best">🥇 우리 모둠 최고 <b id="asBest">0</b>점</div>
+          </div>
+        </div>
       </div>
       <div class="stats">
         <div class="stat"><div class="k">최고 진폭</div><div class="v" id="statMax">0</div><div class="u">가장 센 순간</div></div>
@@ -1406,6 +1444,43 @@ const COMPARE_COLORS=['#41b6ff','#45e0a0','#ff6b7a','#ffcb05','#c47bff','#ff9c42
 function accWords(){ return ($('#quote').textContent||'').trim().split(/\s+/).filter(Boolean); }
 function accRenderWords(){ const el=$('#words'); el.innerHTML=''; accWords().forEach(w=>{ const c=document.createElement('span'); c.className='word-chip'; c.textContent=w; el.appendChild(c); }); }
 $('#quote').addEventListener('input',accRenderWords);
+// 문장 프리셋 선택
+$$('#sentPicker .sent-chip').forEach(chip=>chip.addEventListener('click',()=>{
+  $$('#sentPicker .sent-chip').forEach(c=>c.classList.remove('on')); chip.classList.add('on');
+  const q=$('#quote');
+  if(chip.dataset.custom){ q.textContent=q.textContent.trim()||'여기에 문장을 써 보세요'; q.focus();
+    try{ const r=document.createRange(); r.selectNodeContents(q); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); }catch(e){} }
+  else { q.textContent=chip.dataset.s; }
+  accRenderWords();
+}));
+// 직접 편집하면 프리셋 선택 해제
+$('#quote').addEventListener('input',()=>{ $$('#sentPicker .sent-chip').forEach(c=>{ if(!c.dataset.custom) c.classList.toggle('on', c.dataset.s===$('#quote').textContent.trim()); }); });
+// 강세 점수 — 한 단어가 나머지보다 얼마나 튀는지(강세 명확도)
+let ACC_BEST=0;
+function accScore(clean){
+  if(!clean || clean.length<2) return null;
+  const peaks=clean.map(s=>s.peak).slice().sort((a,b)=>b-a);
+  const top=peaks[0]||1, second=peaks[1]||0, others=peaks.slice(1);
+  const avgOth=others.reduce((a,b)=>a+b,0)/others.length;
+  const contrast=(top-avgOth)/(top||1);   // 강세 단어가 나머지 평균보다 튀는 정도
+  const margin=(top-second)/(top||1);      // 1위-2위 격차
+  return Math.max(0,Math.min(100,Math.round((contrast*0.62+margin*0.38)*135)));
+}
+function renderAccScore(clean){
+  const panel=$('#accScorePanel'); const sc=accScore(clean);
+  if(sc==null){ panel.style.display='none'; return; }
+  panel.style.display='block';
+  $('#asVal').textContent=sc;
+  const ring=panel.querySelector('.as-ring'); if(ring) ring.style.setProperty('--p',sc);
+  let rank,tip;
+  if(sc>=85){rank='🌟 완벽한 강세!';tip='한 단어가 확실히 튀었어요. 강세 = 진폭 UP!';}
+  else if(sc>=70){rank='👍 강세 뚜렷';tip='좋아요! 나머지 단어를 조금 더 여리게 주면 만점!';}
+  else if(sc>=50){rank='🙂 강세 약간';tip='강세 준 단어를 더 세게, 나머지는 여리게 읽어봐요!';}
+  else {rank='😐 밋밋해요';tip='한 단어만 골라 확 세게(진폭 크게) 읽어보세요!';}
+  $('#asRank').textContent=rank; $('#asTip').textContent=tip;
+  if(sc>ACC_BEST) ACC_BEST=sc;
+  $('#asBest').textContent=ACC_BEST;
+}
 
 function accIdleFrame(){
   const {ctx,w,h}=fit($('#liveCanvas')); ctx.clearRect(0,0,w,h);
@@ -1487,7 +1562,7 @@ function accDrawBars(env){
   const clean=segs.filter(s=>(s.e-s.s)>=3);
   const words=accWords(),useWords=clean.length===words.length&&words.length>0;
   $('#barNote').textContent=useWords?'단어별 소리 세기 · 가장 센 단어에 왕관 👑':('자동으로 '+clean.length+'구간 감지 (또박또박 끊어 읽으면 단어별로 딱 나뉘어요)');
-  if(clean.length===0){ el.innerHTML='<div style="color:var(--text-mute);font-size:.9rem;margin:auto;text-align:center">소리가 너무 작아요. 조금 더 크게 다시 녹음해볼까요?</div>'; return; }
+  if(clean.length===0){ el.innerHTML='<div style="color:var(--text-mute);font-size:.9rem;margin:auto;text-align:center">소리가 너무 작아요. 조금 더 크게 다시 녹음해볼까요?</div>'; renderAccScore(null); return; }
   let top=0; for(let i=1;i<clean.length;i++) if(clean[i].peak>clean[top].peak)top=i;
   clean.forEach((seg,i)=>{
     const col=document.createElement('div'); col.className='bar-col'+(i===top?' top':'');

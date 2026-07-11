@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#12a79b">
+<title>소리 탐정단 · 야외 목소리 탐구</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --sky:#12a79b; --sky-d:#0d8d83; --sun:#ffcb05; --sun-d:#e0a800;
+  --coral:#ff6b5e; --coral-d:#e0483b; --grape:#7a6ad6;
+  --ink:#26241f; --ink-soft:#4b4740; --ink-mute:#8a8579;
+  --paper:#fffdf5; --paper-2:#f5f1e2; --line:#26241f;
+  --ok:#2f9e57; --amp:#e8940f; --freq:#2760c8; --wave:#c2417e;
+  --disp:"Jua","Pretendard",sans-serif; --hand:"Gaegu",sans-serif;
+  --body:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--body);color:var(--ink);background:
+  repeating-linear-gradient(45deg,rgba(38,36,31,.03) 0 14px,transparent 14px 28px),
+  linear-gradient(180deg,#e6f7f4,#fffdf5 40%);
+  min-height:100vh;line-height:1.6;padding-bottom:calc(30px + env(safe-area-inset-bottom))}
+.wrap{max-width:640px;margin:0 auto;padding:0 14px}
+
+header{background:linear-gradient(180deg,var(--sky),var(--sky-d));border-bottom:4px solid var(--line);
+  padding:16px 0 18px;text-align:center;color:#fff;position:relative}
+header .t{font-family:var(--disp);font-size:26px;text-shadow:2px 2px 0 rgba(0,0,0,.28);letter-spacing:.5px}
+header .s{font-family:var(--hand);font-weight:700;font-size:15px;color:#d8fff8;margin-top:2px}
+header .grp{margin-top:8px;font-size:12px;color:#eafffb;min-height:1em}
+
+.card{background:var(--paper);border:3px solid var(--line);border-radius:18px;padding:18px 16px;
+  box-shadow:0 5px 0 rgba(38,36,31,.8);margin-top:18px;position:relative}
+.card .tape{position:absolute;top:-13px;left:18px;font-family:var(--hand);font-weight:700;font-size:13px;
+  background:var(--sun);border:2.5px solid var(--line);border-radius:8px;padding:2px 11px;box-shadow:0 2px 0 var(--line)}
+h2{font-family:var(--disp);font-size:21px;line-height:1.35;margin:6px 0 8px}
+.lead{font-size:15px;color:var(--ink-soft);line-height:1.75}
+.lead b{background:linear-gradient(transparent 56%,rgba(255,203,5,.6) 56% 92%,transparent 92%);padding:0 2px;font-weight:800}
+.t-amp{color:var(--amp);font-weight:800}.t-freq{color:var(--freq);font-weight:800}.t-wave{color:var(--wave);font-weight:800}
+
+.btn{font-family:var(--body);font-weight:800;font-size:16px;cursor:pointer;border:2.5px solid var(--line);
+  border-radius:14px;padding:13px 20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:#fff;color:var(--ink);box-shadow:0 4px 0 var(--line);transition:.1s;user-select:none;text-decoration:none}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.btn.big{width:100%;font-size:18px;padding:16px}
+.btn.go{background:var(--sky);color:#fff}
+.btn.sun{background:var(--sun);color:#3a2c00}
+.btn.coral{background:var(--coral);color:#fff}
+.btn.ghost{background:var(--paper-2)}
+.btn:disabled{opacity:.4;box-shadow:none;transform:none;cursor:not-allowed}
+
+.field{width:100%;font-family:var(--body);font-size:16px;font-weight:700;border:2.5px solid var(--line);
+  border-radius:12px;padding:12px 14px;background:#fff;color:var(--ink);margin-bottom:12px}
+.field:focus{outline:none;border-color:var(--sky)}
+
+/* 실시간 도크 */
+#liveDock{position:sticky;top:0;z-index:30;background:rgba(255,253,245,.96);backdrop-filter:blur(8px);
+  border-bottom:3px solid var(--line);padding:10px 0}
+.live-in{max-width:640px;margin:0 auto;padding:0 14px;display:flex;gap:10px;align-items:stretch}
+.scope{flex:1;min-width:0;background:#0f2a26;border:2.5px solid var(--line);border-radius:12px;overflow:hidden;position:relative;aspect-ratio:16/8}
+.scope canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.scope .tag{position:absolute;top:6px;left:8px;font-family:var(--hand);font-weight:700;font-size:11px;color:#8fe9dd;background:rgba(15,42,38,.7);padding:1px 7px;border-radius:6px}
+.meters{width:118px;flex:none;display:flex;flex-direction:column;gap:7px}
+.meter{background:#fff;border:2px solid var(--line);border-radius:10px;padding:5px 8px;text-align:center}
+.meter .k{font-size:10px;color:var(--ink-mute);font-weight:700}
+.meter .v{font-family:var(--disp);font-size:19px;line-height:1.1}
+.meter.amp .v{color:var(--amp)} .meter.freq .v{color:var(--freq)}
+.meter .v small{font-size:11px;color:var(--ink-mute)}
+.amp-bar{height:8px;border-radius:99px;background:var(--paper-2);border:1.5px solid var(--line);overflow:hidden;margin-top:3px}
+.amp-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#7bd6a0,var(--amp),var(--coral));transition:width .06s linear}
+
+/* 예측/정답 */
+.predict{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.predict button{flex:1;min-width:130px;font-family:var(--body);font-weight:800;font-size:14px;color:var(--ink-soft);
+  background:#fff;border:2px solid #d9d3c4;border-radius:12px;padding:11px;cursor:pointer;box-shadow:0 3px 0 rgba(38,36,31,.35);transition:.1s}
+.predict button:hover{transform:translateY(-1px)}
+.predict button.sel{border-color:var(--sky);background:#e9fbf8;color:var(--ink)}
+.predict button.correct{border-color:var(--ok);background:rgba(47,158,87,.12);color:var(--ink)}
+.predict button.wrong{border-color:var(--coral);background:rgba(255,107,94,.1)}
+.reveal{display:none;margin-top:12px;background:rgba(47,158,87,.1);border:2px dashed var(--ok);border-radius:12px;padding:13px 15px;font-size:14.5px;color:var(--ink-soft);line-height:1.65;animation:pop .3s}
+.reveal.show{display:block}
+.reveal b{color:var(--ink)}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.obs{background:var(--paper-2);border:2px solid var(--line);border-radius:12px;padding:11px 13px;margin:10px 0;font-size:14px;color:var(--ink-soft)}
+.obs b{color:var(--ink)}
+
+/* 미션3 캡처 */
+.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.cap-slot{border:2.5px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 4px 0 rgba(38,36,31,.6)}
+.cap-slot .h{padding:7px 10px;font-family:var(--disp);font-size:15px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+.cap-slot.me .h{background:var(--freq)} .cap-slot.friend .h{background:var(--coral)}
+.cap-slot .scope-mini{aspect-ratio:16/9;background:#0f2a26;position:relative}
+.cap-slot .scope-mini canvas{position:absolute;inset:0;width:100%;height:100%}
+.cap-slot .meta{padding:6px 10px;font-size:11px;color:var(--ink-mute);display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap}
+.cap-slot .capbtn{width:100%;border:none;border-top:2px solid var(--line);background:var(--sun);color:#3a2c00;font-weight:800;font-family:var(--body);padding:10px;cursor:pointer}
+.cap-slot.friend .capbtn{background:#ffd9d4}
+.cmp-box{background:#0f2a26;border:2.5px solid var(--line);border-radius:14px;position:relative;aspect-ratio:16/8;overflow:hidden;margin-top:6px}
+.cmp-box canvas{position:absolute;inset:0;width:100%;height:100%}
+.cmp-legend{display:flex;gap:16px;justify-content:center;margin-top:8px;font-size:12.5px;font-weight:700}
+.cmp-legend i{display:inline-block;width:16px;height:4px;border-radius:2px;vertical-align:middle;margin-right:5px}
+
+/* 결론 빈칸 */
+.cloze{cursor:pointer;display:inline-block;min-width:64px;text-align:center;padding:1px 10px;margin:0 2px;border-radius:8px;
+  background:#fff;border:2px dashed var(--line);color:transparent;font-weight:800;user-select:none;transition:.15s}
+.cloze::after{content:"❓";font-size:13px}
+.cloze.on{color:var(--sky);border-style:solid;border-color:var(--sky)}
+.cloze.on::after{content:""}
+.concl-line{font-size:16px;line-height:2.3;color:var(--ink-soft)}
+
+.hint{font-size:12.5px;color:var(--ink-mute);margin-top:8px;line-height:1.55}
+.err{color:var(--coral-d);font-weight:800;font-size:14px;margin-top:10px;display:none}
+.err.show{display:block}
+.hub{display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:13px;color:#fff;background:var(--sky-d);
+  border:2px solid var(--line);border-radius:999px;padding:7px 14px;text-decoration:none;box-shadow:0 3px 0 var(--line)}
+.foot{text-align:center;margin-top:28px;font-size:12px;color:var(--ink-mute)}
+@media(max-width:420px){.meters{width:96px}.cap-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="t">🕵️ 소리 탐정단</div>
+  <div class="s">야외 목소리 탐구 · 교실을 벗어나 소리를 파헤쳐라!</div>
+  <div class="grp" id="grpTag"></div>
+</header>
+
+<div id="liveDock" hidden>
+  <div class="live-in">
+    <div class="scope"><canvas id="liveCv"></canvas><div class="tag">🎙 실시간 파형</div></div>
+    <div class="meters">
+      <div class="meter amp"><div class="k">세기(진폭)</div><div class="v" id="ampV">0</div><div class="amp-bar"><i id="ampBar"></i></div></div>
+      <div class="meter freq"><div class="k">높낮이(진동수)</div><div class="v" id="freqV">—<small></small></div></div>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <!-- 셋업 -->
+  <section id="setup">
+    <div class="card">
+      <span class="tape">출동 준비</span>
+      <h2>우리 모둠, 소리 탐정단이 되자!</h2>
+      <p class="lead">한 교실에 다 모여 있으면 소리가 <b>뒤섞여</b> 탐구가 어려워요. 모둠끼리 <b>넓게 흩어져</b>서, 각자 목소리를 내며 <b class="t-amp">세기</b>·<b class="t-freq">높낮이</b>·<b class="t-wave">목소리의 정체</b>를 파헤쳐 봅시다!</p>
+      <input class="field" id="grpName" placeholder="모둠 이름 (예: 3모둠 · 파동수사대)" style="margin-top:14px">
+      <button class="btn big go" id="startBtn">🎤 마이크 켜고 탐구 시작</button>
+      <p class="hint">📱 휴대폰 <b>마이크 권한</b>을 허용해 주세요. 조용한 곳일수록 잘 측정돼요. (소리는 저장·전송되지 않고 화면 분석에만 쓰여요.)</p>
+      <div class="err" id="setupErr"></div>
+    </div>
+  </section>
+
+  <!-- 미션들 -->
+  <section id="missions" hidden>
+
+    <!-- 미션 1 -->
+    <div class="card">
+      <span class="tape">미션 1</span>
+      <h2>🔊 '세기'의 정체를 밝혀라</h2>
+      <p class="lead">같은 "<b>아~</b>"를 <b>크게</b> 냈다가 <b>작게</b> 내 보세요. 위 실시간 화면에서 <b>무엇이 변하는지</b> 눈으로 관찰!</p>
+      <div class="obs">👀 <b>관찰 포인트</b> — 소리를 크게↔작게 할 때, 파형의 <b>위아래 폭</b>과 <b>세기 막대</b>가 어떻게 되나요?</div>
+      <p class="lead" style="font-size:14.5px"><b>예측:</b> 소리를 크게 하면 파동의 무엇이 커질까?</p>
+      <div class="predict" data-m="1" data-ans="0">
+        <button data-i="0">진폭 (위아래 폭)</button>
+        <button data-i="1">진동수 (촘촘함)</button>
+        <button data-i="2">파형 (모양)</button>
+      </div>
+      <div class="reveal" data-r="1"><b>🎯 정답: 진폭!</b> 소리를 크게 낼수록 파형의 <b class="t-amp">위아래 폭(진폭)</b>이 커지고 세기 막대도 올라가요. <b>소리의 세기 = 진폭</b>이 결정해요. (높낮이·모양은 그대로였죠?)</div>
+    </div>
+
+    <!-- 미션 2 -->
+    <div class="card">
+      <span class="tape">미션 2</span>
+      <h2>🎵 '높낮이'의 정체를 밝혀라</h2>
+      <p class="lead">이번엔 <b>크기는 비슷하게</b> 두고, "아~"를 <b>높게</b> 냈다가 <b>낮게</b> 내 보세요. 위 <b class="t-freq">높낮이(Hz)</b> 숫자와 파형의 <b>촘촘함</b>을 관찰!</p>
+      <div class="obs">👀 <b>관찰 포인트</b> — 높은 소리일 때 Hz 숫자와 파동의 촘촘함(1초에 몇 번 진동)은?</div>
+      <p class="lead" style="font-size:14.5px"><b>예측:</b> 소리를 높게 하면 파동의 무엇이 커질까?</p>
+      <div class="predict" data-m="2" data-ans="1">
+        <button data-i="0">진폭 (위아래 폭)</button>
+        <button data-i="1">진동수 (촘촘함·Hz)</button>
+        <button data-i="2">파형 (모양)</button>
+      </div>
+      <div class="reveal" data-r="2"><b>🎯 정답: 진동수!</b> 높은 소리일수록 <b class="t-freq">진동수(Hz)</b>가 크고 파동이 촘촘해져요. <b>소리의 높낮이 = 진동수</b>가 결정해요. (세기는 그대로 둘 수 있었죠?)</div>
+    </div>
+
+    <!-- 미션 3 -->
+    <div class="card">
+      <span class="tape">미션 3 · 최종</span>
+      <h2>🕵️ 목소리 '지문'을 찾아라</h2>
+      <p class="lead">친구와 내가 <b>똑같은 크기</b>, <b>똑같은 높이</b>의 "<b>아~</b>"를 내도, 우리는 누구 목소리인지 바로 알아요. 세기도 같고 높낮이도 같은데… <b>어떻게 구분</b>하는 걸까? 직접 캡처해서 파형을 비교해 보자!</p>
+      <div class="obs">🎯 <b>미션</b> — 나와 친구가 <b>비슷한 크기·비슷한 높이</b>로 "아~"를 내고 각자 <b>📸 캡처</b>! (세기·높낮이 숫자를 비슷하게 맞춰 보세요.)</div>
+      <div class="cap-grid">
+        <div class="cap-slot me">
+          <div class="h">🙋 내 목소리 <span id="meBadge" style="font-size:11px"></span></div>
+          <div class="scope-mini"><canvas id="meCv"></canvas></div>
+          <div class="meta"><span id="meFreq">높낮이 —</span><span id="meAmp">세기 —</span></div>
+          <button class="capbtn" id="capMe">📸 내 목소리 캡처</button>
+        </div>
+        <div class="cap-slot friend">
+          <div class="h">🧑‍🤝‍🧑 친구 목소리 <span id="frBadge" style="font-size:11px"></span></div>
+          <div class="scope-mini"><canvas id="frCv"></canvas></div>
+          <div class="meta"><span id="frFreq">높낮이 —</span><span id="frAmp">세기 —</span></div>
+          <button class="capbtn" id="capFr">📸 친구 목소리 캡처</button>
+        </div>
+      </div>
+      <p class="lead" style="font-size:14px;margin-top:6px"><b>겹쳐 보기</b> — 두 파형을 같은 크기로 맞춰 겹쳤어요. 모양이 어떤가요?</p>
+      <div class="cmp-box"><canvas id="cmpCv"></canvas></div>
+      <div class="cmp-legend"><span><i style="background:#41b6ff"></i>내 목소리</span><span><i style="background:#ff6b5e"></i>친구 목소리</span></div>
+      <p class="lead" style="font-size:14.5px;margin-top:12px"><b>예측:</b> 세기·높낮이가 같은데도 목소리를 구분하는 이유는?</p>
+      <div class="predict" data-m="3" data-ans="2">
+        <button data-i="0">사실 세기가 달라서</button>
+        <button data-i="1">사실 높낮이가 달라서</button>
+        <button data-i="2">파형(음색)이 달라서</button>
+      </div>
+      <div class="reveal" data-r="3"><b>🎯 정답: 파형(음색)!</b> 세기(진폭)와 높낮이(진동수)가 같아도, 사람마다 <b class="t-wave">파형의 모양</b>이 달라요. 이 모양이 곧 <b>음색</b>이고, 목소리의 <b>'지문'</b>이에요. 그래서 눈 감고도 친구 목소리를 알아채는 거죠! (성대 모양·울림이 사람마다 달라 배음 구성이 달라져요.)</div>
+    </div>
+
+    <!-- 결론 -->
+    <div class="card" style="background:linear-gradient(180deg,#fff6df,var(--paper));border-color:var(--sun-d)">
+      <span class="tape">모둠 결론</span>
+      <h2>🏅 소리 탐정단 최종 보고서</h2>
+      <p class="lead" style="font-size:14px">빈칸을 눌러 우리 모둠이 밝혀낸 결론을 완성해요!</p>
+      <p class="concl-line">① 소리의 <b>세기(크기)</b>는 파동의 <span class="cloze" data-a="진폭">진폭</span>이 결정한다.</p>
+      <p class="concl-line">② 소리의 <b>높낮이</b>는 파동의 <span class="cloze" data-a="진동수">진동수</span>가 결정한다.</p>
+      <p class="concl-line">③ 세기·높낮이가 같아도 목소리를 구분하는 건 <span class="cloze" data-a="파형">파형</span>(음색)이 다르기 때문이다.</p>
+      <div style="margin-top:16px"><a class="hub" href="https://scienceisjo.github.io/lightandwave/hubpage">🏠 빛과 파동 허브로</a></div>
+    </div>
+  </section>
+
+  <div class="foot">소리 탐정단 · 야외 목소리 탐구 — 중학교 과학 「빛과 파동」<br>제작 : 조승재(과학이조선생)</div>
+</main>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const NOTE=['도','도♯','레','레♯','미','파','파♯','솔','솔♯','라','라♯','시'];
+let AC=null, analyser=null, tdata=null, running=false, smoothF=0;
+
+/* ---- 캔버스 DPR ---- */
+function fit(cv){ const dpr=Math.min(devicePixelRatio||1,2), r=cv.getBoundingClientRect();
+  const w=Math.max(2,r.width), h=Math.max(2,r.height);
+  if(cv._w!==w||cv._h!==h){ cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr); cv._w=w; cv._h=h; }
+  const ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); return {ctx,w,h}; }
+
+/* ---- 자기상관 음정 검출 ---- */
+function detectPitch(buf,sr){
+  const N=buf.length; let rms=0; for(let i=0;i<N;i++)rms+=buf[i]*buf[i]; rms=Math.sqrt(rms/N);
+  if(rms<0.012) return -1;
+  let r1=0,r2=N-1; const th=0.2;
+  for(let i=0;i<N/2;i++){ if(Math.abs(buf[i])<th){r1=i;break;} }
+  for(let i=1;i<N/2;i++){ if(Math.abs(buf[N-i])<th){r2=N-i;break;} }
+  const b=buf.slice(r1,r2), n=b.length; if(n<32) return -1;
+  const c=new Float32Array(n);
+  for(let i=0;i<n;i++){ let s=0; for(let j=0;j<n-i;j++) s+=b[j]*b[j+i]; c[i]=s; }
+  let d=0; while(d<n-1 && c[d]>c[d+1]) d++;
+  let mv=-1,mp=-1; for(let i=d;i<n;i++){ if(c[i]>mv){mv=c[i];mp=i;} }
+  if(mp<=0) return -1;
+  const x1=c[mp-1]||0,x2=c[mp],x3=c[mp+1]||0, a=(x1+x3-2*x2)/2, bb=(x3-x1)/2;
+  let T=mp; if(a) T=mp-bb/(2*a);
+  const f=sr/T; return (f>60&&f<1500)?f:-1;
+}
+function noteName(hz){ if(hz<=0)return '—'; const n=Math.round(12*Math.log2(hz/440))+69; return NOTE[((n%12)+12)%12]; }
+
+/* ---- 시작(마이크) ---- */
+$('#startBtn').addEventListener('click',async()=>{
+  const nm=$('#grpName').value.trim(); if(nm) $('#grpTag').textContent='🔎 '+nm;
+  $('#setupErr').classList.remove('show');
+  try{
+    AC=new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended') await AC.resume();
+    const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+    const src=AC.createMediaStreamSource(stream);
+    analyser=AC.createAnalyser(); analyser.fftSize=2048; analyser.smoothingTimeConstant=.2;
+    tdata=new Float32Array(analyser.fftSize);
+    src.connect(analyser);
+    running=true;
+    $('#setup').style.display='none'; $('#liveDock').hidden=false; $('#missions').hidden=false;
+    loop();
+  }catch(err){
+    let m='마이크를 켤 수 없어요.';
+    if(err&&(err.name==='NotAllowedError'||err.name==='SecurityError')) m='마이크 권한이 거부됐어요. 브라우저 주소창의 🔒 → 마이크 허용 후 새로고침 해주세요.';
+    else if(err&&err.name==='NotFoundError') m='마이크를 찾지 못했어요.';
+    $('#setupErr').textContent='⚠️ '+m; $('#setupErr').classList.add('show');
+  }
+});
+
+/* ---- 실시간 루프 ---- */
+let curFreq=-1, curAmp=0;
+function loop(){
+  if(!running) return;
+  requestAnimationFrame(loop);
+  analyser.getFloatTimeDomainData(tdata);
+  let rms=0,mx=0; for(let i=0;i<tdata.length;i++){ const v=tdata[i]; rms+=v*v; if(Math.abs(v)>mx)mx=Math.abs(v); }
+  rms=Math.sqrt(rms/tdata.length); curAmp=Math.min(1,rms*4.5);
+  const f=detectPitch(tdata,AC.sampleRate);
+  if(f>0){ smoothF=smoothF? smoothF*0.75+f*0.25 : f; curFreq=smoothF; } else { curFreq=-1; }
+  // 파형
+  drawScope($('#liveCv'),tdata,'#8fe9dd',2.2);
+  // 세기
+  $('#ampV').textContent=Math.round(curAmp*100);
+  $('#ampBar').style.width=(curAmp*100)+'%';
+  // 높낮이
+  $('#freqV').innerHTML = curFreq>0 ? Math.round(curFreq)+'<small> Hz · '+noteName(curFreq)+'</small>' : '—<small></small>';
+}
+function drawScope(cv,buf,color,lw){
+  const {ctx,w,h}=fit(cv); ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle='rgba(143,233,221,.14)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(0,h/2); ctx.lineTo(w,h/2); ctx.stroke();
+  ctx.strokeStyle=color; ctx.lineWidth=lw; ctx.lineJoin='round'; ctx.beginPath();
+  const step=w/buf.length;
+  for(let i=0;i<buf.length;i++){ const x=i*step, y=h/2 - buf[i]*(h*0.44); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+  ctx.stroke();
+}
+
+/* ---- 예측 → 정답 ---- */
+$$('.predict').forEach(row=>{
+  const ans=+row.dataset.ans;
+  row.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b||row.dataset.done) return;
+    const i=+b.dataset.i;
+    $$('button',row).forEach(x=>x.classList.remove('sel'));
+    if(i===ans){ b.classList.add('correct'); row.dataset.done='1';
+      const rv=$('.reveal[data-r="'+row.dataset.m+'"]'); if(rv) rv.classList.add('show'); }
+    else { b.classList.add('wrong'); setTimeout(()=>b.classList.remove('wrong'),500); }
+  });
+});
+
+/* ---- 미션3 캡처 ---- */
+const CAP={me:null,friend:null};
+function normalizeCycle(buf,hz,sr){
+  // 한 파형 조각을 진폭 1로 정규화 + 고정 길이로 리샘플 (모양만 남김)
+  let mx=0.0001; for(let i=0;i<buf.length;i++) mx=Math.max(mx,Math.abs(buf[i]));
+  // 시작점: 상승 영점교차 찾기
+  let s=0; for(let i=1;i<buf.length*0.4;i++){ if(buf[i-1]<0&&buf[i]>=0){s=i;break;} }
+  let span = hz>0 ? Math.round(sr/hz*2) : Math.round(buf.length*0.5);
+  span=Math.max(64,Math.min(span,buf.length-s-1));
+  const OUT=320, out=new Float32Array(OUT);
+  for(let k=0;k<OUT;k++){ const idx=s+Math.floor(k/OUT*span); out[k]=(buf[idx]||0)/mx; }
+  return out;
+}
+function capture(which){
+  if(!running){ return; }
+  const snap=tdata.slice(0);
+  const hz=curFreq, amp=curAmp;
+  CAP[which]={wave:normalizeCycle(snap,hz,AC.sampleRate), hz, amp};
+  const pre=which==='me'?'me':'fr', col=which==='me'?'#41b6ff':'#ff6b5e';
+  drawStaticWave($('#'+pre+'Cv'), CAP[which].wave, col);
+  $('#'+pre+'Freq').textContent='높낮이 '+(hz>0?Math.round(hz)+'Hz·'+noteName(hz):'—');
+  $('#'+pre+'Amp').textContent='세기 '+Math.round(amp*100);
+  $('#'+pre+'Badge').textContent='✓';
+  drawCompare();
+}
+function drawStaticWave(cv,wave,color){
+  const {ctx,w,h}=fit(cv); ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle='rgba(143,233,221,.12)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();
+  ctx.strokeStyle=color;ctx.lineWidth=2.4;ctx.lineJoin='round';ctx.beginPath();
+  for(let i=0;i<wave.length;i++){ const x=i/wave.length*w, y=h/2 - wave[i]*(h*0.4); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+  ctx.stroke();
+}
+function drawCompare(){
+  const {ctx,w,h}=fit($('#cmpCv')); ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle='rgba(143,233,221,.14)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();
+  const draw=(wave,color)=>{ if(!wave)return; ctx.strokeStyle=color;ctx.lineWidth=2.6;ctx.lineJoin='round';ctx.globalAlpha=.9;ctx.beginPath();
+    for(let i=0;i<wave.length;i++){ const x=i/wave.length*w, y=h/2 - wave[i]*(h*0.42); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke(); ctx.globalAlpha=1; };
+  if(CAP.me) draw(CAP.me.wave,'#41b6ff');
+  if(CAP.friend) draw(CAP.friend.wave,'#ff6b5e');
+  if(!CAP.me&&!CAP.friend){ ctx.fillStyle='#5d7a74';ctx.font='700 13px Pretendard';ctx.textAlign='center';ctx.fillText('두 목소리를 캡처하면 여기 겹쳐 보여요',w/2,h/2-6); }
+}
+$('#capMe').addEventListener('click',()=>capture('me'));
+$('#capFr').addEventListener('click',()=>capture('friend'));
+
+/* ---- 결론 빈칸 ---- */
+$$('.cloze').forEach(c=>c.addEventListener('click',()=>{ if(c.classList.contains('on'))return; c.textContent=c.dataset.a; c.classList.add('on'); }));
+
+window.addEventListener('resize',()=>{ if(CAP.me)drawStaticWave($('#meCv'),CAP.me.wave,'#41b6ff'); if(CAP.friend)drawStaticWave($('#frCv'),CAP.friend.wave,'#ff6b5e'); drawCompare(); });
+drawCompare();
+</script>
+</body>
+</html>
