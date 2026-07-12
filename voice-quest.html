@@ -415,9 +415,9 @@ function fit(cv){ const dpr=Math.min(devicePixelRatio||1,2), r=cv.getBoundingCli
   const ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); return {ctx,w,h}; }
 
 /* ---- 자기상관 음정 검출 (감도↑) ---- */
-function detectPitch(buf,sr){
+function detectPitch(buf,sr,gate){
   const N=buf.length; let rms=0; for(let i=0;i<N;i++)rms+=buf[i]*buf[i]; rms=Math.sqrt(rms/N);
-  if(rms<GATE) return -1;
+  if(rms < (gate==null?GATE:gate)) return -1;   // gate 미지정 시 라이브 감도(GATE) 사용
   let r1=0,r2=N-1; const th=0.16;
   for(let i=0;i<N/2;i++){ if(Math.abs(buf[i])<th){r1=i;break;} }
   for(let i=1;i<N/2;i++){ if(Math.abs(buf[N-i])<th){r2=N-i;break;} }
@@ -469,7 +469,7 @@ function loop(){
   let rms=0; for(let i=0;i<tdata.length;i++) rms+=tdata[i]*tdata[i];
   rms=Math.sqrt(rms/tdata.length);
   const hot = rms>GATE;                       // 게이트(감도) 위로 올라와야 '소리'로 인정
-  curAmp = hot ? Math.min(1,(rms-GATE)*7) : 0; // 배경 소음(게이트 이하)은 0으로
+  curAmp = hot ? Math.min(1,rms*6) : 0;        // 게이트 위면 실제 크기(감도와 무관), 이하면 0
   const f=detectPitch(tdata,AC.sampleRate);
   if(f>0){ smoothF=smoothF? smoothF*0.7+f*0.3 : f; curFreq=smoothF; } else { curFreq=-1; smoothF=0; }
   drawLive();
@@ -522,6 +522,14 @@ function concatBuf(chunks){ let len=0; chunks.forEach(c=>len+=c.length); const o
 function toggleRec(which){ if(recWhich===which) stopRec(); else if(!recWhich) startRec(which); }
 function startRec(which){
   if(!running||recWhich) return;
+  const pre0=which==='me'?'me':'fr';
+  // 슬롯 초기화 — 재녹음 시 이전 녹음/분석이 남아 결과가 어긋나지 않도록
+  REC[which]=null;
+  $('#'+pre0+'Ctrl').style.display='none'; $('#'+pre0+'Click').style.display='none';
+  $('#'+pre0+'Analyze').style.display='none'; $('#'+pre0+'Band').style.display='none';
+  $('#'+pre0+'Empty').style.display='flex';
+  $('#'+pre0+'Freq').textContent='높낮이 —'; $('#'+pre0+'Amp').textContent='세기 —';
+  drawInsp(which); checkDiff(); drawCompare(); computeSimilarity(); updateChecklist();
   recWhich=which; recBuf=[]; recording=true; capturing=true; recStartT=performance.now();
   beep(880,0.12);
   const btn=$(which==='me'?'#capMe':'#capFr'), other=$(which==='me'?'#capFr':'#capMe'), pre=which==='me'?'me':'fr';
@@ -546,10 +554,16 @@ function stopRec(){
   if(!AC || samples.length < MINREC*AC.sampleRate){ $('#'+pre+'Badge').textContent='⚠️ 너무 짧아요, 다시!'; return; }
   finishCapture(which,samples);
 }
-function analyzePitchMedian(samples,sr){
+function analyzePitchMedian(samples,sr,gate){
   const W=2048,hop=1024,arr=[];
-  for(let s=0;s+W<=samples.length;s+=hop){ const f=detectPitch(samples.subarray(s,s+W),sr); if(f>0)arr.push(f); }
+  for(let s=0;s+W<=samples.length;s+=hop){ const f=detectPitch(samples.subarray(s,s+W),sr,gate); if(f>0)arr.push(f); }
   if(!arr.length) return -1; arr.sort((a,b)=>a-b); return arr[Math.floor(arr.length/2)];
+}
+function clipLoudness(samples,sr){    // 가장 큰 소리 구간(~200ms)의 rms — 침묵 길이에 안 희석
+  const win=Math.max(1,Math.floor(sr*0.2)); let best=0;
+  for(let s=0;s+win<=samples.length;s+=Math.floor(win/2)||1){ let e=0,c=0; for(let i=s;i<s+win;i+=4){ e+=samples[i]*samples[i]; c++; } e=Math.sqrt(e/(c||1)); if(e>best)best=e; }
+  if(best===0){ let e=0; for(let i=0;i<samples.length;i++) e+=samples[i]*samples[i]; best=Math.sqrt(e/(samples.length||1)); }
+  return best;
 }
 function loudestOffset(samples,sr){   // 가장 큰 소리가 난 구간(~120ms) 시작 인덱스
   const win=Math.max(1,Math.floor(sr*0.12)); let bestE=-1, anchor=Math.floor(samples.length*0.4);
@@ -570,9 +584,9 @@ function normalizeCycle(samples,hz,sr){
 }
 function finishCapture(which,samples){
   const sr=AC.sampleRate;
-  let rms=0; for(let i=0;i<samples.length;i++) rms+=samples[i]*samples[i]; rms=Math.sqrt(rms/(samples.length||1));
-  const hz=analyzePitchMedian(samples,sr);
-  REC[which]={samples,sr,hz,rms,amp:Math.min(1,rms*6),cycle:normalizeCycle(samples,hz,sr),dur:samples.length/sr};
+  const loud=clipLoudness(samples,sr);                              // 침묵에 안 희석되는 세기
+  const hz=analyzePitchMedian(samples,sr,Math.max(0.006,loud*0.22)); // 녹음 분석은 라이브 감도와 독립
+  REC[which]={samples,sr,hz,loud,amp:Math.min(1,loud*6),cycle:normalizeCycle(samples,hz,sr),dur:samples.length/sr};
   INSP[which]={zoom:1,scroll:0};
   const pre=which==='me'?'me':'fr';
   $('#'+pre+'Empty').style.display='none';
@@ -587,11 +601,11 @@ function finishCapture(which,samples){
 }
 /* ---- 음역대(저음~고음) 분석 ---- */
 const ZONES=[
-  {max:135, name:'저음',   emoji:'🐻', desc:'아주 낮고 굵게 울리는 목소리예요'},
-  {max:180, name:'중저음', emoji:'🎸', desc:'낮고 굵은 편이에요 · 차분하게 들려요'},
-  {max:235, name:'중음',   emoji:'🎵', desc:'너무 높지도 낮지도 않은 보통 목소리예요'},
-  {max:300, name:'중고음', emoji:'🎶', desc:'조금 높고 맑은 편이에요'},
-  {max:1e9, name:'고음',   emoji:'🐦', desc:'아주 높고 가늘게 들리는 목소리예요'},
+  {lo:90,  max:135, name:'저음',   emoji:'🐻', desc:'아주 낮고 굵게 울리는 목소리예요'},
+  {lo:135, max:180, name:'중저음', emoji:'🎸', desc:'낮고 굵은 편이에요 · 차분하게 들려요'},
+  {lo:180, max:235, name:'중음',   emoji:'🎵', desc:'너무 높지도 낮지도 않은 보통 목소리예요'},
+  {lo:235, max:300, name:'중고음', emoji:'🎶', desc:'조금 높고 맑은 편이에요'},
+  {lo:300, max:1e9, name:'고음',   emoji:'🐦', desc:'아주 높고 가늘게 들리는 목소리예요'},
 ];
 function zoneOf(hz){ for(let i=0;i<ZONES.length;i++) if(hz<ZONES[i].max) return Object.assign({idx:i},ZONES[i]); return Object.assign({idx:4},ZONES[4]); }
 function repVoiceMeta(R){ if(!R||R.hz<=0) return '높낮이 측정 실패'; const z=zoneOf(R.hz); return '높낮이 '+Math.round(R.hz)+'Hz('+noteName(R.hz)+') · '+z.emoji+' '+z.name; }
@@ -601,7 +615,9 @@ function analyzeVoice(which){
   const who=which==='me'?'내 목소리':'친구 목소리';
   if(R.hz<=0){ box.innerHTML='<div class="bd">🎧 목소리를 또렷이 잡지 못했어요. <b>조용한 곳</b>에서 마이크에 가까이 대고 "<b>아~</b>"를 <b>2~3초 길게</b> 내며 다시 녹음해 봐요. (위 <b>감도</b>를 "조용"으로 바꿔도 좋아요.)</div>'; return; }
   const z=zoneOf(R.hz);
-  const pos=Math.max(4,Math.min(96,(R.hz-90)/(360-90)*100));   // 90~360Hz → 4~96%
+  const hiB=(z.idx===4?400:z.max);                              // 고음 구간 표시 상한
+  const within=Math.max(0.15,Math.min(0.85,(R.hz-z.lo)/(hiB-z.lo)));
+  const pos=Math.max(6,Math.min(94,(z.idx+within)*20));        // 마커가 항상 해당 음역대 칸 안에 오도록(칸=20%씩)
   const colorVar=which==='me'?'var(--freq)':'var(--coral)';
   let cmp='';
   const other=which==='me'?REC.friend:REC.me, otherName=which==='me'?'친구':'나';
