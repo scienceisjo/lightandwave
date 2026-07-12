@@ -115,7 +115,47 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .cap-slot .thick{padding:0 12px 10px;font-size:13.5px;font-weight:800}
 .capbtn{width:100%;border:none;border-top:2px solid var(--line);background:var(--sun);color:#3a2c00;font-weight:800;font-family:var(--body);padding:12px;cursor:pointer;font-size:15px}
 .cap-slot.friend .capbtn{background:#ffd9d4}
+.capbtn:disabled{opacity:.4;cursor:not-allowed}
+.capbtn.rec{background:var(--coral)!important;color:#fff;animation:recpulse 1s infinite}
+@keyframes recpulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.18)}}
+.recdot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.4);animation:recblink .7s steps(1) infinite;vertical-align:middle;margin-right:4px}
+@keyframes recblink{50%{opacity:.25}}
+.analyzebtn{width:100%;border:none;border-top:2px solid var(--line);background:var(--sky);color:#fff;font-weight:800;font-family:var(--body);padding:11px;cursor:pointer;font-size:14.5px}
+.cap-slot.friend .analyzebtn{background:var(--coral)}
+.bandbox{padding:13px 13px 14px;border-top:2px dashed var(--line);background:var(--paper-2);animation:pop .3s}
+.bandbox .bt{font-family:var(--disp);font-size:18px;line-height:1.3}
+.bandbox .bt u{text-decoration-thickness:3px;text-underline-offset:3px}
+.bandbox .bd{font-size:13px;color:var(--ink-soft);line-height:1.65;margin-top:8px}
+.bandbox .bd b{color:var(--ink)}
+.zone-scale{position:relative;margin:14px 4px 8px}
+.zone-scale .zs-row{display:flex;border:2px solid var(--line);border-radius:9px;overflow:hidden;box-shadow:0 2px 0 rgba(38,36,31,.3)}
+.zone-scale .zs{flex:1;text-align:center;font-size:10.5px;font-weight:800;padding:6px 1px;color:var(--ink-mute);border-right:1.5px solid rgba(38,36,31,.22);background:#fff}
+.zone-scale .zs:last-child{border-right:none}
+.zone-scale .zs.on{background:var(--sun);color:#3a2c00}
+.zone-scale .mark{position:absolute;top:-15px;transform:translateX(-50%);font-size:14px;color:var(--coral-d);font-weight:900;pointer-events:none;white-space:nowrap}
+.zone-scale .mark b{display:block;font-size:10.5px;color:var(--ink);margin-top:-3px}
 .click-hint{padding:0 12px 8px;font-size:11px;color:var(--ink-mute)}
+
+/* 민감도(환경) 선택 */
+.sens-pick{margin:14px 0 4px}
+.sens-q{font-size:13.5px;font-weight:800;color:var(--ink);line-height:1.5}
+.sens-q small{display:block;font-weight:400;color:var(--ink-mute);font-size:12px;margin-top:3px}
+.sens-opts{display:flex;gap:8px;margin-top:10px}
+.sens-opt{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;font-family:var(--body);
+  background:#fff;border:2.5px solid #d9d3c4;border-radius:13px;padding:11px 4px;cursor:pointer;box-shadow:0 3px 0 rgba(38,36,31,.3);transition:.1s}
+.sens-opt .se{font-size:22px;line-height:1.1}
+.sens-opt b{font-size:12.5px;color:var(--ink)}
+.sens-opt small{font-size:10.5px;color:var(--ink-mute);font-weight:700}
+.sens-opt.on{border-color:var(--sky);background:rgba(18,167,155,.1);box-shadow:0 3px 0 var(--sky-d)}
+.sens-opt:active{transform:translateY(2px)}
+/* 도크 감도 */
+.dock-sens{display:flex;align-items:center;gap:7px;margin-top:7px;font-size:11px;color:var(--ink-mute);font-weight:800;flex-wrap:wrap}
+.ds-opts{display:inline-flex;gap:4px}
+.ds{font-family:var(--body);font-weight:800;font-size:11px;color:var(--ink-soft);background:#fff;
+  border:2px solid #d9d3c4;border-radius:8px;padding:3px 9px;cursor:pointer}
+.ds.on{border-color:var(--sky);background:var(--sky);color:#fff}
+.ds-stat{margin-left:auto;font-weight:800;color:var(--ink-mute)}
+.ds-stat.hot{color:var(--ok)}
 
 .warn{display:none;background:rgba(255,107,94,.12);border:2px dashed var(--coral);border-radius:12px;padding:12px 14px;margin:10px 0;font-size:14px;color:var(--coral-d);font-weight:700;line-height:1.6}
 .warn.show{display:block}
@@ -188,6 +228,15 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
       </div>
     </div>
     <div class="zoom-row"><span>🔍 확대</span><input type="range" id="liveZoom" min="1" max="12" step="1" value="1"><span id="liveZoomV">1×</span></div>
+    <div class="dock-sens">
+      <span>🎧 감도</span>
+      <div class="ds-opts" id="dockSens">
+        <button class="ds" data-g="0.012">조용</button>
+        <button class="ds on" data-g="0.022">보통</button>
+        <button class="ds" data-g="0.045">시끌</button>
+      </div>
+      <span class="ds-stat" id="sensStat">🔇 조용함</span>
+    </div>
   </div>
 </div>
 
@@ -200,6 +249,14 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
       <h2>우리 모둠, 소리 탐정단이 되자!</h2>
       <p class="lead">한 교실에 다 모이면 소리가 <b>뒤섞여</b> 탐구가 어려워요. 모둠끼리 <b>넓게 흩어져</b>서, 목소리로 <b class="t-amp">세기</b>·<b class="t-freq">높낮이</b>·<b class="t-wave">목소리의 정체</b>를 파헤쳐 봅시다!</p>
       <input class="field" id="grpName" placeholder="모둠 이름 (예: 3모둠 · 파동수사대)" style="margin-top:14px">
+      <div class="sens-pick">
+        <div class="sens-q">🎧 지금 우리 모둠 <b>주변</b>은 어때요?<small>배경 소음(에어컨·친구들 소리)에 반응하지 않도록 골라요. 나중에 바꿀 수 있어요.</small></div>
+        <div class="sens-opts" id="setupSens">
+          <button class="sens-opt" data-g="0.012"><span class="se">🤫</span><b>아주 조용해요</b><small>민감도 높음</small></button>
+          <button class="sens-opt on" data-g="0.022"><span class="se">🏫</span><b>보통이에요</b><small>민감도 보통</small></button>
+          <button class="sens-opt" data-g="0.045"><span class="se">🎉</span><b>시끌시끌해요</b><small>민감도 낮음</small></button>
+        </div>
+      </div>
       <button class="btn big go" id="startBtn">🎤 마이크 켜고 탐구 시작</button>
       <p class="hint">💻📱 컴퓨터·노트북·태블릿·폰 모두 OK! 처음 열면 <b>마이크 허용</b> 팝업을 눌러 주세요. (소리는 저장·전송되지 않고 화면 분석에만 쓰여요.)</p>
       <div class="err" id="setupErr"></div>
@@ -251,7 +308,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
       <span class="tape">미션 3 · 최종</span>
       <h2>🕵️ 목소리 '지문'을 찾아라</h2>
       <p class="lead">친구와 내가 <b>같은 크기·같은 높이</b>의 "<b>아~</b>"를 내도 목소리를 구분해요. 세기·높낮이가 같은데 <b>어떻게</b>? 각자 녹음해 파형을 비교!</p>
-      <div class="obs">📸 <b>3, 2, 1 카운트</b> 뒤 <b>1초간</b> "아~"가 녹음돼요. 나와 친구가 <b>비슷한 크기·비슷한 높이</b>로 맞춰 봐요.</div>
+      <div class="obs">🔴 <b>녹음 시작</b>을 누르고 "<b>아~</b>" 소리를 낸 뒤 <b>중지</b>를 눌러요. 나와 친구가 <b>비슷한 크기·비슷한 높이</b>로 맞춰 봐요. 녹음 후 <b>🔬 분석하기</b>를 누르면 내 목소리가 <b>몇 음(저음~고음)</b>인지 알려줘요!</div>
 
       <div class="cap-grid">
         <div class="cap-slot me">
@@ -260,8 +317,9 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
           <div class="insp-ctrl" id="meCtrl" style="display:none"><button class="playall" id="mePlayAll">▶ 전체</button><span>🔍</span><input type="range" class="insp-zoom" data-w="me" min="1" max="30" step="1" value="1"><span class="zv" id="meZoomV">1×</span></div>
           <div class="click-hint" id="meClick" style="display:none">👆 파형의 <b>한 지점을 탭</b>하면 그 순간 소리가 나요 · 좌우로 <b>드래그</b>하면 구간 이동</div>
           <div class="meta"><span id="meFreq">높낮이 —</span><span id="meAmp">세기 —</span></div>
-          <div class="thick" id="meThick"></div>
-          <button class="capbtn" id="capMe">📸 내 목소리 녹음 (3초 뒤 1초)</button>
+          <button class="capbtn" id="capMe">🔴 내 목소리 녹음 시작</button>
+          <button class="analyzebtn" id="meAnalyze" style="display:none">🔬 방금 녹음한 내 목소리 분석하기!</button>
+          <div class="bandbox" id="meBand" style="display:none"></div>
         </div>
         <div class="cap-slot friend">
           <div class="h"><span>🧑‍🤝‍🧑 친구 목소리</span><span class="badge" id="frBadge"></span></div>
@@ -269,8 +327,9 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
           <div class="insp-ctrl" id="frCtrl" style="display:none"><button class="playall" id="frPlayAll">▶ 전체</button><span>🔍</span><input type="range" class="insp-zoom" data-w="friend" min="1" max="30" step="1" value="1"><span class="zv" id="frZoomV">1×</span></div>
           <div class="click-hint" id="frClick" style="display:none">👆 파형의 <b>한 지점을 탭</b>하면 그 순간 소리가 나요 · 좌우로 <b>드래그</b>하면 구간 이동</div>
           <div class="meta"><span id="frFreq">높낮이 —</span><span id="frAmp">세기 —</span></div>
-          <div class="thick" id="frThick"></div>
-          <button class="capbtn" id="capFr">📸 친구 목소리 녹음 (3초 뒤 1초)</button>
+          <button class="capbtn" id="capFr">🔴 친구 목소리 녹음 시작</button>
+          <button class="analyzebtn" id="frAnalyze" style="display:none">🔬 방금 녹음한 친구 목소리 분석하기!</button>
+          <div class="bandbox" id="frBand" style="display:none"></div>
         </div>
       </div>
 
@@ -333,7 +392,6 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   <div class="foot no-print">소리 탐정단 · 파동으로 알아보는 소리의 특성 FEAT. 목소리 — 중학교 과학 「빛과 파동」<br>제작 : 조승재(과학이조선생)</div>
 </main>
 
-<div id="cdOverlay" hidden><div id="cdBig">3</div><div id="cdSub">준비!</div></div>
 
 <script>
 "use strict";
@@ -343,6 +401,9 @@ const NOTE=['도','도♯','레','레♯','미','파','파♯','솔','솔♯','�
 let AC=null, analyser=null, gainNode=null, sp=null, tdata=null, running=false, smoothF=0;
 let recording=false, recBuf=[], capturing=false;
 let liveZoom=1;
+let GATE=0.022;           // 노이즈 게이트(민감도) — 환경 선택으로 조절
+let recWhich=null, recStartT=0, recTick=null;
+const MAXREC=6.0, MINREC=0.2;
 const REC={me:null,friend:null};
 const INSP={me:{zoom:1,scroll:0},friend:{zoom:1,scroll:0}};
 const ANS={1:null,2:null,3:null,t1:'',t2:'',t3:''};
@@ -356,7 +417,7 @@ function fit(cv){ const dpr=Math.min(devicePixelRatio||1,2), r=cv.getBoundingCli
 /* ---- 자기상관 음정 검출 (감도↑) ---- */
 function detectPitch(buf,sr){
   const N=buf.length; let rms=0; for(let i=0;i<N;i++)rms+=buf[i]*buf[i]; rms=Math.sqrt(rms/N);
-  if(rms<0.006) return -1;
+  if(rms<GATE) return -1;
   let r1=0,r2=N-1; const th=0.16;
   for(let i=0;i<N/2;i++){ if(Math.abs(buf[i])<th){r1=i;break;} }
   for(let i=1;i<N/2;i++){ if(Math.abs(buf[N-i])<th){r2=N-i;break;} }
@@ -406,13 +467,16 @@ function loop(){
   if(!running) return; requestAnimationFrame(loop);
   analyser.getFloatTimeDomainData(tdata);
   let rms=0; for(let i=0;i<tdata.length;i++) rms+=tdata[i]*tdata[i];
-  rms=Math.sqrt(rms/tdata.length); curAmp=Math.min(1,rms*6);
+  rms=Math.sqrt(rms/tdata.length);
+  const hot = rms>GATE;                       // 게이트(감도) 위로 올라와야 '소리'로 인정
+  curAmp = hot ? Math.min(1,(rms-GATE)*7) : 0; // 배경 소음(게이트 이하)은 0으로
   const f=detectPitch(tdata,AC.sampleRate);
-  if(f>0){ smoothF=smoothF? smoothF*0.7+f*0.3 : f; curFreq=smoothF; } else curFreq=-1;
+  if(f>0){ smoothF=smoothF? smoothF*0.7+f*0.3 : f; curFreq=smoothF; } else { curFreq=-1; smoothF=0; }
   drawLive();
   $('#ampV').textContent=Math.round(curAmp*100);
   $('#ampBar').style.width=(curAmp*100)+'%';
   $('#freqV').innerHTML = curFreq>0 ? Math.round(curFreq)+'<small> Hz·'+noteName(curFreq)+'</small>' : '—<small></small>';
+  const ss=$('#sensStat'); if(ss){ ss.textContent = hot?'🔊 소리 감지!':'🔇 조용함'; ss.classList.toggle('hot',hot); }
 }
 function drawLive(){
   const {ctx,w,h}=fit($('#liveCv')); ctx.clearRect(0,0,w,h);
@@ -423,6 +487,15 @@ function drawLive(){
   ctx.stroke();
 }
 $('#liveZoom').addEventListener('input',e=>{ liveZoom=+e.target.value; $('#liveZoomV').textContent=liveZoom+'×'; });
+
+/* ---- 민감도(환경) 설정 ---- */
+function setGate(g){
+  GATE=g;
+  $$('#setupSens .sens-opt').forEach(b=>b.classList.toggle('on', Math.abs(+b.dataset.g-g)<1e-6));
+  $$('#dockSens .ds').forEach(b=>b.classList.toggle('on', Math.abs(+b.dataset.g-g)<1e-6));
+}
+$$('#setupSens .sens-opt').forEach(b=>b.addEventListener('click',()=>setGate(+b.dataset.g)));
+$$('#dockSens .ds').forEach(b=>b.addEventListener('click',()=>setGate(+b.dataset.g)));
 
 /* ---- 예측 → 정답 → 서술 ---- */
 $$('.predict').forEach(row=>{
@@ -446,17 +519,31 @@ $$('textarea[data-wt]').forEach(ta=>ta.addEventListener('input',()=>{
 function beep(f,d){ try{ const o=AC.createOscillator(),g=AC.createGain(); o.type='sine'; o.frequency.value=f; o.connect(g); g.connect(AC.destination);
   const t=AC.currentTime; g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.14,t+0.01); g.gain.exponentialRampToValueAtTime(0.0004,t+(d||0.14)); o.start(t); o.stop(t+(d||0.14)+0.04);}catch(e){} }
 function concatBuf(chunks){ let len=0; chunks.forEach(c=>len+=c.length); const out=new Float32Array(len); let o=0; chunks.forEach(c=>{out.set(c,o);o+=c.length;}); return out; }
-async function captureVoice(which){
-  if(!running||capturing) return; capturing=true;
-  const ov=$('#cdOverlay'); ov.hidden=false;
-  const who=which==='me'?'내 목소리':'친구 목소리';
-  for(let n=3;n>=1;n--){ $('#cdBig').textContent=n; $('#cdSub').textContent=who+' 준비… "아~" 할 준비!'; beep(620); await wait(850); }
-  $('#cdBig').textContent='🔴'; $('#cdSub').textContent='지금 "아~" 소리 내기!'; beep(880,0.2);
-  recBuf=[]; recording=true;
-  await wait(1050);
-  recording=false; ov.hidden=true;
+function toggleRec(which){ if(recWhich===which) stopRec(); else if(!recWhich) startRec(which); }
+function startRec(which){
+  if(!running||recWhich) return;
+  recWhich=which; recBuf=[]; recording=true; capturing=true; recStartT=performance.now();
+  beep(880,0.12);
+  const btn=$(which==='me'?'#capMe':'#capFr'), other=$(which==='me'?'#capFr':'#capMe'), pre=which==='me'?'me':'fr';
+  btn.classList.add('rec'); btn.textContent='⏹ 녹음 중지'; other.disabled=true;
+  const bd=$('#'+pre+'Badge');
+  bd.innerHTML='<span class="recdot"></span> 녹음 중 0.0초';
+  recTick=setInterval(()=>{ const el=(performance.now()-recStartT)/1000;
+    bd.innerHTML='<span class="recdot"></span> 녹음 중 '+el.toFixed(1)+'초';
+    if(el>=MAXREC) stopRec();
+  },100);
+}
+function stopRec(){
+  if(!recWhich) return; const which=recWhich;
+  recording=false; capturing=false; recWhich=null;
+  if(recTick){ clearInterval(recTick); recTick=null; }
+  beep(500,0.12);
+  const btn=$(which==='me'?'#capMe':'#capFr'), pre=which==='me'?'me':'fr';
+  btn.classList.remove('rec');
+  btn.textContent = which==='me'?'🔴 내 목소리 다시 녹음':'🔴 친구 목소리 다시 녹음';
+  $('#capMe').disabled=false; $('#capFr').disabled=false;
   const samples=concatBuf(recBuf); recBuf=[];
-  capturing=false;
+  if(!AC || samples.length < MINREC*AC.sampleRate){ $('#'+pre+'Badge').textContent='⚠️ 너무 짧아요, 다시!'; return; }
   finishCapture(which,samples);
 }
 function analyzePitchMedian(samples,sr){
@@ -464,14 +551,21 @@ function analyzePitchMedian(samples,sr){
   for(let s=0;s+W<=samples.length;s+=hop){ const f=detectPitch(samples.subarray(s,s+W),sr); if(f>0)arr.push(f); }
   if(!arr.length) return -1; arr.sort((a,b)=>a-b); return arr[Math.floor(arr.length/2)];
 }
+function loudestOffset(samples,sr){   // 가장 큰 소리가 난 구간(~120ms) 시작 인덱스
+  const win=Math.max(1,Math.floor(sr*0.12)); let bestE=-1, anchor=Math.floor(samples.length*0.4);
+  for(let s=0;s+win<=samples.length;s+=Math.floor(win/2)||1){ let e=0; for(let i=s;i<s+win;i+=8) e+=samples[i]*samples[i];
+    if(e>bestE){ bestE=e; anchor=s; } }
+  return anchor;
+}
 function normalizeCycle(samples,hz,sr){
-  let mx=0.0001; for(let i=0;i<samples.length;i++) mx=Math.max(mx,Math.abs(samples[i]));
-  const mid=Math.floor(samples.length*0.45);
+  const anchor=loudestOffset(samples,sr);
+  let mid=Math.min(samples.length-3, anchor+Math.floor(sr*0.03));
   let s=mid; for(let i=mid;i<samples.length-2 && i<mid+sr*0.03;i++){ if(samples[i]<0&&samples[i+1]>=0){s=i;break;} }
   let span= hz>0 ? Math.round(sr/hz*2) : Math.round(sr*0.02);
   span=Math.max(48,Math.min(span,samples.length-s-1));
+  let lmx=0.0001; for(let i=s;i<s+span&&i<samples.length;i++) lmx=Math.max(lmx,Math.abs(samples[i]));
   const OUT=340,out=new Float32Array(OUT);
-  for(let k=0;k<OUT;k++){ out[k]=(samples[s+Math.floor(k/OUT*span)]||0)/mx; }
+  for(let k=0;k<OUT;k++){ out[k]=(samples[s+Math.floor(k/OUT*span)]||0)/lmx; }
   return out;
 }
 function finishCapture(which,samples){
@@ -486,23 +580,44 @@ function finishCapture(which,samples){
   $('#'+pre+'Badge').textContent='✓ 녹음됨';
   $('#'+pre+'Freq').textContent='높낮이 '+(hz>0?Math.round(hz)+'Hz·'+noteName(hz):'—');
   $('#'+pre+'Amp').textContent='세기 '+Math.round(REC[which].amp*100);
-  renderThickness();
+  $('#'+pre+'Analyze').style.display='block';   // 분석하기 버튼 노출
+  $('#'+pre+'Band').style.display='none';        // 이전 분석 결과 초기화
   drawInsp(which);
   checkDiff(); drawCompare(); computeSimilarity(); updateChecklist();
 }
-function voiceBand(hz){ if(hz<=0)return null;
-  if(hz<140)return {e:'🎸',l:'저음! 굵은(낮은) 목소리 편'};
-  if(hz<185)return {e:'🎵',l:'중저음 편'};
-  if(hz<235)return {e:'🎶',l:'중고음 편'};
-  return {e:'🐦',l:'고음! 얇은(높은) 목소리 편'}; }
-function renderThickness(){
-  ['me','friend'].forEach(w=>{ const pre=w==='me'?'me':'fr'; const R=REC[w]; const el=$('#'+pre+'Thick'); if(!R){el.textContent='';return;}
-    const b=voiceBand(R.hz); el.innerHTML = b? '<span style="color:'+(w==='me'?'var(--freq)':'var(--coral)')+'">'+b.e+' '+b.l+'</span>' : '';
-  });
-  if(REC.me&&REC.friend&&REC.me.hz>0&&REC.friend.hz>0){
-    const diff=REC.me.hz-REC.friend.hz, cmp = Math.abs(diff)<12 ? '친구와 비슷한 높이' : (diff>0?'친구보다 <b>더 얇은(높은)</b> 목소리':'친구보다 <b>더 굵은(낮은)</b> 목소리');
-    $('#meThick').innerHTML += ' · <span style="color:var(--ink-mute)">'+cmp+'</span>';
+/* ---- 음역대(저음~고음) 분석 ---- */
+const ZONES=[
+  {max:135, name:'저음',   emoji:'🐻', desc:'아주 낮고 굵게 울리는 목소리예요'},
+  {max:180, name:'중저음', emoji:'🎸', desc:'낮고 굵은 편이에요 · 차분하게 들려요'},
+  {max:235, name:'중음',   emoji:'🎵', desc:'너무 높지도 낮지도 않은 보통 목소리예요'},
+  {max:300, name:'중고음', emoji:'🎶', desc:'조금 높고 맑은 편이에요'},
+  {max:1e9, name:'고음',   emoji:'🐦', desc:'아주 높고 가늘게 들리는 목소리예요'},
+];
+function zoneOf(hz){ for(let i=0;i<ZONES.length;i++) if(hz<ZONES[i].max) return Object.assign({idx:i},ZONES[i]); return Object.assign({idx:4},ZONES[4]); }
+function repVoiceMeta(R){ if(!R||R.hz<=0) return '높낮이 측정 실패'; const z=zoneOf(R.hz); return '높낮이 '+Math.round(R.hz)+'Hz('+noteName(R.hz)+') · '+z.emoji+' '+z.name; }
+function analyzeVoice(which){
+  const R=REC[which]; if(!R) return;
+  const pre=which==='me'?'me':'fr', box=$('#'+pre+'Band'); box.style.display='block';
+  const who=which==='me'?'내 목소리':'친구 목소리';
+  if(R.hz<=0){ box.innerHTML='<div class="bd">🎧 목소리를 또렷이 잡지 못했어요. <b>조용한 곳</b>에서 마이크에 가까이 대고 "<b>아~</b>"를 <b>2~3초 길게</b> 내며 다시 녹음해 봐요. (위 <b>감도</b>를 "조용"으로 바꿔도 좋아요.)</div>'; return; }
+  const z=zoneOf(R.hz);
+  const pos=Math.max(4,Math.min(96,(R.hz-90)/(360-90)*100));   // 90~360Hz → 4~96%
+  const colorVar=which==='me'?'var(--freq)':'var(--coral)';
+  let cmp='';
+  const other=which==='me'?REC.friend:REC.me, otherName=which==='me'?'친구':'나';
+  if(other&&other.hz>0){ const oz=zoneOf(other.hz), semis=12*Math.log2(R.hz/other.hz);
+    cmp = Math.abs(semis)<1.5
+      ? '<div class="bd">🔎 '+otherName+'('+Math.round(other.hz)+'Hz·'+oz.name+')와 <b>거의 같은 높이</b>인데도 파형이 다르다면, 그게 바로 <b>목소리 지문(음색)</b>이에요!</div>'
+      : '<div class="bd">🔎 '+otherName+'('+Math.round(other.hz)+'Hz·'+oz.name+')보다 <b>'+(semis<0?'더 낮고 굵게':'더 높고 가늘게')+'</b> 들려요.</div>';
   }
+  box.innerHTML =
+    '<div class="bt" style="color:'+colorVar+'">'+z.emoji+' '+who+'는 <u>'+z.name+'</u>!</div>'+
+    '<div class="zone-scale">'+
+      '<div class="mark" style="left:'+pos.toFixed(1)+'%">▼<b>'+Math.round(R.hz)+'Hz·'+noteName(R.hz)+'</b></div>'+
+      '<div class="zs-row">'+ZONES.map((zz,i)=>'<div class="zs'+(i===z.idx?' on':'')+'">'+zz.name+'</div>').join('')+'</div>'+
+    '</div>'+
+    '<div class="bd">👉 '+z.desc+'. 목소리가 <b>1초에 약 '+Math.round(R.hz)+'번</b> 진동하고 있어요 (= <b>'+Math.round(R.hz)+'Hz</b>). 숫자가 <b>작을수록 낮고 굵은</b>, <b>클수록 높고 가는</b> 목소리랍니다.</div>'+
+    cmp;
 }
 /* ---- 인스펙터: 확대·스크롤·클릭재생 ---- */
 function drawInsp(which){
@@ -549,8 +664,10 @@ $$('.insp-zoom').forEach(z=>z.addEventListener('input',e=>{ const which=e.target
   $('#'+(which==='me'?'me':'fr')+'ZoomV').textContent=e.target.value+'×'; drawInsp(which); }));
 $('#mePlayAll').addEventListener('click',()=>playAll('me'));
 $('#frPlayAll').addEventListener('click',()=>playAll('friend'));
-$('#capMe').addEventListener('click',()=>captureVoice('me'));
-$('#capFr').addEventListener('click',()=>captureVoice('friend'));
+$('#capMe').addEventListener('click',()=>toggleRec('me'));
+$('#capFr').addEventListener('click',()=>toggleRec('friend'));
+$('#meAnalyze').addEventListener('click',()=>analyzeVoice('me'));
+$('#frAnalyze').addEventListener('click',()=>analyzeVoice('friend'));
 
 /* ---- 차이 경고 ---- */
 function checkDiff(){
@@ -611,9 +728,8 @@ $('#makeReport').addEventListener('click',()=>{
   $('#repA3').textContent=ANS.t3;
   $('#report').style.display='block';   // 먼저 표시해야 캔버스 크기가 잡힘
   drawRepWave('#repMeCv','me'); drawRepWave('#repFrCv','friend');
-  const bm=voiceBand(REC.me.hz), bf=voiceBand(REC.friend.hz);
-  $('#repMeVm').innerHTML='높낮이 '+Math.round(REC.me.hz)+'Hz('+noteName(REC.me.hz)+') · '+(bm?bm.e+' '+bm.l:'');
-  $('#repFrVm').innerHTML='높낮이 '+Math.round(REC.friend.hz)+'Hz('+noteName(REC.friend.hz)+') · '+(bf?bf.e+' '+bf.l:'');
+  $('#repMeVm').innerHTML=repVoiceMeta(REC.me);
+  $('#repFrVm').innerHTML=repVoiceMeta(REC.friend);
   $('#repSimil').innerHTML='🔬 두 목소리 파형 <b>유사도 '+(SIMIL!=null?SIMIL:'—')+'%</b> — 세기·높낮이는 비슷해도 파형 모양이 달라, 우리는 서로의 목소리를 구분할 수 있어요. <b>목소리 = 파형(음색)의 지문!</b>';
   $('#report').scrollIntoView({behavior:'smooth',block:'start'});
 });
